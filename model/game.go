@@ -37,21 +37,21 @@ type Game interface {
 }
 
 // AbstractGame for shared game functionality
-type AbstractGame struct {
+type game struct {
 	GameID uuid.UUID
 	Table  TournamentTable
 }
 
 // DoublesGame to play
 type DoublesGame struct {
-	AbstractGame
+	game
 	right PlayerPair
 	left  PlayerPair
 }
 
 // SinglesGame to play
 type SinglesGame struct {
-	AbstractGame
+	game
 	right Player
 	left  Player
 }
@@ -87,6 +87,6 @@ type Repository interface {
 func NewSinglesGame() Game {
 	id := uuid.Must(uuid.NewV4())
 	return &SinglesGame{
-		AbstractGame: AbstractGame{GameID: id},
+		game: game{GameID: id},
 	}
 }
