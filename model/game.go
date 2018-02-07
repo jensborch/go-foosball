@@ -4,42 +4,39 @@ import (
 	"github.com/satori/go.uuid"
 )
 
-// Tournament played
-type Tournament struct {
-	TableID uuid.UUID
-	Tables  []TournamentTable
-}
-
-// TournamentTable in a foosball game
-type TournamentTable struct {
-	TableID uuid.UUID
-	Table   Table
-	Games   []Game
-}
-
-// Table used in tournament
-type Table struct {
-	TableID uuid.UUID
-	Name    string
-	Color   Color
-}
-
-// Color of table
-type Color struct {
-	Right string
-	Left  string
-}
-
 // Game played
 type Game interface {
-	Right() []Player
-	Left() []Player
+	Right() []*Player
+	Left() []*Player
 }
 
 // AbstractGame for shared game functionality
 type game struct {
 	GameID uuid.UUID
-	Table  TournamentTable
+	Table  *TournamentTable
+}
+
+// SinglesGame to play
+type SinglesGame struct {
+	game
+	right *Player
+	left  *Player
+}
+
+// Right return right playes
+func (s DoublesGame) Right() []*Player {
+	players := make([]*Player, 2)
+	players[0] = s.right.First
+	players[1] = s.right.Second
+	return players
+}
+
+// Left return left playes
+func (s DoublesGame) Left() []*Player {
+	players := make([]*Player, 2)
+	players[0] = s.left.First
+	players[1] = s.left.Second
+	return players
 }
 
 // DoublesGame to play
@@ -49,31 +46,24 @@ type DoublesGame struct {
 	left  PlayerPair
 }
 
-// SinglesGame to play
-type SinglesGame struct {
-	game
-	right Player
-	left  Player
+// PlayerPair pair of playes playing a doubles game
+type PlayerPair struct {
+	First  *Player
+	Second *Player
 }
 
 // Right return right playes
-func (s SinglesGame) Right() []Player {
-	players := make([]Player, 1)
+func (s SinglesGame) Right() []*Player {
+	players := make([]*Player, 1)
 	players[0] = s.right
 	return players
 }
 
 // Left return left playes
-func (s SinglesGame) Left() []Player {
-	players := make([]Player, 1)
+func (s SinglesGame) Left() []*Player {
+	players := make([]*Player, 1)
 	players[0] = s.left
 	return players
-}
-
-// PlayerPair pair of playes playing a doubles game
-type PlayerPair struct {
-	First  Player
-	Second Player
 }
 
 // Repository provides access games etc.
@@ -84,9 +74,14 @@ type Repository interface {
 }
 
 // NewSinglesGame creates a new game
-func NewSinglesGame() Game {
+func NewSinglesGame(table *TournamentTable, right *Player, left *Player) Game {
 	id := uuid.Must(uuid.NewV4())
 	return &SinglesGame{
-		game: game{GameID: id},
+		game: game{
+			GameID: id,
+			Table:  table,
+		},
+		right: right,
+		left:  left,
 	}
 }
