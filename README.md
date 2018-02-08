@@ -1,3 +1,6 @@
 # Foosball REST service
 
-Foosball tournament REST service writen in Go.
+[![Build Status](https://travis-ci.org/jensborch/go-foosball.svg?branch=master)](https://travis-ci.org/jensborch/go-foosball) 
+
+
+Foosball tournament REST service written in Go.
