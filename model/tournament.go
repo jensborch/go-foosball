@@ -1,22 +1,26 @@
 package model
 
 import (
+	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
 )
 
 // Tournament played
 type Tournament struct {
-	TournamentID uuid.UUID
+	gorm.Model
+	TournamentID string
 	Name         string
 	Tables       []*TournamentTable
 }
 
 // TournamentTable in a foosball game
 type TournamentTable struct {
-	TableID    uuid.UUID
-	Table      *Table
-	Tournament *Tournament
-	Games      []*Game
+	gorm.Model
+	TournamentID uint
+	TableID      uint
+	Table        *Table
+	Tournament   *Tournament
+	Games        []*Game
 }
 
 // TournamentRepository provides access games etc.
@@ -28,12 +32,11 @@ type TournamentRepository interface {
 
 // NewTournament creates a new tournament
 func NewTournament(name string, tables []*Table) *Tournament {
-	id := uuid.Must(uuid.NewV4())
+	id := uuid.Must(uuid.NewV4()).String()
 	tournamentTables := []*TournamentTable{}
 	for _, t := range tables {
-		tid := uuid.Must(uuid.NewV4())
 		tt := TournamentTable{
-			TableID: tid,
+			TableID: t.ID,
 			Table:   t,
 		}
 		tournamentTables = append(tournamentTables, &tt)

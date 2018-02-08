@@ -26,4 +26,12 @@ func TestCreate(t *testing.T) {
 	if g.Right()[0].RealName != "Thomas" {
 		t.Errorf("Left player must is incorrect, got: %s, want: %s.", g.Right()[0].RealName, "Thomas")
 	}
+
+	if g.Left()[0].RealName != "Jens" {
+		t.Errorf("Left player must is incorrect, got: %s, want: %s.", g.Left()[0].RealName, "Jens")
+	}
+
+	if g.TournamentTable().Table.Name != "1" {
+		t.Errorf("Table is incorrect, got: %s, want: %s.", g.TournamentTable().Table.Name, "1")
+	}
 }
