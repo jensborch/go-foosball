@@ -8,9 +8,9 @@ import (
 // Table used in tournament
 type Table struct {
 	gorm.Model
-	TableID uuid.UUID
-	Name    string
-	Color   Color
+	UUID string `gorm:"size:36;unique_index"`
+	Name string `gorm:"type:varchar(50)"`
+	//Color   Color
 }
 
 // Color of table
@@ -28,10 +28,10 @@ type TableRepository interface {
 
 // NewTable creates a new table
 func NewTable(name string, color Color) *Table {
-	id := uuid.Must(uuid.NewV4())
+	id := uuid.Must(uuid.NewV4()).String()
 	return &Table{
-		TableID: id,
-		Name:    name,
-		Color:   color,
+		UUID: id,
+		Name: name,
+		//Color:   color,
 	}
 }

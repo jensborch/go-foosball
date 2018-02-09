@@ -21,7 +21,7 @@ func TestCreate(t *testing.T) {
 		RealName: "Jens",
 	}
 
-	g := NewSinglesGame(tournament.Tables[0], &p1, &p2)
+	g := NewSinglesGame(tournament.TournamentTables[0], &p1, &p2)
 
 	if g.Right()[0].RealName != "Thomas" {
 		t.Errorf("Left player must is incorrect, got: %s, want: %s.", g.Right()[0].RealName, "Thomas")

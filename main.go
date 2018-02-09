@@ -9,11 +9,13 @@ import (
 )
 
 func main() {
-	db, err := gorm.Open("sqlite3", "/tmp/test.db")
+	db, err := gorm.Open("sqlite3", "test.db")
 	if err != nil {
 		panic("failed to connect database")
 	}
 	defer db.Close()
+
+	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{})
 
 	table1 := model.NewTable("1", model.Color{Right: "red", Left: "green"})
 	table2 := model.NewTable("2", model.Color{Right: "black", Left: "blue"})
@@ -21,9 +23,9 @@ func main() {
 
 	db.Create(&tournament)
 
-	db.Where("TournamentID = ?", tournament.TournamentID).First(&tournament)
+	tournament2 := db.Where("UUID = ?", tournament.UUID).First(&tournament)
 
-	fmt.Println(tournament)
+	fmt.Println(tournament2)
 
 	p1 := model.Player{
 		PlayerID: "tt",
@@ -35,6 +37,6 @@ func main() {
 		RealName: "Jens",
 	}
 
-	g := model.NewSinglesGame(tournament.Tables[0], &p1, &p2)
+	g := model.NewSinglesGame(tournament.TournamentTables[0], &p1, &p2)
 	fmt.Println(g)
 }

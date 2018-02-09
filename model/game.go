@@ -6,7 +6,7 @@ import (
 
 // Game played
 type Game interface {
-	ID() uuid.UUID
+	ID() string
 	Right() []*Player
 	Left() []*Player
 	TournamentTable() *TournamentTable
@@ -14,7 +14,7 @@ type Game interface {
 
 // AbstractGame for shared game functionality
 type game struct {
-	gameID uuid.UUID
+	gameID string
 	table  *TournamentTable
 }
 
@@ -22,7 +22,7 @@ func (g game) TournamentTable() *TournamentTable {
 	return g.table
 }
 
-func (g game) ID() uuid.UUID {
+func (g game) ID() string {
 	return g.gameID
 }
 
@@ -85,7 +85,7 @@ type Repository interface {
 
 // NewSinglesGame creates a new game
 func NewSinglesGame(table *TournamentTable, right *Player, left *Player) Game {
-	id := uuid.Must(uuid.NewV4())
+	id := uuid.Must(uuid.NewV4()).String()
 	return &singlesGame{
 		game: game{
 			gameID: id,

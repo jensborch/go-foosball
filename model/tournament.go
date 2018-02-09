@@ -8,9 +8,9 @@ import (
 // Tournament played
 type Tournament struct {
 	gorm.Model
-	TournamentID string
-	Name         string
-	Tables       []*TournamentTable
+	UUID             string             `gorm:"size:36;unique_index"`
+	Name             string             `gorm:"type:varchar(100)"`
+	TournamentTables []*TournamentTable `gorm:"ForeignKey:ID;AssociationForeignKey:TournamentID"`
 }
 
 // TournamentTable in a foosball game
@@ -18,9 +18,9 @@ type TournamentTable struct {
 	gorm.Model
 	TournamentID uint
 	TableID      uint
-	Table        *Table
-	Tournament   *Tournament
-	Games        []*Game
+	Table        *Table      `gorm:"ForeignKey:TableID;AssociationForeignKey:ID"`
+	Tournament   *Tournament `gorm:"ForeignKey:TournamentID;AssociationForeignKey:ID"`
+	//Games        []*Game     `gorm:"ForeignKey:ID;AssociationForeignKey:TableID"`
 }
 
 // TournamentRepository provides access games etc.
@@ -42,8 +42,8 @@ func NewTournament(name string, tables []*Table) *Tournament {
 		tournamentTables = append(tournamentTables, &tt)
 	}
 	return &Tournament{
-		TournamentID: id,
-		Name:         name,
-		Tables:       tournamentTables,
+		UUID:             id,
+		Name:             name,
+		TournamentTables: tournamentTables,
 	}
 }
