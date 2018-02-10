@@ -15,7 +15,7 @@ func main() {
 	}
 	defer db.Close()
 
-	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{})
+	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{}, &model.Player{})
 
 	table1 := model.NewTable("1", model.Color{Right: "red", Left: "green"})
 	table2 := model.NewTable("2", model.Color{Right: "black", Left: "blue"})
@@ -27,16 +27,10 @@ func main() {
 
 	fmt.Println(tournament2)
 
-	p1 := model.Player{
-		PlayerID: "tt",
-		RealName: "Thomas",
-	}
+	p1 := model.NewPlayer("tt", "Thomas")
 
-	p2 := model.Player{
-		PlayerID: "jj",
-		RealName: "Jens",
-	}
+	p2 := model.NewPlayer("jj", "Jens")
 
-	g := model.NewSinglesGame(tournament.TournamentTables[0], &p1, &p2)
+	g := model.NewSinglesGame(tournament.TournamentTables[0], p1, p2)
 	fmt.Println(g)
 }

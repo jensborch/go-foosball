@@ -1,12 +1,13 @@
 package model
 
 import (
+	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
 )
 
 // Game played
 type Game interface {
-	ID() string
+	UUID() string
 	Right() []*Player
 	Left() []*Player
 	TournamentTable() *TournamentTable
@@ -14,16 +15,18 @@ type Game interface {
 
 // AbstractGame for shared game functionality
 type game struct {
-	gameID string
-	table  *TournamentTable
+	gorm.Model
+	uuid              string `gorm:"size:36;unique_index"`
+	tournamentTableID uint
+	tournamentTable   *TournamentTable `gorm:"ForeignKey:tournamentTableID;AssociationForeignKey:ID"`
 }
 
 func (g game) TournamentTable() *TournamentTable {
-	return g.table
+	return g.tournamentTable
 }
 
-func (g game) ID() string {
-	return g.gameID
+func (g game) UUID() string {
+	return g.uuid
 }
 
 // SinglesGame to play
@@ -88,8 +91,8 @@ func NewSinglesGame(table *TournamentTable, right *Player, left *Player) Game {
 	id := uuid.Must(uuid.NewV4()).String()
 	return &singlesGame{
 		game: game{
-			gameID: id,
-			table:  table,
+			uuid:            id,
+			tournamentTable: table,
 		},
 		right: right,
 		left:  left,

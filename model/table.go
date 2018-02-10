@@ -10,13 +10,13 @@ type Table struct {
 	gorm.Model
 	UUID string `gorm:"size:36;unique_index"`
 	Name string `gorm:"type:varchar(50)"`
-	//Color   Color
+	Color   Color
 }
 
 // Color of table
 type Color struct {
-	Right string
-	Left  string
+	Right string `gorm:"type:varchar(50)"`
+	Left  string `gorm:"type:varchar(50)"`
 }
 
 // TableRepository provides access games etc.
@@ -32,6 +32,6 @@ func NewTable(name string, color Color) *Table {
 	return &Table{
 		UUID: id,
 		Name: name,
-		//Color:   color,
+		Color:   color,
 	}
 }
