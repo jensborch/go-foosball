@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/jensborch/go-foosball/model"
+	"github.com/jensborch/go-foosball/persistence"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -35,12 +36,14 @@ func main() {
 		Nickname: "jj",
 	})
 
-	db.Create(&p1)
-	db.Create(&p2)
+	r := persistence.NewPlayerRepository(db)
 
-	players := db.Find(&p1)
+	r.Store(p1)
+	r.Store(p2)
 
-	fmt.Println(&players)
+	player, err := r.Find("jj")
+
+	fmt.Println(player)
 
 	g := model.NewSinglesGame(tournament.TournamentTables[0], p1, p2)
 	fmt.Println(g)

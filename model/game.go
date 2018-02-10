@@ -79,8 +79,8 @@ type PlayerPair struct {
 	Second *Player
 }
 
-// Repository provides access games etc.
-type Repository interface {
+// GameRepository provides access games etc.
+type GameRepository interface {
 	Store(game *Game) error
 	Find(id uuid.UUID) (*Game, error)
 	FindAll() []*Game
