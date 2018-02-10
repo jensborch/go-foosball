@@ -16,6 +16,7 @@ func main() {
 	defer db.Close()
 
 	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{}, &model.Player{})
+	model.MigrateGameDB(db)
 
 	table1 := model.NewTable("1", model.Color{Right: "red", Left: "green"})
 	table2 := model.NewTable("2", model.Color{Right: "black", Left: "blue"})
@@ -23,13 +24,23 @@ func main() {
 
 	db.Create(&tournament)
 
-	tournament2 := db.Where("UUID = ?", tournament.UUID).First(&tournament)
-
-	fmt.Println(tournament2)
+	fmt.Println(db.Where("UUID = ?", tournament.UUID).First(&tournament))
 
 	p1 := model.NewPlayer("tt", "Thomas")
-
+	db.Delete(&model.Player{
+		Nickname: "tt",
+	})
 	p2 := model.NewPlayer("jj", "Jens")
+	db.Delete(&model.Player{
+		Nickname: "jj",
+	})
+
+	db.Create(&p1)
+	db.Create(&p2)
+
+	players := db.Find(&p1)
+
+	fmt.Println(&players)
 
 	g := model.NewSinglesGame(tournament.TournamentTables[0], p1, p2)
 	fmt.Println(g)

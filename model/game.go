@@ -98,3 +98,7 @@ func NewSinglesGame(table *TournamentTable, right *Player, left *Player) Game {
 		left:  left,
 	}
 }
+
+func MigrateGameDB(db *gorm.DB) {
+	db.AutoMigrate(&game{})
+}
