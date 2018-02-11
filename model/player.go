@@ -14,6 +14,7 @@ type Player struct {
 // PlayerRepository provides access players
 type PlayerRepository interface {
 	Store(player *Player) error
+	Remove(player *Player) error
 	Find(nickname string) (*Player, error)
 	FindAll() []*Player
 }

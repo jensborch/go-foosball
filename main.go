@@ -43,7 +43,11 @@ func main() {
 
 	player, err := r.Find("jj")
 
+	players := r.FindAll()
+
 	fmt.Println(player)
+	fmt.Println("===============")
+	fmt.Println(players)
 
 	g := model.NewSinglesGame(tournament.TournamentTables[0], p1, p2)
 	fmt.Println(g)
