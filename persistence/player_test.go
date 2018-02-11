@@ -8,7 +8,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
-func TestStore(t *testing.T) {
+func TestStorePlayer(t *testing.T) {
 	p1 := model.NewPlayer("tt", "Thomas")
 	p2 := model.NewPlayer("jj", "Jens")
 

@@ -20,13 +20,13 @@ type TournamentTable struct {
 	TableID      uint
 	Table        *Table      `gorm:"ForeignKey:TableID;AssociationForeignKey:ID"`
 	Tournament   *Tournament `gorm:"ForeignKey:TournamentID;AssociationForeignKey:ID"`
-	//Games        []*Game     `gorm:"ForeignKey:ID;AssociationForeignKey:TableID"`
+	Games        []*Game     `gorm:"ForeignKey:ID;AssociationForeignKey:tournamentTableID"`
 }
 
 // TournamentRepository provides access games etc.
 type TournamentRepository interface {
 	Store(tournament *Tournament) error
-	Find(id uuid.UUID) (*Tournament, error)
+	Find(uuid string) (*Tournament, error)
 	FindAll() []*Tournament
 }
 

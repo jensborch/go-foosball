@@ -5,71 +5,63 @@ import (
 	"github.com/satori/go.uuid"
 )
 
-// Game played
-type Game interface {
+// Playable game
+type Playable interface {
 	UUID() string
 	Right() []*Player
 	Left() []*Player
 	TournamentTable() *TournamentTable
 }
 
-// AbstractGame for shared game functionality
-type game struct {
+// Game played
+type Game struct {
 	gorm.Model
 	uuid              string `gorm:"size:36;unique_index"`
 	tournamentTableID uint
 	tournamentTable   *TournamentTable `gorm:"ForeignKey:tournamentTableID;AssociationForeignKey:ID"`
+	rigthPlayer1ID    uint
+	rigthPlayer2ID    uint
+	leftPlayer1ID     uint
+	leftPlayer2ID     uint
+	rigthPlayer1      *Player `gorm:"ForeignKey:rightPlayer1ID;AssociationForeignKey:ID"`
+	rigthPlayer2      *Player `gorm:"ForeignKey:rightPlayer2ID;AssociationForeignKey:ID"`
+	leftPlayer1       *Player `gorm:"ForeignKey:leftPlayer1ID;AssociationForeignKey:ID"`
+	leftPlayer2       *Player `gorm:"ForeignKey:leftPlayer2ID;AssociationForeignKey:ID"`
 }
 
-func (g game) TournamentTable() *TournamentTable {
+func (g Game) TournamentTable() *TournamentTable {
 	return g.tournamentTable
 }
 
-func (g game) UUID() string {
+func (g Game) UUID() string {
 	return g.uuid
 }
 
-// SinglesGame to play
-type singlesGame struct {
-	game
-	right *Player
-	left  *Player
-}
-
 // Right return right playes
-func (s singlesGame) Right() []*Player {
-	players := make([]*Player, 1)
-	players[0] = s.right
+func (g Game) Right() []*Player {
+	var players []*Player
+	if g.rigthPlayer2 == nil {
+		players = make([]*Player, 1)
+		players[0] = g.rigthPlayer1
+	} else {
+		players = make([]*Player, 2)
+		players[0] = g.rigthPlayer1
+		players[1] = g.rigthPlayer2
+	}
 	return players
 }
 
 // Left return left playes
-func (s singlesGame) Left() []*Player {
-	players := make([]*Player, 1)
-	players[0] = s.left
-	return players
-}
-
-// DoublesGame to play
-type doublesGame struct {
-	game
-	right PlayerPair
-	left  PlayerPair
-}
-
-// Right return right playes
-func (g doublesGame) Right() []*Player {
-	players := make([]*Player, 2)
-	players[0] = g.right.First
-	players[1] = g.right.Second
-	return players
-}
-
-// Left return left playes
-func (g doublesGame) Left() []*Player {
-	players := make([]*Player, 2)
-	players[0] = g.left.First
-	players[1] = g.left.Second
+func (g Game) Left() []*Player {
+	var players []*Player
+	if g.leftPlayer2 == nil {
+		players = make([]*Player, 1)
+		players[0] = g.leftPlayer1
+	} else {
+		players = make([]*Player, 2)
+		players[0] = g.leftPlayer1
+		players[1] = g.leftPlayer2
+	}
 	return players
 }
 
@@ -82,23 +74,30 @@ type PlayerPair struct {
 // GameRepository provides access games etc.
 type GameRepository interface {
 	Store(game *Game) error
-	Find(id uuid.UUID) (*Game, error)
+	Find(uuid string) (*Game, error)
 	FindAll() []*Game
 }
 
-// NewSinglesGame creates a new game
-func NewSinglesGame(table *TournamentTable, right *Player, left *Player) Game {
+// NewDuroGame creates a new game
+func NewDuroGame(table *TournamentTable, right PlayerPair, left PlayerPair) *Game {
 	id := uuid.Must(uuid.NewV4()).String()
-	return &singlesGame{
-		game: game{
-			uuid:            id,
-			tournamentTable: table,
-		},
-		right: right,
-		left:  left,
+	return &Game{
+		uuid:            id,
+		tournamentTable: table,
+		rigthPlayer1:    right.First,
+		leftPlayer1:     left.First,
+		rigthPlayer2:    right.Second,
+		leftPlayer2:     left.Second,
 	}
 }
 
-func MigrateGameDB(db *gorm.DB) {
-	db.AutoMigrate(&game{})
+// NewSinglesGame creates a new game
+func NewSinglesGame(table *TournamentTable, right *Player, left *Player) *Game {
+	id := uuid.Must(uuid.NewV4()).String()
+	return &Game{
+		uuid:            id,
+		tournamentTable: table,
+		rigthPlayer1:    right,
+		leftPlayer1:     left,
+	}
 }

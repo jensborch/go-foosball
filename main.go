@@ -16,8 +16,7 @@ func main() {
 	}
 	defer db.Close()
 
-	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{}, &model.Player{})
-	model.MigrateGameDB(db)
+	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{}, &model.Player{}, &model.Game{})
 
 	table1 := model.NewTable("1", model.Color{Right: "red", Left: "green"})
 	table2 := model.NewTable("2", model.Color{Right: "black", Left: "blue"})
