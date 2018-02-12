@@ -17,9 +17,9 @@ func (r playerRepository) Remove(player *model.Player) error {
 	return r.db.Where("nickname = ?", player.Nickname).Delete(&model.Player{}).Error
 }
 
-func (r playerRepository) Find(nickname string) (*model.Player, error) {
+func (r playerRepository) Find(nickname string) (*model.Player, bool, error) {
 	var player model.Player
-	return &player, r.db.Where("nickname = ?", nickname).First(&player).Error
+	return &player, !r.db.Where("nickname = ?", nickname).First(&player).RecordNotFound(), r.db.Error
 }
 
 func (r playerRepository) FindAll() []*model.Player {
