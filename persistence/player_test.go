@@ -29,7 +29,7 @@ func TestStorePlayer(t *testing.T) {
 		t.Errorf("FindAll should return all playes, got: %d, want: %d.", len(r.FindAll()), 2)
 	}
 
-	found, err := r.Find("jj")
+	found, _, err := r.Find("jj")
 	if err != nil {
 		t.Errorf("Failed to find player")
 	}
