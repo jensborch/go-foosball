@@ -7,7 +7,7 @@ import (
 // Player playing foosball games
 type Player struct {
 	gorm.Model
-	Nickname string `gorm:"size:50;unique_index"`
+	Nickname string `"json:"name" gorm:"size:50;unique_index"`
 	RealName string `gorm:"size:100"`
 }
 

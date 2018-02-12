@@ -22,7 +22,8 @@ type Color struct {
 // TableRepository provides access games etc.
 type TableRepository interface {
 	Store(table *Table) error
-	Find(id uuid.UUID) (*Table, error)
+	Remove(table *Table) error
+	Find(uuid string) (*Table, error)
 	FindAll() []*Table
 }
 

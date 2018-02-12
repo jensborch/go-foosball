@@ -29,10 +29,12 @@ type Game struct {
 	leftPlayer2       *Player `gorm:"ForeignKey:leftPlayer2ID;AssociationForeignKey:ID"`
 }
 
+// TournamentTable for game
 func (g Game) TournamentTable() *TournamentTable {
 	return g.tournamentTable
 }
 
+// UUID for a game
 func (g Game) UUID() string {
 	return g.uuid
 }
