@@ -16,7 +16,7 @@ type Player struct {
 type PlayerRepository interface {
 	Store(player *Player) error
 	Remove(player *Player) error
-	Find(nickname string) (*Player, bool, error)
+	Find(nickname string) (*Player, Found, error)
 	FindAll() []*Player
 }
 

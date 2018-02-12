@@ -7,16 +7,16 @@ import (
 
 // Table used in tournament
 type Table struct {
-	gorm.Model
-	UUID  string `gorm:"size:36;unique_index"`
-	Name  string `gorm:"type:varchar(50)"`
-	Color Color  `gorm:"embedded"`
+	gorm.Model `json:"-"`
+	UUID       string `json:"uuid" gorm:"size:36;unique_index"`
+	Name       string `json:"name" gorm:"type:varchar(50)"`
+	Color      Color  `gorm:"embedded"`
 }
 
 // Color of table
 type Color struct {
-	Right string `gorm:"type:varchar(50)"`
-	Left  string `gorm:"type:varchar(50)"`
+	Right string `json:"right" gorm:"type:varchar(50)"`
+	Left  string `json:"left" gorm:"type:varchar(50)"`
 }
 
 // TableRepository provides access games etc.

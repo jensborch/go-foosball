@@ -7,10 +7,11 @@ import (
 
 // Tournament played
 type Tournament struct {
-	gorm.Model
-	UUID             string             `gorm:"size:36;unique_index"`
-	Name             string             `gorm:"type:varchar(100)"`
-	TournamentTables []*TournamentTable `gorm:"ForeignKey:ID;AssociationForeignKey:TournamentID"`
+	gorm.Model       `json:"-"`
+	UUID             string             `json:"uuid" gorm:"size:36;unique_index"`
+	Name             string             `json:"name" gorm:"type:varchar(100)"`
+	TournamentTables []*TournamentTable `json:"-" gorm:"ForeignKey:ID;AssociationForeignKey:TournamentID"`
+	Players          []*Player          `json:"-" gorm:"ForeignKey:ID;AssociationForeignKey:PlayerID"`
 }
 
 // TournamentTable in a foosball game
