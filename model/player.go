@@ -9,6 +9,7 @@ type Player struct {
 	gorm.Model
 	Nickname string `"json:"name" gorm:"size:50;unique_index"`
 	RealName string `gorm:"size:100"`
+	RFID     string `gorm:"size:36"`
 }
 
 // PlayerRepository provides access players
