@@ -31,7 +31,7 @@ func TestStoreTournament(t *testing.T) {
 		t.Errorf("FindAll should return all tournaments, got: %d, want: %d.", len(r.FindAll()), 2)
 	}
 
-	found, err := r.Find(tournament1.UUID)
+	found, _, err := r.Find(tournament1.UUID)
 	if err != nil {
 		t.Errorf("Failed to find tournament")
 	}

@@ -26,6 +26,15 @@ func GetPlayer(db *gorm.DB) func(*gin.Context) {
 	}
 }
 
+// GetPlayers get players resource
+func GetPlayers(db *gorm.DB) func(*gin.Context) {
+	return func(c *gin.Context) {
+		r := persistence.NewPlayerRepository(db)
+		players := r.FindAll()
+		c.JSON(http.StatusOK, players)
+	}
+}
+
 // PostPlayer posts to players resource
 func PostPlayer(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {

@@ -28,7 +28,7 @@ type TournamentTable struct {
 type TournamentRepository interface {
 	Store(tournament *Tournament) error
 	Remove(tournament *Tournament) error
-	Find(uuid string) (*Tournament, error)
+	Find(uuid string) (*Tournament, Found, error)
 	FindAll() []*Tournament
 }
 

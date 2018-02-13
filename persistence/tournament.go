@@ -17,9 +17,9 @@ func (r tournamentRepository) Remove(t *model.Tournament) error {
 	return r.db.Where("uuid = ?", t.UUID).Delete(&model.Tournament{}).Error
 }
 
-func (r tournamentRepository) Find(uuid string) (*model.Tournament, error) {
+func (r tournamentRepository) Find(uuid string) (*model.Tournament, model.Found, error) {
 	var t model.Tournament
-	return &t, r.db.Where("uuid = ?", uuid).First(&t).Error
+	return &t, !r.db.Where("uuid = ?", uuid).First(&t).RecordNotFound(), r.db.Error
 }
 
 func (r tournamentRepository) FindAll() []*model.Tournament {

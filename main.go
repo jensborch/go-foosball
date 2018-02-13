@@ -20,7 +20,10 @@ func main() {
 	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{}, &model.Player{}, &model.Game{})
 
 	router.GET("/players/:name", resources.GetPlayer(db))
+	router.GET("/players/", resources.GetPlayers(db))
 	router.POST("/players/", resources.PostPlayer(db))
+
+	router.GET("/tournaments/:id", resources.GetTournament(db))
 
 	router.Run(":8080")
 }
