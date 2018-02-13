@@ -6,16 +6,19 @@ import (
 
 // Player playing foosball games
 type Player struct {
-	gorm.Model `json:"-"`
-	Nickname   string `json:"nickname" gorm:"size:50;unique_index"`
-	RealName   string `json:"realname" gorm:"size:100"`
-	RFID       string `json:"rfid" gorm:"size:36"`
+	gorm.Model   `json:"-"`
+	Nickname     string      `json:"nickname" gorm:"size:50;unique_index"`
+	RealName     string      `json:"realname" gorm:"size:100;not null"`
+	RFID         string      `json:"rfid, omitempty" gorm:"size:36"`
+	TournamentID uint        `json:"-"`
+	Tournament   *Tournament `json:"tournament, omitempty" gorm:"ForeignKey:TournamentID;AssociationForeignKey:ID"`
 }
 
 // PlayerRepository provides access players
 type PlayerRepository interface {
 	Store(player *Player) error
 	Remove(player *Player) error
+	Update(player *Player) error
 	Find(nickname string) (*Player, Found, error)
 	FindAll() []*Player
 }

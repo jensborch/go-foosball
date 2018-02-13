@@ -11,8 +11,8 @@ import (
 func TestStoreTournament(t *testing.T) {
 	table1 := model.NewTable("1", model.Color{Right: "red", Left: "green"})
 	table2 := model.NewTable("2", model.Color{Right: "black", Left: "blue"})
-	tournament1 := model.NewTournament("Foosball tournament 1", []*model.Table{table1})
-	tournament2 := model.NewTournament("Foosball tournament 2", []*model.Table{table1, table2})
+	tournament1 := model.NewTournament("Foosball tournament 1", table1)
+	tournament2 := model.NewTournament("Foosball tournament 2", table1, table2)
 
 	db, err := gorm.Open("sqlite3", ":memory:")
 	if err != nil {

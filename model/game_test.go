@@ -8,7 +8,7 @@ import (
 func TestCreate(t *testing.T) {
 	table1 := NewTable("1", Color{Right: "red", Left: "green"})
 	table2 := NewTable("2", Color{Right: "black", Left: "blue"})
-	tournament := NewTournament("Foosball tournament 1", []*Table{table1, table2})
+	tournament := NewTournament("Foosball tournament 1", table1, table2)
 	fmt.Println(tournament)
 
 	p1 := NewPlayer("tt", "Thomas")

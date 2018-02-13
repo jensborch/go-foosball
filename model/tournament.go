@@ -11,7 +11,7 @@ type Tournament struct {
 	UUID             string             `json:"uuid" gorm:"size:36;unique_index"`
 	Name             string             `json:"name" gorm:"type:varchar(100)"`
 	TournamentTables []*TournamentTable `json:"-" gorm:"ForeignKey:ID;AssociationForeignKey:TournamentID"`
-	Players          []*Player          `json:"-" gorm:"ForeignKey:ID;AssociationForeignKey:PlayerID"`
+	Players          []*Player          `json:"-" gorm:"ForeignKey:ID;AssociationForeignKey:TournamentID"`
 }
 
 // TournamentTable in a foosball game
@@ -24,6 +24,19 @@ type TournamentTable struct {
 	Games        []*Game     `gorm:"ForeignKey:ID;AssociationForeignKey:tournamentTableID"`
 }
 
+// AddTables adds tables to a tournament
+func (t *Tournament) AddTables(tables ...*Table) {
+	tournamentTables := []*TournamentTable{}
+	for _, t := range tables {
+		tt := TournamentTable{
+			TableID: t.ID,
+			Table:   t,
+		}
+		tournamentTables = append(tournamentTables, &tt)
+	}
+	t.TournamentTables = append(t.TournamentTables, tournamentTables...)
+}
+
 // TournamentRepository provides access games etc.
 type TournamentRepository interface {
 	Store(tournament *Tournament) error
@@ -33,19 +46,12 @@ type TournamentRepository interface {
 }
 
 // NewTournament creates a new tournament
-func NewTournament(name string, tables []*Table) *Tournament {
+func NewTournament(name string, tables ...*Table) *Tournament {
 	id := uuid.Must(uuid.NewV4()).String()
-	tournamentTables := []*TournamentTable{}
-	for _, t := range tables {
-		tt := TournamentTable{
-			TableID: t.ID,
-			Table:   t,
-		}
-		tournamentTables = append(tournamentTables, &tt)
+	result := &Tournament{
+		UUID: id,
+		Name: name,
 	}
-	return &Tournament{
-		UUID:             id,
-		Name:             name,
-		TournamentTables: tournamentTables,
-	}
+	result.AddTables(tables...)
+	return result
 }
