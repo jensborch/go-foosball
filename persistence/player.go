@@ -18,7 +18,7 @@ func (r playerRepository) Remove(player *model.Player) error {
 }
 
 func (r playerRepository) Update(player *model.Player) error {
-	return r.db.Update(player).Error
+	return r.db.Save(player).Error
 }
 
 func (r playerRepository) Find(nickname string) (*model.Player, model.Found, error) {

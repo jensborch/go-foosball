@@ -8,10 +8,10 @@ import (
 type Player struct {
 	gorm.Model   `json:"-"`
 	Nickname     string      `json:"nickname" gorm:"size:50;unique_index"`
-	RealName     string      `json:"realname" gorm:"size:100;not null"`
-	RFID         string      `json:"rfid, omitempty" gorm:"size:36"`
+	RealName     string      `json:"realname" gorm:"type:varchar(100);not null"`
+	RFID         string      `json:"rfid, omitempty" gorm:"type:varchar(36)"`
 	TournamentID uint        `json:"-"`
-	Tournament   *Tournament `json:"tournament, omitempty" gorm:"ForeignKey:TournamentID;AssociationForeignKey:ID"`
+	Tournament   *Tournament `json:"tournament, omitempty"`
 }
 
 // PlayerRepository provides access players

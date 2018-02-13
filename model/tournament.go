@@ -10,8 +10,8 @@ type Tournament struct {
 	gorm.Model       `json:"-"`
 	UUID             string             `json:"uuid" gorm:"size:36;unique_index"`
 	Name             string             `json:"name" gorm:"type:varchar(100)"`
-	TournamentTables []*TournamentTable `json:"-" gorm:"ForeignKey:ID;AssociationForeignKey:TournamentID"`
-	Players          []*Player          `json:"-" gorm:"ForeignKey:ID;AssociationForeignKey:TournamentID"`
+	TournamentTables []*TournamentTable `json:"-"`
+	Players          []*Player          `json:"-"`
 }
 
 // TournamentTable in a foosball game
@@ -19,9 +19,9 @@ type TournamentTable struct {
 	gorm.Model
 	TournamentID uint
 	TableID      uint
-	Table        *Table      `gorm:"ForeignKey:TableID;AssociationForeignKey:ID"`
-	Tournament   *Tournament `gorm:"ForeignKey:TournamentID;AssociationForeignKey:ID"`
-	Games        []*Game     `gorm:"ForeignKey:ID;AssociationForeignKey:tournamentTableID"`
+	Table        *Table
+	Tournament   *Tournament
+	Games        []*Game
 }
 
 // AddTables adds tables to a tournament
