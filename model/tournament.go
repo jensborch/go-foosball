@@ -27,10 +27,11 @@ type TournamentTable struct {
 // AddTables adds tables to a tournament
 func (t *Tournament) AddTables(tables ...*Table) {
 	tournamentTables := []*TournamentTable{}
-	for _, t := range tables {
+	for _, table := range tables {
 		tt := TournamentTable{
-			TableID: t.ID,
-			Table:   t,
+			TableID:      table.ID,
+			Table:        table,
+			TournamentID: t.ID,
 		}
 		tournamentTables = append(tournamentTables, &tt)
 	}

@@ -5,52 +5,46 @@ import (
 	"github.com/satori/go.uuid"
 )
 
-// Playable game
-type Playable interface {
-	Right() []*Player
-	Left() []*Player
-}
-
 // Game played
 type Game struct {
-	gorm.Model
-	UUID              string `gorm:"size:36;unique_index"`
-	TournamentTableID uint
-	TournamentTable   *TournamentTable
-	RightPlayerOneID  uint
-	RightPlayerTwoID  uint
-	LeftPlayerOneID   uint
-	LeftPlayerTwoID   uint
-	RightPlayerOne    *Player
-	RightPlayerTwo    *Player
-	LeftPlayerOne     *Player
-	LeftPlayerTwo     *Player
+	gorm.Model        `json:"-"`
+	UUID              string           `gorm:"size:36;unique_index"`
+	TournamentTableID uint             `json:"-"`
+	TournamentTable   *TournamentTable `json:"table"`
+	RightPlayerOneID  uint             `json:"-"`
+	RightPlayerTwoID  uint             `json:"-"`
+	LeftPlayerOneID   uint             `json:"-"`
+	LeftPlayerTwoID   uint             `json:"-"`
+	RightPlayerOne    *Player          `json:"tightPlayerOne"`
+	RightPlayerTwo    *Player          `json:"rightPlayerTwo,  omitempty"`
+	LeftPlayerOne     *Player          `json:"leftPlayerOne"`
+	LeftPlayerTwo     *Player          `json:"leftPlayerTwo, omitempty"`
 }
 
 // Right return right playes
-func (g Game) Right() []*Player {
-	var players []*Player
+func (g Game) Right() []Player {
+	var players []Player
 	if g.RightPlayerTwo == nil {
-		players = make([]*Player, 1)
-		players[0] = g.RightPlayerOne
+		players = make([]Player, 1)
+		players[0] = *g.RightPlayerOne
 	} else {
-		players = make([]*Player, 2)
-		players[0] = g.RightPlayerOne
-		players[1] = g.RightPlayerTwo
+		players = make([]Player, 2)
+		players[0] = *g.RightPlayerOne
+		players[1] = *g.RightPlayerTwo
 	}
 	return players
 }
 
 // Left return left playes
-func (g Game) Left() []*Player {
-	var players []*Player
+func (g Game) Left() []Player {
+	var players []Player
 	if g.LeftPlayerTwo == nil {
-		players = make([]*Player, 1)
-		players[0] = g.LeftPlayerOne
+		players = make([]Player, 1)
+		players[0] = *g.LeftPlayerOne
 	} else {
-		players = make([]*Player, 2)
-		players[0] = g.LeftPlayerOne
-		players[1] = g.LeftPlayerTwo
+		players = make([]Player, 2)
+		players[0] = *g.LeftPlayerOne
+		players[1] = *g.LeftPlayerTwo
 	}
 	return players
 }

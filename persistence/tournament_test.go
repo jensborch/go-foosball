@@ -16,7 +16,7 @@ func TestStoreTournament(t *testing.T) {
 
 	db, err := gorm.Open("sqlite3", ":memory:")
 	if err != nil {
-		t.Errorf("Failed to connect database")
+		t.Errorf("Failed to connect database: %s", err.Error())
 	}
 	defer db.Close()
 
@@ -24,8 +24,14 @@ func TestStoreTournament(t *testing.T) {
 
 	r := NewTournamentRepository(db)
 
-	r.Store(tournament1)
-	r.Store(tournament2)
+	err = r.Store(tournament1)
+	if err != nil {
+		t.Errorf("Failed to store: %s", err.Error())
+	}
+	err = r.Store(tournament2)
+	if err != nil {
+		t.Errorf("Failed to store: %s", err.Error())
+	}
 
 	if len(r.FindAll()) != 2 {
 		t.Errorf("FindAll should return all tournaments, got: %d, want: %d.", len(r.FindAll()), 2)
@@ -38,6 +44,15 @@ func TestStoreTournament(t *testing.T) {
 
 	if found.Name != "Foosball tournament 1" {
 		t.Errorf("Find should find tournament, got: %s, want: %s.", found.Name, "Foosball tournament 1")
+	}
+
+	if len(found.TournamentTables) != 1 {
+		t.Errorf("Tournament should have a table, got: %d.", len(found.TournamentTables))
+	}
+
+	name := found.TournamentTables[0].Table.Name
+	if name != "1" {
+		t.Errorf("Tournament should have table with name, got: %s, want: %s.", name, "1")
 	}
 
 }
