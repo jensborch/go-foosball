@@ -25,7 +25,7 @@ func TestCreate(t *testing.T) {
 		t.Errorf("Left player must is incorrect, got: %s, want: %s.", g.Left()[0].RealName, "Jens")
 	}
 
-	if g.TournamentTable().Table.Name != "1" {
-		t.Errorf("Table is incorrect, got: %s, want: %s.", g.TournamentTable().Table.Name, "1")
+	if g.TournamentTable.Table.Name != "1" {
+		t.Errorf("Table is incorrect, got: %s, want: %s.", g.TournamentTable.Table.Name, "1")
 	}
 }
