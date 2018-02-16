@@ -24,6 +24,7 @@ func main() {
 	router.GET("/players/", resources.GetPlayers(db))
 
 	router.POST("/tournaments/", resources.PostTournament(db))
+	router.GET("/tournaments/", resources.GetTournaments(db))
 	router.GET("/tournaments/:id", resources.GetTournament("id", db))
 	router.GET("/tournaments/:id/players", resources.GetTournamentPlayes("id", db))
 	router.POST("/tournaments/:id/players", resources.PostTournamentPlayer("id", db))

@@ -12,9 +12,10 @@
             let id = document.getElementById("tournament").value
             let url = `ws://localhost:8080/tournaments/${id}/events`;
             let c = new WebSocket(url);
+            element = document.getElementById("output");
+            element.innerHTML = "";
 
-            c.onmessage = function (msg) {
-                element = document.getElementById("output");
+            c.onmessage = function (msg) {                
                 element.innerHTML += new Date() + " <== " + msg.data
                 console.log(msg)
             }

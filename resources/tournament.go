@@ -28,6 +28,14 @@ func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
 	}
 }
 
+// GetTournaments to list all tournaments
+func GetTournaments(db *gorm.DB) func(*gin.Context) {
+	return func(c *gin.Context) {
+		r := persistence.NewTournamentRepository(db)
+		c.JSON(http.StatusOK, r.FindAll())
+	}
+}
+
 // GetTournamentPlayes get players resource
 func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
@@ -90,7 +98,9 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 					err = r.Update(p)
 					p, _, err = r.Find(p.Nickname)
 					if err == nil {
-						websockets[t.UUID].WriteJSON(p)
+						if websockets[t.UUID] != nil {
+							websockets[t.UUID].WriteJSON(p)
+						}
 						c.JSON(http.StatusOK, p)
 					}
 				} else {
@@ -124,7 +134,7 @@ func GetTournamentEvents(param string) func(c *gin.Context) {
 		id := c.Param(param)
 		conn, err := wsupgrader.Upgrade(c.Writer, c.Request, nil)
 		if err != nil {
-			log.Println("Failed to set websocket upgrade: %+v", err)
+			log.Printf("Failed to set websocket upgrade: %+v", err)
 			return
 		}
 		websockets[id] = conn
