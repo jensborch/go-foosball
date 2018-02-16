@@ -20,13 +20,17 @@ func main() {
 	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{}, &model.Player{}, &model.Game{})
 
 	router.POST("/players/", resources.PostPlayer(db))
-	router.GET("/players/:name", resources.GetPlayer(db))
+	router.GET("/players/:name", resources.GetPlayer("name", db))
 	router.GET("/players/", resources.GetPlayers(db))
 
 	router.POST("/tournaments/", resources.PostTournament(db))
 	router.GET("/tournaments/:id", resources.GetTournament("id", db))
 	router.GET("/tournaments/:id/players", resources.GetTournamentPlayes("id", db))
 	router.POST("/tournaments/:id/players", resources.PostTournamentPlayer("id", db))
+
+	router.StaticFile("/", "./src/github.com/jensborch/go-foosball/index.html")
+
+	router.GET("/tournaments/:id/events", resources.GetTournamentEvents("id"))
 
 	router.Run(":8080")
 }

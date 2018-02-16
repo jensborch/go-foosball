@@ -9,20 +9,20 @@ type tableRepository struct {
 	db *gorm.DB
 }
 
-func (r tableRepository) Store(t *model.Table) error {
+func (r *tableRepository) Store(t *model.Table) error {
 	return r.db.Create(t).Error
 }
 
-func (r tableRepository) Remove(t *model.Table) error {
+func (r *tableRepository) Remove(t *model.Table) error {
 	return r.db.Where("uuid = ?", t.UUID).Delete(&model.Table{}).Error
 }
 
-func (r tableRepository) Find(uuid string) (*model.Table, error) {
+func (r *tableRepository) Find(uuid string) (*model.Table, error) {
 	var t model.Table
 	return &t, r.db.Where("uuid = ?", uuid).First(&t).Error
 }
 
-func (r tableRepository) FindAll() []*model.Table {
+func (r *tableRepository) FindAll() []*model.Table {
 	var tables []*model.Table
 	r.db.Find(&tables)
 	return tables

@@ -2,9 +2,11 @@ package resources
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
 	"github.com/jinzhu/gorm"
@@ -26,7 +28,7 @@ func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-// GetTournament get players resource
+// GetTournamentPlayes get players resource
 func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
@@ -88,6 +90,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 					err = r.Update(p)
 					p, _, err = r.Find(p.Nickname)
 					if err == nil {
+						websockets[t.UUID].WriteJSON(p)
 						c.JSON(http.StatusOK, p)
 					}
 				} else {
@@ -104,6 +107,33 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			}
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		}
+	}
+}
+
+var wsupgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+
+var websockets = make(map[string]*websocket.Conn)
+
+// GetTournamentEvents crestes web socket with tournamnent events
+func GetTournamentEvents(param string) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		id := c.Param(param)
+		conn, err := wsupgrader.Upgrade(c.Writer, c.Request, nil)
+		if err != nil {
+			log.Println("Failed to set websocket upgrade: %+v", err)
+			return
+		}
+		websockets[id] = conn
+		for {
+			if _, _, err := conn.NextReader(); err != nil {
+				conn.Close()
+				delete(websockets, id)
+				break
+			}
 		}
 	}
 }

@@ -11,9 +11,9 @@ import (
 )
 
 // GetPlayer get players resource
-func GetPlayer(db *gorm.DB) func(*gin.Context) {
+func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		name := c.Param("name")
+		name := c.Param(param)
 		r := persistence.NewPlayerRepository(db)
 		p, found, err := r.Find(name)
 		if found {
