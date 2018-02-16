@@ -19,19 +19,24 @@ func main() {
 
 	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{}, &model.Player{}, &model.Game{})
 
-	router.POST("/players/", resources.PostPlayer(db))
-	router.GET("/players/:name", resources.GetPlayer("name", db))
-	router.GET("/players/", resources.GetPlayers(db))
+	players := router.Group("/players/")
+	{
+		players.POST("/", resources.PostPlayer(db))
+		players.GET("/:name", resources.GetPlayer("name", db))
+		players.GET("/", resources.GetPlayers(db))
+	}
 
-	router.POST("/tournaments/", resources.PostTournament(db))
-	router.GET("/tournaments/", resources.GetTournaments(db))
-	router.GET("/tournaments/:id", resources.GetTournament("id", db))
-	router.GET("/tournaments/:id/players", resources.GetTournamentPlayes("id", db))
-	router.POST("/tournaments/:id/players", resources.PostTournamentPlayer("id", db))
+	tournaments := router.Group("/tournaments/")
+	{
+		tournaments.POST("/", resources.PostTournament(db))
+		tournaments.GET("/", resources.GetTournaments(db))
+		tournaments.GET("/:id", resources.GetTournament("id", db))
+		tournaments.GET("/:id/players", resources.GetTournamentPlayes("id", db))
+		tournaments.POST("/:id/players", resources.PostTournamentPlayer("id", db))
+		tournaments.GET("/:id/events", resources.GetTournamentEvents("id"))
+	}
 
 	router.StaticFile("/", "./src/github.com/jensborch/go-foosball/index.html")
-
-	router.GET("/tournaments/:id/events", resources.GetTournamentEvents("id"))
 
 	router.Run(":8080")
 }
