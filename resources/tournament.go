@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sync"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -98,9 +99,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 					err = r.Update(p)
 					p, _, err = r.Find(p.Nickname)
 					if err == nil {
-						if websockets[t.UUID] != nil {
-							websockets[t.UUID].WriteJSON(p)
-						}
+						pEvents.publish(t.UUID, *p)
 						c.JSON(http.StatusOK, p)
 					}
 				} else {
@@ -126,7 +125,34 @@ var wsupgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-var websockets = make(map[string]*websocket.Conn)
+type playerEvents struct {
+	sync.RWMutex
+	websockets map[string]*websocket.Conn
+}
+
+func (e *playerEvents) publish(uuid string, player model.Player) {
+	e.Lock()
+	if e.websockets[uuid] != nil {
+		e.websockets[uuid].WriteJSON(player)
+	}
+	e.Unlock()
+}
+
+func (e *playerEvents) register(uuid string, conn *websocket.Conn) {
+	e.Lock()
+	e.websockets[uuid] = conn
+	e.Unlock()
+}
+
+func (e *playerEvents) unregister(uuid string) {
+	e.Lock()
+	delete(e.websockets, uuid)
+	e.Unlock()
+}
+
+var pEvents = &playerEvents{
+	websockets: make(map[string]*websocket.Conn),
+}
 
 // GetTournamentEvents crestes web socket with tournamnent events
 func GetTournamentEvents(param string) func(c *gin.Context) {
@@ -137,11 +163,11 @@ func GetTournamentEvents(param string) func(c *gin.Context) {
 			log.Printf("Failed to set websocket upgrade: %+v", err)
 			return
 		}
-		websockets[id] = conn
+		pEvents.register(id, conn)
 		for {
 			if _, _, err := conn.NextReader(); err != nil {
 				conn.Close()
-				delete(websockets, id)
+				pEvents.unregister(id)
 				break
 			}
 		}
