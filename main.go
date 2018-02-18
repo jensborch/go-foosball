@@ -26,6 +26,13 @@ func main() {
 		players.GET("/", resources.GetPlayers(db))
 	}
 
+	tables := router.Group("/tables/")
+	{
+		tables.POST("/", resources.PostTable(db))
+		tables.GET("/:id", resources.GetTable("id", db))
+		tables.GET("/", resources.GetTables(db))
+	}
+
 	tournaments := router.Group("/tournaments/")
 	{
 		tournaments.POST("/", resources.PostTournament(db))

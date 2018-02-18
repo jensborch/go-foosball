@@ -10,7 +10,7 @@ type Table struct {
 	gorm.Model `json:"-"`
 	UUID       string `json:"uuid" gorm:"size:36;unique_index"`
 	Name       string `json:"name" gorm:"type:varchar(50)"`
-	Color      Color  `gorm:"embedded"`
+	Color      Color  `json:"color" gorm:"embedded"`
 }
 
 // Color of table
@@ -23,7 +23,7 @@ type Color struct {
 type TableRepository interface {
 	Store(table *Table) error
 	Remove(table *Table) error
-	Find(uuid string) (*Table, error)
+	Find(uuid string) (*Table, Found, error)
 	FindAll() []*Table
 }
 
