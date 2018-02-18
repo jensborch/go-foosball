@@ -7,8 +7,8 @@ import (
 // Player playing foosball games
 type Player struct {
 	gorm.Model   `json:"-"`
-	Nickname     string      `json:"nickname" gorm:"size:50;unique_index"`
-	RealName     string      `json:"realname" gorm:"type:varchar(100);not null"`
+	Nickname     string      `json:"nickname" binding:"required" gorm:"size:50;unique_index"`
+	RealName     string      `json:"realname" binding:"required" gorm:"type:varchar(100);not null"`
 	RFID         string      `json:"rfid, omitempty" gorm:"type:varchar(36)"`
 	TournamentID uint        `json:"-"`
 	Tournament   *Tournament `json:"tournament, omitempty"`

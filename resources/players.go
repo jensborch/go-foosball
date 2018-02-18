@@ -10,7 +10,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// GetPlayer get players resource
+// GetPlayer gets player info
 func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		name := c.Param(param)
@@ -26,7 +26,7 @@ func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-// GetPlayers get players resource
+// GetPlayers get a list of all players
 func GetPlayers(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		r := persistence.NewPlayerRepository(db)
@@ -35,7 +35,7 @@ func GetPlayers(db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-// PostPlayer posts to players resource
+// PostPlayer creates a new player
 func PostPlayer(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var player model.Player

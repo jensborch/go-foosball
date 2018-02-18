@@ -13,7 +13,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// GetTournament get players resource
+// GetTournament gets info about a tournament
 func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
@@ -29,7 +29,7 @@ func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-// GetTournaments to list all tournaments
+// GetTournaments gets a list of all tournaments
 func GetTournaments(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		r := persistence.NewTournamentRepository(db)
@@ -37,7 +37,7 @@ func GetTournaments(db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-// GetTournamentPlayes get players resource
+// GetTournamentPlayes get players in a given tournament
 func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
@@ -75,7 +75,7 @@ func PostTournament(db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-// PostTournamentPlayer creats tournament
+// PostTournamentPlayer addes player to a tournament
 func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
@@ -154,7 +154,7 @@ var pEvents = &playerEvents{
 	websockets: make(map[string]*websocket.Conn),
 }
 
-// GetTournamentEvents crestes web socket with tournamnent events
+// GetTournamentEvents creats web socket with tournamnent events
 func GetTournamentEvents(param string) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
