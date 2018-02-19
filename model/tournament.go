@@ -7,11 +7,13 @@ import (
 
 // Tournament played
 type Tournament struct {
-	gorm.Model       `json:"-"`
-	UUID             string             `json:"uuid" gorm:"size:36;unique_index"`
-	Name             string             `json:"name" binding:"required" gorm:"type:varchar(100)"`
-	TournamentTables []*TournamentTable `json:"-"`
-	Players          []*Player          `json:"-"`
+	gorm.Model        `json:"-"`
+	UUID              string              `json:"uuid" gorm:"size:36;unique_index"`
+	Name              string              `json:"name" binding:"required" gorm:"type:varchar(100)"`
+	GamePoints        uint                `json:"points" binding:"required"`
+	InitialPoints     uint                `json:"points" binding:"required"`
+	TournamentTables  []*TournamentTable  `json:"-"`
+	TournamentPlayers []*TournamentPlayer `json:"-"`
 }
 
 // TournamentTable in a foosball game

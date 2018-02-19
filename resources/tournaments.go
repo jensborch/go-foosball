@@ -44,7 +44,7 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 		r := persistence.NewTournamentRepository(db)
 		t, found, err := r.Find(id)
 		if found {
-			c.JSON(http.StatusOK, t.Players)
+			c.JSON(http.StatusOK, t.TournamentPlayers)
 		} else if err == nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", id)})
 		} else {
@@ -95,7 +95,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 				var p *model.Player
 				p, found, err = r.Find(player.Nickname)
 				if found {
-					p.TournamentID = t.ID
+					p.AddToTournament(t)
 					err = r.Update(p)
 					p, _, err = r.Find(p.Nickname)
 					if err == nil {

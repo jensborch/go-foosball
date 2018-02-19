@@ -19,7 +19,19 @@ type Game struct {
 	RightPlayerTwo    *Player          `json:"rightPlayerTwo,  omitempty"`
 	LeftPlayerOne     *Player          `json:"leftPlayerOne"`
 	LeftPlayerTwo     *Player          `json:"leftPlayerTwo, omitempty"`
+	Winner            Winner           `json:"winner"`
 }
+
+// Winner of a game played
+type Winner string
+
+const (
+	//RIGHT is winner
+	RIGHT Winner = "right"
+
+	//LEFT is winner
+	LEFT = "left"
+)
 
 // Right return right playes
 func (g Game) Right() []Player {

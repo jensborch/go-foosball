@@ -36,6 +36,16 @@ func TestCreateSingleGame(t *testing.T) {
 	if g.TournamentTable.Table.Name != "1" {
 		t.Errorf("Table is incorrect, got: %s, want: %s.", g.TournamentTable.Table.Name, "1")
 	}
+
+	if g.Winner != "" {
+		t.Errorf("There should be no winner yet, got: %s.", g.Winner)
+	}
+
+	g.Winner = RIGHT
+
+	if g.Winner != RIGHT {
+		t.Errorf("Right should be winner, got: %s.", g.Winner)
+	}
 }
 
 func TestCreateDuroGame(t *testing.T) {

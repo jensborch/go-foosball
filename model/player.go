@@ -6,12 +6,43 @@ import (
 
 // Player playing foosball games
 type Player struct {
+	gorm.Model        `json:"-"`
+	Nickname          string              `json:"nickname" binding:"required" gorm:"size:50;unique_index"`
+	RealName          string              `json:"realname" binding:"required" gorm:"type:varchar(100);not null"`
+	RFID              string              `json:"rfid, omitempty" gorm:"type:varchar(36)"`
+	TournamentPlayers []*TournamentPlayer `json:"tournaments, omitempty"`
+}
+
+// TournamentPlayer is a player in a tournament
+type TournamentPlayer struct {
 	gorm.Model   `json:"-"`
-	Nickname     string      `json:"nickname" binding:"required" gorm:"size:50;unique_index"`
-	RealName     string      `json:"realname" binding:"required" gorm:"type:varchar(100);not null"`
-	RFID         string      `json:"rfid, omitempty" gorm:"type:varchar(36)"`
+	PlayerID     uint        `json:"-"`
+	Player       *Player     `json:"player"`
 	TournamentID uint        `json:"-"`
-	Tournament   *Tournament `json:"tournament, omitempty"`
+	Tournament   *Tournament `json:"tournament binding:"required"`
+	Points       uint        `json:"points"`
+	Active       bool        `json:"active"`
+}
+
+// AddToTournament adds a player to a tournament
+func (p *Player) AddToTournament(t *Tournament) {
+	var found = false
+	for _, tp := range p.TournamentPlayers {
+		if tp.Tournament.UUID == t.UUID {
+			tp.Active = true
+			found = true
+			break
+		}
+	}
+	if !found {
+		p.TournamentPlayers = append(p.TournamentPlayers,
+			&TournamentPlayer{
+				Tournament: t,
+				Player:     p,
+				Points:     t.InitialPoints,
+				Active:     true,
+			})
+	}
 }
 
 // PlayerRepository provides access players
@@ -26,7 +57,8 @@ type PlayerRepository interface {
 // NewPlayer create new palyer
 func NewPlayer(nickname, realName string) *Player {
 	return &Player{
-		Nickname: nickname,
-		RealName: realName,
+		Nickname:          nickname,
+		RealName:          realName,
+		TournamentPlayers: make([]*TournamentPlayer, 0, 10),
 	}
 }
