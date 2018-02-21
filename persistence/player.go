@@ -23,7 +23,7 @@ func (r *playerRepository) Update(player *model.Player) error {
 
 func (r *playerRepository) Find(nickname string) (*model.Player, model.Found, error) {
 	var player model.Player
-	return &player, !r.db.Preload("Tournament").Where("nickname = ?", nickname).First(&player).RecordNotFound(), r.db.Error
+	return &player, !r.db.Preload("TournamentPlayers").Preload("TournamentPlayers.Tournament").Where("nickname = ?", nickname).First(&player).RecordNotFound(), r.db.Error
 }
 
 func (r *playerRepository) FindAll() []*model.Player {

@@ -8,12 +8,12 @@ import (
 // Tournament played
 type Tournament struct {
 	gorm.Model        `json:"-"`
-	UUID              string              `json:"uuid" gorm:"size:36;unique_index"`
-	Name              string              `json:"name" binding:"required" gorm:"type:varchar(100)"`
-	GamePoints        uint                `json:"points" binding:"required"`
-	InitialPoints     uint                `json:"points" binding:"required"`
-	TournamentTables  []*TournamentTable  `json:"-"`
-	TournamentPlayers []*TournamentPlayer `json:"-"`
+	UUID              string             `json:"uuid" gorm:"size:36;unique_index"`
+	Name              string             `json:"name" binding:"required" gorm:"type:varchar(100)"`
+	GamePoints        uint               `json:"points" binding:"required"`
+	InitialPoints     uint               `json:"initial" binding:"required"`
+	TournamentTables  []TournamentTable  `json:"-"`
+	TournamentPlayers []TournamentPlayer `json:"-"`
 }
 
 // TournamentTable in a foosball game
@@ -21,21 +21,21 @@ type TournamentTable struct {
 	gorm.Model
 	TournamentID uint
 	TableID      uint
-	Table        *Table
-	Tournament   *Tournament
-	Games        []*Game
+	Table        Table
+	Tournament   Tournament
+	Games        []Game
 }
 
 // AddTables adds tables to a tournament
-func (t *Tournament) AddTables(tables ...*Table) {
-	tournamentTables := []*TournamentTable{}
+func (t *Tournament) AddTables(tables ...Table) {
+	var tournamentTables []TournamentTable
 	for _, table := range tables {
 		tt := TournamentTable{
 			TableID:      table.ID,
 			Table:        table,
 			TournamentID: t.ID,
 		}
-		tournamentTables = append(tournamentTables, &tt)
+		tournamentTables = append(tournamentTables, tt)
 	}
 	t.TournamentTables = append(t.TournamentTables, tournamentTables...)
 }
@@ -49,7 +49,7 @@ type TournamentRepository interface {
 }
 
 // NewTournament creates a new tournament
-func NewTournament(name string, tables ...*Table) *Tournament {
+func NewTournament(name string, tables ...Table) *Tournament {
 	id := uuid.Must(uuid.NewV4()).String()
 	result := &Tournament{
 		UUID: id,

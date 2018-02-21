@@ -39,13 +39,24 @@ func GetPlayers(db *gorm.DB) func(*gin.Context) {
 func PostPlayer(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var player model.Player
-		if err := c.ShouldBindJSON(&player); err == nil {
-			tx := db.Begin()
-			r := persistence.NewPlayerRepository(tx)
-			r.Store(model.NewPlayer(player.Nickname, player.RealName))
-			tx.Commit()
-		} else {
+		if err := c.ShouldBindJSON(&player); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
 		}
+		tx := db.Begin()
+		r := persistence.NewPlayerRepository(tx)
+		if _, found, _ := r.Find(player.Nickname); found {
+			c.JSON(http.StatusConflict, gin.H{"error": fmt.Sprintf("Player %s already exists", player.Nickname)})
+			tx.Rollback()
+			return
+		}
+		p := model.NewPlayer(player.Nickname, player.RealName)
+		if err := r.Store(p); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			tx.Rollback()
+			return
+		}
+		c.JSON(http.StatusOK, p)
+		tx.Commit()
 	}
 }

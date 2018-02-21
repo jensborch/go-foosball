@@ -19,7 +19,7 @@ func (r *tournamentRepository) Remove(t *model.Tournament) error {
 
 func (r *tournamentRepository) Find(uuid string) (*model.Tournament, model.Found, error) {
 	var t model.Tournament
-	return &t, !r.db.Preload("TournamentTables").Preload("TournamentTables.Table").Preload("Players").Where("uuid = ?", uuid).First(&t).RecordNotFound(), r.db.Error
+	return &t, !r.db.Preload("TournamentTables").Preload("TournamentTables.Table").Preload("TournamentPlayers").Where("uuid = ?", uuid).First(&t).RecordNotFound(), r.db.Error
 }
 
 func (r *tournamentRepository) FindAll() []*model.Tournament {

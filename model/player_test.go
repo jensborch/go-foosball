@@ -20,3 +20,14 @@ func TestCreatePlayer(t *testing.T) {
 	}
 
 }
+
+func TestAddPlayer2Tournament(t *testing.T) {
+	tournament := InitTournament()
+	p := NewPlayer("jj", "Jens")
+
+	p.AddToTournament(*tournament)
+
+	if len(p.TournamentPlayers) != 1 {
+		t.Errorf("Tournament must have one player, got: %d.", len(p.TournamentPlayers))
+	}
+}

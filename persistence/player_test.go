@@ -8,6 +8,12 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
+func initTournament() *model.Tournament {
+	table1 := model.NewTable("1", model.Color{Right: "red", Left: "green"})
+	table2 := model.NewTable("2", model.Color{Right: "black", Left: "blue"})
+	return model.NewTournament("test", *table1, *table2)
+}
+
 func TestStorePlayer(t *testing.T) {
 	p1 := model.NewPlayer("tt", "Thomas")
 	p2 := model.NewPlayer("jj", "Jens")
@@ -46,5 +52,24 @@ func TestStorePlayer(t *testing.T) {
 	if len(r.FindAll()) != 1 {
 		t.Errorf("FindAll should return only 1 player afer delete, got: %d", len(r.FindAll()))
 	}
+
+}
+
+func TestUpdatePlayer(t *testing.T) {
+	p := model.NewPlayer("tt", "Thomas")
+	db := InitDB(t)
+	defer db.Close()
+
+	db.AutoMigrate(&model.Player{}, &model.TournamentPlayer{}, &model.Tournament{})
+
+	pr := NewPlayerRepository(db)
+	pr.Store(p)
+
+	tr := NewTournamentRepository(db)
+	tournament := initTournament()
+	tr.Store(tournament)
+
+	p.AddToTournament(*tournament)
+	pr.Update(p)
 
 }

@@ -17,7 +17,7 @@ func main() {
 	}
 	defer db.Close()
 
-	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{}, &model.Player{}, &model.Game{})
+	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{}, &model.Player{}, &model.TournamentPlayer{}, &model.Game{})
 
 	players := router.Group("/players/")
 	{

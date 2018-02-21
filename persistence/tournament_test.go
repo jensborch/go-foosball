@@ -4,30 +4,27 @@ import (
 	"testing"
 
 	"github.com/jensborch/go-foosball/model"
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 func TestStoreTournament(t *testing.T) {
 	table1 := model.NewTable("1", model.Color{Right: "red", Left: "green"})
-	table2 := model.NewTable("2", model.Color{Right: "black", Left: "blue"})
-	tournament1 := model.NewTournament("Foosball tournament 1", table1)
-	tournament2 := model.NewTournament("Foosball tournament 2", table1, table2)
+	tournament1 := model.NewTournament("Foosball tournament 1", *table1)
 
-	db, err := gorm.Open("sqlite3", ":memory:")
-	if err != nil {
-		t.Errorf("Failed to connect database: %s", err.Error())
-	}
+	db := InitDB(t)
 	defer db.Close()
-
 	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{})
 
 	r := NewTournamentRepository(db)
 
-	err = r.Store(tournament1)
+	err := r.Store(tournament1)
 	if err != nil {
 		t.Errorf("Failed to store: %s", err.Error())
 	}
+
+	table2 := model.NewTable("2", model.Color{Right: "black", Left: "blue"})
+	tournament2 := model.NewTournament("Foosball tournament 2", tournament1.TournamentTables[0].Table, *table2)
+
 	err = r.Store(tournament2)
 	if err != nil {
 		t.Errorf("Failed to store: %s", err.Error())
