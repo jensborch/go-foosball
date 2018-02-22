@@ -132,16 +132,23 @@ func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm
 			tx.Rollback()
 			return
 		}
-		for _, tp := range p.TournamentPlayers {
+		found := false
+		for i, tp := range p.TournamentPlayers {
 			if tp.Tournament.UUID == tID {
-				tp.Active = false
+				p.TournamentPlayers[i].Active = false
 				r.Update(p)
+				found = true
 				pEvents.publish(tID, *p)
 				c.JSON(http.StatusOK, p)
 				break
 			}
 		}
-		tx.Commit()
+		if found {
+			tx.Commit()
+		} else {
+			tx.Rollback()
+			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", tID)})
+		}
 	}
 }
 

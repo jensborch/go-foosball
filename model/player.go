@@ -27,9 +27,9 @@ type TournamentPlayer struct {
 // AddToTournament adds a player to a tournament
 func (p *Player) AddToTournament(t *Tournament) {
 	var found = false
-	for _, tp := range p.TournamentPlayers {
+	for i, tp := range p.TournamentPlayers {
 		if tp.Tournament.UUID == t.UUID {
-			tp.Active = true
+			p.TournamentPlayers[i].Active = true
 			found = true
 			break
 		}
