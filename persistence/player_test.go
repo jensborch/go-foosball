@@ -60,8 +60,6 @@ func TestUpdatePlayer(t *testing.T) {
 	db := InitDB(t)
 	defer db.Close()
 
-	db.AutoMigrate(&model.Player{}, &model.TournamentPlayer{}, &model.Tournament{})
-
 	pr := NewPlayerRepository(db)
 	pr.Store(p)
 
@@ -69,7 +67,7 @@ func TestUpdatePlayer(t *testing.T) {
 	tournament := initTournament()
 	tr.Store(tournament)
 
-	p.AddToTournament(*tournament)
+	p.AddToTournament(tournament)
 	pr.Update(p)
 
 }

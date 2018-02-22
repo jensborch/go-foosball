@@ -23,12 +23,28 @@ func (r *playerRepository) Update(player *model.Player) error {
 
 func (r *playerRepository) Find(nickname string) (*model.Player, model.Found, error) {
 	var player model.Player
-	return &player, !r.db.Preload("TournamentPlayers").Preload("TournamentPlayers.Tournament").Where("nickname = ?", nickname).First(&player).RecordNotFound(), r.db.Error
+	return &player, !r.db.Preload(
+		"TournamentPlayers").Preload(
+		"TournamentPlayers.Tournament").Where(
+		"nickname = ?", nickname).First(&player).RecordNotFound(), r.db.Error
+}
+
+func (r *playerRepository) FindByTournament(id string) []*model.Player {
+	var players []*model.Player
+	r.db.Joins(
+		"JOIN tournament_players ON tournament_players.player_id = players.id "+
+			"JOIN tournaments ON tournament_players.tournament_id = tournaments.id").Preload(
+		"TournamentPlayers").Preload(
+		"TournamentPlayers.Tournament").Where(
+		"tournaments.uuid = ?", id).First(&players)
+	return players
 }
 
 func (r *playerRepository) FindAll() []*model.Player {
 	var players []*model.Player
-	r.db.Find(&players)
+	r.db.Preload(
+		"TournamentPlayers").Preload(
+		"TournamentPlayers.Tournament").Find(&players)
 	return players
 }
 

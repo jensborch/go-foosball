@@ -13,7 +13,6 @@ func TestStoreTournament(t *testing.T) {
 
 	db := InitDB(t)
 	defer db.Close()
-	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{})
 
 	r := NewTournamentRepository(db)
 
@@ -50,6 +49,10 @@ func TestStoreTournament(t *testing.T) {
 	name := found.TournamentTables[0].Table.Name
 	if name != "1" {
 		t.Errorf("Tournament should have table with name, got: %s, want: %s.", name, "1")
+	}
+
+	if len(found.TournamentPlayers) != 0 {
+		t.Errorf("Tournament should have no players, got: %d.", len(found.TournamentPlayers))
 	}
 
 }

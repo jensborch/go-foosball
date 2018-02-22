@@ -19,13 +19,13 @@ type TournamentPlayer struct {
 	PlayerID     uint       `json:"-"`
 	Player       Player     `json:"-"`
 	TournamentID uint       `json:"-"`
-	Tournament   Tournament `json:"tournament" gorm:"save_associations:false"`
+	Tournament   Tournament `json:"tournament"`
 	Points       uint       `json:"points"`
 	Active       bool       `json:"active"`
 }
 
 // AddToTournament adds a player to a tournament
-func (p *Player) AddToTournament(t Tournament) {
+func (p *Player) AddToTournament(t *Tournament) {
 	var found = false
 	for _, tp := range p.TournamentPlayers {
 		if tp.Tournament.UUID == t.UUID {
@@ -36,7 +36,7 @@ func (p *Player) AddToTournament(t Tournament) {
 	}
 	if !found {
 		newPlayer := TournamentPlayer{
-			Tournament: t,
+			Tournament: *t,
 			Player:     *p,
 			Points:     t.InitialPoints,
 			Active:     true,
@@ -53,6 +53,7 @@ type PlayerRepository interface {
 	Update(player *Player) error
 	Find(nickname string) (*Player, Found, error)
 	FindAll() []*Player
+	FindByTournament(id string) []*Player
 }
 
 // NewPlayer create new palyer
