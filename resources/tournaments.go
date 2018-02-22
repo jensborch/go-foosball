@@ -123,10 +123,10 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		tID := c.Param(tournamentParam)
-		pId := c.Param(playerParam)
+		pID := c.Param(playerParam)
 		tx := db.Begin()
 		r := persistence.NewPlayerRepository(tx)
-		p, _, err := r.Find(pId)
+		p, _, err := r.Find(pID)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			tx.Rollback()
