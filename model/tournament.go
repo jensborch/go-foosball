@@ -1,6 +1,9 @@
 package model
 
 import (
+	"log"
+	"math/rand"
+
 	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
 )
@@ -38,6 +41,42 @@ func (t *Tournament) AddTables(tables ...Table) {
 		tournamentTables = append(tournamentTables, tt)
 	}
 	t.TournamentTables = append(t.TournamentTables, tournamentTables...)
+}
+
+//ShufflePlayers shuffles the players in a tournament
+func (t *Tournament) ShufflePlayers() []TournamentPlayer {
+	rand.Shuffle(len(t.TournamentPlayers), func(i, j int) {
+		t.TournamentPlayers[i], t.TournamentPlayers[j] = t.TournamentPlayers[j], t.TournamentPlayers[i]
+	})
+	return t.TournamentPlayers
+}
+
+func min(a, b int) int {
+	if a > b {
+		return b
+	}
+	return a
+}
+
+//RandomGames genrates a list of random games for tournament
+func (t *Tournament) RandomGames() []Game {
+	players := t.ShufflePlayers()
+	games := make([]Game, 0, 2)
+	if len(players) >= 2 {
+		i := 0
+		for _, table := range t.TournamentTables {
+			g := NewGame(table)
+			playersInGameIndex := min(i+4, len(players))
+			if playersInGameIndex-i > 1 {
+				for ; i < playersInGameIndex; i++ {
+					g.AddPlayer(players[i].Player)
+				}
+				games = append(games, *g)
+			}
+		}
+	}
+	log.Println(games)
+	return games
 }
 
 // TournamentRepository provides access games etc.

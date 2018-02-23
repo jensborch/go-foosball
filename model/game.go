@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"reflect"
 
 	"github.com/jinzhu/gorm"
@@ -38,7 +39,7 @@ const (
 // Right return right playes
 func (g Game) Right() []Player {
 	var players []Player
-	if reflect.DeepEqual(g.RightPlayerTwo, Player{}) {
+	if isEmptyPlayer(g.RightPlayerTwo) {
 		players = make([]Player, 1)
 		players[0] = g.RightPlayerOne
 	} else {
@@ -52,7 +53,7 @@ func (g Game) Right() []Player {
 // Left return left playes
 func (g Game) Left() []Player {
 	var players []Player
-	if reflect.DeepEqual(g.LeftPlayerTwo, Player{}) {
+	if isEmptyPlayer(g.LeftPlayerTwo) {
 		players = make([]Player, 1)
 		players[0] = g.LeftPlayerOne
 	} else {
@@ -61,6 +62,27 @@ func (g Game) Left() []Player {
 		players[1] = g.LeftPlayerTwo
 	}
 	return players
+}
+
+func isEmptyPlayer(p Player) bool {
+	return reflect.DeepEqual(p, Player{})
+}
+
+// AddPlayer adds a player to a game
+func (g *Game) AddPlayer(p Player) error {
+	switch {
+	case isEmptyPlayer(g.RightPlayerOne):
+		g.RightPlayerOne = p
+	case isEmptyPlayer(g.RightPlayerTwo):
+		g.RightPlayerTwo = p
+	case isEmptyPlayer(g.LeftPlayerOne):
+		g.LeftPlayerOne = p
+	case isEmptyPlayer(g.LeftPlayerTwo):
+		g.LeftPlayerTwo = p
+	default:
+		return errors.New("All players have been added")
+	}
+	return nil
 }
 
 // PlayerPair pair of playes playing a doubles game
@@ -72,8 +94,18 @@ type PlayerPair struct {
 // GameRepository provides access games etc.
 type GameRepository interface {
 	Store(game *Game) error
-	Find(uuid string) (*Game, error)
+	Find(uuid string) (*Game, Found, error)
 	FindAll() []*Game
+	FindByTournament(uuid string) []*Game
+}
+
+// NewGame creates a new game
+func NewGame(table TournamentTable) *Game {
+	id := uuid.Must(uuid.NewV4()).String()
+	return &Game{
+		UUID:            id,
+		TournamentTable: table,
+	}
 }
 
 // NewDuroGame creates a new game
