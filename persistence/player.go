@@ -36,7 +36,7 @@ func (r *playerRepository) FindByTournament(id string) []*model.Player {
 			"JOIN tournaments ON tournament_players.tournament_id = tournaments.id").Preload(
 		"TournamentPlayers").Preload(
 		"TournamentPlayers.Tournament").Where(
-		"tournaments.uuid = ?", id).First(&players)
+		"tournaments.uuid = ?", id).Find(&players)
 	return players
 }
 

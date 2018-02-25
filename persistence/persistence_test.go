@@ -13,6 +13,11 @@ func InitDB(t *testing.T) *gorm.DB {
 	if err != nil {
 		t.Errorf("Failed to connect database: %s", err.Error())
 	}
-	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{}, &model.Player{}, &model.TournamentPlayer{}, &model.Game{})
+	db.AutoMigrate(&model.Tournament{},
+		&model.TournamentTable{},
+		&model.TournamentPlayer{},
+		&model.Table{},
+		&model.Player{},
+		&model.Game{})
 	return db
 }

@@ -41,6 +41,10 @@ func GetTournaments(db *gorm.DB) func(*gin.Context) {
 func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
+		if t, found, _ := persistence.NewTournamentRepository(db).Find(id); !found {
+			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", t.Name)})
+			return
+		}
 		r := persistence.NewPlayerRepository(db)
 		players := r.FindByTournament(id)
 		c.JSON(http.StatusOK, players)
@@ -85,8 +89,9 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			return
 		}
 		tx := db.Begin()
-		if t, found, err = persistence.NewTournamentRepository(tx).Find(id); !found {
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not tournament %s", t.Name)})
+		tournamentRepo := persistence.NewTournamentRepository(tx)
+		if t, found, err = tournamentRepo.Find(id); !found {
+			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", t.Name)})
 			tx.Rollback()
 			return
 		}
@@ -102,8 +107,8 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			tx.Rollback()
 			return
 		}
-		p.AddToTournament(t)
-		if err = playerRepo.Update(p); err != nil {
+		t.AddPlayer(p)
+		if err = tournamentRepo.Update(t); err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not update player %s", player.Nickname)})
 			tx.Rollback()
 			return

@@ -24,28 +24,6 @@ type TournamentPlayer struct {
 	Active       bool       `json:"active"`
 }
 
-// AddToTournament adds a player to a tournament
-func (p *Player) AddToTournament(t *Tournament) {
-	var found = false
-	for i, tp := range p.TournamentPlayers {
-		if tp.Tournament.UUID == t.UUID {
-			p.TournamentPlayers[i].Active = true
-			found = true
-			break
-		}
-	}
-	if !found {
-		newPlayer := TournamentPlayer{
-			Tournament: *t,
-			Player:     *p,
-			Points:     t.InitialPoints,
-			Active:     true,
-		}
-		p.TournamentPlayers = append(p.TournamentPlayers, newPlayer)
-		t.TournamentPlayers = append(t.TournamentPlayers, newPlayer)
-	}
-}
-
 // PlayerRepository provides access players
 type PlayerRepository interface {
 	Store(player *Player) error

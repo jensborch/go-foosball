@@ -30,11 +30,11 @@ func TestAddTables2Tournament(t *testing.T) {
 
 func TestRandomGamesOneTable(t *testing.T) {
 	tournament := InitTournament()
-	NewPlayer("1", "n1").AddToTournament(tournament)
-	NewPlayer("2", "n2").AddToTournament(tournament)
-	NewPlayer("3", "n3").AddToTournament(tournament)
-	NewPlayer("4", "n4").AddToTournament(tournament)
-	NewPlayer("5", "n5").AddToTournament(tournament)
+	tournament.AddPlayer(NewPlayer("1", "n1"))
+	tournament.AddPlayer(NewPlayer("2", "n2"))
+	tournament.AddPlayer(NewPlayer("3", "n3"))
+	tournament.AddPlayer(NewPlayer("4", "n4"))
+	tournament.AddPlayer(NewPlayer("5", "n5"))
 
 	g := tournament.RandomGames()
 
@@ -45,16 +45,35 @@ func TestRandomGamesOneTable(t *testing.T) {
 
 func TestRandomGamesTwoTable(t *testing.T) {
 	tournament := InitTournament()
-	NewPlayer("1", "n1").AddToTournament(tournament)
-	NewPlayer("2", "n2").AddToTournament(tournament)
-	NewPlayer("3", "n3").AddToTournament(tournament)
-	NewPlayer("4", "n4").AddToTournament(tournament)
-	NewPlayer("5", "n5").AddToTournament(tournament)
-	NewPlayer("6", "n6").AddToTournament(tournament)
+	tournament.AddPlayer(NewPlayer("1", "n1"))
+	tournament.AddPlayer(NewPlayer("2", "n2"))
+	tournament.AddPlayer(NewPlayer("3", "n3"))
+	tournament.AddPlayer(NewPlayer("4", "n4"))
+	tournament.AddPlayer(NewPlayer("5", "n5"))
+	tournament.AddPlayer(NewPlayer("6", "n6"))
 
 	g := tournament.RandomGames()
 
 	if len(g) != 2 {
 		t.Errorf("Number of games is incorrect, got: %d, want: %d.", len(g), 2)
+	}
+}
+
+func TestAddPlayer2Tournament(t *testing.T) {
+	tournament := InitTournament()
+	p1 := NewPlayer("jj", "Jens")
+
+	tournament.AddPlayer(p1)
+
+	if len(p1.TournamentPlayers) != 1 {
+		t.Errorf("Tournament must have one player, got: %d.", len(p1.TournamentPlayers))
+	}
+
+	p2 := NewPlayer("tt", "Thomas")
+
+	tournament.AddPlayer(p2)
+
+	if len(tournament.TournamentPlayers) != 2 {
+		t.Errorf("Tournament must have two player, got: %d.", len(tournament.TournamentPlayers))
 	}
 }

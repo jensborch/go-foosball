@@ -5,17 +5,19 @@ import (
 )
 
 func initSingleGame(tournament *Tournament) *Game {
-	p1 := NewPlayer("tt", "Thomas")
-	p2 := NewPlayer("jj", "Jens")
-	return NewSinglesGame(tournament.TournamentTables[0], *p1, *p2)
+	g := NewGame(tournament.TournamentTables[0])
+	g.AddPlayer(*NewPlayer("tt", "Thomas"))
+	g.AddPlayer(*NewPlayer("jj", "Jens"))
+	return g
 }
 
 func initDuroGame(tournament *Tournament) *Game {
-	p1 := NewPlayer("tt", "Thomas")
-	p2 := NewPlayer("jj", "Jens")
-	p3 := NewPlayer("rr", "Rikke")
-	p4 := NewPlayer("kk", "Kristine")
-	return NewDuroGame(tournament.TournamentTables[0], PlayerPair{First: *p1, Second: *p2}, PlayerPair{First: *p3, Second: *p4})
+	g := NewGame(tournament.TournamentTables[0])
+	g.AddPlayer(*NewPlayer("tt", "Thomas"))
+	g.AddPlayer(*NewPlayer("rr", "Rikke"))
+	g.AddPlayer(*NewPlayer("jj", "Jens"))
+	g.AddPlayer(*NewPlayer("kk", "Kristine"))
+	return g
 }
 
 func TestCreateSingleGame(t *testing.T) {

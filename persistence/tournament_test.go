@@ -54,5 +54,47 @@ func TestStoreTournament(t *testing.T) {
 	if len(found.TournamentPlayers) != 0 {
 		t.Errorf("Tournament should have no players, got: %d.", len(found.TournamentPlayers))
 	}
+}
 
+func TestAddPlayers2Tournament(t *testing.T) {
+	table := model.NewTable("1", model.Color{Right: "red", Left: "green"})
+	tournament := model.NewTournament("Foosball tournament 1", *table)
+
+	db := InitDB(t)
+	defer db.Close()
+
+	r := NewTournamentRepository(db)
+	p1 := model.NewPlayer("p1", "n2")
+	p2 := model.NewPlayer("p2", "n2")
+
+	tournament.AddPlayer(p1)
+	err := r.Store(tournament)
+	if err != nil {
+		t.Errorf("Failed to store: %s", err.Error())
+	}
+
+	tournament, found, err := r.Find(tournament.UUID)
+	if !found {
+		t.Errorf("Tournament not found")
+	}
+	if err != nil {
+		t.Errorf("Failed to find: %s", err.Error())
+	}
+
+	tournament.AddPlayer(p2)
+	err = r.Update(tournament)
+	if err != nil {
+		t.Errorf("Failed to update: %s", err.Error())
+	}
+
+	tournament, _, _ = r.Find(tournament.UUID)
+
+	if len(tournament.TournamentPlayers) != 2 {
+		t.Errorf("Tournament should two players, got: %d.", len(tournament.TournamentPlayers))
+	}
+
+	players := NewPlayerRepository(db).FindByTournament(tournament.UUID)
+	if len(players) != 2 {
+		t.Errorf("Tournament should two players, got: %d.", len(players))
+	}
 }

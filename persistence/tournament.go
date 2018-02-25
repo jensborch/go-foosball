@@ -17,15 +17,19 @@ func (r *tournamentRepository) Remove(t *model.Tournament) error {
 	return r.db.Where("uuid = ?", t.UUID).Delete(&model.Tournament{}).Error
 }
 
+func (r *tournamentRepository) Update(t *model.Tournament) error {
+	return r.db.Save(t).Error
+}
+
 func (r *tournamentRepository) Find(uuid string) (*model.Tournament, model.Found, error) {
 	var t model.Tournament
-	return &t, !r.db.Preload(
-			"TournamentPlayers").Preload(
-			"TournamentPlayers.Player").Preload(
-			"TournamentTables").Preload(
-			"TournamentTables.Table").Where(
-			"uuid = ?", uuid).First(&t).RecordNotFound(),
-		r.db.Error
+	result := r.db.Preload(
+		"TournamentPlayers").Preload(
+		"TournamentPlayers.Player").Preload(
+		"TournamentTables").Preload(
+		"TournamentTables.Table").Where(
+		"tournaments.uuid = ?", uuid).First(&t)
+	return &t, !result.RecordNotFound(), result.Error
 }
 
 func (r *tournamentRepository) FindAll() []*model.Tournament {

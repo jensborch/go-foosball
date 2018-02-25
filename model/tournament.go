@@ -43,6 +43,27 @@ func (t *Tournament) AddTables(tables ...Table) {
 	t.TournamentTables = append(t.TournamentTables, tournamentTables...)
 }
 
+// AddPlayer adds a player to a tournament
+func (t *Tournament) AddPlayer(p *Player) {
+	var found = false
+	for i, tp := range t.TournamentPlayers {
+		if tp.Player.Nickname == p.Nickname {
+			t.TournamentPlayers[i].Active = true
+			found = true
+			break
+		}
+	}
+	if !found {
+		newPlayer := TournamentPlayer{
+			Player: *p,
+			Points: t.InitialPoints,
+			Active: true,
+		}
+		p.TournamentPlayers = append(p.TournamentPlayers, newPlayer)
+		t.TournamentPlayers = append(t.TournamentPlayers, newPlayer)
+	}
+}
+
 //ShufflePlayers shuffles the players in a tournament
 func (t *Tournament) ShufflePlayers() []TournamentPlayer {
 	rand.Shuffle(len(t.TournamentPlayers), func(i, j int) {
@@ -83,6 +104,7 @@ func (t *Tournament) RandomGames() []Game {
 type TournamentRepository interface {
 	Store(tournament *Tournament) error
 	Remove(tournament *Tournament) error
+	Update(tournament *Tournament) error
 	Find(uuid string) (*Tournament, Found, error)
 	FindAll() []*Tournament
 }

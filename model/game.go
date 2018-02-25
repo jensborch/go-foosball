@@ -73,22 +73,16 @@ func (g *Game) AddPlayer(p Player) error {
 	switch {
 	case isEmptyPlayer(g.RightPlayerOne):
 		g.RightPlayerOne = p
-	case isEmptyPlayer(g.RightPlayerTwo):
-		g.RightPlayerTwo = p
 	case isEmptyPlayer(g.LeftPlayerOne):
 		g.LeftPlayerOne = p
+	case isEmptyPlayer(g.RightPlayerTwo):
+		g.RightPlayerTwo = p
 	case isEmptyPlayer(g.LeftPlayerTwo):
 		g.LeftPlayerTwo = p
 	default:
 		return errors.New("All players have been added")
 	}
 	return nil
-}
-
-// PlayerPair pair of playes playing a doubles game
-type PlayerPair struct {
-	First  Player
-	Second Player
 }
 
 // GameRepository provides access games etc.
@@ -105,29 +99,5 @@ func NewGame(table TournamentTable) *Game {
 	return &Game{
 		UUID:            id,
 		TournamentTable: table,
-	}
-}
-
-// NewDuroGame creates a new game
-func NewDuroGame(table TournamentTable, right PlayerPair, left PlayerPair) *Game {
-	id := uuid.Must(uuid.NewV4()).String()
-	return &Game{
-		UUID:            id,
-		TournamentTable: table,
-		RightPlayerOne:  right.First,
-		LeftPlayerOne:   left.First,
-		RightPlayerTwo:  right.Second,
-		LeftPlayerTwo:   left.Second,
-	}
-}
-
-// NewSinglesGame creates a new game
-func NewSinglesGame(table TournamentTable, right Player, left Player) *Game {
-	id := uuid.Must(uuid.NewV4()).String()
-	return &Game{
-		UUID:            id,
-		TournamentTable: table,
-		RightPlayerOne:  right,
-		LeftPlayerOne:   left,
 	}
 }

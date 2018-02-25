@@ -63,11 +63,16 @@ func TestUpdatePlayer(t *testing.T) {
 	pr := NewPlayerRepository(db)
 	pr.Store(p)
 
-	tr := NewTournamentRepository(db)
-	tournament := initTournament()
-	tr.Store(tournament)
-
-	p.AddToTournament(tournament)
+	p.RealName = "t2"
 	pr.Update(p)
+
+	found, _, err := pr.Find("tt")
+	if err != nil {
+		t.Errorf("Failed to find player")
+	}
+
+	if found.RealName != "t2" {
+		t.Errorf("Find should find player with updated name, got: %s, want: %s.", found.RealName, "t2")
+	}
 
 }
