@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
 	"github.com/jinzhu/gorm"
 )
@@ -14,9 +13,7 @@ import (
 func GetGames(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		r := persistence.NewGameRepository(db)
-		t := r.FindByTournament(id)
-		c.JSON(http.StatusOK, t)
+		c.JSON(http.StatusOK, persistence.NewGameRepository(db).FindByTournament(id))
 	}
 }
 
@@ -24,14 +21,15 @@ func GetGames(param string, db *gorm.DB) func(*gin.Context) {
 func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		var (
-			t     *model.Tournament
-			found model.Found
-		)
-		if t, found, _ = persistence.NewTournamentRepository(db).Find(id); !found {
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", t.Name)})
+		if t, found, err := persistence.NewTournamentRepository(db).Find(id); !found {
+			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", id)})
+			return
+		} else if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		} else {
+			c.JSON(http.StatusOK, t.RandomGames())
 			return
 		}
-		c.JSON(http.StatusOK, t.RandomGames())
 	}
 }

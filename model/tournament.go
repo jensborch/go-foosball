@@ -25,7 +25,7 @@ type TournamentTable struct {
 	TableID      uint       `json:"-"`
 	Table        Table      `json:"table"`
 	Tournament   Tournament `json:"-"`
-	Games        []Game     `json:"games, omitempty"`
+	Games        []Game     `json:"games,omitempty"`
 }
 
 // AddTables adds tables to a tournament

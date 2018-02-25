@@ -1,6 +1,7 @@
 package model
 
 import (
+	"encoding/json"
 	"errors"
 	"reflect"
 
@@ -18,11 +19,28 @@ type Game struct {
 	RightPlayerTwoID  uint            `json:"-"`
 	LeftPlayerOneID   uint            `json:"-"`
 	LeftPlayerTwoID   uint            `json:"-"`
-	RightPlayerOne    Player          `json:"tightPlayerOne"`
-	RightPlayerTwo    Player          `json:"rightPlayerTwo,  omitempty"`
-	LeftPlayerOne     Player          `json:"leftPlayerOne"`
-	LeftPlayerTwo     Player          `json:"leftPlayerTwo, omitempty"`
+	RightPlayerOne    Player          `json:"-"`
+	RightPlayerTwo    Player          `json:"-"`
+	LeftPlayerOne     Player          `json:"-"`
+	LeftPlayerTwo     Player          `json:"-"`
 	Winner            Winner          `json:"winner"`
+}
+
+// MarshalJSON creates JSON game representation
+func (g *Game) MarshalJSON() ([]byte, error) {
+	return json.Marshal(&struct {
+		UUID            string          `json:"uuid"`
+		TournamentTable TournamentTable `json:"table"`
+		Right           []string        `json:"right"`
+		Left            []string        `json:"left"`
+		Winner          Winner          `json:"winner,omitempty"`
+	}{
+		UUID:            g.UUID,
+		TournamentTable: g.TournamentTable,
+		Right:           g.RightPlayerNames(),
+		Left:            g.LeftPlayerNames(),
+		Winner:          g.Winner,
+	})
 }
 
 // Winner of a game played
@@ -50,6 +68,15 @@ func (g Game) Right() []Player {
 	return players
 }
 
+// RightPlayerNames return right player names
+func (g Game) RightPlayerNames() []string {
+	result := make([]string, 0, 2)
+	for _, n := range g.Right() {
+		result = append(result, n.Nickname)
+	}
+	return result
+}
+
 // Left return left playes
 func (g Game) Left() []Player {
 	var players []Player
@@ -62,6 +89,15 @@ func (g Game) Left() []Player {
 		players[1] = g.LeftPlayerTwo
 	}
 	return players
+}
+
+// LeftPlayerNames return right player names
+func (g Game) LeftPlayerNames() []string {
+	result := make([]string, 0, 2)
+	for _, n := range g.Left() {
+		result = append(result, n.Nickname)
+	}
+	return result
 }
 
 func isEmptyPlayer(p Player) bool {

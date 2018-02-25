@@ -14,14 +14,15 @@ import (
 func GetTable(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		r := persistence.NewTableRepository(db)
-		t, found, err := r.Find(id)
-		if found {
+		if t, found, err := persistence.NewTableRepository(db).Find(id); found {
 			c.JSON(http.StatusOK, t)
+			return
 		} else if err == nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find %s", id)})
+			return
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
 		}
 	}
 }
@@ -29,9 +30,7 @@ func GetTable(param string, db *gorm.DB) func(*gin.Context) {
 // GetTables get list of all tables
 func GetTables(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		r := persistence.NewTableRepository(db)
-		tables := r.FindAll()
-		c.JSON(http.StatusOK, tables)
+		c.JSON(http.StatusOK, persistence.NewTableRepository(db).FindAll())
 	}
 }
 
@@ -41,11 +40,14 @@ func PostTable(db *gorm.DB) func(*gin.Context) {
 		var table model.Table
 		if err := c.ShouldBindJSON(&table); err == nil {
 			tx := db.Begin()
-			r := persistence.NewTableRepository(tx)
 			t := model.NewTable(table.Name, table.Color)
-			r.Store(t)
-			tx.Commit()
-			c.JSON(http.StatusOK, t)
+			if err := persistence.NewTableRepository(tx).Store(t); err == nil {
+				tx.Commit()
+				c.JSON(http.StatusOK, t)
+			} else {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				tx.Rollback()
+			}
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		}
@@ -56,21 +58,17 @@ func PostTable(db *gorm.DB) func(*gin.Context) {
 func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		var (
-			err   error
-			found model.Found
-			t     *model.Tournament
-		)
 		tournamentRepo := persistence.NewTournamentRepository(db)
-		if t, found, err = tournamentRepo.Find(id); !found {
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", t.Name)})
+		if t, found, err := tournamentRepo.Find(id); !found {
+			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", id)})
 			return
-		}
-		if err != nil {
+		} else if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
+		} else {
+			c.JSON(http.StatusOK, t.TournamentTables)
+			return
 		}
-		c.JSON(http.StatusOK, t.TournamentTables)
 	}
 }
 
