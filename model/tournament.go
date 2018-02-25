@@ -78,7 +78,7 @@ func min(a, b int) int {
 	return a
 }
 
-//RandomGames genrates a list of random games for tournament
+//RandomGames generates a list of random games for tournament
 func (t *Tournament) RandomGames() []Game {
 	players := t.ShufflePlayers()
 	games := make([]Game, 0, 2)
