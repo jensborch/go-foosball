@@ -20,12 +20,12 @@ type Tournament struct {
 
 // TournamentTable in a foosball game
 type TournamentTable struct {
-	gorm.Model
-	TournamentID uint
-	TableID      uint
-	Table        Table
-	Tournament   Tournament
-	Games        []Game
+	gorm.Model   `json:"-"`
+	TournamentID uint       `json:"-"`
+	TableID      uint       `json:"-"`
+	Table        Table      `json:"table"`
+	Tournament   Tournament `json:"-"`
+	Games        []Game     `json:"games, omitempty"`
 }
 
 // AddTables adds tables to a tournament

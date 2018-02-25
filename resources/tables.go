@@ -51,3 +51,81 @@ func PostTable(db *gorm.DB) func(*gin.Context) {
 		}
 	}
 }
+
+// GetTournamentTables list tables in a tournament
+func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
+	return func(c *gin.Context) {
+		id := c.Param(param)
+		var (
+			err   error
+			found model.Found
+			t     *model.Tournament
+		)
+		tournamentRepo := persistence.NewTournamentRepository(db)
+		if t, found, err = tournamentRepo.Find(id); !found {
+			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", t.Name)})
+			return
+		}
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, t.TournamentTables)
+	}
+}
+
+// TableRepresentation JSON representation for adding table to tournament
+type TableRepresentation struct {
+	UUID string `json:"uuid" binding:"required"`
+}
+
+// PostTournamentTables adds a table to a tournament
+func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
+	return func(c *gin.Context) {
+		id := c.Param(param)
+		var (
+			representation TableRepresentation
+			table          *model.Table
+			tournament     *model.Tournament
+			found          model.Found
+			err            error
+		)
+		if err = c.ShouldBindJSON(&representation); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		tx := db.Begin()
+		r := persistence.NewTournamentRepository(tx)
+		if tournament, found, err = r.Find(id); !found {
+			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", tournament.Name)})
+			tx.Rollback()
+			return
+		}
+		if table, found, err = persistence.NewTableRepository(tx).Find(representation.UUID); !found {
+			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find table %s", representation.UUID)})
+			tx.Rollback()
+			return
+		}
+		tournament.AddTables(*table)
+		if err = r.Update(tournament); err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not add table to tournament %s", tournament.UUID)})
+			tx.Rollback()
+			return
+		}
+		tx.Commit()
+		for _, t := range tournament.TournamentTables {
+			if t.Table.UUID == table.UUID {
+				c.JSON(http.StatusOK, t)
+				return
+			}
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Could not find table %s in tournament %s", table.UUID, tournament.UUID)})
+	}
+}
+
+// DeleteTournamentTable deletes a table from a tournament
+func DeleteTournamentTable(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.Context) {
+	return func(c *gin.Context) {
+		//TODO
+	}
+}
