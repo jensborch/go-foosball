@@ -43,7 +43,7 @@ func main() {
 		tournaments.DELETE("/:id/players/:name", resources.DeleteTournamentPlayer("id", "name", db))
 		tournaments.GET("/:id/events", resources.GetTournamentEvents("id"))
 		tournaments.GET("/:id/games", resources.GetGames("id", db))
-		tournaments.GET("/:id/games/random", resources.GetGames("id", db))
+		tournaments.GET("/:id/games/random", resources.GetRandomGames("id", db))
 	}
 
 	router.StaticFile("/", "./src/github.com/jensborch/go-foosball/index.html")

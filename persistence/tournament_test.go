@@ -93,6 +93,11 @@ func TestAddPlayers2Tournament(t *testing.T) {
 		t.Errorf("Tournament should two players, got: %d.", len(tournament.TournamentPlayers))
 	}
 
+	randomGames := tournament.RandomGames()
+	if len(randomGames) != 1 {
+		t.Errorf("Tournament be able to create random game, got: %d.", len(randomGames))
+	}
+
 	players := NewPlayerRepository(db).FindByTournament(tournament.UUID)
 	if len(players) != 2 {
 		t.Errorf("Tournament should two players, got: %d.", len(players))

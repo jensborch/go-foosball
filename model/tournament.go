@@ -1,7 +1,6 @@
 package model
 
 import (
-	"log"
 	"math/rand"
 
 	"github.com/jinzhu/gorm"
@@ -96,7 +95,6 @@ func (t *Tournament) RandomGames() []Game {
 			}
 		}
 	}
-	log.Println(games)
 	return games
 }
 
