@@ -29,7 +29,7 @@ type TableRepository interface {
 
 // NewTable creates a new table
 func NewTable(name string, color Color) *Table {
-	id := uuid.Must(uuid.NewV4()).String()
+	id := uuid.Must(uuid.NewV4(), nil).String()
 	return &Table{
 		UUID:  id,
 		Name:  name,

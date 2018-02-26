@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gin-gonic/gin/binding"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
@@ -39,7 +41,7 @@ func GetPlayers(db *gorm.DB) func(*gin.Context) {
 func PostPlayer(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var player model.Player
-		if err := c.ShouldBindJSON(&player); err != nil {
+		if err := c.ShouldBindWith(&player, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}

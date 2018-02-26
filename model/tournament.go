@@ -1,6 +1,7 @@
 package model
 
 import (
+	"log"
 	"math/rand"
 
 	"github.com/jinzhu/gorm"
@@ -15,7 +16,7 @@ type Tournament struct {
 	GamePoints        uint               `json:"points" binding:"required"`
 	InitialPoints     uint               `json:"initial" binding:"required"`
 	TournamentTables  []TournamentTable  `json:"-"`
-	TournamentPlayers []TournamentPlayer `json:"-"`
+	TournamentPlayers []TournamentPlayer `json:"-" gorm:"auto_preload"`
 }
 
 // TournamentTable in a foosball game
@@ -61,6 +62,30 @@ func (t *Tournament) AddPlayer(p *Player) {
 		p.TournamentPlayers = append(p.TournamentPlayers, newPlayer)
 		t.TournamentPlayers = append(t.TournamentPlayers, newPlayer)
 	}
+}
+
+// DeactivatePlayer deactivates player in tournament
+func (t *Tournament) DeactivatePlayer(nickName string) Found {
+	for i, tp := range t.TournamentPlayers {
+		log.Println(tp)
+		if tp.Player.Nickname == nickName {
+			t.TournamentPlayers[i].Active = false
+			//t.TournamentPlayers[i].Player.TournamentPlayers = t.TournamentPlayers
+			return true
+		}
+	}
+	return false
+}
+
+// ActivePlayers list active players
+func (t *Tournament) ActivePlayers() []Player {
+	result := make([]Player, 0, len(t.TournamentPlayers))
+	for _, tp := range t.TournamentPlayers {
+		if tp.Active {
+			result = append(result, tp.Player)
+		}
+	}
+	return result
 }
 
 //ShufflePlayers shuffles the players in a tournament
@@ -109,7 +134,7 @@ type TournamentRepository interface {
 
 // NewTournament creates a new tournament
 func NewTournament(name string, tables ...Table) *Tournament {
-	id := uuid.Must(uuid.NewV4()).String()
+	id := uuid.Must(uuid.NewV4(), nil).String()
 	result := &Tournament{
 		UUID: id,
 		Name: name,

@@ -131,7 +131,7 @@ type GameRepository interface {
 
 // NewGame creates a new game
 func NewGame(table TournamentTable) *Game {
-	id := uuid.Must(uuid.NewV4()).String()
+	id := uuid.Must(uuid.NewV4(), nil).String()
 	return &Game{
 		UUID:            id,
 		TournamentTable: table,

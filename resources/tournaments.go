@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/gorilla/websocket"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
@@ -55,7 +56,7 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 func PostTournament(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var tournament model.Tournament
-		if err := c.ShouldBindJSON(&tournament); err != nil {
+		if err := c.ShouldBindWith(&tournament, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -84,7 +85,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			found  model.Found
 			t      *model.Tournament
 		)
-		if err = c.ShouldBindJSON(&player); err != nil {
+		if err = c.ShouldBindWith(&player, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -130,29 +131,32 @@ func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm
 		tID := c.Param(tournamentParam)
 		pID := c.Param(playerParam)
 		tx := db.Begin()
-		r := persistence.NewPlayerRepository(tx)
-		p, _, err := r.Find(pID)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			tx.Rollback()
-			return
-		}
-		found := false
-		for i, tp := range p.TournamentPlayers {
-			if tp.Tournament.UUID == tID {
-				p.TournamentPlayers[i].Active = false
-				r.Update(p)
-				found = true
-				pEvents.publish(tID, *p)
-				c.JSON(http.StatusOK, p)
-				break
-			}
-		}
-		if found {
-			tx.Commit()
-		} else {
+		r := persistence.NewTournamentRepository(tx)
+		if t, found, err := r.Find(tID); !found {
 			tx.Rollback()
 			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", tID)})
+		} else if err != nil {
+			tx.Rollback()
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		} else {
+			log.Printf("Deactivation player %s in tournament %s", pID, tID)
+			if found := t.DeactivatePlayer(pID); found {
+				if err := r.Update(t); err != nil {
+					c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+					tx.Rollback()
+					return
+				}
+				tx.Commit()
+				if p, found, err := persistence.NewPlayerRepository(db).Find(pID); !found || err != nil {
+					c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error finding player %s after update", pID)})
+				} else {
+					pEvents.publish(tID, *p)
+					c.JSON(http.StatusOK, p)
+				}
+			} else {
+				tx.Rollback()
+				c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find player %s", pID)})
+			}
 		}
 	}
 }

@@ -77,3 +77,21 @@ func TestAddPlayer2Tournament(t *testing.T) {
 		t.Errorf("Tournament must have two player, got: %d.", len(tournament.TournamentPlayers))
 	}
 }
+
+func TestDeactivatePlayerInTournament(t *testing.T) {
+	tournament := InitTournament()
+	p := NewPlayer("jj", "Jens")
+	tournament.AddPlayer(p)
+
+	if !p.TournamentPlayers[0].Active {
+		t.Errorf("Player should be active")
+	}
+
+	if !tournament.DeactivatePlayer(p.Nickname) {
+		t.Errorf("Player should be in tournament")
+	}
+
+	if tournament.TournamentPlayers[0].Active {
+		t.Errorf("Player should not be active")
+	}
+}

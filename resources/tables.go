@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
 	"github.com/jinzhu/gorm"
@@ -38,7 +39,7 @@ func GetTables(db *gorm.DB) func(*gin.Context) {
 func PostTable(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var table model.Table
-		if err := c.ShouldBindJSON(&table); err == nil {
+		if err := c.ShouldBindWith(&table, binding.JSON); err == nil {
 			tx := db.Begin()
 			t := model.NewTable(table.Name, table.Color)
 			if err := persistence.NewTableRepository(tx).Store(t); err == nil {
@@ -88,7 +89,7 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 			found          model.Found
 			err            error
 		)
-		if err = c.ShouldBindJSON(&representation); err != nil {
+		if err = c.ShouldBindWith(&representation, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}

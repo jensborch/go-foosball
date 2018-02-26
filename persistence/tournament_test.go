@@ -90,7 +90,7 @@ func TestAddPlayers2Tournament(t *testing.T) {
 	tournament, _, _ = r.Find(tournament.UUID)
 
 	if len(tournament.TournamentPlayers) != 2 {
-		t.Errorf("Tournament should two players, got: %d.", len(tournament.TournamentPlayers))
+		t.Errorf("Tournament should have two players, got: %d.", len(tournament.TournamentPlayers))
 	}
 
 	randomGames := tournament.RandomGames()
@@ -100,6 +100,23 @@ func TestAddPlayers2Tournament(t *testing.T) {
 
 	players := NewPlayerRepository(db).FindByTournament(tournament.UUID)
 	if len(players) != 2 {
-		t.Errorf("Tournament should two players, got: %d.", len(players))
+		t.Errorf("Tournament should have two players, got: %d.", len(players))
 	}
+
+	if len(tournament.ActivePlayers()) != 2 {
+		t.Errorf("Tournament should have two active player, got: %d.", len(tournament.ActivePlayers()))
+	}
+
+	tournament.DeactivatePlayer(p1.Nickname)
+	err = r.Update(tournament)
+	if err != nil {
+		t.Errorf("Failed to update: %s", err.Error())
+	}
+
+	tournament, _, _ = r.Find(tournament.UUID)
+
+	if len(tournament.ActivePlayers()) != 1 {
+		t.Errorf("Tournament should have one player, got: %d.", len(tournament.ActivePlayers()))
+	}
+
 }

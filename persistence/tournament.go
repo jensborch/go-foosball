@@ -23,12 +23,12 @@ func (r *tournamentRepository) Update(t *model.Tournament) error {
 
 func (r *tournamentRepository) Find(uuid string) (*model.Tournament, model.Found, error) {
 	var t model.Tournament
-	result := r.db.Preload(
+	result := r.db.Debug().Preload(
 		"TournamentPlayers").Preload(
 		"TournamentPlayers.Player").Preload(
 		"TournamentTables").Preload(
 		"TournamentTables.Table").Where(
-		"tournaments.uuid = ?", uuid).First(&t)
+		"uuid = ?", uuid).First(&t)
 	return &t, !result.RecordNotFound(), result.Error
 }
 
