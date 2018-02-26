@@ -9,13 +9,16 @@ Foosball tournament REST service written in Go.
 # Build
 
 ```
-go install github.com/jensborch/go-foosball/
+go get -u github.com/golang/dep/cmd/dep
+dep ensure
+go install
 ```
 
 # Test
 
 ```
 go test -cover github.com/jensborch/go-foosball/model
+go test -cover github.com/jensborch/go-foosball/persistence
 ```
 
 # Run
