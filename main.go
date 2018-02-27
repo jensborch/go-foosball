@@ -1,6 +1,9 @@
 package main
 
 import (
+	"net/http"
+
+	rice "github.com/GeertJohan/go.rice"
 	"github.com/gin-gonic/gin"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/resources"
@@ -49,8 +52,11 @@ func main() {
 		tournaments.GET("/:id/games/random", resources.GetRandomGames("id", db))
 	}
 
-	//router.StaticFile("/", "./src/github.com/jensborch/go-foosball/index.html")
-	router.StaticFile("/", "./index.html")
+	if i, err := rice.MustFindBox("html").String("index.html"); err == nil {
+		router.GET("/", func(c *gin.Context) {
+			c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(i))
+		})
+	}
 
 	router.Run(":8080")
 }
