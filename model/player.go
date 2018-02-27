@@ -17,7 +17,7 @@ type Player struct {
 type TournamentPlayer struct {
 	gorm.Model   `json:"-"`
 	PlayerID     uint       `json:"-"`
-	Player       Player     `json:"-" gorm:"auto_preload"`
+	Player       Player     `json:"-"`
 	TournamentID uint       `json:"-"`
 	Tournament   Tournament `json:"tournament"`
 	Points       uint       `json:"points"`

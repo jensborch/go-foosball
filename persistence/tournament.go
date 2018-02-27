@@ -23,7 +23,7 @@ func (r *tournamentRepository) Update(t *model.Tournament) error {
 
 func (r *tournamentRepository) Find(uuid string) (*model.Tournament, model.Found, error) {
 	var t model.Tournament
-	result := r.db.Debug().Preload(
+	result := r.db.Preload(
 		"TournamentPlayers").Preload(
 		"TournamentPlayers.Player").Preload(
 		"TournamentTables").Preload(

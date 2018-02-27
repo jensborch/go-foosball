@@ -104,7 +104,7 @@ func TestAddPlayers2Tournament(t *testing.T) {
 	}
 
 	if len(tournament.ActivePlayers()) != 2 {
-		t.Errorf("Tournament should have two active player, got: %d.", len(tournament.ActivePlayers()))
+		t.Errorf("Tournament should have two active players, got: %d.", len(tournament.ActivePlayers()))
 	}
 
 	tournament.DeactivatePlayer(p1.Nickname)
@@ -116,7 +116,7 @@ func TestAddPlayers2Tournament(t *testing.T) {
 	tournament, _, _ = r.Find(tournament.UUID)
 
 	if len(tournament.ActivePlayers()) != 1 {
-		t.Errorf("Tournament should have one player, got: %d.", len(tournament.ActivePlayers()))
+		t.Errorf("Tournament should have one active player, got: %d.", len(tournament.ActivePlayers()))
 	}
 
 }

@@ -16,7 +16,7 @@ type Tournament struct {
 	GamePoints        uint               `json:"points" binding:"required"`
 	InitialPoints     uint               `json:"initial" binding:"required"`
 	TournamentTables  []TournamentTable  `json:"-"`
-	TournamentPlayers []TournamentPlayer `json:"-" gorm:"auto_preload"`
+	TournamentPlayers []TournamentPlayer `json:"-"`
 }
 
 // TournamentTable in a foosball game
@@ -70,7 +70,6 @@ func (t *Tournament) DeactivatePlayer(nickName string) Found {
 		log.Println(tp)
 		if tp.Player.Nickname == nickName {
 			t.TournamentPlayers[i].Active = false
-			//t.TournamentPlayers[i].Player.TournamentPlayers = t.TournamentPlayers
 			return true
 		}
 	}
@@ -78,22 +77,23 @@ func (t *Tournament) DeactivatePlayer(nickName string) Found {
 }
 
 // ActivePlayers list active players
-func (t *Tournament) ActivePlayers() []Player {
-	result := make([]Player, 0, len(t.TournamentPlayers))
+func (t *Tournament) ActivePlayers() []TournamentPlayer {
+	result := make([]TournamentPlayer, 0, len(t.TournamentPlayers))
 	for _, tp := range t.TournamentPlayers {
 		if tp.Active {
-			result = append(result, tp.Player)
+			result = append(result, tp)
 		}
 	}
 	return result
 }
 
-//ShufflePlayers shuffles the players in a tournament
-func (t *Tournament) ShufflePlayers() []TournamentPlayer {
-	rand.Shuffle(len(t.TournamentPlayers), func(i, j int) {
-		t.TournamentPlayers[i], t.TournamentPlayers[j] = t.TournamentPlayers[j], t.TournamentPlayers[i]
+//ShuffleActivePlayers shuffles the players in a tournament
+func (t *Tournament) ShuffleActivePlayers() []TournamentPlayer {
+	players := t.ActivePlayers()
+	rand.Shuffle(len(players), func(i, j int) {
+		players[i], players[j] = players[j], players[i]
 	})
-	return t.TournamentPlayers
+	return players
 }
 
 func min(a, b int) int {
@@ -105,7 +105,7 @@ func min(a, b int) int {
 
 //RandomGames generates a list of random games for tournament
 func (t *Tournament) RandomGames() []Game {
-	players := t.ShufflePlayers()
+	players := t.ShuffleActivePlayers()
 	games := make([]Game, 0, 2)
 	if len(players) >= 2 {
 		i := 0

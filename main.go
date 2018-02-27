@@ -49,7 +49,8 @@ func main() {
 		tournaments.GET("/:id/games/random", resources.GetRandomGames("id", db))
 	}
 
-	router.StaticFile("/", "./src/github.com/jensborch/go-foosball/index.html")
+	//router.StaticFile("/", "./src/github.com/jensborch/go-foosball/index.html")
+	router.StaticFile("/", "./index.html")
 
 	router.Run(":8080")
 }

@@ -1,3 +1,4 @@
 go-foosball.exe
 debug.test
 /vendor
+test.db

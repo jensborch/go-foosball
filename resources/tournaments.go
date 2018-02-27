@@ -142,14 +142,15 @@ func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm
 			log.Printf("Deactivation player %s in tournament %s", pID, tID)
 			if found := t.DeactivatePlayer(pID); found {
 				if err := r.Update(t); err != nil {
-					c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 					tx.Rollback()
+					c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 					return
 				}
-				tx.Commit()
-				if p, found, err := persistence.NewPlayerRepository(db).Find(pID); !found || err != nil {
+				if p, found, err := persistence.NewPlayerRepository(tx).Find(pID); !found || err != nil {
+					tx.Rollback()
 					c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error finding player %s after update", pID)})
 				} else {
+					tx.Commit()
 					pEvents.publish(tID, *p)
 					c.JSON(http.StatusOK, p)
 				}
