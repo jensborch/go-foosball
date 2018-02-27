@@ -28,6 +28,6 @@ go test -cover github.com/jensborch/go-foosball/persistence
 # Run
 
 ```
-./bin/go-foosball
+go-foosball
 ```
 

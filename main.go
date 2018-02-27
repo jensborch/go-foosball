@@ -47,6 +47,7 @@ func main() {
 		tournaments.GET("/:id/tables", resources.GetTournamentTables("id", db))
 		tournaments.POST("/:id/tables", resources.PostTournamentTables("id", db))
 		//tournaments.DELETE("/:tournament/tables/:table", resources.DeleteTournamentTable("tournament", "table", db))
+		tournaments.POST("/:tournament/tables/:table/games", resources.PostGame("tournament", "table", db))
 		tournaments.GET("/:id/events", resources.GetTournamentEvents("id"))
 		tournaments.GET("/:id/games", resources.GetGames("id", db))
 		tournaments.GET("/:id/games/random", resources.GetRandomGames("id", db))

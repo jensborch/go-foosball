@@ -123,6 +123,16 @@ func (t *Tournament) RandomGames() []Game {
 	return games
 }
 
+// HasTable returns true if table is in tournament
+func (t *Tournament) HasTable(id string) bool {
+	for _, tt := range t.TournamentTables {
+		if tt.Table.UUID == id {
+			return true
+		}
+	}
+	return false
+}
+
 // TournamentRepository provides access games etc.
 type TournamentRepository interface {
 	Store(tournament *Tournament) error
