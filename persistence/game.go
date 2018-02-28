@@ -24,7 +24,13 @@ func (r *gameRepository) Find(uuid string) (*model.Game, model.Found, error) {
 
 func (r *gameRepository) FindAll() []*model.Game {
 	var games []*model.Game
-	r.db.Find(&games)
+	r.db.Preload(
+		"RightPlayerOne").Preload(
+		"RightPlayerTwo").Preload(
+		"LeftPlayerOne").Preload(
+		"LeftPlayerTwo").Preload(
+		"TournamentTable").Preload(
+		"TournamentTable.Table").Find(&games)
 	return games
 }
 
