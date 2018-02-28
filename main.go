@@ -49,8 +49,14 @@ func main() {
 		//tournaments.DELETE("/:tournament/tables/:table", resources.DeleteTournamentTable("tournament", "table", db))
 		tournaments.POST("/:tournament/tables/:table/games", resources.PostGame("tournament", "table", db))
 		tournaments.GET("/:id/events", resources.GetTournamentEvents("id"))
-		tournaments.GET("/:id/games", resources.GetGames("id", db))
+		tournaments.GET("/:id/games", resources.GetGamesInTournament("id", db))
 		tournaments.GET("/:id/games/random", resources.GetRandomGames("id", db))
+	}
+
+	games := router.Group("/games/")
+	{
+		games.GET("/", resources.GetGames(db))
+		games.GET("/:id", resources.GetGame("id", db))
 	}
 
 	if i, err := rice.MustFindBox("html").String("index.html"); err == nil {

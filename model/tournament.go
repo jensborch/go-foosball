@@ -123,14 +123,14 @@ func (t *Tournament) RandomGames() []Game {
 	return games
 }
 
-// HasTable returns true if table is in tournament
-func (t *Tournament) HasTable(id string) bool {
+// Table returns true if table is in tournament
+func (t *Tournament) Table(id string) *TournamentTable {
 	for _, tt := range t.TournamentTables {
 		if tt.Table.UUID == id {
-			return true
+			return &tt
 		}
 	}
-	return false
+	return nil
 }
 
 // TournamentRepository provides access games etc.
