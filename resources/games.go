@@ -59,7 +59,7 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 			return
 		} else if table := t.Table(tableID); table != nil {
 			var g GameRepresentation
-			if err := c.ShouldBindWith(&g, binding.JSON); err != nil {
+			if err := c.ShouldBindWith(&g, binding.JSON); err == nil {
 				pRepo := persistence.NewPlayerRepository(tx)
 				game := model.NewGame(*table)
 				for _, pID := range g.Players {
