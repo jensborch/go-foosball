@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"math"
 	"reflect"
 
@@ -58,25 +59,27 @@ const (
 )
 
 //
-func (g *Game) calculateRightPoints() uint {
-	return (g.RightPlayerOne.Points + g.RightPlayerTwo.Points) / uint(len(g.Right()))
+func (g *Game) calculateRightScore() float64 {
+	r := float64(g.RightPlayerOne.Ranking+g.RightPlayerTwo.Ranking) / float64(len(g.Right()))
+	return r
 }
 
 //
-func (g *Game) calculateLeftPoints() uint {
-	return (g.LeftPlayerOne.Points + g.LeftPlayerTwo.Points) / uint(len(g.Left()))
+func (g *Game) calculateLeftScore() float64 {
+	r := float64(g.LeftPlayerOne.Ranking+g.LeftPlayerTwo.Ranking) / float64(len(g.Left()))
+	return r
 }
 
 //
-func (g *Game) GameFactor() (uint, uint) {
-	rigth := uint(math.Pow(10, float64(((g.calculateLeftPoints()-g.calculateRightPoints())/1000)+1)))
+func (g *Game) gameScoreFactor() (float64, float64) {
+	rigth := 1 / (math.Pow(10, ((g.calculateLeftScore()-g.calculateRightScore())/1000)) + 1)
 	return rigth, 1 - rigth
 }
 
 //
-func (g *Game) GamePoints() (uint, uint) {
-	right, left := g.GameFactor()
-	return g.TournamentTable.Tournament.GamePoints * right, g.TournamentTable.Tournament.GamePoints * left
+func (g *Game) GameScore() (uint, uint) {
+	right, left := g.gameScoreFactor()
+	return uint(float64(g.TournamentTable.Tournament.GameScore) * right), uint(float64(g.TournamentTable.Tournament.GameScore) * left)
 }
 
 // Right return right playes
@@ -130,7 +133,28 @@ func isEmptyPlayer(p TournamentPlayer) bool {
 }
 
 // AddPlayer adds a player to a game
-func (g *Game) AddPlayer(p TournamentPlayer) error {
+func (g *Game) AddPlayer(p Player) error {
+	if tp, err := g.findOrCreateTournamentPlayer(p); err == nil {
+		return g.AddTournamentPlayer(*tp)
+	} else {
+		return err
+	}
+}
+
+func (g *Game) findOrCreateTournamentPlayer(p Player) (*TournamentPlayer, error) {
+	for _, tp := range g.TournamentTable.Tournament.TournamentPlayers {
+		if p.Nickname == tp.Player.Nickname {
+			if !tp.Active {
+				return nil, fmt.Errorf("Player %s is not active", p.Nickname)
+			}
+			return &tp, nil
+		}
+	}
+	return NewTournamentPlayer(p, g.TournamentTable.Tournament), nil
+}
+
+//AddTournamentPlayer adds a tournament player to a game
+func (g *Game) AddTournamentPlayer(p TournamentPlayer) error {
 	switch {
 	case isEmptyPlayer(g.RightPlayerOne):
 		g.RightPlayerOne = p

@@ -69,3 +69,17 @@ func TestCreateDuroGame(t *testing.T) {
 		t.Errorf("Table is incorrect, got: %s, want: %s.", g.TournamentTable.Table.Name, "1")
 	}
 }
+
+func TestGameScore(t *testing.T) {
+	g := initSingleGame(InitTournament())
+	s1, s2 := g.GameScore()
+
+	if s1 != s2 {
+		t.Errorf("Game scores should be equal, right is %d, left is %d.", s1, s2)
+	}
+
+	if s1 != 25 {
+		t.Errorf("Game scores should 25, but is %d.", s1)
+	}
+
+}

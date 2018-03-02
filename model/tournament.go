@@ -13,8 +13,8 @@ type Tournament struct {
 	gorm.Model        `json:"-"`
 	UUID              string             `json:"uuid" gorm:"size:36;unique_index"`
 	Name              string             `json:"name" binding:"required" gorm:"type:varchar(100)"`
-	GamePoints        uint               `json:"points" binding:"required"`
-	InitialPoints     uint               `json:"initial" binding:"required"`
+	GameScore         uint               `json:"points" binding:"required"`
+	InitialRanking    uint               `json:"initial" binding:"required"`
 	TournamentTables  []TournamentTable  `json:"-"`
 	TournamentPlayers []TournamentPlayer `json:"-"`
 }
@@ -37,6 +37,7 @@ func (t *Tournament) AddTables(tables ...Table) {
 			TableID:      table.ID,
 			Table:        table,
 			TournamentID: t.ID,
+			Tournament:   *t,
 		}
 		tournamentTables = append(tournamentTables, tt)
 	}
@@ -55,9 +56,9 @@ func (t *Tournament) AddPlayer(p *Player) {
 	}
 	if !found {
 		newPlayer := TournamentPlayer{
-			Player: *p,
-			Points: t.InitialPoints,
-			Active: true,
+			Player:  *p,
+			Ranking: t.InitialRanking,
+			Active:  true,
 		}
 		p.TournamentPlayers = append(p.TournamentPlayers, newPlayer)
 		t.TournamentPlayers = append(t.TournamentPlayers, newPlayer)
@@ -114,7 +115,7 @@ func (t *Tournament) RandomGames() []Game {
 			playersInGameIndex := min(i+4, len(players))
 			if playersInGameIndex-i > 1 {
 				for ; i < playersInGameIndex; i++ {
-					g.AddPlayer(players[i])
+					g.AddTournamentPlayer(players[i])
 				}
 				games = append(games, *g)
 			}
@@ -146,8 +147,10 @@ type TournamentRepository interface {
 func NewTournament(name string, tables ...Table) *Tournament {
 	id := uuid.Must(uuid.NewV4(), nil).String()
 	result := &Tournament{
-		UUID: id,
-		Name: name,
+		UUID:           id,
+		Name:           name,
+		GameScore:      50,
+		InitialRanking: 1500,
 	}
 	result.AddTables(tables...)
 	return result

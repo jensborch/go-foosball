@@ -20,17 +20,8 @@ type TournamentPlayer struct {
 	Player       Player     `json:"-"`
 	TournamentID uint       `json:"-"`
 	Tournament   Tournament `json:"tournament"`
-	Points       uint       `json:"points"`
+	Ranking      uint       `json:"ranking"`
 	Active       bool       `json:"active"`
-}
-
-func (p *Player) FindTournamentPlayer(id string) *TournamentPlayer {
-	for i, tp := range p.TournamentPlayers {
-		if tp.Tournament.UUID == id {
-			return &p.TournamentPlayers[i]
-		}
-	}
-	return nil
 }
 
 // PlayerRepository provides access players
@@ -43,11 +34,23 @@ type PlayerRepository interface {
 	FindByTournament(id string) []*Player
 }
 
-// NewPlayer create new palyer
+// NewPlayer create new player
 func NewPlayer(nickname, realName string) *Player {
 	return &Player{
 		Nickname:          nickname,
 		RealName:          realName,
 		TournamentPlayers: make([]TournamentPlayer, 0, 10),
 	}
+}
+
+// NewTournamentPlayer create new player in tournament
+func NewTournamentPlayer(player Player, tournament Tournament) *TournamentPlayer {
+	tp := &TournamentPlayer{
+		Player:     player,
+		Tournament: tournament,
+		Ranking:    tournament.InitialRanking,
+		Active:     true,
+	}
+	tp.Player.TournamentPlayers = append(tp.Player.TournamentPlayers, *tp)
+	return tp
 }

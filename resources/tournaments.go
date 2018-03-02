@@ -63,8 +63,8 @@ func PostTournament(db *gorm.DB) func(*gin.Context) {
 		tx := db.Begin()
 		r := persistence.NewTournamentRepository(tx)
 		t := model.NewTournament(tournament.Name)
-		t.GamePoints = tournament.GamePoints
-		t.InitialPoints = tournament.InitialPoints
+		t.GameScore = tournament.GameScore
+		t.InitialRanking = tournament.InitialRanking
 		if err := r.Store(t); err != nil {
 			tx.Rollback()
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
