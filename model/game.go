@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"errors"
+	"math"
 	"reflect"
 
 	"github.com/jinzhu/gorm"
@@ -12,18 +13,20 @@ import (
 // Game played
 type Game struct {
 	gorm.Model        `json:"-"`
-	UUID              string          `gorm:"size:36;unique_index"`
-	TournamentTableID uint            `json:"-"`
-	TournamentTable   TournamentTable `json:"table"`
-	RightPlayerOneID  uint            `json:"-"`
-	RightPlayerTwoID  uint            `json:"-"`
-	LeftPlayerOneID   uint            `json:"-"`
-	LeftPlayerTwoID   uint            `json:"-"`
-	RightPlayerOne    Player          `json:"-"`
-	RightPlayerTwo    Player          `json:"-"`
-	LeftPlayerOne     Player          `json:"-"`
-	LeftPlayerTwo     Player          `json:"-"`
-	Winner            Winner          `json:"winner"`
+	UUID              string           `gorm:"size:36;unique_index"`
+	TournamentTableID uint             `json:"-"`
+	TournamentTable   TournamentTable  `json:"table"`
+	RightPlayerOneID  uint             `json:"-"`
+	RightPlayerTwoID  uint             `json:"-"`
+	LeftPlayerOneID   uint             `json:"-"`
+	LeftPlayerTwoID   uint             `json:"-"`
+	RightPlayerOne    TournamentPlayer `json:"-"`
+	RightPlayerTwo    TournamentPlayer `json:"-"`
+	LeftPlayerOne     TournamentPlayer `json:"-"`
+	LeftPlayerTwo     TournamentPlayer `json:"-"`
+	RightPoints       int
+	LeftPoints        int
+	Winner            Winner `json:"winner"`
 }
 
 // MarshalJSON creates JSON game representation
@@ -54,16 +57,38 @@ const (
 	LEFT = "left"
 )
 
+//
+func (g *Game) calculateRightPoints() uint {
+	return (g.RightPlayerOne.Points + g.RightPlayerTwo.Points) / uint(len(g.Right()))
+}
+
+//
+func (g *Game) calculateLeftPoints() uint {
+	return (g.LeftPlayerOne.Points + g.LeftPlayerTwo.Points) / uint(len(g.Left()))
+}
+
+//
+func (g *Game) GameFactor() (uint, uint) {
+	rigth := uint(math.Pow(10, float64(((g.calculateLeftPoints()-g.calculateRightPoints())/1000)+1)))
+	return rigth, 1 - rigth
+}
+
+//
+func (g *Game) GamePoints() (uint, uint) {
+	right, left := g.GameFactor()
+	return g.TournamentTable.Tournament.GamePoints * right, g.TournamentTable.Tournament.GamePoints * left
+}
+
 // Right return right playes
 func (g Game) Right() []Player {
 	var players []Player
 	if isEmptyPlayer(g.RightPlayerTwo) {
 		players = make([]Player, 1)
-		players[0] = g.RightPlayerOne
+		players[0] = g.RightPlayerOne.Player
 	} else {
 		players = make([]Player, 2)
-		players[0] = g.RightPlayerOne
-		players[1] = g.RightPlayerTwo
+		players[0] = g.RightPlayerOne.Player
+		players[1] = g.RightPlayerTwo.Player
 	}
 	return players
 }
@@ -82,11 +107,11 @@ func (g Game) Left() []Player {
 	var players []Player
 	if isEmptyPlayer(g.LeftPlayerTwo) {
 		players = make([]Player, 1)
-		players[0] = g.LeftPlayerOne
+		players[0] = g.LeftPlayerOne.Player
 	} else {
 		players = make([]Player, 2)
-		players[0] = g.LeftPlayerOne
-		players[1] = g.LeftPlayerTwo
+		players[0] = g.LeftPlayerOne.Player
+		players[1] = g.LeftPlayerTwo.Player
 	}
 	return players
 }
@@ -100,12 +125,12 @@ func (g Game) LeftPlayerNames() []string {
 	return result
 }
 
-func isEmptyPlayer(p Player) bool {
-	return reflect.DeepEqual(p, Player{})
+func isEmptyPlayer(p TournamentPlayer) bool {
+	return reflect.DeepEqual(p, TournamentPlayer{})
 }
 
 // AddPlayer adds a player to a game
-func (g *Game) AddPlayer(p Player) error {
+func (g *Game) AddPlayer(p TournamentPlayer) error {
 	switch {
 	case isEmptyPlayer(g.RightPlayerOne):
 		g.RightPlayerOne = p

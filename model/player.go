@@ -24,6 +24,15 @@ type TournamentPlayer struct {
 	Active       bool       `json:"active"`
 }
 
+func (p *Player) FindTournamentPlayer(id string) *TournamentPlayer {
+	for i, tp := range p.TournamentPlayers {
+		if tp.Tournament.UUID == id {
+			return &p.TournamentPlayers[i]
+		}
+	}
+	return nil
+}
+
 // PlayerRepository provides access players
 type PlayerRepository interface {
 	Store(player *Player) error

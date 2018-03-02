@@ -64,7 +64,7 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 				game := model.NewGame(*table)
 				for _, pID := range g.Players {
 					player, _, _ := pRepo.Find(pID)
-					game.AddPlayer(*player)
+					game.AddPlayer(*player.FindTournamentPlayer(tournamentID))
 				}
 				game.Winner = g.Winner
 				persistence.NewGameRepository(tx).Store(game)

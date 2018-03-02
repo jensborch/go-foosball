@@ -1,4 +1,7 @@
-go-foosball.exe
+/go-foosball.exe
 debug.test
 /vendor
 test.db
+/go-foosball
+
+

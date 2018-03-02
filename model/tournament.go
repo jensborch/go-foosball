@@ -114,7 +114,7 @@ func (t *Tournament) RandomGames() []Game {
 			playersInGameIndex := min(i+4, len(players))
 			if playersInGameIndex-i > 1 {
 				for ; i < playersInGameIndex; i++ {
-					g.AddPlayer(players[i].Player)
+					g.AddPlayer(players[i])
 				}
 				games = append(games, *g)
 			}
