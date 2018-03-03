@@ -115,5 +115,5 @@ func TestSetGameScore(t *testing.T) {
 	}
 	if s := g.LeftScore; s != -2 {
 		t.Errorf("Game scores should be -2, but is %d.", s)
-	}	
+	}
 }
