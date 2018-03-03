@@ -25,7 +25,7 @@ type TournamentTable struct {
 	TournamentID uint       `json:"-"`
 	TableID      uint       `json:"-"`
 	Table        Table      `json:"table"`
-	Tournament   Tournament `json:"-"`
+	Tournament   Tournament `gorm:"association_save_reference:false;association_autocreate:false" json:"-"`
 	Games        []Game     `json:"games,omitempty"`
 }
 

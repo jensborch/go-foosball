@@ -21,6 +21,15 @@ func TestStoreTournament(t *testing.T) {
 		t.Errorf("Failed to store: %s", err.Error())
 	}
 
+	found, _, err := r.Find(tournament1.UUID)
+	if err != nil {
+		t.Errorf("Failed to find tournament")
+	}
+
+	if len(found.TournamentTables) != 1 {
+		t.Errorf("Tournament should have a table, got: %d.", len(found.TournamentTables))
+	}
+
 	table2 := model.NewTable("2", model.Color{Right: "black", Left: "blue"})
 	tournament2 := model.NewTournament("Foosball tournament 2", tournament1.TournamentTables[0].Table, *table2)
 
@@ -33,17 +42,8 @@ func TestStoreTournament(t *testing.T) {
 		t.Errorf("FindAll should return all tournaments, got: %d, want: %d.", len(r.FindAll()), 2)
 	}
 
-	found, _, err := r.Find(tournament1.UUID)
-	if err != nil {
-		t.Errorf("Failed to find tournament")
-	}
-
 	if found.Name != "Foosball tournament 1" {
 		t.Errorf("Find should find tournament, got: %s, want: %s.", found.Name, "Foosball tournament 1")
-	}
-
-	if len(found.TournamentTables) != 1 {
-		t.Errorf("Tournament should have a table, got: %d.", len(found.TournamentTables))
 	}
 
 	name := found.TournamentTables[0].Table.Name

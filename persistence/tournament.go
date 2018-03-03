@@ -10,7 +10,7 @@ type tournamentRepository struct {
 }
 
 func (r *tournamentRepository) Store(t *model.Tournament) error {
-	return r.db.Create(t).Error
+	return r.db.Debug().Create(t).Error
 }
 
 func (r *tournamentRepository) Remove(t *model.Tournament) error {
@@ -23,12 +23,12 @@ func (r *tournamentRepository) Update(t *model.Tournament) error {
 
 func (r *tournamentRepository) Find(uuid string) (*model.Tournament, model.Found, error) {
 	var t model.Tournament
-	result := r.db.Preload(
+	result := r.db.Debug().Where(
+		&model.Tournament{UUID: uuid}).Preload(
 		"TournamentPlayers").Preload(
 		"TournamentPlayers.Player").Preload(
 		"TournamentTables").Preload(
-		"TournamentTables.Table").Where(
-		"uuid = ?", uuid).First(&t)
+		"TournamentTables.Table").First(&t)
 	return &t, !result.RecordNotFound(), result.Error
 }
 

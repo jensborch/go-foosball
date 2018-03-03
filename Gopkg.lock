@@ -45,13 +45,13 @@
   version = "v1.2.0"
 
 [[projects]]
-  branch = "master"
   name = "github.com/jinzhu/gorm"
   packages = [
     ".",
     "dialects/sqlite"
   ]
-  revision = "48a20a6e9f3f4d26095df82c3337efec6db0a6fc"
+  revision = "6ed508ec6a4ecb3531899a69cbc746ccf65a4166"
+  version = "v1.9.1"
 
 [[projects]]
   branch = "master"
