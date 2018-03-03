@@ -70,7 +70,7 @@ func TestCreateDuroGame(t *testing.T) {
 	}
 }
 
-func TestGameScore(t *testing.T) {
+func TestInitialGameScore(t *testing.T) {
 	g := initSingleGame(InitTournament())
 	s1, s2 := g.GameScore()
 
@@ -80,6 +80,26 @@ func TestGameScore(t *testing.T) {
 
 	if s1 != 25 {
 		t.Errorf("Game scores should 25, but is %d.", s1)
+	}
+
+}
+
+func TestGameScore(t *testing.T) {
+	g := initSingleGame(InitTournament())
+	g.LeftPlayerOne.Ranking = 1000
+	g.RightPlayerOne.Ranking = 2000
+	s1, s2 := g.GameScore()
+
+	if s1 == s2 {
+		t.Errorf("Game scores should be equal, right is %d, left is %d.", s1, s2)
+	}
+
+	if s1 != 45 {
+		t.Errorf("Game scores should 45, but is %d.", s1)
+	}
+
+	if s2 != 5 {
+		t.Errorf("Game scores should 5, but is %d.", s2)
 	}
 
 }

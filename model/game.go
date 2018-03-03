@@ -58,28 +58,24 @@ const (
 	LEFT = "left"
 )
 
-//
-func (g *Game) calculateRightScore() float64 {
+func (g *Game) calculateRightRaning() float64 {
 	r := float64(g.RightPlayerOne.Ranking+g.RightPlayerTwo.Ranking) / float64(len(g.Right()))
 	return r
 }
 
-//
-func (g *Game) calculateLeftScore() float64 {
+func (g *Game) calculateLeftRanking() float64 {
 	r := float64(g.LeftPlayerOne.Ranking+g.LeftPlayerTwo.Ranking) / float64(len(g.Left()))
 	return r
 }
 
-//
-func (g *Game) gameScoreFactor() (float64, float64) {
-	rigth := 1 / (math.Pow(10, ((g.calculateLeftScore()-g.calculateRightScore())/1000)) + 1)
-	return rigth, 1 - rigth
+func (g *Game) gameRigthScoreFactor() float64 {
+	return 1 / (math.Pow(10, ((g.calculateLeftRanking()-g.calculateRightRaning())/1000)) + 1)
 }
 
-//
+// GameScore calculates score for right and left side
 func (g *Game) GameScore() (uint, uint) {
-	right, left := g.gameScoreFactor()
-	return uint(float64(g.TournamentTable.Tournament.GameScore) * right), uint(float64(g.TournamentTable.Tournament.GameScore) * left)
+	right := uint(float64(g.TournamentTable.Tournament.GameScore) * g.gameRigthScoreFactor())
+	return right, g.TournamentTable.Tournament.GameScore - right
 }
 
 // Right return right playes
