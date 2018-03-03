@@ -25,9 +25,9 @@ type Game struct {
 	RightPlayerTwo    TournamentPlayer `json:"-"`
 	LeftPlayerOne     TournamentPlayer `json:"-"`
 	LeftPlayerTwo     TournamentPlayer `json:"-"`
-	RightPoints       int
-	LeftPoints        int
-	Winner            Winner `json:"winner"`
+	RightScore        int              `json:"rightScore,omitempty"`
+	LeftScore         int              `json:"leftScore,omitempty"`
+	Winner            Winner           `json:"winner"`
 }
 
 // MarshalJSON creates JSON game representation
@@ -68,14 +68,36 @@ func (g *Game) calculateLeftRanking() float64 {
 	return r
 }
 
-func (g *Game) gameRigthScoreFactor() float64 {
+func (g *Game) gameScoreFactor() float64 {
 	return 1 / (math.Pow(10, ((g.calculateLeftRanking()-g.calculateRightRaning())/1000)) + 1)
+}
+
+func round(f float64) uint {
+	return uint(f + math.Copysign(0.5, f))
 }
 
 // GameScore calculates score for right and left side
 func (g *Game) GameScore() (uint, uint) {
-	right := uint(float64(g.TournamentTable.Tournament.GameScore) * g.gameRigthScoreFactor())
-	return right, g.TournamentTable.Tournament.GameScore - right
+	left := round(float64(g.TournamentTable.Tournament.GameScore) * g.gameScoreFactor())
+	return g.TournamentTable.Tournament.GameScore - left, left
+}
+
+// UpdateScore set game score for each side on game
+func (g *Game) UpdateScore() error {
+	switch g.Winner {
+	case RIGHT:
+		right, _ := g.GameScore()
+		g.RightScore = int(right)
+		g.LeftScore = -int(right)
+		return nil
+	case LEFT:
+		_, left := g.GameScore()
+		g.RightScore = -int(left)
+		g.LeftScore = int(left)
+		return nil
+	default:
+		return errors.New("No winner in this game")
+	}
 }
 
 // Right return right playes
@@ -130,11 +152,11 @@ func isEmptyPlayer(p TournamentPlayer) bool {
 
 // AddPlayer adds a player to a game
 func (g *Game) AddPlayer(p Player) error {
-	if tp, err := g.findOrCreateTournamentPlayer(p); err == nil {
+	tp, err := g.findOrCreateTournamentPlayer(p)
+	if err == nil {
 		return g.AddTournamentPlayer(*tp)
-	} else {
-		return err
 	}
+	return err
 }
 
 func (g *Game) findOrCreateTournamentPlayer(p Player) (*TournamentPlayer, error) {

@@ -86,8 +86,8 @@ func TestInitialGameScore(t *testing.T) {
 
 func TestGameScore(t *testing.T) {
 	g := initSingleGame(InitTournament())
-	g.LeftPlayerOne.Ranking = 1000
-	g.RightPlayerOne.Ranking = 2000
+	g.RightPlayerOne.Ranking = 1000
+	g.LeftPlayerOne.Ranking = 2000
 	s1, s2 := g.GameScore()
 
 	if s1 == s2 {
@@ -102,4 +102,18 @@ func TestGameScore(t *testing.T) {
 		t.Errorf("Game scores should 5, but is %d.", s2)
 	}
 
+}
+
+func TestSetGameScore(t *testing.T) {
+	g := initSingleGame(InitTournament())
+	g.LeftPlayerOne.Ranking = 900
+	g.RightPlayerOne.Ranking = 2200
+	g.Winner = RIGHT
+	g.UpdateScore()
+	if s := g.RightScore; s != 2 {
+		t.Errorf("Game scores should be 2, but is %d.", s)
+	}
+	if s := g.LeftScore; s != -2 {
+		t.Errorf("Game scores should be -2, but is %d.", s)
+	}	
 }
