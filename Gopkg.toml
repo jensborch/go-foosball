@@ -35,7 +35,7 @@
 
 [[constraint]]
   name = "github.com/jinzhu/gorm"
-  branch = "master"
+  version = "1.9.1"
 
 [[constraint]]
   name = "github.com/satori/go.uuid"
