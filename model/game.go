@@ -90,7 +90,7 @@ func (g *Game) calculateLeftRanking() float64 {
 	return r
 }
 
-func (g *Game) gameScoreFactor() float64 {
+func (g *Game) gameLeftScoreFactor() float64 {
 	return 1 / (math.Pow(10, ((g.calculateLeftRanking()-g.calculateRightRaning())/1000)) + 1)
 }
 
@@ -100,7 +100,7 @@ func round(f float64) uint {
 
 // GameScore calculates score for right and left side
 func (g *Game) GameScore() (uint, uint) {
-	left := round(float64(g.TournamentTable.Tournament.GameScore) * g.gameScoreFactor())
+	left := round(float64(g.TournamentTable.Tournament.GameScore) * g.gameLeftScoreFactor())
 	return g.TournamentTable.Tournament.GameScore - left, left
 }
 
