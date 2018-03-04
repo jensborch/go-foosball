@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"net/http"
 
 	rice "github.com/GeertJohan/go.rice"
@@ -12,9 +13,17 @@ import (
 )
 
 func main() {
+	var (
+		port   int
+		dbfile string
+	)
+	flag.IntVar(&port, "port", 8080, "the port number")
+	flag.StringVar(&dbfile, "db", "test.db", "the database file")
+	flag.Parse()
+
 	router := gin.Default()
 
-	db, err := gorm.Open("sqlite3", "test.db")
+	db, err := gorm.Open("sqlite3", dbfile)
 	if err != nil {
 		panic("failed to connect database")
 	}
