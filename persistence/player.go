@@ -31,18 +31,12 @@ func (r *playerRepository) Find(nickname string) (*model.Player, model.Found, er
 
 func (r *playerRepository) FindByTournament(id string) []*model.Player {
 	var players []*model.Player
-	r.db.Debug().Where("id in (?)", r.db.Table("tournament_players").Select("player_id").Where(
-		"tournament_id = (?)", r.db.Table("tournaments").Select("id").Where("uuid = ?", id).QueryExpr()).QueryExpr()).Preload(
+	r.db.Joins(
+		"LEFT JOIN tournament_players ON tournament_players.player_id = players.id "+
+			"LEFT JOIN tournaments ON tournament_players.tournament_id = tournaments.id").Preload(
 		"TournamentPlayers").Preload(
-		"TournamentPlayers.Tournament").Group(
-		"players.nickname").Find(&players)
-
-	/*r.db.Joins(
-	"LEFT JOIN tournament_players ON tournament_players.player_id = players.id "+
-		"LEFT JOIN tournaments ON tournament_players.tournament_id = tournaments.id").Preload(
-	"TournamentPlayers").Preload(
-	"TournamentPlayers.Tournament").Where(
-	"tournaments.uuid = ?", id).Group("players.nickname").Find(&players)*/
+		"TournamentPlayers.Tournament").Where(
+		"tournaments.uuid = ?", id).Group("players.nickname").Find(&players)
 	return players
 }
 
