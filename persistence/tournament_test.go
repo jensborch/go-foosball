@@ -89,8 +89,12 @@ func TestAddPlayers2Tournament(t *testing.T) {
 
 	tournament, _, _ = r.Find(tournament.UUID)
 
-	if len(tournament.TournamentPlayers) != 2 {
-		t.Errorf("Tournament should have two players, got: %d.", len(tournament.TournamentPlayers))
+	if l := len(tournament.TournamentPlayers); l != 2 {
+		t.Errorf("Tournament should have two players, got: %d.", l)
+	}
+
+	if id := tournament.TournamentPlayers[0].Tournament.ID; id == 0 {
+		t.Errorf("Players should have tournament with id, got: %d.", id)
 	}
 
 	randomGames := tournament.RandomGames()
@@ -119,4 +123,28 @@ func TestAddPlayers2Tournament(t *testing.T) {
 		t.Errorf("Tournament should have one active player, got: %d.", len(tournament.ActivePlayers()))
 	}
 
+}
+
+func TestCalculateGameScore(t *testing.T) {
+	table := model.NewTable("1", model.Color{Right: "red", Left: "green"})
+	tournament := model.NewTournament("Foosball tournament 1", *table)
+
+	db := InitDB(t)
+	defer db.Close()
+
+	r := NewTournamentRepository(db)
+	p1 := model.NewPlayer("p1", "n2")
+	p2 := model.NewPlayer("p2", "n2")
+
+	tournament.AddPlayer(p1)
+	tournament.AddPlayer(p2)
+
+	r.Store(tournament)
+	tournament, _, _ = r.Find(tournament.UUID)
+
+	games := tournament.RandomGames()
+
+	if s := games[0].GetOrCalculateLeftScore(); s != 25 {
+		t.Errorf("Games should have score, wanted %d, got: %d.", 25, s)
+	}
 }

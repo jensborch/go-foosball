@@ -33,17 +33,21 @@ type Game struct {
 // MarshalJSON creates JSON game representation
 func (g *Game) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&struct {
-		UUID   string   `json:"uuid"`
-		Table  Table    `json:"table"`
-		Right  []string `json:"right"`
-		Left   []string `json:"left"`
-		Winner Winner   `json:"winner,omitempty"`
+		UUID         string   `json:"uuid"`
+		Table        Table    `json:"table"`
+		RightPlayers []string `json:"rightPlayers"`
+		LeftPlayers  []string `json:"leftPlayers"`
+		RightScore   int      `json:"rightScore"`
+		LeftScore    int      `json:"leftScore"`
+		Winner       Winner   `json:"winner,omitempty"`
 	}{
-		UUID:   g.UUID,
-		Table:  g.TournamentTable.Table,
-		Right:  g.RightPlayerNames(),
-		Left:   g.LeftPlayerNames(),
-		Winner: g.Winner,
+		UUID:         g.UUID,
+		Table:        g.TournamentTable.Table,
+		RightPlayers: g.RightPlayerNames(),
+		LeftPlayers:  g.LeftPlayerNames(),
+		RightScore:   g.GetOrCalculateRightScore(),
+		LeftScore:    g.GetOrCalculateLeftScore(),
+		Winner:       g.Winner,
 	})
 }
 
@@ -57,6 +61,24 @@ const (
 	//LEFT is winner
 	LEFT = "left"
 )
+
+// GetOrCalculateRightScore returns game score for saven games or calcukates new score
+func (g *Game) GetOrCalculateRightScore() int {
+	if g.RightScore == 0 {
+		right, _ := g.GameScore()
+		return int(right)
+	}
+	return g.RightScore
+}
+
+// GetOrCalculateLeftScore returns game score for saven games or calculates new score
+func (g *Game) GetOrCalculateLeftScore() int {
+	if g.LeftScore == 0 {
+		_, left := g.GameScore()
+		return int(left)
+	}
+	return g.LeftScore
+}
 
 func (g *Game) calculateRightRaning() float64 {
 	r := float64(g.RightPlayerOne.Ranking+g.RightPlayerTwo.Ranking) / float64(len(g.Right()))

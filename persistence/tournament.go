@@ -27,7 +27,9 @@ func (r *tournamentRepository) Find(uuid string) (*model.Tournament, model.Found
 		&model.Tournament{UUID: uuid}).Preload(
 		"TournamentPlayers").Preload(
 		"TournamentPlayers.Player").Preload(
+		"TournamentPlayers.Tournament").Preload(
 		"TournamentTables").Preload(
+		"TournamentTables.Tournament").Preload(
 		"TournamentTables.Table").First(&t)
 	return &t, !result.RecordNotFound(), result.Error
 }

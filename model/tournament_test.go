@@ -41,6 +41,10 @@ func TestRandomGamesOneTable(t *testing.T) {
 	if len(g) != 1 {
 		t.Errorf("Number of games is incorrect, got: %d, want: %d.", len(g), 1)
 	}
+
+	if s := g[0].GetOrCalculateRightScore(); s != 25 {
+		t.Errorf("Score should be something, got: %d, want: %d.", s, 25)
+	}
 }
 
 func TestRandomGamesTwoTable(t *testing.T) {
