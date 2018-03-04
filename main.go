@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"net/http"
+	"strconv"
 
 	rice "github.com/GeertJohan/go.rice"
 	"github.com/gin-gonic/gin"
@@ -14,10 +15,10 @@ import (
 
 func main() {
 	var (
-		port   int
+		port   uint
 		dbfile string
 	)
-	flag.IntVar(&port, "port", 8080, "the port number")
+	flag.UintVar(&port, "port", 8080, "the port number")
 	flag.StringVar(&dbfile, "db", "foosball.db", "the database file")
 	flag.Parse()
 
@@ -78,5 +79,5 @@ func main() {
 		})
 	}
 
-	router.Run(":8080")
+	router.Run(":" + strconv.FormatUint(uint64(port), 10))
 }
