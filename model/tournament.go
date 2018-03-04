@@ -1,7 +1,6 @@
 package model
 
 import (
-	"log"
 	"math/rand"
 
 	"github.com/jinzhu/gorm"
@@ -68,7 +67,6 @@ func (t *Tournament) AddPlayer(p *Player) {
 // DeactivatePlayer deactivates player in tournament
 func (t *Tournament) DeactivatePlayer(nickName string) Found {
 	for i, tp := range t.TournamentPlayers {
-		log.Println(tp)
 		if tp.Player.Nickname == nickName {
 			t.TournamentPlayers[i].Active = false
 			return true
