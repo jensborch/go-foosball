@@ -16,15 +16,15 @@ type Game struct {
 	gorm.Model        `json:"-"`
 	UUID              string           `gorm:"size:36;unique_index"`
 	TournamentTableID uint             `json:"-"`
-	TournamentTable   TournamentTable  `json:"table"`
+	TournamentTable   TournamentTable  `gorm:"gorm:"association_save_reference:false;save_associations:false" json:"table"`
 	RightPlayerOneID  uint             `json:"-"`
 	RightPlayerTwoID  uint             `json:"-"`
 	LeftPlayerOneID   uint             `json:"-"`
 	LeftPlayerTwoID   uint             `json:"-"`
-	RightPlayerOne    TournamentPlayer `json:"-"`
-	RightPlayerTwo    TournamentPlayer `json:"-"`
-	LeftPlayerOne     TournamentPlayer `json:"-"`
-	LeftPlayerTwo     TournamentPlayer `json:"-"`
+	RightPlayerOne    TournamentPlayer `gorm:"association_save_reference:false;save_associations:false" json:"-"`
+	RightPlayerTwo    TournamentPlayer `gorm:"association_save_reference:false;save_associations:false" json:"-"`
+	LeftPlayerOne     TournamentPlayer `gorm:"association_save_reference:false;save_associations:false" json:"-"`
+	LeftPlayerTwo     TournamentPlayer `gorm:"association_save_reference:false;save_associations:false" json:"-"`
 	RightScore        int              `json:"rightScore,omitempty"`
 	LeftScore         int              `json:"leftScore,omitempty"`
 	Winner            Winner           `json:"winner"`

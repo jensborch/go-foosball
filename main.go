@@ -18,7 +18,7 @@ func main() {
 		dbfile string
 	)
 	flag.IntVar(&port, "port", 8080, "the port number")
-	flag.StringVar(&dbfile, "db", "test.db", "the database file")
+	flag.StringVar(&dbfile, "db", "foosball.db", "the database file")
 	flag.Parse()
 
 	router := gin.Default()

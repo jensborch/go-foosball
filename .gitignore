@@ -3,5 +3,5 @@ debug.test
 /vendor
 test.db
 /go-foosball
-
+/*.db
 
