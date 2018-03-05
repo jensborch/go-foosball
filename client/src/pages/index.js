@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
+import HomeIcon  from 'material-ui-icons/Home';
 import RefreshIcon from 'material-ui-icons/Refresh';
 import Typography from 'material-ui/Typography';
 import Toolbar from 'material-ui/Toolbar';
@@ -10,11 +11,15 @@ import withRoot from '../withRoot';
 
 const styles = theme => ({
   root: {
-
+    flexGrow: 1
   },
   flex: {
     flex: 1
-  }  
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  }
 });
 
 class Index extends React.Component {
@@ -25,12 +30,15 @@ class Index extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-         <AppBar title="Case client" position="static">
+         <AppBar position="static">
           <Toolbar>
-            <Typography type="title" color="inherit" className={classes.flex}>
-              Case client
+          <IconButton className={classes.menuButton} color="inherit" aria-label="Home">
+          <HomeIcon />
+          </IconButton>
+            <Typography variant="title" color="inherit" className={classes.flex}>
+              Foosball
             </Typography>
-            <IconButton onClick={this.loadAll}>
+            <IconButton color="inherit" aria-label="Refresh" onClick={this.loadAll}>
               <RefreshIcon />
             </IconButton>
           </Toolbar>
