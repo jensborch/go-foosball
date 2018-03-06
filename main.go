@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	rice "github.com/GeertJohan/go.rice"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/resources"
@@ -23,6 +24,7 @@ func main() {
 	flag.Parse()
 
 	router := gin.Default()
+	router.Use(cors.Default())
 
 	db, err := gorm.Open("sqlite3", dbfile)
 	if err != nil {

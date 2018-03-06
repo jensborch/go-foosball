@@ -17,6 +17,12 @@
   revision = "a5fe2436ffcb3236e175e5149162b41cd28bd27d"
 
 [[projects]]
+  name = "github.com/gin-contrib/cors"
+  packages = ["."]
+  revision = "cf4846e6a636a76237a28d9286f163c132e841bc"
+  version = "v1.2"
+
+[[projects]]
   branch = "master"
   name = "github.com/gin-contrib/sse"
   packages = ["."]
@@ -110,6 +116,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "950fc7ba2a6addc187cbd9b1524f95edd73b1bb1300d59dd4c45654e19915c9a"
+  inputs-digest = "347f9055ae09d3ef9ade69a612a9c5a298aa24d0597dd7624d9bb3f58a304b8d"
   solver-name = "gps-cdcl"
   solver-version = 1
