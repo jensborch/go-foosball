@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
-import HomeIcon  from 'material-ui-icons/Home';
+import HomeIcon from 'material-ui-icons/Home';
 import RefreshIcon from 'material-ui-icons/Refresh';
 import Typography from 'material-ui/Typography';
 import Toolbar from 'material-ui/Toolbar';
@@ -24,17 +24,18 @@ const styles = theme => ({
 
 class Index extends React.Component {
 
-  loadAll = () => {}
+  loadAll = () => {
+  }
 
   render() {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-         <AppBar position="static">
+        <AppBar position="static">
           <Toolbar>
-          <IconButton className={classes.menuButton} color="inherit" aria-label="Home">
-          <HomeIcon />
-          </IconButton>
+            <IconButton className={classes.menuButton} color="inherit" aria-label="Home">
+              <HomeIcon />
+            </IconButton>
             <Typography variant="title" color="inherit" className={classes.flex}>
               Foosball
             </Typography>
