@@ -22,15 +22,13 @@ class Tournament extends React.Component {
     const { classes } = this.props;
     const { data } = this.props;
     return (
-      <div>
-        <Card className={classes.card}>
-          <CardContent>
-            <Typography variant="headline" component="h2">
-              {data.name}
-            </Typography>
-          </CardContent>
-        </Card>
-      </div>
+      <Card className={classes.card}>
+        <CardContent>
+          <Typography variant="headline" component="h2">
+            {data.name}
+          </Typography>
+        </CardContent>
+      </Card>
     );
   }
 }
