@@ -12,21 +12,19 @@ import Tournaments from '../components/tournaments';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   flex: {
-    flex: 1
+    flex: 1,
   },
   menuButton: {
     marginLeft: -12,
     marginRight: 20,
-  }
+  },
 });
 
 class Index extends React.Component {
-
-  loadAll = () => {
-  }
+  loadAll = () => {};
 
   render() {
     const { classes } = this.props;
@@ -34,13 +32,25 @@ class Index extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Home">
+            <IconButton
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="Home"
+            >
               <HomeIcon />
             </IconButton>
-            <Typography variant="title" color="inherit" className={classes.flex}>
+            <Typography
+              variant="title"
+              color="inherit"
+              className={classes.flex}
+            >
               Foosball
             </Typography>
-            <IconButton color="inherit" aria-label="Refresh" onClick={this.loadAll}>
+            <IconButton
+              color="inherit"
+              aria-label="Refresh"
+              onClick={this.loadAll}
+            >
               <RefreshIcon />
             </IconButton>
           </Toolbar>
