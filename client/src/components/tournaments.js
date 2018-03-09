@@ -8,7 +8,13 @@ import withRoot from '../withRoot';
 const styles = theme => ({
     card: {
         minWidth: 275,
-    }
+    },
+    root: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        padding: 20,
+        justifyContent: 'space-between'
+      },
 });
 
 class Tournament extends React.Component {
@@ -55,7 +61,7 @@ class Tournaments extends React.Component {
         const { classes } = this.props;
         const tournaments = this.state.tournaments;
         return (
-            <div>
+            <div className={classes.root}>
                 {tournaments.map((tournament) =>
                     <Tournament key={tournament.uuid} data={tournament} classes={classes} />
                 )}
