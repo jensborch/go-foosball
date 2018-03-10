@@ -14,11 +14,21 @@ export const receiveTournaments = tournaments => {
   };
 };
 
+function transformDateFormat(json) {
+  const result = {
+    ...json,
+    created: new Date(json.created),
+    updated: new Date(json.updated),
+  };
+  return result;
+}
+
 export function fetchTournaments() {
   return function(dispatch) {
     dispatch(requestTournaments());
     return fetch('http://localhost:8080/tournaments/')
       .then(response => response.json())
+      .then(json => json.map(transformDateFormat))
       .then(json => {
         dispatch(receiveTournaments(json));
       });

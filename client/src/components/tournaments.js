@@ -1,6 +1,7 @@
+import Avatar from 'material-ui/Avatar';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card, { CardContent } from 'material-ui/Card';
+import Card, { CardContent, CardHeader } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
@@ -15,6 +16,9 @@ const styles = theme => ({
     padding: 20,
     justifyContent: 'space-between',
   },
+  avatar: {
+    backgroundColor: theme.palette.secondary.dark,
+  },
 });
 
 class Tournament extends React.Component {
@@ -23,9 +27,19 @@ class Tournament extends React.Component {
     const { data } = this.props;
     return (
       <Card className={classes.card}>
+        <CardHeader
+          avatar={
+            <Avatar className={classes.avatar}>
+              {data.name.substring(0, 1)}
+            </Avatar>
+          }
+          title={data.name}
+          subheader={data.created.toLocaleDateString()}
+        />
         <CardContent>
-          <Typography variant="headline" component="h2">
-            {data.name}
+          <Typography variant="body2">Score pr. game: {data.score}</Typography>
+          <Typography variant="body2">
+            Initial ranking: {data.initial}
           </Typography>
         </CardContent>
       </Card>
@@ -56,6 +70,7 @@ class Tournaments extends React.Component {
 }
 
 Tournaments.propTypes = {
+  classes: PropTypes.object.isRequired,
   data: PropTypes.shape({
     tournaments: PropTypes.array.isRequired,
   }).isRequired,

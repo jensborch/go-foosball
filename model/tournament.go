@@ -3,16 +3,15 @@ package model
 import (
 	"math/rand"
 
-	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
 )
 
 // Tournament played
 type Tournament struct {
-	gorm.Model        `json:"-"`
+	Base
 	UUID              string             `json:"uuid" gorm:"size:36;unique_index"`
 	Name              string             `json:"name" binding:"required" gorm:"type:varchar(100)"`
-	GameScore         uint               `json:"points" binding:"required"`
+	GameScore         uint               `json:"score" binding:"required"`
 	InitialRanking    uint               `json:"initial" binding:"required"`
 	TournamentTables  []TournamentTable  `json:"-"`
 	TournamentPlayers []TournamentPlayer `json:"-"`
@@ -20,7 +19,7 @@ type Tournament struct {
 
 // TournamentTable in a foosball game
 type TournamentTable struct {
-	gorm.Model   `json:"-"`
+	Base
 	TournamentID uint       `json:"-"`
 	TableID      uint       `json:"-"`
 	Table        Table      `json:"table"`

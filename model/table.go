@@ -1,16 +1,15 @@
 package model
 
 import (
-	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
 )
 
 // Table used in tournament
 type Table struct {
-	gorm.Model `json:"-"`
-	UUID       string `json:"uuid" gorm:"size:36;unique_index"`
-	Name       string `json:"name" binding:"required" gorm:"type:varchar(50)"`
-	Color      Color  `json:"color" binding:"required" gorm:"embedded"`
+	Base
+	UUID  string `json:"uuid" gorm:"size:36;unique_index"`
+	Name  string `json:"name" binding:"required" gorm:"type:varchar(50)"`
+	Color Color  `json:"color" binding:"required" gorm:"embedded"`
 }
 
 // Color of table

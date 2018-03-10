@@ -7,13 +7,12 @@ import (
 	"math"
 	"reflect"
 
-	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
 )
 
 // Game played
 type Game struct {
-	gorm.Model        `json:"-"`
+	Base
 	UUID              string           `gorm:"size:36;unique_index"`
 	TournamentTableID uint             `json:"-"`
 	TournamentTable   TournamentTable  `gorm:"gorm:"association_save_reference:false;save_associations:false" json:"table"`

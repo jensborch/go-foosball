@@ -1,12 +1,8 @@
 package model
 
-import (
-	"github.com/jinzhu/gorm"
-)
-
 // Player playing foosball games
 type Player struct {
-	gorm.Model        `json:"-"`
+	Base
 	Nickname          string             `json:"nickname" binding:"required" gorm:"size:50;unique_index"`
 	RealName          string             `json:"realname" gorm:"type:varchar(100);not null"`
 	RFID              string             `json:"rfid,omitempty" gorm:"type:varchar(36)"`
@@ -15,7 +11,7 @@ type Player struct {
 
 // TournamentPlayer is a player in a tournament
 type TournamentPlayer struct {
-	gorm.Model   `json:"-"`
+	Base
 	PlayerID     uint       `json:"-"`
 	Player       Player     `json:"-"`
 	TournamentID uint       `json:"-"`
