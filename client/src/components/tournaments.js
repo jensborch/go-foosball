@@ -34,34 +34,16 @@ class Tournament extends React.Component {
 }
 
 class Tournaments extends React.Component {
-  state = {
-    tournaments: [],
-  };
-
   componentWillMount() {
-    this.loadAll();
+    this.props.fetchTournaments();
   }
-
-  loadAll = () => {
-    fetch('http://localhost:8080/tournaments/', {
-      method: 'GET',
-      mode: 'cors',
-    })
-      .then(response => response.json())
-      .then(json => {
-        this.setState({ tournaments: json });
-      })
-      .catch(e => {
-        console.error(e);
-      });
-  };
 
   render() {
     const { classes } = this.props;
-    const tournaments = this.state.tournaments;
+    const { data } = this.props;
     return (
       <div className={classes.root}>
-        {tournaments.map(tournament => (
+        {data.tournaments.map(tournament => (
           <Tournament
             key={tournament.uuid}
             data={tournament}
@@ -72,6 +54,13 @@ class Tournaments extends React.Component {
     );
   }
 }
+
+Tournaments.propTypes = {
+  data: PropTypes.shape({
+    tournaments: PropTypes.array.isRequired,
+  }).isRequired,
+  fetchTournaments: PropTypes.func.isRequired,
+};
 
 Tournament.propTypes = {
   classes: PropTypes.object.isRequired,

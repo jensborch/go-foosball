@@ -8,7 +8,7 @@ import Typography from 'material-ui/Typography';
 import Toolbar from 'material-ui/Toolbar';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
-import Tournaments from '../components/tournaments';
+import AllTournaments from '../containers/allTournaments';
 
 const styles = theme => ({
   root: {
@@ -55,7 +55,7 @@ class Index extends React.Component {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Tournaments />
+        <AllTournaments />
       </div>
     );
   }

@@ -17,11 +17,10 @@ export const receiveTournaments = tournaments => {
 export function fetchTournaments() {
   return function(dispatch) {
     dispatch(requestTournaments());
-
     return fetch('http://localhost:8080/tournaments/')
       .then(response => response.json())
       .then(json => {
-        dispatch(receiveTournaments());
+        dispatch(receiveTournaments(json));
       });
   };
 }
