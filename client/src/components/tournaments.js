@@ -17,7 +17,7 @@ const styles = theme => ({
     justifyContent: 'space-between',
   },
   avatar: {
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.secondary.main,
   },
 });
 
