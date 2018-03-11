@@ -14,7 +14,7 @@ const styles = theme => ({
 
 class Tournament extends React.Component {
   componentWillMount() {
-    fetchTournaments(this.props.id);
+    fetchTournaments(this.props.match.params.id);
   }
 
   render() {

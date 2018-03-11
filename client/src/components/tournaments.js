@@ -44,7 +44,7 @@ class Tournament extends React.Component {
           <Typography variant="body2">
             Initial ranking: {data.initial}
           </Typography>
-          <Link to="/tournament/" id={data.uuid}>
+          <Link to={`/tournament/${data.uuid}`}>
             <IconButton aria-label="Play">
               <PlayArrowIcon />
             </IconButton>

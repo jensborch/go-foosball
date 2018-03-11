@@ -19,8 +19,8 @@ ReactDOM.render(
   <Provider store={store}>
     <Router>
       <Switch>
-        <Route path="/" component={Index} />
-        <Route path="/tournament/" component={Tournament} />
+        <Route exact path="/" component={Index} />
+        <Route path="/tournament/:id" component={Tournament} />
       </Switch>
     </Router>
   </Provider>,
