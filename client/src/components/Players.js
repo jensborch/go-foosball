@@ -3,11 +3,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
-import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-ui/List';
+import List, {
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+} from 'material-ui/List';
 import Checkbox from 'material-ui/Checkbox';
 import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
-
 
 const styles = theme => ({
   paper: {
@@ -44,7 +47,6 @@ class Player extends React.Component {
 }
 
 class Players extends React.Component {
-
   componentWillMount() {
     this.props.fetchPlayers(this.props.id);
   }
@@ -56,18 +58,18 @@ class Players extends React.Component {
     return (
       <div className={classes.root}>
         <Paper className={classes.paper} elevation={4}>
-        <List>
-          {players.map( (p, i) => (            
-            <div>
-            <Player key={p.nickname} data={p} classes={classes} />
-            {(i !== players.length - 1) ?
-            <li>
-              <Divider inset />
-            </li>
-            : null}            
-            </div>
-          ))}
-        </List>
+          <List>
+            {players.map((p, i) => (
+              <div>
+                <Player key={p.nickname} data={p} classes={classes} />
+                {i !== players.length - 1 ? (
+                  <li>
+                    <Divider inset />
+                  </li>
+                ) : null}
+              </div>
+            ))}
+          </List>
         </Paper>
       </div>
     );

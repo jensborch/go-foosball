@@ -12,13 +12,12 @@ const styles = theme => ({
 });
 
 class Tournament extends React.Component {
-
   render() {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
         <Menu title="Tournament" />
-        <TournamentPlayers id={this.props.match.params.id}/>
+        <TournamentPlayers id={this.props.match.params.id} />
       </div>
     );
   }
