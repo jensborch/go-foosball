@@ -1,6 +1,6 @@
 // Link.react.test.js
 import React from 'react';
-import Menu from '../menu';
+import Menu from '../Menu';
 import renderer from 'react-test-renderer';
 
 test('Should render with title', () => {

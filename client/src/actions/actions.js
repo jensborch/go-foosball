@@ -14,6 +14,24 @@ export const receiveTournaments = tournaments => {
   };
 };
 
+export const REQUEST_TOURNAMET_PLAYERS = 'REQUEST_TOURNAMET_PLAYERS';
+export const requestTournamentPlayers = id => {
+  return {
+    type: REQUEST_TOURNAMET_PLAYERS,
+    id: id,
+  };
+};
+
+export const RECEIVE_TOURNAMET_PLAYERS = 'RECEIVE_TOURNAMET_PLAYERS';
+export const receiveTournamentPlayers = (id, players) => {
+  return {
+    type: RECEIVE_TOURNAMET_PLAYERS,
+    id: id,
+    players: players,
+    receivedAt: Date.now(),
+  };
+};
+
 function transformDateFormat(json) {
   const result = {
     ...json,
@@ -31,6 +49,18 @@ export function fetchTournaments() {
       .then(json => json.map(transformDateFormat))
       .then(json => {
         dispatch(receiveTournaments(json));
+      });
+  };
+}
+
+export function fetchTournamentPlayers(id) {
+  return function(dispatch) {
+    dispatch(requestTournamentPlayers(id));
+    return fetch(`http://localhost:8080/tournaments/${id}/players`)
+      .then(response => response.json())
+      .then(json => json.map(transformDateFormat))
+      .then(json => {
+        dispatch(receiveTournamentPlayers(id, json));
       });
   };
 }

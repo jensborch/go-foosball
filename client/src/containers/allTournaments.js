@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Tournaments from '../components/tournaments';
+import Tournaments from '../components/Tournaments';
 import { fetchTournaments } from '../actions/actions';
 
 const mapStateToProps = state => {

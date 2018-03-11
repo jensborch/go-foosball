@@ -5,6 +5,9 @@ import Card, { CardContent, CardHeader } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
+import IconButton from 'material-ui/IconButton';
+import PlayArrowIcon from 'material-ui-icons/PlayArrow';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   card: {
@@ -41,6 +44,11 @@ class Tournament extends React.Component {
           <Typography variant="body2">
             Initial ranking: {data.initial}
           </Typography>
+          <Link to="/tournament/" id={data.uuid}>
+            <IconButton aria-label="Play">
+              <PlayArrowIcon />
+            </IconButton>
+          </Link>
         </CardContent>
       </Card>
     );
