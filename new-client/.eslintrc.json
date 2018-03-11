@@ -1,6 +1,0 @@
-{
-    "extends": [
-        "eslint:react-app",
-        "plugin:prettier/recommended"
-    ]
-}
