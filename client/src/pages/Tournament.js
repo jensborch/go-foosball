@@ -4,7 +4,6 @@ import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
 import TournamentPlayers from '../containers/TournamentsPlayers';
 import Menu from '../components/Menu';
-import { fetchTournaments } from '../actions/actions';
 
 const styles = theme => ({
   root: {
@@ -13,16 +12,13 @@ const styles = theme => ({
 });
 
 class Tournament extends React.Component {
-  componentWillMount() {
-    fetchTournaments(this.props.match.params.id);
-  }
 
   render() {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
         <Menu title="Tournament" />
-        <TournamentPlayers />
+        <TournamentPlayers id={this.props.match.params.id}/>
       </div>
     );
   }
@@ -30,7 +26,6 @@ class Tournament extends React.Component {
 
 Tournament.propTypes = {
   classes: PropTypes.object.isRequired,
-  id: PropTypes.string.isRequired,
 };
 
 export default withRoot(withStyles(styles)(Tournament));

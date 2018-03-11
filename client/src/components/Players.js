@@ -1,14 +1,23 @@
 import Avatar from 'material-ui/Avatar';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card, { CardHeader } from 'material-ui/Card';
+import Card, { CardContent, CardHeader } from 'material-ui/Card';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
+import Typography from 'material-ui/Typography';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui-icons/MoreVert';
 
 const styles = theme => ({
   card: {
-    width: 50,
+    maxWidth: 200,
   },
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    padding: 20,
+    justifyContent: 'space-between',
+  },  
   avatar: {
     backgroundColor: theme.palette.secondary.main,
   },
@@ -23,10 +32,11 @@ class Player extends React.Component {
         <CardHeader
           avatar={
             <Avatar className={classes.avatar}>
-              {data.name.substring(0, 1)}
+              {data.nickname.substring(0, 2)}
             </Avatar>
-          }
-          title={data.name}
+          }          
+          title={data.nickname}
+          subheader={data.realname}
         />
       </Card>
     );
@@ -34,12 +44,18 @@ class Player extends React.Component {
 }
 
 class Players extends React.Component {
+
+  componentWillMount() {
+    this.props.fetchPlayers(this.props.id);
+  }
+
   render() {
     const { classes } = this.props;
     const { data } = this.props;
+    const players = Array.from(data.values());
     return (
       <div className={classes.root}>
-        {data.players.map(p => (
+        {players.map(p => (
           <Player key={p.nickname} data={p} classes={classes} />
         ))}
       </div>
@@ -49,9 +65,8 @@ class Players extends React.Component {
 
 Players.propTypes = {
   classes: PropTypes.object.isRequired,
-  data: PropTypes.shape({
-    players: PropTypes.array.isRequired,
-  }).isRequired,
+  data: PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 Player.propTypes = {

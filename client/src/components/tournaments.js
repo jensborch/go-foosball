@@ -65,7 +65,7 @@ class Tournaments extends React.Component {
     const { data } = this.props;
     return (
       <div className={classes.root}>
-        {data.tournaments.map(tournament => (
+        {data.map(tournament => (
           <Tournament
             key={tournament.uuid}
             data={tournament}
@@ -79,9 +79,7 @@ class Tournaments extends React.Component {
 
 Tournaments.propTypes = {
   classes: PropTypes.object.isRequired,
-  data: PropTypes.shape({
-    tournaments: PropTypes.array.isRequired,
-  }).isRequired,
+  data: PropTypes.array.isRequired,
   fetchTournaments: PropTypes.func.isRequired,
 };
 

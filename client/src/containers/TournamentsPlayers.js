@@ -1,14 +1,17 @@
 import { connect } from 'react-redux';
 import Players from '../components/Players';
+import { fetchTournamentPlayers } from '../actions/actions';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
   return {
-    id: state.id,
+    id: props.id,
     data: state.players,
   };
 };
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    fetchPlayers: id => dispatch(fetchTournamentPlayers(id)),
+  };
 };
 
 const TournamentPlayers = connect(mapStateToProps, mapDispatchToProps)(Players);
