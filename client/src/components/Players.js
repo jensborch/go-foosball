@@ -1,23 +1,25 @@
 import Avatar from 'material-ui/Avatar';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card, { CardContent, CardHeader } from 'material-ui/Card';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
-import Typography from 'material-ui/Typography';
-import IconButton from 'material-ui/IconButton';
-import MoreVertIcon from 'material-ui-icons/MoreVert';
+import List, { ListItem, ListItemSecondaryAction, ListItemText } from 'material-ui/List';
+import Checkbox from 'material-ui/Checkbox';
+import Paper from 'material-ui/Paper';
+import Divider from 'material-ui/Divider';
+
 
 const styles = theme => ({
-  card: {
-    maxWidth: 200,
+  paper: {
+    maxWidth: 275,
+    minWidth: 200,
   },
   root: {
     display: 'flex',
     flexWrap: 'wrap',
     padding: 20,
     justifyContent: 'space-between',
-  },  
+  },
   avatar: {
     backgroundColor: theme.palette.secondary.main,
   },
@@ -28,17 +30,15 @@ class Player extends React.Component {
     const { classes } = this.props;
     const { data } = this.props;
     return (
-      <Card className={classes.card}>
-        <CardHeader
-          avatar={
-            <Avatar className={classes.avatar}>
-              {data.nickname.substring(0, 2)}
-            </Avatar>
-          }          
-          title={data.nickname}
-          subheader={data.realname}
-        />
-      </Card>
+      <ListItem>
+        <Avatar className={classes.avatar}>
+          {data.nickname.substring(0, 2)}
+        </Avatar>
+        <ListItemText primary={data.nickname} secondary={data.realname} />
+        <ListItemSecondaryAction>
+          <Checkbox />
+        </ListItemSecondaryAction>
+      </ListItem>
     );
   }
 }
@@ -55,9 +55,20 @@ class Players extends React.Component {
     const players = Array.from(data.values());
     return (
       <div className={classes.root}>
-        {players.map(p => (
-          <Player key={p.nickname} data={p} classes={classes} />
-        ))}
+        <Paper className={classes.paper} elevation={4}>
+        <List>
+          {players.map( (p, i) => (            
+            <div>
+            <Player key={p.nickname} data={p} classes={classes} />
+            {(i !== players.length - 1) ?
+            <li>
+              <Divider inset />
+            </li>
+            : null}            
+            </div>
+          ))}
+        </List>
+        </Paper>
       </div>
     );
   }
