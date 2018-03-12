@@ -5,7 +5,7 @@ import {
   RECEIVE_TOURNAMET_PLAYERS,
 } from '../actions/actions';
 
-function tournaments(state = [], action) {
+export function tournaments(state = [], action) {
   switch (action.type) {
     case RECEIVE_TOURNAMETS:
       return action.tournaments;
@@ -14,11 +14,24 @@ function tournaments(state = [], action) {
   }
 }
 
-function players(state = new Map(), action) {
+export function players(state = new Map(), action) {
   switch (action.type) {
     case RECEIVE_TOURNAMET_PLAYERS:
       let players = new Map(action.players.map(p => [p.nickname, p]));
-      return players;
+      return new Map([...state, ...players]);
+    default:
+      return state;
+  }
+}
+
+export function active(state = {}, action) {
+  switch (action.type) {
+    case RECEIVE_TOURNAMET_PLAYERS:
+      const names = action.players.map(p => p.nickname);
+      return {
+        ...state,
+        [action.id]: names
+      }
     default:
       return state;
   }
@@ -27,6 +40,7 @@ function players(state = new Map(), action) {
 const rootReducer = combineReducers({
   tournaments,
   players,
+  active,
 });
 
 export default rootReducer;

@@ -5,7 +5,6 @@ import withRoot from '../withRoot';
 import AllTournaments, {
   AllTournamentsMenu,
 } from '../containers/AllTournaments';
-import Menu from '../components/Menu';
 
 const styles = theme => ({
   root: {
