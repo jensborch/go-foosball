@@ -1,13 +1,12 @@
 import Avatar from 'material-ui/Avatar';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card, { CardContent, CardHeader } from 'material-ui/Card';
+import Card, { CardActions, CardContent, CardHeader } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
-import IconButton from 'material-ui/IconButton';
-import PlayArrowIcon from 'material-ui-icons/PlayArrow';
 import { Link } from 'react-router-dom';
+import Button from 'material-ui/Button';
 
 const styles = theme => ({
   card: {
@@ -44,12 +43,14 @@ class Tournament extends React.Component {
           <Typography variant="body2">
             Initial ranking: {data.initial}
           </Typography>
-          <Link to={`/tournament/${data.uuid}`}>
-            <IconButton aria-label="Play">
-              <PlayArrowIcon />
-            </IconButton>
-          </Link>
         </CardContent>
+        <CardActions>
+          <Link to={`/tournament/${data.uuid}`}>
+            <Button size="small" color="primary">
+              Play
+            </Button>
+          </Link>
+        </CardActions>
       </Card>
     );
   }
@@ -57,7 +58,7 @@ class Tournament extends React.Component {
 
 class Tournaments extends React.Component {
   componentWillMount() {
-    this.props.fetchTournaments();
+    this.props.fetch();
   }
 
   render() {
@@ -80,7 +81,7 @@ class Tournaments extends React.Component {
 Tournaments.propTypes = {
   classes: PropTypes.object.isRequired,
   data: PropTypes.array.isRequired,
-  fetchTournaments: PropTypes.func.isRequired,
+  fetch: PropTypes.func.isRequired,
 };
 
 Tournament.propTypes = {

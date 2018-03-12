@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import Tournaments from '../components/Tournaments';
 import { fetchTournaments } from '../actions/actions';
+import Menu from '../components/Menu';
 
 const mapStateToProps = state => {
   return {
@@ -9,7 +10,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    fetchTournaments: () => dispatch(fetchTournaments()),
+    fetch: () => dispatch(fetchTournaments()),
   };
 };
 
@@ -18,3 +19,5 @@ const AllTournaments = connect(mapStateToProps, mapDispatchToProps)(
 );
 
 export default AllTournaments;
+
+export const AllTournamentsMenu = connect(null, mapDispatchToProps)(Menu);

@@ -8,6 +8,7 @@ import Typography from 'material-ui/Typography';
 import Toolbar from 'material-ui/Toolbar';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   flex: {
@@ -26,6 +27,8 @@ class Menu extends React.Component {
       <AppBar position="static">
         <Toolbar>
           <IconButton
+            to="/"
+            component={props => <Link {...props} />}
             className={classes.menuButton}
             color="inherit"
             aria-label="Home"
@@ -35,13 +38,15 @@ class Menu extends React.Component {
           <Typography variant="title" color="inherit" className={classes.flex}>
             {this.props.title}
           </Typography>
-          <IconButton
-            color="inherit"
-            aria-label="Refresh"
-            onClick={this.props.refresh ? this.props.refresh : undefined}
-          >
-            <RefreshIcon />
-          </IconButton>
+          {this.props.fetch ? (
+            <IconButton
+              color="inherit"
+              aria-label="Refresh"
+              onClick={this.props.fetch}
+            >
+              <RefreshIcon />
+            </IconButton>
+          ) : null}
         </Toolbar>
       </AppBar>
     );
@@ -51,7 +56,7 @@ class Menu extends React.Component {
 Menu.propTypes = {
   classes: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
-  refresh: PropTypes.func,
+  fetch: PropTypes.func,
 };
 
 export default withRoot(withStyles(styles)(Menu));

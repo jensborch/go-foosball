@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
-import AllTournaments from '../containers/AllTournaments';
+import AllTournaments, {
+  AllTournamentsMenu,
+} from '../containers/AllTournaments';
 import Menu from '../components/Menu';
 
 const styles = theme => ({
@@ -16,7 +18,7 @@ class Index extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <Menu title="Foosball" />
+        <AllTournamentsMenu title="Foosball" />
         <AllTournaments />
       </div>
     );

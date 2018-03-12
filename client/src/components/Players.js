@@ -48,7 +48,7 @@ class Player extends React.Component {
 
 class Players extends React.Component {
   componentWillMount() {
-    this.props.fetchPlayers(this.props.id);
+    this.props.fetch(this.props.id);
   }
 
   render() {
@@ -60,8 +60,8 @@ class Players extends React.Component {
         <Paper className={classes.paper} elevation={4}>
           <List>
             {players.map((p, i) => (
-              <div>
-                <Player key={p.nickname} data={p} classes={classes} />
+              <div key={p.nickname}>
+                <Player data={p} classes={classes} />
                 {i !== players.length - 1 ? (
                   <li>
                     <Divider inset />
@@ -80,6 +80,7 @@ Players.propTypes = {
   classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired,
   id: PropTypes.string.isRequired,
+  fetch: PropTypes.func.isRequired,
 };
 
 Player.propTypes = {

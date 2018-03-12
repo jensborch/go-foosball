@@ -10,7 +10,7 @@ const mapStateToProps = (state, props) => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    fetchPlayers: id => dispatch(fetchTournamentPlayers(id)),
+    fetch: id => dispatch(fetchTournamentPlayers(id)),
   };
 };
 
