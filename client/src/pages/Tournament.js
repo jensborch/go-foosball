@@ -4,6 +4,8 @@ import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
 import TournamentPlayers from '../containers/TournamentsPlayers';
 import Menu from '../components/Menu';
+import Header from '../components/Header';
+import Start from '../components/Start';
 
 const styles = theme => ({
   root: {
@@ -16,6 +18,8 @@ class Tournament extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
+        <Header />
+        <Start />
         <Menu title="Tournament" />
         <TournamentPlayers id={this.props.match.params.id} />
       </div>

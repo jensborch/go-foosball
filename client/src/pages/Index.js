@@ -5,6 +5,7 @@ import withRoot from '../withRoot';
 import AllTournaments, {
   AllTournamentsMenu,
 } from '../containers/AllTournaments';
+import Header from '../components/Header';
 
 const styles = theme => ({
   root: {
@@ -18,6 +19,7 @@ class Index extends React.Component {
     return (
       <div className={classes.root}>
         <AllTournamentsMenu title="Foosball" />
+        <Header />
         <AllTournaments />
       </div>
     );

@@ -30,8 +30,8 @@ export function active(state = {}, action) {
       const names = action.players.map(p => p.nickname);
       return {
         ...state,
-        [action.id]: names
-      }
+        [action.id]: names,
+      };
     default:
       return state;
   }

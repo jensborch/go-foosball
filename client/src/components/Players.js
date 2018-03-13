@@ -20,7 +20,7 @@ const styles = theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
-    padding: 20,
+    padding: 40,
     justifyContent: 'space-between',
   },
   avatar: {
