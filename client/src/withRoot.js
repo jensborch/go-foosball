@@ -1,7 +1,5 @@
 import React from 'react';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import amber from 'material-ui/colors/amber';
-import grey from 'material-ui/colors/grey';
 import Reboot from 'material-ui/Reboot';
 
 // A theme with custom primary and secondary color.

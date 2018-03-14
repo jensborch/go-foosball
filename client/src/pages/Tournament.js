@@ -6,10 +6,16 @@ import TournamentPlayers from '../containers/TournamentsPlayers';
 import Menu from '../components/Menu';
 import Header from '../components/Header';
 import Start from '../components/Start';
+import Game from '../components/Game';
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
+  },
+  content: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    paddingTop: 25,
   },
 });
 
@@ -21,7 +27,10 @@ class Tournament extends React.Component {
         <Header />
         <Start />
         <Menu title="Tournament" />
-        <TournamentPlayers id={this.props.match.params.id} />
+        <div className={classes.content}>
+          <TournamentPlayers id={this.props.match.params.id} />
+          <Game />
+        </div>
       </div>
     );
   }

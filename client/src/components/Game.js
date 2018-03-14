@@ -1,16 +1,17 @@
-import Avatar from 'material-ui/Avatar';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card, { CardActions, CardContent, CardHeader } from 'material-ui/Card';
+import Card, {
+  CardMedia,
+  CardContent,
+} from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
-import { Link } from 'react-router-dom';
-import Button from 'material-ui/Button';
 
 const styles = theme => ({
   card: {
     minWidth: 275,
+    margin: 20,
   },
 });
 
@@ -24,12 +25,15 @@ class Game extends React.Component {
           image="/foosball.jpg"
           title="Game"
         />
+        <CardContent>
+        <Typography variant="body2">Game</Typography>
+        </CardContent>
       </Card>
     );
   }
 }
 
-Tournament.propTypes = {
+Game.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 

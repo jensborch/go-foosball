@@ -16,12 +16,7 @@ const styles = theme => ({
   paper: {
     maxWidth: 275,
     minWidth: 200,
-  },
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    padding: 40,
-    justifyContent: 'space-between',
+    margin: 20,
   },
   avatar: {
     backgroundColor: theme.palette.secondary.main,
@@ -56,22 +51,20 @@ class Players extends React.Component {
     const { data } = this.props;
     const players = Array.from(data.values());
     return (
-      <div className={classes.root}>
-        <Paper className={classes.paper} elevation={4}>
-          <List>
-            {players.map((p, i) => (
-              <div key={p.nickname}>
-                <Player data={p} classes={classes} />
-                {i !== players.length - 1 ? (
-                  <li>
-                    <Divider inset />
-                  </li>
-                ) : null}
-              </div>
-            ))}
-          </List>
-        </Paper>
-      </div>
+      <Paper className={classes.paper} elevation={4}>
+        <List>
+          {players.map((p, i) => (
+            <div key={p.nickname}>
+              <Player data={p} classes={classes} />
+              {i !== players.length - 1 ? (
+                <li>
+                  <Divider inset />
+                </li>
+              ) : null}
+            </div>
+          ))}
+        </List>
+      </Paper>
     );
   }
 }

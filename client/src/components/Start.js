@@ -19,7 +19,7 @@ class Start extends React.Component {
     return (
       <Button
         variant="fab"
-        color="scondary"
+        color="default"
         aria-label="add"
         className={classes.button}
       >
