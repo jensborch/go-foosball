@@ -3,7 +3,8 @@ import { fetchRandomgames } from '../actions/actions';
 import Games from '../components/Games';
 
 const mapStateToProps = (state, props) => {
-  const games = state.random && state.random[props.id] ? state.random[props.id] : [];
+  const games =
+    state.random && state.random[props.id] ? state.random[props.id] : [];
   return {
     id: props.id,
     data: games,

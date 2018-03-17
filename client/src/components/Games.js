@@ -34,6 +34,27 @@ const styles = theme => ({
   },
 });
 
+function Players(props) {
+  const { classes } = props;
+  const { data } = props;
+  return (
+    <div className={classes.row}>
+      <Typography className={classes.name} variant="subheading">
+        {data[0]}
+      </Typography>
+      <Avatar className={classes.avatar}>{data[0].substring(0, 2)}</Avatar>
+      {data.length > 1 ? (
+        <div>
+          <Avatar className={classes.avatar}>{data[1].substring(0, 2)}</Avatar>
+          <Typography className={classes.name} variant="subheading">
+            {data[1]}
+          </Typography>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 class Game extends React.Component {
   render() {
     const { classes } = this.props;
@@ -41,22 +62,7 @@ class Game extends React.Component {
     return (
       <Card className={classes.card}>
         <CardContent>
-          <div className={classes.row}>
-            <Typography className={classes.name} variant="subheading">
-              {data.rightPlayers[0]}
-            </Typography>
-            <Avatar className={classes.avatar}>
-              {data.rightPlayers[0].substring(0, 2)}
-            </Avatar>
-            {data.rightPlayers.length > 1 ? (
-              <div>
-                <Avatar className={classes.avatar}>J</Avatar>
-                <Typography className={classes.name} variant="subheading">
-                  test
-                </Typography>
-              </div>
-            ) : null}
-          </div>
+          <Players data={data.rightPlayers} classes={classes} />
           <LinearProgress
             className={classes.score}
             color="secondary"
@@ -76,16 +82,7 @@ class Game extends React.Component {
             variant="determinate"
             value="20"
           />
-          <div className={classes.row}>
-            <Typography className={classes.name} variant="subheading">
-              test
-            </Typography>
-            <Avatar className={classes.avatar}>H</Avatar>
-            <Avatar className={classes.avatar}>J</Avatar>
-            <Typography className={classes.name} variant="subheading">
-              test
-            </Typography>
-          </div>
+          <Players data={data.leftPlayers} classes={classes} />
         </CardContent>
       </Card>
     );
@@ -101,7 +98,11 @@ class Games extends React.Component {
     const { classes } = this.props;
     const { data } = this.props;
     return (
-      <div>{data.map(game => <Game key={game.uuid} classes={classes} data={game} />)}</div>
+      <div>
+        {data.map(game => (
+          <Game key={game.uuid} classes={classes} data={game} />
+        ))}
+      </div>
     );
   }
 }
