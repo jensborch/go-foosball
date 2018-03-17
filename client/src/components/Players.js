@@ -71,7 +71,7 @@ class Players extends React.Component {
 
 Players.propTypes = {
   classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired,
   id: PropTypes.string.isRequired,
   fetch: PropTypes.func.isRequired,
 };
