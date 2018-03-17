@@ -11,15 +11,25 @@ import List, {
 import Checkbox from 'material-ui/Checkbox';
 import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
+import Button from 'material-ui/Button';
+import BottomNavigation, {
+  BottomNavigationAction,
+} from 'material-ui/BottomNavigation';
+import AddIcon from 'material-ui-icons/Add';
 
 const styles = theme => ({
   paper: {
     maxWidth: 275,
     minWidth: 200,
     margin: 20,
+    display: 'flex',
+    flexFlow: 'column',
   },
   avatar: {
     backgroundColor: theme.palette.secondary.main,
+  },
+  list: {
+    flex: 1,
   },
 });
 
@@ -52,7 +62,11 @@ class Players extends React.Component {
     const players = data ? data : [];
     return (
       <Paper className={classes.paper} elevation={4}>
-        <List>
+        <List className={classes.list}>
+          <ListItem>
+            <ListItemText primary="Players" />
+          </ListItem>
+          <Divider />
           {players.map((p, i) => (
             <div key={p.nickname}>
               <Player data={p} classes={classes} />
@@ -64,6 +78,10 @@ class Players extends React.Component {
             </div>
           ))}
         </List>
+        <Divider />
+        <BottomNavigation showLabels>
+          <BottomNavigationAction label="Add" icon={<AddIcon />} />
+        </BottomNavigation>
       </Paper>
     );
   }
