@@ -3,9 +3,14 @@ import Players from '../components/Players';
 import { fetchTournamentPlayers } from '../actions/actions';
 
 const mapStateToProps = (state, props) => {
+  const players = [];
+  const active = state.active[props.id] ? state.active[props.id] : [];
+  active.forEach(nickname => {
+    players.push(state.players[nickname]);
+  });
   return {
     id: props.id,
-    data: state.players,
+    data: players,
   };
 };
 const mapDispatchToProps = dispatch => {

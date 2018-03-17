@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import {
   RECEIVE_TOURNAMETS,
   RECEIVE_TOURNAMET_PLAYERS,
+  RECEIVE_RANDOM_GAMES,
 } from '../actions/actions';
 
 export function tournaments(state = [], action) {
@@ -14,11 +15,17 @@ export function tournaments(state = [], action) {
   }
 }
 
-export function players(state = new Map(), action) {
+export function players(state = {}, action) {
   switch (action.type) {
     case RECEIVE_TOURNAMET_PLAYERS:
-      let players = new Map(action.players.map(p => [p.nickname, p]));
-      return new Map([...state, ...players]);
+      const newplayers = action.players.reduce(
+        (a, p) => ({ ...a, [p.nickname]: p }),
+        {}
+      );
+      return {
+        ...state,
+        ...newplayers,
+      };
     default:
       return state;
   }
@@ -27,10 +34,21 @@ export function players(state = new Map(), action) {
 export function active(state = {}, action) {
   switch (action.type) {
     case RECEIVE_TOURNAMET_PLAYERS:
-      const names = action.players.map(p => p.nickname);
       return {
         ...state,
-        [action.id]: names,
+        [action.id]: action.players.map(p => p.nickname),
+      };
+    default:
+      return state;
+  }
+}
+
+export function random(state = {}, action) {
+  switch (action.type) {
+    case RECEIVE_RANDOM_GAMES:
+      return {
+        ...state,
+        [action.id]: action.games,
       };
     default:
       return state;

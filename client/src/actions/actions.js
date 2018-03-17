@@ -37,7 +37,7 @@ export const receiveRandomGames = (id, games) => {
   return {
     type: RECEIVE_RANDOM_GAMES,
     id: id,
-    players: games,
+    games: games,
     receivedAt: Date.now(),
   };
 };

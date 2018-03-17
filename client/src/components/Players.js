@@ -49,7 +49,7 @@ class Players extends React.Component {
   render() {
     const { classes } = this.props;
     const { data } = this.props;
-    const players = Array.from(data.values());
+    const players = data ? data : [];
     return (
       <Paper className={classes.paper} elevation={4}>
         <List>
