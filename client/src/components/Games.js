@@ -67,20 +67,20 @@ class Game extends React.Component {
             className={classes.score}
             color="secondary"
             variant="determinate"
-            value="30"
+            value={data.rightScore / (data.rightScore + data.leftScore) * 100}
           />
           <div size="small" className={classes.row}>
-            <Button className={classes.button}>Red wins 30 points</Button>
+            <Button className={classes.button}>{data.table.color.right} wins {data.rightScore} points</Button>
           </div>
           <Divider />
           <div size="small" className={classes.row}>
-            <Button className={classes.button}>Blue wins 20 points</Button>
+            <Button className={classes.button}>{data.table.color.left} wins {data.leftScore} points</Button>
           </div>
           <LinearProgress
             className={classes.score}
             color="secondary"
             variant="determinate"
-            value="20"
+            value={data.leftScore / (data.rightScore + data.leftScore) * 100}
           />
           <Players data={data.leftPlayers} classes={classes} />
         </CardContent>
@@ -106,6 +106,11 @@ class Games extends React.Component {
     );
   }
 }
+
+Players.propTypes = {
+  classes: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired,
+};
 
 Game.propTypes = {
   classes: PropTypes.object.isRequired,
