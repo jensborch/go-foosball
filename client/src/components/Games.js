@@ -70,11 +70,15 @@ class Game extends React.Component {
             value={data.rightScore / (data.rightScore + data.leftScore) * 100}
           />
           <div size="small" className={classes.row}>
-            <Button className={classes.button}>{data.table.color.right} wins {data.rightScore} points</Button>
+            <Button className={classes.button}>
+              {data.table.color.right} wins {data.rightScore} points
+            </Button>
           </div>
           <Divider />
           <div size="small" className={classes.row}>
-            <Button className={classes.button}>{data.table.color.left} wins {data.leftScore} points</Button>
+            <Button className={classes.button}>
+              {data.table.color.left} wins {data.leftScore} points
+            </Button>
           </div>
           <LinearProgress
             className={classes.score}
