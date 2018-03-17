@@ -11,7 +11,6 @@ import List, {
 import Checkbox from 'material-ui/Checkbox';
 import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
-import Button from 'material-ui/Button';
 import BottomNavigation, {
   BottomNavigationAction,
 } from 'material-ui/BottomNavigation';

@@ -6,7 +6,7 @@ import TournamentPlayers from '../containers/TournamentsPlayers';
 import Menu from '../components/Menu';
 import Header from '../components/Header';
 import Start from '../components/Start';
-import Game from '../components/Game';
+import GamesInTournament from '../containers/GamesInTournament';
 
 const styles = theme => ({
   root: {
@@ -29,7 +29,7 @@ class Tournament extends React.Component {
         <Menu title="Tournament" />
         <div className={classes.content}>
           <TournamentPlayers id={this.props.match.params.id} />
-          <Game />
+          <GamesInTournament id={this.props.match.params.id} />
         </div>
       </div>
     );

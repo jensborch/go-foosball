@@ -59,6 +59,7 @@ const rootReducer = combineReducers({
   tournaments,
   players,
   active,
+  random,
 });
 
 export default rootReducer;

@@ -79,7 +79,7 @@ export function fetchRandomgames(id) {
   return function(dispatch) {
     return fetch(`http://localhost:8080/tournaments/${id}/games/random`)
       .then(response => response.json())
-      .then(json => json.map(transformDateFormat))
+      //.then(json => json.map(transformDateFormat))
       .then(json => {
         dispatch(receiveRandomGames(id, json));
       });
