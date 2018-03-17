@@ -32,7 +32,17 @@ export const receiveTournamentPlayers = (id, players) => {
   };
 };
 
-function transformDateFormat(json) {
+export const RECEIVE_RANDOM_GAMES = 'RECEIVE_RANDOM_GAMES';
+export const receiveRandomGames = (id, games) => {
+  return {
+    type: RECEIVE_RANDOM_GAMES,
+    id: id,
+    players: games,
+    receivedAt: Date.now(),
+  };
+};
+
+export function transformDateFormat(json) {
   const result = {
     ...json,
     created: new Date(json.created),
@@ -61,6 +71,17 @@ export function fetchTournamentPlayers(id) {
       .then(json => json.map(transformDateFormat))
       .then(json => {
         dispatch(receiveTournamentPlayers(id, json));
+      });
+  };
+}
+
+export function fetchRandomgames(id) {
+  return function(dispatch) {
+    return fetch(`http://localhost:8080/tournaments/${id}/games/random`)
+      .then(response => response.json())
+      .then(json => json.map(transformDateFormat))
+      .then(json => {
+        dispatch(receiveRandomGames(id, json));
       });
   };
 }
