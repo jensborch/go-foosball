@@ -3,11 +3,8 @@ import { fetchRandomgames } from '../actions/actions';
 import Refresh from '../components/Refresh';
 
 const mapStateToProps = (state, props) => {
-  const games =
-    state.random && state.random[props.id] ? state.random[props.id] : [];
   return {
     id: props.id,
-    data: games,
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -16,6 +13,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const GamesInTournament = connect(mapStateToProps, mapDispatchToProps)(Refresh);
+const RandomGames = connect(mapStateToProps, mapDispatchToProps)(Refresh);
 
-export default GamesInTournament;
+export default RandomGames;

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
 import Button from 'material-ui/Button';
-import Refresh from 'material-ui-icons/Refresh';
+import RefreshIcon from 'material-ui-icons/Refresh';
 
 const styles = theme => ({
   button: {
@@ -13,25 +13,30 @@ const styles = theme => ({
   },
 });
 
-class Start extends React.Component {
+class Refresh extends React.Component {
+  handleClick = () => {
+    this.props.refresh(this.props.id);
+  };
+
   render() {
     const { classes } = this.props;
     return (
       <Button
-        onClick={this.props.refresh}
+        onClick={this.handleClick}
         variant="fab"
         color="default"
         aria-label="add"
         className={classes.button}
       >
-        <Refresh />
+        <RefreshIcon />
       </Button>
     );
   }
 }
 
-Start.propTypes = {
+Refresh.propTypes = {
   classes: PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
-export default withRoot(withStyles(styles)(Start));
+export default withRoot(withStyles(styles)(Refresh));
