@@ -7,6 +7,7 @@ import Menu from '../components/Menu';
 import Header from '../components/Header';
 import Start from '../components/Start';
 import GamesInTournament from '../containers/GamesInTournament';
+import RandomGames from '../containers/RandomGames';
 
 const styles = theme => ({
   root: {
@@ -26,6 +27,7 @@ class Tournament extends React.Component {
       <div className={classes.root}>
         <Header />
         <Start />
+        <RandomGames />
         <Menu title="Tournament" />
         <div className={classes.content}>
           <TournamentPlayers id={this.props.match.params.id} />
