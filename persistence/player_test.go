@@ -13,6 +13,15 @@ func initTournament() *model.Tournament {
 	return model.NewTournament("test", *table1, *table2)
 }
 
+func TestRemoveNotFound(t *testing.T) {
+	db := InitDB(t)
+	defer db.Close()
+	r := NewPlayerRepository(db)
+	if f, _ := r.Remove("test"); f {
+		t.Errorf("Player should not be found")
+	}
+}
+
 func TestStorePlayer(t *testing.T) {
 	db := InitDB(t)
 	defer db.Close()
@@ -38,8 +47,8 @@ func TestStorePlayer(t *testing.T) {
 		t.Errorf("Find should find player, got: %s, want: %s.", found.Nickname, "jj")
 	}
 
-	if f, err := r.Remove(p1.Nickname); f || err != nil {
-		t.Errorf("Failed to remove player %v", err)
+	if f, err := r.Remove(p1.Nickname); !f || err != nil {
+		t.Errorf("Failed to remove or find player, found is %v, error is %v", f, err)
 	}
 
 	if len(r.FindAll()) != 1 {

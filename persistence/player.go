@@ -13,6 +13,7 @@ type playerRepository struct {
 }
 
 func (r *playerRepository) Store(player *model.Player) error {
+	r.db.Unscoped().Where("nickname = ?", player.Nickname).Delete(&model.Player{})
 	return r.db.Create(player).Error
 }
 
@@ -20,8 +21,7 @@ func (r *playerRepository) Remove(nickname string) (model.Found, error) {
 	if len(nickname) > 0 {
 		p, found, _ := r.Find(nickname)
 		if found && len(p.TournamentPlayers) == 0 {
-			result := r.db.Where("nickname = ?", nickname).Delete(&model.Player{})
-			return result.RecordNotFound(), result.Error
+			return true, r.db.Where("nickname = ?", nickname).Delete(&model.Player{}).Error
 		}
 		return found, fmt.Errorf("Player %s could not be found or is in tournament", nickname)
 	}
