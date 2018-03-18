@@ -23,7 +23,7 @@ type TournamentPlayer struct {
 // PlayerRepository provides access players
 type PlayerRepository interface {
 	Store(player *Player) error
-	Remove(player *Player) error
+	Remove(nickname string) (Found, error)
 	Update(player *Player) error
 	Find(nickname string) (*Player, Found, error)
 	FindAll() []*Player

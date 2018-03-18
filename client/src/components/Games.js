@@ -11,7 +11,7 @@ import Button from 'material-ui/Button';
 
 const styles = theme => ({
   card: {
-    minWidth: 275,
+    minWidth: 300,
     margin: 20,
   },
   avatar: {
@@ -39,12 +39,14 @@ function Players(props) {
   const { data } = props;
   return (
     <div className={classes.row}>
-      <Typography className={classes.name} variant="subheading">
-        {data[0]}
-      </Typography>
-      <Avatar className={classes.avatar}>{data[0].substring(0, 2)}</Avatar>
+      <div className={classes.row}>
+        <Typography className={classes.name} variant="subheading">
+          {data[0]}
+        </Typography>
+        <Avatar className={classes.avatar}>{data[0].substring(0, 2)}</Avatar>
+      </div>
       {data.length > 1 ? (
-        <div>
+        <div className={classes.row}>
           <Avatar className={classes.avatar}>{data[1].substring(0, 2)}</Avatar>
           <Typography className={classes.name} variant="subheading">
             {data[1]}

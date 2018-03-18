@@ -4,4 +4,4 @@ debug.test
 test.db
 /go-foosball
 /*.db
-
+.vscode

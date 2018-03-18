@@ -62,3 +62,19 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 		tx.Commit()
 	}
 }
+
+//DeletePlayer deletes a player
+func DeletePlayer(param string, db *gorm.DB) func(*gin.Context) {
+	return func(c *gin.Context) {
+		name := c.Param(param)
+		r := persistence.NewPlayerRepository(db)
+		found, err := r.Remove(name)
+		if found {
+			c.JSON(http.StatusOK, struct{}{})
+		} else if err == nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find %s", name)})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+	}
+}

@@ -1,6 +1,9 @@
 package persistence
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jinzhu/gorm"
 )
@@ -13,8 +16,16 @@ func (r *playerRepository) Store(player *model.Player) error {
 	return r.db.Create(player).Error
 }
 
-func (r *playerRepository) Remove(player *model.Player) error {
-	return r.db.Where("nickname = ?", player.Nickname).Delete(&model.Player{}).Error
+func (r *playerRepository) Remove(nickname string) (model.Found, error) {
+	if len(nickname) > 0 {
+		p, found, _ := r.Find(nickname)
+		if found && len(p.TournamentPlayers) == 0 {
+			result := r.db.Where("nickname = ?", nickname).Delete(&model.Player{})
+			return result.RecordNotFound(), result.Error
+		}
+		return found, fmt.Errorf("Player %s could not be found or is in tournament", nickname)
+	}
+	return false, errors.New("Nickname must be defined - empty string not allowed")
 }
 
 func (r *playerRepository) Update(player *model.Player) error {

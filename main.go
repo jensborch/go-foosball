@@ -38,7 +38,7 @@ func main() {
 	{
 		players.POST("/", resources.PostPlayer(db))
 		players.GET("/:name", resources.GetPlayer("name", db))
-		//players.DELETE("/:name", resources.DeletePlayer("name", db))
+		players.DELETE("/:name", resources.DeletePlayer("name", db))
 		players.GET("/", resources.GetPlayers(db))
 	}
 

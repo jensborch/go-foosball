@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/jensborch/go-foosball/model"
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
@@ -15,16 +14,11 @@ func initTournament() *model.Tournament {
 }
 
 func TestStorePlayer(t *testing.T) {
-	p1 := model.NewPlayer("tt", "Thomas")
-	p2 := model.NewPlayer("jj", "Jens")
-
-	db, err := gorm.Open("sqlite3", ":memory:")
-	if err != nil {
-		t.Errorf("Failed to connect database")
-	}
+	db := InitDB(t)
 	defer db.Close()
 
-	db.AutoMigrate(&model.Player{})
+	p1 := model.NewPlayer("tt", "Thomas")
+	p2 := model.NewPlayer("jj", "Jens")
 
 	r := NewPlayerRepository(db)
 
@@ -44,9 +38,8 @@ func TestStorePlayer(t *testing.T) {
 		t.Errorf("Find should find player, got: %s, want: %s.", found.Nickname, "jj")
 	}
 
-	err = r.Remove(p1)
-	if err != nil {
-		t.Errorf("Failed to remove player")
+	if f, err := r.Remove(p1.Nickname); f || err != nil {
+		t.Errorf("Failed to remove player %v", err)
 	}
 
 	if len(r.FindAll()) != 1 {
