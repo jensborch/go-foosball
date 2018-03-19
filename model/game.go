@@ -15,7 +15,7 @@ type Game struct {
 	Base
 	UUID              string           `gorm:"size:36;unique_index"`
 	TournamentTableID uint             `json:"-"`
-	TournamentTable   TournamentTable  `gorm:"gorm:"association_save_reference:false;save_associations:false" json:"table"`
+	TournamentTable   TournamentTable  `gorm:"association_save_reference:false;save_associations:false" json:"table"`
 	RightPlayerOneID  uint             `json:"-"`
 	RightPlayerTwoID  uint             `json:"-"`
 	LeftPlayerOneID   uint             `json:"-"`
