@@ -13,6 +13,12 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
   },
+  buttons: {
+    position: 'absolute',
+    display: 'flex',
+    top: theme.spacing.unit * 3,
+    right: theme.spacing.unit * 5,
+  },
   content: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -26,8 +32,10 @@ class Tournament extends React.Component {
     return (
       <div className={classes.root}>
         <Header />
-        <Start />
-        <RandomGames id={this.props.match.params.id} />
+        <div className={classes.buttons}>
+          <Start />
+          <RandomGames id={this.props.match.params.id} />
+        </div>
         <Menu title="Tournament" />
         <div className={classes.content}>
           <TournamentPlayers id={this.props.match.params.id} />

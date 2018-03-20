@@ -7,9 +7,7 @@ import Launch from 'material-ui-icons/Launch';
 
 const styles = theme => ({
   button: {
-    position: 'absolute',
-    top: theme.spacing.unit * 4,
-    right: theme.spacing.unit * 5,
+    margin: theme.spacing.unit,
   },
 });
 

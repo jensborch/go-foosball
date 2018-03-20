@@ -7,9 +7,7 @@ import RefreshIcon from 'material-ui-icons/Refresh';
 
 const styles = theme => ({
   button: {
-    position: 'absolute',
-    top: theme.spacing.unit * 4,
-    right: theme.spacing.unit * 15,
+    margin: theme.spacing.unit,
   },
 });
 
