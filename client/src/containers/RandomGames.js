@@ -9,7 +9,7 @@ const mapStateToProps = (state, props) => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    refresh: id => dispatch(fetchRandomgames(id)),
+    fetch: id => dispatch(fetchRandomgames(id)),
   };
 };
 

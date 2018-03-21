@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import HomeIcon from 'material-ui-icons/Home';
-import RefreshIcon from 'material-ui-icons/Refresh';
 import Typography from 'material-ui/Typography';
 import Toolbar from 'material-ui/Toolbar';
 import { withStyles } from 'material-ui/styles';
@@ -15,8 +14,14 @@ const styles = theme => ({
     flex: 1,
   },
   menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
+    marginLeft: theme.spacing.unit * -1,
+    marginRight: theme.spacing.unit * 2,
+  },
+  buttons: {
+    position: 'absolute',
+    display: 'flex',
+    top: theme.spacing.unit * 3.5,
+    right: theme.spacing.unit * 5,
   },
 });
 
@@ -38,15 +43,7 @@ class Menu extends React.Component {
           <Typography variant="title" color="inherit" className={classes.flex}>
             {this.props.title}
           </Typography>
-          {this.props.fetch ? (
-            <IconButton
-              color="inherit"
-              aria-label="Refresh"
-              onClick={this.props.fetch}
-            >
-              <RefreshIcon />
-            </IconButton>
-          ) : null}
+          <div className={classes.buttons}>{this.props.children}</div>
         </Toolbar>
       </AppBar>
     );

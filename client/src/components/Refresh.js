@@ -13,7 +13,7 @@ const styles = theme => ({
 
 class Refresh extends React.Component {
   handleClick = () => {
-    this.props.refresh(this.props.id);
+    this.props.fetch(this.props.id);
   };
 
   render() {
@@ -34,7 +34,7 @@ class Refresh extends React.Component {
 
 Refresh.propTypes = {
   classes: PropTypes.object.isRequired,
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
 };
 
 export default withRoot(withStyles(styles)(Refresh));

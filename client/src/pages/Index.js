@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
 import AllTournaments, {
-  AllTournamentsMenu,
+  RefreshTournaments,
 } from '../containers/AllTournaments';
 import Header from '../components/Header';
+import Menu from '../components/Menu';
 
 const styles = theme => ({
   root: {
@@ -18,7 +19,9 @@ class Index extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <AllTournamentsMenu title="Foosball" />
+        <Menu title="Foosball">
+          <RefreshTournaments />
+        </Menu>
         <Header />
         <AllTournaments />
       </div>

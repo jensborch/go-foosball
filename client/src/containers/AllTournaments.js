@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import Tournaments from '../components/Tournaments';
 import { fetchTournaments } from '../actions/actions';
-import Menu from '../components/Menu';
+import Refresh from '../components/Refresh';
 
 const mapStateToProps = state => {
   return {
@@ -20,4 +20,4 @@ const AllTournaments = connect(mapStateToProps, mapDispatchToProps)(
 
 export default AllTournaments;
 
-export const AllTournamentsMenu = connect(null, mapDispatchToProps)(Menu);
+export const RefreshTournaments = connect(null, mapDispatchToProps)(Refresh);
