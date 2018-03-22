@@ -35,11 +35,10 @@ class Timer extends React.Component {
     this.timerHandle = undefined;
     this.reset = this.reset.bind(this);
     this.timer = this.timer.bind(this);
-    this.reset();
   }
 
   state = {
-    countdown: '',
+    countdown: this.printCountDown(this.props.timeout),
   };
 
   componentWillReceiveProps(nextProps) {
@@ -51,28 +50,42 @@ class Timer extends React.Component {
     }
   }
 
-  reset = () => {
-    this.setState({
-      countdown: '',
-    });
+  reset() {
     this.timeout = this.props.timeout;
-  };
-
-  timer = () => {
-    let minutes = Math.floor(this.timeout / 60);
-    let seconds = this.timeout % 60;
-
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    seconds = seconds < 10 ? '0' + seconds : seconds;
-
     this.setState({
-      countdown: minutes + ':' + seconds,
+      countdown: this.printCountDown(this.timeout),
+    });
+  }
+
+  format(time) {
+    return time < 10 ? '0' + time : time;
+  }
+
+  printCountDown(timeout) {
+    return (
+      this.format(this.minutes(timeout)) +
+      ':' +
+      this.format(this.seconds(timeout))
+    );
+  }
+
+  minutes(timeout) {
+    return Math.floor(timeout / 60);
+  }
+
+  seconds(timeout) {
+    return timeout % 60;
+  }
+
+  timer() {
+    this.setState({
+      countdown: this.printCountDown(this.timeout),
     });
 
     if (--this.timeout < 0 && this.timerHandle) {
       clearTimeout(this.timerHandle);
     }
-  };
+  }
 
   render() {
     const { classes } = this.props;
@@ -92,6 +105,7 @@ class Timer extends React.Component {
               className={classes.button}
               variant="raised"
               color="secondary"
+              onClick={this.props.onClose}
             >
               Cancel
             </Button>
