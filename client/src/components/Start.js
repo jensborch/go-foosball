@@ -38,7 +38,11 @@ class Start extends React.Component {
         >
           <Launch />
         </Button>
-        <Timer open={this.state.open} onClose={this.handleClose} />
+        <Timer
+          timeout={2 * 60}
+          open={this.state.open}
+          onClose={this.handleClose}
+        />
       </div>
     );
   }
