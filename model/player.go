@@ -20,6 +20,16 @@ type TournamentPlayer struct {
 	Active       bool       `json:"active"`
 }
 
+// IsActive returns true if player is active in tournament
+func (p *Player) IsActive(tournamentID string) bool {
+	for _, t := range p.TournamentPlayers {
+		if t.Tournament.UUID == tournamentID {
+			return true
+		}
+	}
+	return false
+}
+
 // PlayerRepository provides access players
 type PlayerRepository interface {
 	Store(player *Player) error

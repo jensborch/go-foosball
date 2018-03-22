@@ -40,6 +40,14 @@ func GetTournaments(db *gorm.DB) func(*gin.Context) {
 	}
 }
 
+//PlayerRepresenatation represents a player in a tournament
+type PlayerRepresenatation struct {
+	Nickname string `json:"nickname"`
+	RealName string `json:"realname"`
+	RFID     string `json:"rfid,omitempty"`
+	Active   bool   `json:"active"`
+}
+
 // GetTournamentPlayes get players in a given tournament
 func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
@@ -48,7 +56,17 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", id)})
 			return
 		}
-		c.JSON(http.StatusOK, persistence.NewPlayerRepository(db).FindByTournament(id))
+		foundPlayers := persistence.NewPlayerRepository(db).FindByTournament(id)
+		players := make([]PlayerRepresenatation, len(foundPlayers))
+		for i, p := range foundPlayers {
+			players[i] = PlayerRepresenatation{
+				Nickname: p.Nickname,
+				RealName: p.RealName,
+				RFID:     p.RFID,
+				Active:   p.IsActive(id),
+			}
+		}
+		c.JSON(http.StatusOK, players)
 	}
 }
 
