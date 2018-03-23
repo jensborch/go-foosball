@@ -3,18 +3,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
-import List, {
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
-} from 'material-ui/List';
-import Checkbox from 'material-ui/Checkbox';
+import List, { ListItem, ListItemText } from 'material-ui/List';
 import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
 import BottomNavigation, {
   BottomNavigationAction,
 } from 'material-ui/BottomNavigation';
 import AddIcon from 'material-ui-icons/Add';
+import CheckIcon from 'material-ui-icons/Check';
 
 const styles = theme => ({
   paper: {
@@ -33,18 +29,35 @@ const styles = theme => ({
 });
 
 class Player extends React.Component {
+  constructor(props) {
+    super(props);
+    this.activete = this.activete.bind(this);
+    this.deactivete = this.deactivete.bind(this);
+  }
+
+  activete() {
+    this.props.activate(this.props.tournament, this.props.data.nickname);
+  }
+
+  deactivete() {
+    this.props.deactivete(this.props.tournament, this.props.data.nickname);
+  }
+
   render() {
     const { classes } = this.props;
     const { data } = this.props;
     return (
       <ListItem>
-        <Avatar className={classes.avatar}>
-          {data.nickname.substring(0, 2)}
-        </Avatar>
+        {data.active ? (
+          <Avatar className={classes.avatar} onClick={this.deactivete}>
+            <CheckIcon />
+          </Avatar>
+        ) : (
+          <Avatar className={classes.avatar} onClick={this.activete}>
+            {data.nickname.substring(0, 2)}
+          </Avatar>
+        )}
         <ListItemText primary={data.nickname} secondary={data.realname} />
-        <ListItemSecondaryAction>
-          <Checkbox />
-        </ListItemSecondaryAction>
       </ListItem>
     );
   }
@@ -68,7 +81,13 @@ class Players extends React.Component {
           <Divider />
           {players.map((p, i) => (
             <div key={p.nickname}>
-              <Player data={p} classes={classes} />
+              <Player
+                data={p}
+                tournament={this.props.id}
+                activate={this.props.activate}
+                deactivete={this.props.deactivete}
+                classes={classes}
+              />
               {i !== players.length - 1 ? (
                 <li>
                   <Divider inset />
@@ -96,6 +115,9 @@ Players.propTypes = {
 Player.propTypes = {
   classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired,
+  tournament: PropTypes.string.isRequired,
+  deactivete: PropTypes.func.isRequired,
+  activate: PropTypes.func.isRequired,
 };
 
 export default withRoot(withStyles(styles)(Players));

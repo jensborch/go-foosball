@@ -32,6 +32,24 @@ export const receiveTournamentPlayers = (id, players) => {
   };
 };
 
+export const ACTIVATE_TOURNAMET_PLAYER = 'ACTIVATE_TOURNAMET_PLAYER';
+export const activateTournamentPlayer = (tournamentId, playerId) => {
+  return {
+    type: ACTIVATE_TOURNAMET_PLAYER,
+    tournamentId: tournamentId,
+    playerId: playerId,
+  };
+};
+
+export const DEACTIVATE_TOURNAMET_PLAYER = 'DEACTIVATE_TOURNAMET_PLAYER';
+export const deactivateTournamentPlayer = (tournamentId, playerId) => {
+  return {
+    type: DEACTIVATE_TOURNAMET_PLAYER,
+    tournamentId: tournamentId,
+    playerId: playerId,
+  };
+};
+
 export const RECEIVE_RANDOM_GAMES = 'RECEIVE_RANDOM_GAMES';
 export const receiveRandomGames = (id, games) => {
   return {
@@ -72,6 +90,30 @@ export function fetchTournamentPlayers(id) {
       .then(json => {
         dispatch(receiveTournamentPlayers(id, json));
       });
+  };
+}
+
+export function activatePlayer(tournamentId, playerId) {
+  return function(dispatch) {
+    dispatch(requestTournaments());
+    return fetch(
+      `http://localhost:8080/tournaments/${tournamentId}/players/${playerId}`,
+      {}
+    ).then(response =>
+      dispatch(activateTournamentPlayer(tournamentId, playerId))
+    );
+  };
+}
+
+export function deactivatePlayer(tournamentId, playerId) {
+  return function(dispatch) {
+    dispatch(requestTournaments());
+    return fetch(
+      `http://localhost:8080/tournaments/${tournamentId}/players/${playerId}`,
+      {}
+    ).then(response =>
+      dispatch(deactivateTournamentPlayer(tournamentId, playerId))
+    );
   };
 }
 

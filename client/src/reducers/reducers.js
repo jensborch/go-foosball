@@ -3,6 +3,8 @@ import { combineReducers } from 'redux';
 import {
   RECEIVE_TOURNAMETS,
   RECEIVE_TOURNAMET_PLAYERS,
+  ACTIVATE_TOURNAMET_PLAYER,
+  DEACTIVATE_TOURNAMET_PLAYER,
   RECEIVE_RANDOM_GAMES,
 } from '../actions/actions';
 
@@ -37,6 +39,18 @@ export function active(state = {}, action) {
       return {
         ...state,
         [action.id]: action.players.map(p => p.nickname),
+      };
+    case ACTIVATE_TOURNAMET_PLAYER:
+      return {
+        ...state,
+        [action.tournamentId]: [...state[action.tournamentId], action.playerId],
+      };
+    case DEACTIVATE_TOURNAMET_PLAYER:
+      let active = state[action.tournamentId];
+      active.pop(action.playerId);
+      return {
+        ...state,
+        [action.tournamentId]: active,
       };
     default:
       return state;

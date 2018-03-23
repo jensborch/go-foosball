@@ -16,6 +16,8 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = dispatch => {
   return {
     fetch: id => dispatch(fetchTournamentPlayers(id)),
+    activate: id => dispatch(fetchTournamentPlayers(id)),
+    deactivete: id => dispatch(fetchTournamentPlayers(id)),
   };
 };
 
