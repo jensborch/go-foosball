@@ -100,10 +100,11 @@ export function activatePlayer(tournamentId, playerId) {
     dispatch(requestTournaments());
     return fetch(`http://localhost:8080/tournaments/${tournamentId}/players/`, {
       method: 'POST',
-      headers: {
+      mode: 'cors',
+      headers: new Headers({
         Accept: 'application/json',
         'Content-Type': 'application/json',
-      },
+      }),
       body: JSON.stringify({
         nickname: playerId,
       }),
