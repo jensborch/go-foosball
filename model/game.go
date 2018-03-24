@@ -189,7 +189,7 @@ func (g *Game) findOrCreateTournamentPlayer(p Player) (*TournamentPlayer, error)
 			return &tp, nil
 		}
 	}
-	return NewTournamentPlayer(p, g.TournamentTable.Tournament), nil
+	return NewTournamentPlayer(&p, g.TournamentTable.Tournament), nil
 }
 
 //AddTournamentPlayer adds a tournament player to a game

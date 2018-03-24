@@ -24,7 +24,7 @@ type TournamentPlayer struct {
 func (p *Player) IsActive(tournamentID string) bool {
 	for _, t := range p.TournamentPlayers {
 		if t.Tournament.UUID == tournamentID {
-			return true
+			return t.Active
 		}
 	}
 	return false
@@ -50,13 +50,13 @@ func NewPlayer(nickname, realName string) *Player {
 }
 
 // NewTournamentPlayer create new player in tournament
-func NewTournamentPlayer(player Player, tournament Tournament) *TournamentPlayer {
+func NewTournamentPlayer(player *Player, tournament Tournament) *TournamentPlayer {
 	tp := &TournamentPlayer{
-		Player:     player,
 		Tournament: tournament,
 		Ranking:    tournament.InitialRanking,
 		Active:     true,
 	}
-	tp.Player.TournamentPlayers = append(tp.Player.TournamentPlayers, *tp)
+	player.TournamentPlayers = append(player.TournamentPlayers, *tp)
+	tp.Player = *player
 	return tp
 }

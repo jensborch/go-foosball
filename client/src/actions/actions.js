@@ -100,7 +100,6 @@ export function activatePlayer(tournamentId, playerId) {
     dispatch(requestTournaments());
     return fetch(`http://localhost:8080/tournaments/${tournamentId}/players/`, {
       method: 'POST',
-      mode: 'cors',
       headers: new Headers({
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -122,7 +121,7 @@ export function deactivatePlayer(tournamentId, playerId) {
     return fetch(
       `http://localhost:8080/tournaments/${tournamentId}/players/${playerId}`,
       {
-        method: 'DEL',
+        method: 'DELETE',
       }
     )
       .then(handleErrors)
