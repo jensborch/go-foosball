@@ -1,6 +1,10 @@
 import { connect } from 'react-redux';
 import Players from '../components/Players';
-import { fetchTournamentPlayers } from '../actions/actions';
+import {
+  fetchTournamentPlayers,
+  activatePlayer,
+  deactivatePlayer,
+} from '../actions/actions';
 
 const mapStateToProps = (state, props) => {
   const players = [];
@@ -16,8 +20,10 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = dispatch => {
   return {
     fetch: id => dispatch(fetchTournamentPlayers(id)),
-    activate: id => dispatch(fetchTournamentPlayers(id)),
-    deactivete: id => dispatch(fetchTournamentPlayers(id)),
+    activate: (tournamentId, playerId) =>
+      dispatch(activatePlayer(tournamentId, playerId)),
+    deactivete: (tournamentId, playerId) =>
+      dispatch(deactivatePlayer(tournamentId, playerId)),
   };
 };
 

@@ -73,6 +73,7 @@ export function fetchTournaments() {
   return function(dispatch) {
     dispatch(requestTournaments());
     return fetch('http://localhost:8080/tournaments/')
+      .then(handleErrors)
       .then(response => response.json())
       .then(json => json.map(transformDateFormat))
       .then(json => {
@@ -85,6 +86,7 @@ export function fetchTournamentPlayers(id) {
   return function(dispatch) {
     dispatch(requestTournamentPlayers(id));
     return fetch(`http://localhost:8080/tournaments/${id}/players`)
+      .then(handleErrors)
       .then(response => response.json())
       .then(json => json.map(transformDateFormat))
       .then(json => {
@@ -96,12 +98,20 @@ export function fetchTournamentPlayers(id) {
 export function activatePlayer(tournamentId, playerId) {
   return function(dispatch) {
     dispatch(requestTournaments());
-    return fetch(
-      `http://localhost:8080/tournaments/${tournamentId}/players/${playerId}`,
-      {}
-    ).then(response =>
-      dispatch(activateTournamentPlayer(tournamentId, playerId))
-    );
+    return fetch(`http://localhost:8080/tournaments/${tournamentId}/players/`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        nickname: playerId,
+      }),
+    })
+      .then(handleErrors)
+      .then(response =>
+        dispatch(activateTournamentPlayer(tournamentId, playerId))
+      );
   };
 }
 
@@ -110,22 +120,32 @@ export function deactivatePlayer(tournamentId, playerId) {
     dispatch(requestTournaments());
     return fetch(
       `http://localhost:8080/tournaments/${tournamentId}/players/${playerId}`,
-      {}
-    ).then(response =>
-      dispatch(deactivateTournamentPlayer(tournamentId, playerId))
-    );
+      {
+        method: 'DEL',
+      }
+    )
+      .then(handleErrors)
+      .then(response =>
+        dispatch(deactivateTournamentPlayer(tournamentId, playerId))
+      );
   };
 }
 
 export function fetchRandomgames(id) {
   return function(dispatch) {
-    return (
-      fetch(`http://localhost:8080/tournaments/${id}/games/random`)
-        .then(response => response.json())
-        //.then(json => json.map(transformDateFormat))
-        .then(json => {
-          dispatch(receiveRandomGames(id, json));
-        })
-    );
+    return fetch(`http://localhost:8080/tournaments/${id}/games/random`)
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(json => json.map(transformDateFormat))
+      .then(json => {
+        dispatch(receiveRandomGames(id, json));
+      });
   };
+}
+
+function handleErrors(response) {
+  if (!response.ok) {
+    throw Error(response.statusText);
+  }
+  return response;
 }
