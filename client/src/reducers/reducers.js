@@ -21,7 +21,13 @@ export function players(state = {}, action) {
   switch (action.type) {
     case RECEIVE_TOURNAMET_PLAYERS:
       const newplayers = action.players.reduce(
-        (a, p) => ({ ...a, [p.nickname]: p }),
+        (a, p) => ({
+          ...a,
+          [p.nickname]: {
+            nickname: p.nickname,
+            realname: p.realname,
+          },
+        }),
         {}
       );
       return {
@@ -38,7 +44,7 @@ export function active(state = {}, action) {
     case RECEIVE_TOURNAMET_PLAYERS:
       return {
         ...state,
-        [action.id]: action.players.map(p => p.nickname),
+        [action.id]: action.players.filter(p => p.active).map(p => p.nickname),
       };
     case ACTIVATE_TOURNAMET_PLAYER:
       return {
@@ -46,12 +52,34 @@ export function active(state = {}, action) {
         [action.tournamentId]: [...state[action.tournamentId], action.playerId],
       };
     case DEACTIVATE_TOURNAMET_PLAYER:
-      let active = state[action.tournamentId];
-      active.pop(action.playerId);
+      let newstate = { ...state };
+      if (newstate[action.tournamentId]) {
+        newstate[action.tournamentId].pop(action.playerId);
+      }
+      return newstate;
+    default:
+      return state;
+  }
+}
+
+export function inactive(state = {}, action) {
+  switch (action.type) {
+    case RECEIVE_TOURNAMET_PLAYERS:
       return {
         ...state,
-        [action.tournamentId]: active,
+        [action.id]: action.players.filter(p => !p.active).map(p => p.nickname),
       };
+    case DEACTIVATE_TOURNAMET_PLAYER:
+      return {
+        ...state,
+        [action.tournamentId]: [...state[action.tournamentId], action.playerId],
+      };
+    case ACTIVATE_TOURNAMET_PLAYER:
+      let newstate = { ...state };
+      if (newstate[action.tournamentId]) {
+        newstate[action.tournamentId].pop(action.playerId);
+      }
+      return newstate;
     default:
       return state;
   }
@@ -73,6 +101,7 @@ const rootReducer = combineReducers({
   tournaments,
   players,
   active,
+  inactive,
   random,
 });
 

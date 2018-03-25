@@ -26,7 +26,7 @@ func main() {
 	router := gin.Default()
 	corsConf := cors.DefaultConfig()
 	corsConf.AllowAllOrigins = true
-	corsConf.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}
+	corsConf.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "HEAD"}
 	router.Use(cors.New(corsConf))
 
 	db, err := gorm.Open("sqlite3", dbfile)

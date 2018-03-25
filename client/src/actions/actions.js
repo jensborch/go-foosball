@@ -98,8 +98,9 @@ export function fetchTournamentPlayers(id) {
 export function activatePlayer(tournamentId, playerId) {
   return function(dispatch) {
     dispatch(requestTournaments());
-    return fetch(`http://localhost:8080/tournaments/${tournamentId}/players/`, {
+    return fetch(`http://localhost:8080/tournaments/${tournamentId}/players`, {
       method: 'POST',
+      redirect: 'follow',
       headers: new Headers({
         Accept: 'application/json',
         'Content-Type': 'application/json',
