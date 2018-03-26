@@ -14,9 +14,14 @@ test('Players should contain all player', () => {
 });
 
 test('Active should contain active player', () => {
-  const action = receiveTournamentPlayers(42, [{ nickname: 'name' }]);
+  const action = receiveTournamentPlayers(42, [
+    { nickname: 'active', active: true },
+    { nickname: 'inactive', active: false },
+  ]);
   const state = active({}, action);
-  expect(state[42]).toContain('name');
+  console.log(state[42]);
+  expect(state[42]).toContain('active');
+  expect(state[42]).not.toContain('inactive');
 });
 
 test('Activate should add player to active', () => {

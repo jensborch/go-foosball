@@ -18,7 +18,7 @@ const mapStateToProps = (state, props) => {
   });
   return {
     id: props.id,
-    data: players,
+    data: players.sort((p1, p2) => p1.realname.localeCompare(p2.realname)),
   };
 };
 const mapDispatchToProps = dispatch => {

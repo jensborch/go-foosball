@@ -53,8 +53,9 @@ export function active(state = {}, action) {
       };
     case DEACTIVATE_TOURNAMET_PLAYER:
       let newstate = { ...state };
-      if (newstate[action.tournamentId]) {
-        newstate[action.tournamentId].pop(action.playerId);
+      const i = newstate[action.tournamentId].indexOf(action.playerId);
+      if (i > -1) {
+        newstate[action.tournamentId].splice(i, 1);
       }
       return newstate;
     default:
@@ -76,8 +77,9 @@ export function inactive(state = {}, action) {
       };
     case ACTIVATE_TOURNAMET_PLAYER:
       let newstate = { ...state };
-      if (newstate[action.tournamentId]) {
-        newstate[action.tournamentId].pop(action.playerId);
+      const i = newstate[action.tournamentId].indexOf(action.playerId);
+      if (i > -1) {
+        newstate[action.tournamentId].splice(i, 1);
       }
       return newstate;
     default:
