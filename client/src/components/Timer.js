@@ -90,28 +90,26 @@ class Timer extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <div>
-        <Modal open={this.props.open} onClose={this.props.onClose}>
-          <div className={classes.paper}>
-            <div className={classes.content}>
-              <Typography noWrap={true} variant="display3">
-                Timer
-              </Typography>
-              <Typography noWrap={true} variant="display4">
-                {this.state.countdown}
-              </Typography>
-            </div>
-            <Button
-              className={classes.button}
-              variant="raised"
-              color="secondary"
-              onClick={this.props.onClose}
-            >
-              Cancel
-            </Button>
+      <Modal open={this.props.open} onClose={this.props.onClose}>
+        <div className={classes.paper}>
+          <div className={classes.content}>
+            <Typography noWrap={true} variant="display3">
+              Timer
+            </Typography>
+            <Typography noWrap={true} variant="display4">
+              {this.state.countdown}
+            </Typography>
           </div>
-        </Modal>
-      </div>
+          <Button
+            className={classes.button}
+            variant="raised"
+            color="secondary"
+            onClick={this.props.onClose}
+          >
+            Cancel
+          </Button>
+        </div>
+      </Modal>
     );
   }
 }

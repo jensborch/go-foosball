@@ -31,6 +31,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const TournamentPlayersContainer = connect(mapStateToProps, mapDispatchToProps)(TournamentPlayers);
+const TournamentPlayersContainer = connect(mapStateToProps, mapDispatchToProps)(
+  TournamentPlayers
+);
 
 export default TournamentPlayersContainer;

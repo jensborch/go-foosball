@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
-import TournamentPlayersContainer from '../containers/TournamentsPlayersContainer';
+import TournamentPlayersContainer from '../containers/TournamentPlayersContainer';
 import Menu from '../components/Menu';
 import Header from '../components/Header';
 import Start from '../components/Start';
