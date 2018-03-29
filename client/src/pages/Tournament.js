@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import withRoot from '../withRoot';
-import TournamentPlayers from '../containers/TournamentsPlayers';
+import TournamentPlayersContainer from '../containers/TournamentsPlayersContainer';
 import Menu from '../components/Menu';
 import Header from '../components/Header';
 import Start from '../components/Start';
@@ -37,7 +37,7 @@ class Tournament extends React.Component {
           <RandomGames id={this.props.match.params.id} />
         </Menu>
         <div className={classes.content}>
-          <TournamentPlayers id={this.props.match.params.id} />
+          <TournamentPlayersContainer id={this.props.match.params.id} />
           <GamesInTournament id={this.props.match.params.id} />
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Players from '../components/Players';
+import TournamentPlayers from '../components/TournamentPlayers';
 import {
   fetchTournamentPlayers,
   activatePlayer,
@@ -24,13 +24,13 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = dispatch => {
   return {
     fetch: id => dispatch(fetchTournamentPlayers(id)),
-    activate: (tournamentId, playerId) =>
+    select: (tournamentId, playerId) =>
       dispatch(activatePlayer(tournamentId, playerId)),
-    deactivete: (tournamentId, playerId) =>
+    deselect: (tournamentId, playerId) =>
       dispatch(deactivatePlayer(tournamentId, playerId)),
   };
 };
 
-const TournamentPlayers = connect(mapStateToProps, mapDispatchToProps)(Players);
+const TournamentPlayersContainer = connect(mapStateToProps, mapDispatchToProps)(TournamentPlayers);
 
-export default TournamentPlayers;
+export default TournamentPlayersContainer;

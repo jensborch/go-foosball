@@ -1,0 +1,65 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import withRoot from '../withRoot';
+import Paper from 'material-ui/Paper';
+import Divider from 'material-ui/Divider';
+import BottomNavigation, {
+  BottomNavigationAction,
+} from 'material-ui/BottomNavigation';
+import AddIcon from 'material-ui-icons/Add';
+import Players from './Players';
+
+const styles = theme => ({
+  paper: {
+    maxWidth: 200,
+    minWidth: 150,
+    margin: 20,
+    display: 'flex',
+    flexFlow: 'column',
+  },
+  avatar: {
+    backgroundColor: theme.palette.secondary.main,
+  },
+  list: {
+    flex: 1,
+  },
+});
+
+class TournamentPlayers extends React.Component {
+  componentWillMount() {
+    this.props.fetch(this.props.id);
+  }
+
+  render() {
+    const { classes } = this.props;
+    const { paper, ...childClasses } = classes;
+    return (
+      <Paper className={classes.paper} elevation={4}>
+        <Players
+          classes={childClasses}
+          fetch={this.props.fetch}
+          select={this.props.select}
+          deselect={this.props.deselect}
+          data={this.props.data}
+          id={this.props.id}
+        />
+        <Divider />
+        <BottomNavigation showLabels>
+          <BottomNavigationAction label="Add" icon={<AddIcon />} />
+        </BottomNavigation>
+      </Paper>
+    );
+  }
+}
+
+TournamentPlayers.propTypes = {
+  classes: PropTypes.object.isRequired,
+  fetch: PropTypes.func.isRequired,
+  select: PropTypes.func.isRequired,
+  deselect: PropTypes.func.isRequired,
+  data: PropTypes.array.isRequired,
+  id: PropTypes.string.isRequired,
+};
+
+export default withRoot(withStyles(styles)(TournamentPlayers));
