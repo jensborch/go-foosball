@@ -28,7 +28,7 @@ class Tournament extends React.Component {
     const { classes } = this.props;
     const { data } = this.props;
     return (
-      <Card className={classes.card}>
+      <Card className={classes.card} elevation={4}>
         <CardHeader
           avatar={
             <Avatar className={classes.avatar}>
