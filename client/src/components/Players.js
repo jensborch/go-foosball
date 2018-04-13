@@ -42,7 +42,9 @@ class Player extends React.Component {
 
 class Players extends React.Component {
   componentWillMount() {
-    this.props.fetch(this.props.id);
+    if (this.props.fetch) {
+      this.props.fetch(this.props.id);
+    }
   }
 
   render() {
@@ -76,7 +78,7 @@ Players.propTypes = {
   classes: PropTypes.object.isRequired,
   data: PropTypes.array.isRequired,
   id: PropTypes.string.isRequired,
-  fetch: PropTypes.func.isRequired,
+  fetch: PropTypes.func,
 };
 
 Player.propTypes = {

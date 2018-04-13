@@ -9,6 +9,7 @@ import BottomNavigation, {
 } from 'material-ui/BottomNavigation';
 import AddIcon from 'material-ui-icons/Add';
 import Players from './Players';
+import AddPlayers from '../containers/AddPlayer';
 
 const styles = theme => ({
   paper: {
@@ -27,9 +28,21 @@ const styles = theme => ({
 });
 
 class TournamentPlayers extends React.Component {
+  state = {
+    open: false,
+  };
+
   componentWillMount() {
     this.props.fetch(this.props.id);
   }
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  handleOpen = () => {
+    this.setState({ open: true });
+  };
 
   render() {
     const { classes } = this.props;
@@ -46,7 +59,19 @@ class TournamentPlayers extends React.Component {
         />
         <Divider />
         <BottomNavigation showLabels>
-          <BottomNavigationAction label="Add" icon={<AddIcon />} />
+          <BottomNavigationAction
+            onClick={this.handleOpen}
+            label="Add"
+            icon={<AddIcon />}
+          />
+          <AddPlayers
+            select={this.props.select}
+            deselect={this.props.deselect}
+            data={this.props.data}
+            open={this.state.open}
+            onClose={this.handleClose}
+            id={this.props.id}
+          />
         </BottomNavigation>
       </Paper>
     );
