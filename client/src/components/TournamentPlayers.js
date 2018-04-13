@@ -48,7 +48,7 @@ class TournamentPlayers extends React.Component {
     const { classes } = this.props;
     const { paper, ...childClasses } = classes;
     return (
-      <Paper className={classes.paper} elevation={4}>
+      <Paper className={paper} elevation={4}>
         <Players
           classes={childClasses}
           fetch={this.props.fetch}

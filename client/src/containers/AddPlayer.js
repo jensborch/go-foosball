@@ -1,10 +1,13 @@
 import { connect } from 'react-redux';
 import AddPlayersComponent from '../components/AddPlayers';
 
-const mapStateToProps = (state, props) => {
-  const players = state.players[props.id];
+const mapStateToProps = state => {
+  const players = [];
+  Object.keys(state.players).forEach(id => {
+    players.push(state.players[id]);
+  });
   return {
-    data: players ? players : [],
+    data: players,
   };
 };
 

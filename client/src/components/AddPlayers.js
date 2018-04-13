@@ -33,12 +33,14 @@ const styles = theme => ({
 class AddPlayers extends React.Component {
   render() {
     const { classes } = this.props;
+    const { paper, list, button, ...childClasses } = classes;
+    //debugger;
     return (
       <Modal open={this.props.open} onClose={this.props.onClose}>
-        <div className={classes.paper}>
-          <div className={classes.list}>
+        <div className={paper}>
+          <div className={list}>
             <Players
-              classes={classes.players}
+              classes={childClasses}
               select={this.props.select}
               deselect={this.props.deselect}
               data={this.props.data}
@@ -46,7 +48,7 @@ class AddPlayers extends React.Component {
             />
           </div>
           <Button
-            className={classes.button}
+            className={button}
             variant="raised"
             color="secondary"
             onClick={this.props.onClose}
