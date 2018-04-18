@@ -31,21 +31,26 @@ const styles = theme => ({
 });
 
 class AddPlayers extends React.Component {
+  componentWillMount() {
+    this.props.fetch();
+  }
+
   render() {
     const { classes } = this.props;
-    const { paper, list, button, ...childClasses } = classes;
-    //debugger;
+    const { paper, list, button, players, ...childClasses } = classes;
     return (
       <Modal open={this.props.open} onClose={this.props.onClose}>
         <div className={paper}>
           <div className={list}>
-            <Players
-              classes={childClasses}
-              select={this.props.select}
-              deselect={this.props.deselect}
-              data={this.props.data}
-              id={this.props.id}
-            />
+            <div className={players}>
+              <Players
+                classes={childClasses}
+                select={this.props.select}
+                deselect={this.props.deselect}
+                data={this.props.data}
+                id={this.props.id}
+              />
+            </div>
           </div>
           <Button
             className={button}
@@ -65,6 +70,7 @@ AddPlayers.propTypes = {
   classes: PropTypes.object.isRequired,
   select: PropTypes.func.isRequired,
   deselect: PropTypes.func.isRequired,
+  fetch: PropTypes.func.isRequired,
   data: PropTypes.array.isRequired,
   id: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
