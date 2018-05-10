@@ -24,11 +24,11 @@ build:
 	${BIN}/rice append --exec ${BINARY}
 
 build-linux: 
-	GOOS=linux GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}-linux-${GOARCH}
+	GOOS=linux GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}
 	${BIN}/rice append --exec ${BINARY}-linux-${GOARCH}
 
 build-windows:
-	GOOS=windows GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}-windows-${GOARCH}.exe
+	GOOS=windows GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}.exe
 	${BIN}/rice append --exec ${BINARY}-windows-${GOARCH}.exe
 
 test:

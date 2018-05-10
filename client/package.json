@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "license": "MIT",
   "dependencies": {
-    "eslint": "^4.19.0",
+    "eslint": "^4.19.1",
     "eslint-plugin-react": "^7.7.0",
-    "material-ui": "^1.0.0-beta.41",
+    "material-ui": "^1.0.0-beta.47",
     "material-ui-icons": "^1.0.0-beta.36",
     "prop-types": "^15.6.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.1",
@@ -27,6 +27,6 @@
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-prettier": "^2.6.0",
     "prettier": "1.11.1",
-    "react-test-renderer": "^16.2.0"
+    "react-test-renderer": "^16.3.2"
   }
 }
