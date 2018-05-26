@@ -1,6 +1,6 @@
-import { actions as tournamentActions } from "../reducers/tournaments";
-import { actions as playerActions } from '../reducers/players'
-import { actions as randomGameActions } from '../reducers/random'
+import { actions as tournamentActions } from '../reducers/tournaments';
+import { actions as playerActions } from '../reducers/players';
+import { actions as randomGameActions } from '../reducers/random';
 
 export function transformDateFormat(json) {
   const result = {
@@ -13,7 +13,7 @@ export function transformDateFormat(json) {
 
 export function fetchTournaments() {
   return function(dispatch) {
-    dispatch( tournamentActions.requestTournaments());
+    dispatch(tournamentActions.requestTournaments());
     return fetch('http://localhost:8080/tournaments/')
       .then(handleErrors)
       .then(response => response.json())
@@ -38,13 +38,13 @@ export function fetchTournamentPlayers(id) {
 
 export function fetchAllPlayers() {
   return function(dispatch) {
-    dispatch( playerActions.requestAllPlayers());
+    dispatch(playerActions.requestAllPlayers());
     return fetch('http://localhost:8080/players/')
       .then(handleErrors)
       .then(response => response.json())
       .then(json => json.map(transformDateFormat))
       .then(json => {
-        dispatch( playerActions.receiveAllPlayers(json));
+        dispatch(playerActions.receiveAllPlayers(json));
       });
   };
 }
@@ -65,7 +65,9 @@ export function activatePlayer(tournamentId, playerId) {
     })
       .then(handleErrors)
       .then(response =>
-        dispatch(tournamentActions.activateTournamentPlayer(tournamentId, playerId))
+        dispatch(
+          tournamentActions.activateTournamentPlayer(tournamentId, playerId)
+        )
       );
   };
 }
@@ -81,7 +83,9 @@ export function deactivatePlayer(tournamentId, playerId) {
     )
       .then(handleErrors)
       .then(response =>
-        dispatch(tournamentActions.deactivateTournamentPlayer(tournamentId, playerId))
+        dispatch(
+          tournamentActions.deactivateTournamentPlayer(tournamentId, playerId)
+        )
       );
   };
 }
