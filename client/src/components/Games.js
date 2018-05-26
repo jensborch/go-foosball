@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card, { CardContent } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
+import Card, { CardContent } from '@material-ui/core/Card';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
-import Avatar from 'material-ui/Avatar';
-import Divider from 'material-ui/Divider';
-import { LinearProgress } from 'material-ui/Progress';
-import Button from 'material-ui/Button';
+import Avatar from '@material-ui/core/Avatar';
+import Divider from '@material-ui/core/Divider';
+import { LinearProgress } from '@material-ui/core/LinearProgress';
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   card: {

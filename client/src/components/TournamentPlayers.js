@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
-import Paper from 'material-ui/Paper';
-import Divider from 'material-ui/Divider';
+import Paper from '@material-ui/core/Paper';
+import Divider from '@material-ui/core/Divider';
 import BottomNavigation, {
   BottomNavigationAction,
-} from 'material-ui/BottomNavigation';
-import AddIcon from 'material-ui-icons/Add';
+} from '@material-ui/core/BottomNavigation';
+import AddIcon from '@material-ui/icons/Add';
 import Players from './Players';
 import AddPlayers from '../containers/AddPlayer';
 

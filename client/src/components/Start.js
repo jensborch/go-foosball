@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
-import Button from 'material-ui/Button';
-import Launch from 'material-ui-icons/Launch';
+import Button from '@material-ui/core/Button';
+import Launch from '@material-ui/icons/Launch';
 import Timer from './Timer';
 
 const styles = theme => ({

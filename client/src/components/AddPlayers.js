@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
 import Players from './Players';
-import Modal from 'material-ui/Modal';
-import Button from 'material-ui/Button';
+import Modal from '@material-ui/core/Modal';
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   paper: {

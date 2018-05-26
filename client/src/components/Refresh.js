@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
-import Button from 'material-ui/Button';
-import RefreshIcon from 'material-ui-icons/Refresh';
+import Button from '@material-ui/core/Button';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 const styles = theme => ({
   button: {

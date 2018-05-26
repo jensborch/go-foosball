@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AppBar from 'material-ui/AppBar';
-import IconButton from 'material-ui/IconButton';
-import HomeIcon from 'material-ui-icons/Home';
-import Typography from 'material-ui/Typography';
-import Toolbar from 'material-ui/Toolbar';
-import { withStyles } from 'material-ui/styles';
+import AppBar from '@material-ui/core/AppBar';
+import IconButton from '@material-ui/core/IconButton';
+import HomeIcon from '@material-ui/icons/Home';
+import Typography from '@material-ui/core/Typography';
+import Toolbar from '@material-ui/core/Toolbar';
+import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
 import { Link } from 'react-router-dom';
 

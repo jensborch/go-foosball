@@ -1,9 +1,9 @@
-import Avatar from 'material-ui/Avatar';
+import Avatar from '@material-ui/core/Avatar';
 import React from 'react';
 import PropTypes from 'prop-types';
-import List, { ListItem, ListItemText } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
-import CheckIcon from 'material-ui-icons/Check';
+import List, { ListItem, ListItemText } from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import CheckIcon from '@material-ui/icons/Check';
 
 class Player extends React.Component {
   constructor(props) {
