@@ -6,12 +6,12 @@ export const types = {
 
 export const actions = {
   receiveAllPlayers: players => ({
-    type: types.RECEIVE_TOURNAMET_PLAYERS,
+    type: tournamentsTypes.RECEIVE_TOURNAMET_PLAYERS,
     players: players,
     receivedAt: Date.now(),
   }),
   requestAllPlayers: _ => ({
-    type: types.REQUEST_TOURNAMET_PLAYERS,
+    type: tournamentsTypes.REQUEST_TOURNAMET_PLAYERS,
   }),
 };
 
