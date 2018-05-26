@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import AddPlayersComponent from '../components/AddPlayers';
 import { fetchAllPlayers } from '../actions/actions';
-import { isInTournament } from '../reducers/reducers';
+import { isInTournament } from '../reducers';
 
 const mapStateToProps = (state, props) => {
   const players = [];

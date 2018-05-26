@@ -1,12 +1,10 @@
-import { active, players, isPlayerInactive, isPlayerActive } from '../reducers';
-import {
-  receiveTournamentPlayers,
-  activateTournamentPlayer,
-  deactivateTournamentPlayer,
-} from '../../actions/actions';
+import { isPlayerInactive, isPlayerActive } from '..';
+import { actions } from '../tournaments';
+import players from '../players';
+import active from '../active';
 
 test('Players should contain all player', () => {
-  const action = receiveTournamentPlayers(42, [
+  const action = actions.receiveTournamentPlayers(42, [
     { nickname: 'key', realname: 'value' },
   ]);
   const state = players({}, action);
@@ -14,7 +12,7 @@ test('Players should contain all player', () => {
 });
 
 test('Active should contain active player', () => {
-  const action = receiveTournamentPlayers(42, [
+  const action = actions.receiveTournamentPlayers(42, [
     { nickname: 'active', active: true },
     { nickname: 'inactive', active: false },
   ]);
@@ -25,7 +23,7 @@ test('Active should contain active player', () => {
 });
 
 test('Activate should add player to active', () => {
-  const action = activateTournamentPlayer(42, 'name');
+  const action = actions.activateTournamentPlayer(42, 'name');
   const state = active(
     {
       42: [],
@@ -38,7 +36,7 @@ test('Activate should add player to active', () => {
 });
 
 test('Deactivate should remove player from active', () => {
-  const action = deactivateTournamentPlayer(42, 'name');
+  const action = actions.deactivateTournamentPlayer(42, 'name');
   const state = active(
     {
       42: ['name'],

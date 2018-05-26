@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Index from './pages/Index';
 import Tournament from './pages/Tournament';
-import rootReducer from './reducers/reducers';
+import rootReducer from './reducers';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
