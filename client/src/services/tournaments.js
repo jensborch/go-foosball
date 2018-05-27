@@ -42,9 +42,7 @@ export function activatePlayer(tournamentId, playerId) {
     })
       .then(handleErrors)
       .then(response =>
-        dispatch(
-          actions.activateTournamentPlayer(tournamentId, playerId)
-        )
+        dispatch(actions.activateTournamentPlayer(tournamentId, playerId))
       );
   };
 }
@@ -60,9 +58,7 @@ export function deactivatePlayer(tournamentId, playerId) {
     )
       .then(handleErrors)
       .then(response =>
-        dispatch(
-          actions.deactivateTournamentPlayer(tournamentId, playerId)
-        )
+        dispatch(actions.deactivateTournamentPlayer(tournamentId, playerId))
       );
   };
 }
