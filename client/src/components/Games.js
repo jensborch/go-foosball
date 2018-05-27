@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
 import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
-import { LinearProgress } from '@material-ui/core/LinearProgress';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Button from '@material-ui/core/Button';
 
 const styles = theme => ({

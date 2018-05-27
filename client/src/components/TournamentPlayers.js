@@ -4,9 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
-import BottomNavigation, {
-  BottomNavigationAction,
-} from '@material-ui/core/BottomNavigation';
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import AddIcon from '@material-ui/icons/Add';
 import Players from './Players';
 import AddPlayers from '../containers/AddPlayer';

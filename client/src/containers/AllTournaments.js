@@ -4,15 +4,14 @@ import { fetchTournaments } from '../actions/actions';
 import Refresh from '../components/Refresh';
 
 const mapStateToProps = state => {
+  debugger;
   return {
     data: state.tournaments,
   };
 };
-const mapDispatchToProps = dispatch => {
-  return {
-    fetch: () => dispatch(fetchTournaments()),
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  fetch: () => dispatch(fetchTournaments()),
+});
 
 const AllTournaments = connect(mapStateToProps, mapDispatchToProps)(
   Tournaments

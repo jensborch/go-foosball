@@ -11,8 +11,8 @@ export function transformDateFormat(json) {
   return result;
 }
 
-export function fetchTournaments() {
-  return function(dispatch) {
+export const fetchTournaments = () => {
+  return dispatch => {
     dispatch(tournamentActions.requestTournaments());
     return fetch('http://localhost:8080/tournaments/')
       .then(handleErrors)
@@ -22,7 +22,7 @@ export function fetchTournaments() {
         dispatch(tournamentActions.receiveTournaments(json));
       });
   };
-}
+};
 
 export function fetchTournamentPlayers(id) {
   return function(dispatch) {
