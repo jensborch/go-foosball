@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import Tournaments from '../components/Tournaments';
-import { fetchTournaments } from '../actions/actions';
+import { fetchTournaments } from '../services';
 import Refresh from '../components/Refresh';
 
 const mapStateToProps = state => {

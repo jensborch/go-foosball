@@ -8,7 +8,7 @@ import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import registerServiceWorker from './registerServiceWorker';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import logger from 'redux-logger'
+import logger from 'redux-logger';
 
 const store = createStore(
   rootReducer,

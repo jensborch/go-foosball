@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import AddPlayersComponent from '../components/AddPlayers';
-import { fetchAllPlayers } from '../actions/actions';
+import { fetchAllPlayers } from '../services';
 import { isInTournament } from '../reducers';
 
 const mapStateToProps = (state, props) => {

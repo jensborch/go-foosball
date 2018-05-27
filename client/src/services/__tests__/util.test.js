@@ -1,4 +1,4 @@
-import { transformDateFormat } from '../actions';
+import { transformDateFormat } from '../util';
 
 test('Date string should be change to data object', () => {
   const json = {

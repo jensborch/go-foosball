@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { fetchRandomgames } from '../actions/actions';
+import { fetchRandomgames } from '../services';
 import Games from '../components/Games';
 
 const mapStateToProps = (state, props) => {

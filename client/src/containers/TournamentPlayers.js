@@ -4,7 +4,7 @@ import {
   fetchTournamentPlayers,
   activatePlayer,
   deactivatePlayer,
-} from '../actions/actions';
+} from '../services';
 
 const mapStateToProps = (state, props) => {
   const players = [];
