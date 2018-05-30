@@ -12,8 +12,8 @@ import AddPlayers from '../containers/AddPlayer';
 
 const styles = theme => ({
   paper: {
-    maxWidth: 200,
-    minWidth: 150,
+    maxWidth: 250,
+    minWidth: 250,
     margin: 20,
     display: 'flex',
     flexFlow: 'column',

@@ -1,23 +1,25 @@
 package model
 
+import "fmt"
+
 // Player playing foosball games
 type Player struct {
 	Base
 	Nickname          string             `json:"nickname" binding:"required" gorm:"size:50;unique_index"`
 	RealName          string             `json:"realname" gorm:"type:varchar(100);not null"`
 	RFID              string             `json:"rfid,omitempty" gorm:"type:varchar(36)"`
-	TournamentPlayers []TournamentPlayer `json:"tournaments,omitempty"`
+	TournamentPlayers []TournamentPlayer `json:"-"`
 }
 
 // TournamentPlayer is a player in a tournament
 type TournamentPlayer struct {
 	Base
-	PlayerID     uint       `json:"-"`
-	Player       Player     `json:"-"`
-	TournamentID uint       `json:"-"`
-	Tournament   Tournament `json:"tournament"`
-	Ranking      uint       `json:"ranking"`
-	Active       bool       `json:"active"`
+	PlayerID     uint
+	Player       Player
+	TournamentID uint
+	Tournament   Tournament
+	Ranking      uint
+	Active       bool
 }
 
 // IsActive returns true if player is active in tournament
@@ -28,6 +30,16 @@ func (p *Player) IsActive(tournamentID string) bool {
 		}
 	}
 	return false
+}
+
+// GetScore returns score for a given tournament
+func (p *Player) GetScore(tournamentID string) (uint, error) {
+	for _, t := range p.TournamentPlayers {
+		if t.Tournament.UUID == tournamentID {
+			return t.Ranking, nil
+		}
+	}
+	return 0, fmt.Errorf("Player %s is not in tournament %s", p.Nickname, tournamentID)
 }
 
 // PlayerRepository provides access players

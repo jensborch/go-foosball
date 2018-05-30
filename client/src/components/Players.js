@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Divider from '@material-ui/core/Divider';
 import CheckIcon from '@material-ui/icons/Check';
+import Chip from '@material-ui/core/Chip';
 
 class Player extends React.Component {
   constructor(props) {
@@ -37,6 +39,9 @@ class Player extends React.Component {
           </Avatar>
         )}
         <ListItemText primary={data.nickname} secondary={data.realname} />
+        <ListItemSecondaryAction>
+          <Chip label={42} className={classes.chip} />
+        </ListItemSecondaryAction>f
       </ListItem>
     );
   }

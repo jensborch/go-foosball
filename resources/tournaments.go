@@ -46,6 +46,7 @@ type PlayerRepresenatation struct {
 	RealName string `json:"realname"`
 	RFID     string `json:"rfid,omitempty"`
 	Active   bool   `json:"active"`
+	Score    uint   `json:"score"`
 }
 
 // GetTournamentPlayes get players in a given tournament
@@ -59,11 +60,16 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 		foundPlayers := persistence.NewPlayerRepository(db).FindByTournament(id)
 		players := make([]PlayerRepresenatation, len(foundPlayers))
 		for i, p := range foundPlayers {
+			var score uint
+			if s, e := p.GetScore(id); e == nil {
+				score = s
+			}
 			players[i] = PlayerRepresenatation{
 				Nickname: p.Nickname,
 				RealName: p.RealName,
 				RFID:     p.RFID,
 				Active:   p.IsActive(id),
+				Score:    score,
 			}
 		}
 		c.JSON(http.StatusOK, players)

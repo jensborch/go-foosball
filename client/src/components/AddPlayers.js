@@ -1,4 +1,4 @@
-import React from 'react';
+  import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
@@ -12,7 +12,6 @@ const styles = theme => ({
     top: '15%',
     left: '15%',
     width: '70%',
-    height: '70%',
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     display: 'flex',

@@ -45,4 +45,11 @@ func TestCreateTournamentPlayer(t *testing.T) {
 	if !p.IsActive(tournament.UUID) {
 		t.Error("Player should be active")
 	}
+
+	if s, e := p.GetScore(tournament.UUID); e != nil {
+		t.Error("Player should have score")
+		if s != 1500 {
+			t.Errorf("Player should have score of 1500, but got: %d", s)
+		}
+	}
 }

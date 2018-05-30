@@ -4,7 +4,6 @@ import { fetchTournaments } from '../services';
 import Refresh from '../components/Refresh';
 
 const mapStateToProps = state => {
-  debugger;
   return {
     data: state.tournaments,
   };
