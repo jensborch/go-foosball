@@ -17,7 +17,6 @@ test('Active should contain active player', () => {
     { nickname: 'inactive', active: false },
   ]);
   const state = active({}, action);
-  console.log(state[42]);
   expect(state[42]).toContain('active');
   expect(state[42]).not.toContain('inactive');
 });

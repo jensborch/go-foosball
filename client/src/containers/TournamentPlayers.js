@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import TournamentPlayersComponent from '../components/TournamentPlayers';
+import { getPlayerScore } from '../reducers/score';
 import {
   fetchTournamentPlayers,
   activatePlayer,
@@ -11,10 +12,18 @@ const mapStateToProps = (state, props) => {
   const active = state.active[props.id] ? state.active[props.id] : [];
   const inactive = state.inactive[props.id] ? state.inactive[props.id] : [];
   active.forEach(nickname => {
-    players.push({ ...state.players[nickname], active: true });
+    players.push({
+      ...state.players[nickname],
+      score: getPlayerScore(state, props.id, nickname),
+      active: true,
+    });
   });
   inactive.forEach(nickname => {
-    players.push({ ...state.players[nickname], active: false });
+    players.push({
+      ...state.players[nickname],
+      score: getPlayerScore(state, props.id, nickname),
+      active: false,
+    });
   });
   return {
     id: props.id,

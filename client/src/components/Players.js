@@ -40,7 +40,7 @@ class Player extends React.Component {
         )}
         <ListItemText primary={data.nickname} secondary={data.realname} />
         <ListItemSecondaryAction>
-          <Chip label={42} className={classes.chip} />
+          <Chip label={data.score} className={classes.chip} />
         </ListItemSecondaryAction>f
       </ListItem>
     );
