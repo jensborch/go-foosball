@@ -33,8 +33,10 @@ test('Reducer should handle player events with players', () => {
 test('Selector should returne score', () => {
   const score = getPlayerScore(
     {
-      t: {
-        p: 42,
+      score: {
+        t: {
+          p: 42,
+        },
       },
     },
     't',

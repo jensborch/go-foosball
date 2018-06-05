@@ -20,5 +20,7 @@ export default (state = {}, action) => {
 };
 
 export function getPlayerScore(state, tournament, player) {
-  return state[tournament] ? state[tournament][player] : undefined;
+  return state.score && state.score[tournament]
+    ? state.score[tournament][player]
+    : undefined;
 }
