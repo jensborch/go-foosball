@@ -23,10 +23,11 @@ export const actions = {
     players: players,
     receivedAt: Date.now(),
   }),
-  activateTournamentPlayer: (tournamentId, playerId) => ({
+  activateTournamentPlayer: (tournamentId, playerId, score) => ({
     type: types.ACTIVATE_TOURNAMET_PLAYER,
     tournamentId: tournamentId,
     playerId: playerId,
+    score: score,
   }),
   deactivateTournamentPlayer: (tournamentId, playerId) => ({
     type: types.DEACTIVATE_TOURNAMET_PLAYER,
@@ -38,14 +39,13 @@ export const actions = {
 export default (state = [], action) => {
   switch (action.type) {
     case types.RECEIVE_TOURNAMETS:
-      const tournaments = action.tournaments.reduce(
+      return action.tournaments.reduce(
         (a, t) => ({
           ...a,
           [t.uuid]: t,
         }),
         {}
       );
-      return tournaments;
     default:
       return state;
   }

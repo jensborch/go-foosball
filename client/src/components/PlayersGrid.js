@@ -9,19 +9,23 @@ import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 
 class Player extends React.Component {
-  constructor(props) {
-    super(props);
-    this.select = this.select.bind(this);
-    this.deselect = this.deselect.bind(this);
-  }
+  state = { score: this.props.score };
 
-  select() {
-    this.props.select(this.props.tournament, this.props.data.nickname);
-  }
+  select = () => {
+    this.props.select(
+      this.props.tournament,
+      this.props.data.nickname,
+      this.state.score
+    );
+  };
 
-  deselect() {
+  deselect = () => {
     this.props.deselect(this.props.tournament, this.props.data.nickname);
-  }
+  };
+
+  updateScore = event => {
+    this.setState({ score: event.target.value });
+  };
 
   render() {
     const { classes } = this.props;
@@ -34,14 +38,21 @@ class Player extends React.Component {
           subtitle={data.realname}
           actionIcon={
             <div>
-              <TextField id="score" type="text" value={this.props.score} />
-              <IconButton className={classes.icon}>
-                {data.active ? (
-                  <PlaylistAdd onClick={this.select} />
-                ) : (
-                  <PlaylistAddCheck onClick={this.deselect} />
-                )}
-              </IconButton>
+              <TextField
+                id="score"
+                type="text"
+                value={this.state.score}
+                onChange={this.updateScore}
+              />
+              {data.active ? (
+                <IconButton className={classes.icon} onClick={this.select}>
+                  <PlaylistAdd />
+                </IconButton>
+              ) : (
+                <IconButton className={classes.icon} onClick={this.deselect}>
+                  <PlaylistAddCheck />
+                </IconButton>
+              )}
             </div>
           }
         />

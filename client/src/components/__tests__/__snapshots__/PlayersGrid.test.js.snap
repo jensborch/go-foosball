@@ -82,6 +82,7 @@ exports[`Should render players 1`] = `
                 className="MuiButtonBase-root-40 MuiIconButton-root-34"
                 disabled={false}
                 onBlur={[Function]}
+                onClick={[Function]}
                 onFocus={[Function]}
                 onKeyDown={[Function]}
                 onKeyUp={[Function]}
@@ -102,7 +103,6 @@ exports[`Should render players 1`] = `
                     className="MuiSvgIcon-root-43"
                     color={undefined}
                     focusable="false"
-                    onClick={[Function]}
                     viewBox="0 0 24 24"
                   >
                     <g>
