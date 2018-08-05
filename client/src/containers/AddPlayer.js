@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import AddPlayersComponent from '../components/AddPlayers';
-import { fetchAllPlayers } from '../services';
+import { fetchAllPlayers, fetchTournaments } from '../services';
 import { isInTournament } from '../reducers';
 
 const mapStateToProps = (state, props) => {
@@ -17,7 +17,10 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetch: () => dispatch(fetchAllPlayers()),
+    fetch: () => {
+      dispatch(fetchAllPlayers());
+      dispatch(fetchTournaments());
+    },
   };
 };
 

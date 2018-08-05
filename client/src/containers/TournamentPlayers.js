@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import TournamentPlayersComponent from '../components/TournamentPlayers';
-import { getPlayerScore } from '../reducers/score';
+import { getPlayerScore, getTournamentScore } from '../reducers/score';
 import {
   fetchTournamentPlayers,
   activatePlayer,
@@ -27,6 +27,7 @@ const mapStateToProps = (state, props) => {
   });
   return {
     id: props.id,
+    score: getTournamentScore(state, props.id),
     data: players.sort((p1, p2) => p1.realname.localeCompare(p2.realname)),
   };
 };

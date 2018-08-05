@@ -38,7 +38,14 @@ export const actions = {
 export default (state = [], action) => {
   switch (action.type) {
     case types.RECEIVE_TOURNAMETS:
-      return action.tournaments;
+      const tournaments = action.tournaments.reduce(
+        (a, t) => ({
+          ...a,
+          [t.uuid]: t,
+        }),
+        {}
+      );
+      return tournaments;
     default:
       return state;
   }

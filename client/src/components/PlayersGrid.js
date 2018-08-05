@@ -1,4 +1,3 @@
-import Avatar from '@material-ui/core/Avatar';
 import React from 'react';
 import PropTypes from 'prop-types';
 import GridList from '@material-ui/core/GridList';
@@ -7,6 +6,7 @@ import GridListTileBar from '@material-ui/core/GridListTileBar';
 import PlaylistAdd from '@material-ui/icons/PlaylistAdd';
 import PlaylistAddCheck from '@material-ui/icons/PlaylistAddCheck';
 import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
 
 class Player extends React.Component {
   constructor(props) {
@@ -28,13 +28,21 @@ class Player extends React.Component {
     const { data } = this.props;
     return (
       <GridListTile key={data.nickname}>
+        <div class={classes.cell} />
         <GridListTileBar
           title={data.nickname}
           subtitle={data.realname}
           actionIcon={
-            <IconButton className={classes.icon}>
-              {data.active ? <PlaylistAdd /> : <PlaylistAddCheck />}
-            </IconButton>
+            <div>
+              <TextField id="score" type="text" value={this.props.score} />
+              <IconButton className={classes.icon}>
+                {data.active ? (
+                  <PlaylistAdd onClick={this.select} />
+                ) : (
+                  <PlaylistAddCheck onClick={this.deselect} />
+                )}
+              </IconButton>
+            </div>
           }
         />
       </GridListTile>
@@ -60,6 +68,7 @@ class PlayersGrid extends React.Component {
             <Player
               data={p}
               tournament={this.props.id}
+              score={this.props.score}
               select={this.props.select}
               deselect={this.props.deselect}
               classes={classes}
@@ -74,6 +83,7 @@ class PlayersGrid extends React.Component {
 PlayersGrid.propTypes = {
   classes: PropTypes.object.isRequired,
   data: PropTypes.array.isRequired,
+  score: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired,
   fetch: PropTypes.func,
 };
@@ -82,6 +92,7 @@ Player.propTypes = {
   classes: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired,
   tournament: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
   deselect: PropTypes.func.isRequired,
   select: PropTypes.func.isRequired,
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
-import Players from './Players';
+import PlayersGrid from './PlayersGrid';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 
@@ -12,16 +12,20 @@ const styles = theme => ({
     top: '15%',
     left: '15%',
     width: '70%',
+    height: '80%',
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     display: 'flex',
     flexFlow: 'column',
+    justifyContent: 'space-between',
   },
-  list: {
-    flex: 1,
-  },
-  players: {
-    display: 'flex',
+  cell: {
+    height: '150px',
+    //width: '100px',
+    backgroundColor:
+      theme.palette.type === 'light'
+        ? theme.palette.grey[300]
+        : theme.palette.grey[700],
   },
   button: {
     align: 'center',
@@ -40,17 +44,14 @@ class AddPlayers extends React.Component {
     return (
       <Modal open={this.props.open} onClose={this.props.onClose}>
         <div className={paper}>
-          <div className={list}>
-            <div className={players}>
-              <Players
-                classes={childClasses}
-                select={this.props.select}
-                deselect={this.props.deselect}
-                data={this.props.data}
-                id={this.props.id}
-              />
-            </div>
-          </div>
+          <PlayersGrid
+            classes={childClasses}
+            select={this.props.select}
+            deselect={this.props.deselect}
+            data={this.props.data}
+            score={this.props.score}
+            id={this.props.id}
+          />
           <Button
             className={button}
             variant="raised"
@@ -71,6 +72,7 @@ AddPlayers.propTypes = {
   deselect: PropTypes.func.isRequired,
   fetch: PropTypes.func.isRequired,
   data: PropTypes.array.isRequired,
+  score: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,

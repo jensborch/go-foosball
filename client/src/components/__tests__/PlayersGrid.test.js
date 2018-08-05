@@ -3,26 +3,20 @@ import PlayersGrid from '../PlayersGrid';
 import renderer from 'react-test-renderer';
 
 test('Should render players', () => {
-  const classes = {
-    list: '',
+  const props = {
+    id: 'uuid',
+    data: [
+      {
+        nickname: 'nick',
+        realname: 'name',
+      },
+    ],
+    classes: {},
+    deselect: () => {},
+    select: () => {},
+    score: 1500,
   };
-  const data = [
-    {
-      nickname: 'nick',
-      realname: 'name',
-    },
-  ];
-  const deselect = () => {};
-  const select = () => {};
-  const component = renderer.create(
-    <PlayersGrid
-      id="1"
-      data={data}
-      classes={classes}
-      select={select}
-      deselect={deselect}
-    />
-  );
+  const component = renderer.create(<PlayersGrid {...props} />);
   let tree = component.toJSON();
   expect(tree).toMatchSnapshot();
 });

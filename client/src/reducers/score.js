@@ -24,3 +24,9 @@ export function getPlayerScore(state, tournament, player) {
     ? state.score[tournament][player]
     : undefined;
 }
+
+export function getTournamentScore(state, tournament) {
+  return state.tournaments && state.tournaments[tournament]
+    ? state.tournaments[tournament].initial
+    : undefined;
+}
