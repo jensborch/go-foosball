@@ -37,3 +37,11 @@ export default (state = {}, action) => {
       return state;
   }
 };
+
+export function getActivePlayers(state, tournament) {
+  return state.active[tournament] ? state.active[tournament] : [];
+}
+
+export function getInactivePlayers(state, tournament) {
+  return state.inactive[tournament] ? state.inactive[tournament] : [];
+}

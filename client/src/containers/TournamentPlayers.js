@@ -1,41 +1,42 @@
 import { connect } from 'react-redux';
 import TournamentPlayersComponent from '../components/TournamentPlayers';
-import { getPlayerScore, getTournamentScore } from '../reducers/score';
+import { getPlayerRanking, getTournamentRanking } from '../reducers/ranking';
 import {
   fetchTournamentPlayers,
   activatePlayer,
   deactivatePlayer,
 } from '../services';
+import { getActivePlayers, getInactivePlayers } from '../reducers/players';
 
 const mapStateToProps = (state, props) => {
   const players = [];
-  const active = state.active[props.id] ? state.active[props.id] : [];
-  const inactive = state.inactive[props.id] ? state.inactive[props.id] : [];
+  const active = getActivePlayers(state, props.id);
+  const inactive = getInactivePlayers(state, props.id);
   active.forEach(nickname => {
     players.push({
       ...state.players[nickname],
-      score: getPlayerScore(state, props.id, nickname),
+      ranking: getPlayerRanking(state, props.id, nickname),
       active: true,
     });
   });
   inactive.forEach(nickname => {
     players.push({
       ...state.players[nickname],
-      score: getPlayerScore(state, props.id, nickname),
+      ranking: getPlayerRanking(state, props.id, nickname),
       active: false,
     });
   });
   return {
     id: props.id,
-    score: getTournamentScore(state, props.id),
+    // ranking: getTournamentRanking(state, props.id),
     data: players.sort((p1, p2) => p1.realname.localeCompare(p2.realname)),
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
     fetch: id => dispatch(fetchTournamentPlayers(id)),
-    select: (tournamentId, playerId) =>
-      dispatch(activatePlayer(tournamentId, playerId)),
+    select: (tournamentId, playerId, ranking) =>
+      dispatch(activatePlayer(tournamentId, playerId, ranking)),
     deselect: (tournamentId, playerId) =>
       dispatch(deactivatePlayer(tournamentId, playerId)),
   };

@@ -3,19 +3,18 @@ import PropTypes from 'prop-types';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
-import PlaylistAdd from '@material-ui/icons/PlaylistAdd';
-import PlaylistAddCheck from '@material-ui/icons/PlaylistAddCheck';
+import AddCircle from '@material-ui/icons/AddCircle';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 
 class Player extends React.Component {
-  state = { score: this.props.score };
+  state = { ranking: this.props.ranking };
 
   select = () => {
     this.props.select(
       this.props.tournament,
       this.props.data.nickname,
-      this.state.score
+      this.state.ranking
     );
   };
 
@@ -23,8 +22,8 @@ class Player extends React.Component {
     this.props.deselect(this.props.tournament, this.props.data.nickname);
   };
 
-  updateScore = event => {
-    this.setState({ score: event.target.value });
+  updateRanking = event => {
+    this.setState({ ranking: event.target.value });
   };
 
   render() {
@@ -39,20 +38,14 @@ class Player extends React.Component {
           actionIcon={
             <div>
               <TextField
-                id="score"
+                id="ranking"
                 type="text"
-                value={this.state.score}
-                onChange={this.updateScore}
+                value={this.state.ranking}
+                onChange={this.updateRanking}
               />
-              {data.active ? (
-                <IconButton className={classes.icon} onClick={this.select}>
-                  <PlaylistAdd />
-                </IconButton>
-              ) : (
-                <IconButton className={classes.icon} onClick={this.deselect}>
-                  <PlaylistAddCheck />
-                </IconButton>
-              )}
+              <IconButton className={classes.icon} onClick={this.select}>
+                <AddCircle />
+              </IconButton>
             </div>
           }
         />
@@ -69,17 +62,16 @@ class PlayersGrid extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
-    const { data } = this.props;
-    const players = data ? data : [];
+    const { classes, players } = this.props;
+    //const players = this.props.data.players ? this.props.data.players : [];
     return (
       <GridList className={classes.list}>
         {players.map((p, i) => (
           <div key={p.nickname}>
             <Player
-              data={p}
+              player={p}
               tournament={this.props.id}
-              score={this.props.score}
+              ranking={this.props.ranking}
               select={this.props.select}
               deselect={this.props.deselect}
               classes={classes}
@@ -93,17 +85,17 @@ class PlayersGrid extends React.Component {
 
 PlayersGrid.propTypes = {
   classes: PropTypes.object.isRequired,
-  data: PropTypes.array.isRequired,
-  score: PropTypes.number.isRequired,
-  id: PropTypes.string.isRequired,
+  players: PropTypes.array.isRequired,
+  tournament: PropTypes.string.isRequired,
+  ranking: PropTypes.number.isRequired,
   fetch: PropTypes.func,
 };
 
 Player.propTypes = {
   classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired,
+  player: PropTypes.object.isRequired,
   tournament: PropTypes.string.isRequired,
-  score: PropTypes.number.isRequired,
+  ranking: PropTypes.number.isRequired,
   deselect: PropTypes.func.isRequired,
   select: PropTypes.func.isRequired,
 };

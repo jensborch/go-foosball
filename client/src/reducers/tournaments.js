@@ -10,7 +10,7 @@ export const actions = {
   requestTournaments: () => ({ type: types.REQUEST_TOURNAMETS }),
   receiveTournaments: tournaments => ({
     type: types.RECEIVE_TOURNAMETS,
-    tournaments: tournaments,
+    tournaments,
     receivedAt: Date.now(),
   }),
   requestTournamentPlayers: id => ({
@@ -19,24 +19,24 @@ export const actions = {
   }),
   receiveTournamentPlayers: (id, players) => ({
     type: types.RECEIVE_TOURNAMET_PLAYERS,
-    id: id,
-    players: players,
+    id,
+    players,
     receivedAt: Date.now(),
   }),
-  activateTournamentPlayer: (tournamentId, playerId, score) => ({
+  activateTournamentPlayer: (tournamentId, nickname, ranking) => ({
     type: types.ACTIVATE_TOURNAMET_PLAYER,
-    tournamentId: tournamentId,
-    playerId: playerId,
-    score: score,
+    tournamentId,
+    nickname,
+    ranking,
   }),
-  deactivateTournamentPlayer: (tournamentId, playerId) => ({
+  deactivateTournamentPlayer: (tournamentId, nickname) => ({
     type: types.DEACTIVATE_TOURNAMET_PLAYER,
-    tournamentId: tournamentId,
-    playerId: playerId,
+    tournamentId,
+    nickname,
   }),
 };
 
-export default (state = [], action) => {
+export default (state = {}, action) => {
   switch (action.type) {
     case types.RECEIVE_TOURNAMETS:
       return action.tournaments.reduce(
@@ -50,3 +50,7 @@ export default (state = [], action) => {
       return state;
   }
 };
+
+export function getTournaments(state) {
+  return state.tournaments;
+}

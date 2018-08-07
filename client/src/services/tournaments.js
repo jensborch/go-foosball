@@ -26,7 +26,7 @@ export function fetchTournamentPlayers(id) {
   };
 }
 
-export function activatePlayer(tournamentId, playerId) {
+export function activatePlayer(tournamentId, nickname, ranking) {
   return function(dispatch) {
     dispatch(actions.requestTournaments());
     return fetch(`http://localhost:8080/tournaments/${tournamentId}/players`, {
@@ -37,12 +37,15 @@ export function activatePlayer(tournamentId, playerId) {
         'Content-Type': 'application/json',
       }),
       body: JSON.stringify({
-        nickname: playerId,
+        nickname,
+        ranking,
       }),
     })
       .then(handleErrors)
       .then(response =>
-        dispatch(actions.activateTournamentPlayer(tournamentId, playerId))
+        dispatch(
+          actions.activateTournamentPlayer(tournamentId, nickname, ranking)
+        )
       );
   };
 }

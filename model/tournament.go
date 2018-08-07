@@ -44,6 +44,11 @@ func (t *Tournament) AddTables(tables ...Table) {
 
 // AddPlayer adds a player to a tournament
 func (t *Tournament) AddPlayer(p *Player) {
+	t.AddPlayerWithRanking(p, t.InitialRanking)
+}
+
+// AddPlayerWithRanking adds a player to a tournament with ranking
+func (t *Tournament) AddPlayerWithRanking(p *Player, ranking uint) {
 	var found = false
 	for i, tp := range t.TournamentPlayers {
 		if tp.Player.Nickname == p.Nickname {
@@ -55,7 +60,7 @@ func (t *Tournament) AddPlayer(p *Player) {
 	if !found {
 		newPlayer := TournamentPlayer{
 			Player:  *p,
-			Ranking: t.InitialRanking,
+			Ranking: ranking,
 			Active:  true,
 		}
 		p.TournamentPlayers = append(p.TournamentPlayers, newPlayer)

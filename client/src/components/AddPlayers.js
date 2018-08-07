@@ -45,12 +45,10 @@ class AddPlayers extends React.Component {
       <Modal open={this.props.open} onClose={this.props.onClose}>
         <div className={paper}>
           <PlayersGrid
+            {...this.props.data}
             classes={childClasses}
             select={this.props.select}
             deselect={this.props.deselect}
-            data={this.props.data}
-            score={this.props.score}
-            id={this.props.id}
           />
           <Button
             className={button}
@@ -71,9 +69,9 @@ AddPlayers.propTypes = {
   select: PropTypes.func.isRequired,
   deselect: PropTypes.func.isRequired,
   fetch: PropTypes.func.isRequired,
-  data: PropTypes.array.isRequired,
-  score: PropTypes.number.isRequired,
-  id: PropTypes.string.isRequired,
+  players: PropTypes.array.isRequired,
+  ranking: PropTypes.number.isRequired,
+  tournament: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
 };

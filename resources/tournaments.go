@@ -46,7 +46,7 @@ type PlayerRepresenatation struct {
 	RealName string `json:"realname"`
 	RFID     string `json:"rfid,omitempty"`
 	Active   bool   `json:"active"`
-	Score    uint   `json:"score"`
+	Ranking  uint   `json:"ranking"`
 }
 
 // GetTournamentPlayes get players in a given tournament
@@ -60,16 +60,16 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 		foundPlayers := persistence.NewPlayerRepository(db).FindByTournament(id)
 		players := make([]PlayerRepresenatation, len(foundPlayers))
 		for i, p := range foundPlayers {
-			var score uint
-			if s, e := p.GetScore(id); e == nil {
-				score = s
+			var ranking uint
+			if r, e := p.GetScore(id); e == nil {
+				ranking = r
 			}
 			players[i] = PlayerRepresenatation{
 				Nickname: p.Nickname,
 				RealName: p.RealName,
 				RFID:     p.RFID,
 				Active:   p.IsActive(id),
-				Score:    score,
+				Ranking:  ranking,
 			}
 		}
 		c.JSON(http.StatusOK, players)
@@ -99,12 +99,18 @@ func PostTournament(db *gorm.DB) func(*gin.Context) {
 	}
 }
 
+// PlayerInTournamentRepresenatation for adding players to tournament
+type PlayerInTournamentRepresenatation struct {
+	Nickname string `json:"nickname" binding:"required"`
+	Ranking  uint   `json:"ranking"`
+}
+
 // PostTournamentPlayer addes player to a tournament
 func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
 		var (
-			player model.Player
+			player PlayerInTournamentRepresenatation
 			err    error
 			found  model.Found
 			t      *model.Tournament
@@ -132,7 +138,11 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			tx.Rollback()
 			return
 		}
-		t.AddPlayer(p)
+		if player.Ranking == 0 {
+			t.AddPlayer(p)
+		} else {
+			t.AddPlayerWithRanking(p, player.Ranking)
+		}
 		if err = tournamentRepo.Update(t); err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not update player %s", player.Nickname)})
 			tx.Rollback()

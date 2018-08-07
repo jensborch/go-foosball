@@ -3,6 +3,7 @@ import AddPlayersComponent from '../components/AddPlayers';
 import { fetchAllPlayers, fetchTournaments } from '../services';
 import { isInTournament } from '../reducers';
 import { actions } from '../reducers/tournaments';
+import { getTournamentRanking } from '../reducers/ranking';
 
 const mapStateToProps = (state, props) => {
   const players = [];
@@ -12,7 +13,11 @@ const mapStateToProps = (state, props) => {
     }
   });
   return {
-    data: players,
+    data: {
+      players,
+      tournament: props.id,
+      ranking: getTournamentRanking(state, props.id),
+    },
   };
 };
 

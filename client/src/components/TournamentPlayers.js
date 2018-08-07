@@ -67,7 +67,7 @@ class TournamentPlayers extends React.Component {
             select={this.props.select}
             deselect={this.props.deselect}
             data={this.props.data}
-            score={this.props.score}
+            //score={this.props.ranking}
             open={this.state.open}
             onClose={this.handleClose}
             id={this.props.id}
@@ -84,7 +84,7 @@ TournamentPlayers.propTypes = {
   select: PropTypes.func.isRequired,
   deselect: PropTypes.func.isRequired,
   data: PropTypes.array.isRequired,
-  score: PropTypes.number.isRequired,
+  //ranking: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired,
 };
 
