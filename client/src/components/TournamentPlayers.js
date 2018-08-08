@@ -8,7 +8,7 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import AddIcon from '@material-ui/icons/Add';
 import Players from './Players';
-import AddPlayers from '../containers/AddPlayer';
+import AddPlayers from '../containers/AddPlayers';
 
 const styles = theme => ({
   paper: {
@@ -64,10 +64,6 @@ class TournamentPlayers extends React.Component {
             icon={<AddIcon />}
           />
           <AddPlayers
-            select={this.props.select}
-            deselect={this.props.deselect}
-            data={this.props.data}
-            //score={this.props.ranking}
             open={this.state.open}
             onClose={this.handleClose}
             id={this.props.id}
@@ -84,7 +80,6 @@ TournamentPlayers.propTypes = {
   select: PropTypes.func.isRequired,
   deselect: PropTypes.func.isRequired,
   data: PropTypes.array.isRequired,
-  //ranking: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired,
 };
 

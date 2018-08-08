@@ -10,11 +10,11 @@ export default (state = {}, action) => {
     case types.ACTIVATE_TOURNAMET_PLAYER:
       return {
         ...state,
-        [action.tournamentId]: [...state[action.tournamentId], action.playerId],
+        [action.tournamentId]: [...state[action.tournamentId], action.nickname],
       };
     case types.DEACTIVATE_TOURNAMET_PLAYER:
       let newstate = { ...state };
-      const i = newstate[action.tournamentId].indexOf(action.playerId);
+      const i = newstate[action.tournamentId].indexOf(action.nickname);
       if (i > -1) {
         newstate[action.tournamentId].splice(i, 1);
       }

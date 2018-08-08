@@ -28,5 +28,5 @@ export function getPlayerRanking(state, tournament, player) {
 export function getTournamentRanking(state, tournament) {
   return state.tournaments && state.tournaments[tournament]
     ? state.tournaments[tournament].initial
-    : undefined;
+    : 0;
 }

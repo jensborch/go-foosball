@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
 import TournamentPlayersComponent from '../components/TournamentPlayers';
-import { getPlayerRanking, getTournamentRanking } from '../reducers/ranking';
+import { getPlayerRanking } from '../reducers/ranking';
 import {
   fetchTournamentPlayers,
   activatePlayer,
   deactivatePlayer,
+  fetchTournaments,
 } from '../services';
 import { getActivePlayers, getInactivePlayers } from '../reducers/players';
 
@@ -28,13 +29,15 @@ const mapStateToProps = (state, props) => {
   });
   return {
     id: props.id,
-    // ranking: getTournamentRanking(state, props.id),
     data: players.sort((p1, p2) => p1.realname.localeCompare(p2.realname)),
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    fetch: id => dispatch(fetchTournamentPlayers(id)),
+    fetch: id => {
+      dispatch(fetchTournamentPlayers(id));
+      dispatch(fetchTournaments());
+    },
     select: (tournamentId, playerId, ranking) =>
       dispatch(activatePlayer(tournamentId, playerId, ranking)),
     deselect: (tournamentId, playerId) =>

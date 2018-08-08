@@ -45,7 +45,9 @@ class AddPlayers extends React.Component {
       <Modal open={this.props.open} onClose={this.props.onClose}>
         <div className={paper}>
           <PlayersGrid
-            {...this.props.data}
+            players={this.props.players}
+            ranking={this.props.ranking}
+            tournament={this.props.tournament}
             classes={childClasses}
             select={this.props.select}
             deselect={this.props.deselect}

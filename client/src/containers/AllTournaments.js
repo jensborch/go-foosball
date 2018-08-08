@@ -10,7 +10,9 @@ const mapStateToProps = state => {
   };
 };
 const mapDispatchToProps = dispatch => ({
-  fetch: () => dispatch(fetchTournaments()),
+  fetch: () => {
+    dispatch(fetchTournaments());
+  },
 });
 
 const AllTournaments = connect(mapStateToProps, mapDispatchToProps)(

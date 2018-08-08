@@ -27,20 +27,19 @@ class Player extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
-    const { data } = this.props;
+    const { classes, player, ranking } = this.props;
     return (
-      <GridListTile key={data.nickname}>
-        <div class={classes.cell} />
+      <GridListTile key={player.nickname}>
+        <div className={classes.cell} />
         <GridListTileBar
-          title={data.nickname}
-          subtitle={data.realname}
+          title={player.nickname}
+          subtitle={player.realname}
           actionIcon={
             <div>
               <TextField
                 id="ranking"
                 type="text"
-                value={this.state.ranking}
+                value={ranking}
                 onChange={this.updateRanking}
               />
               <IconButton className={classes.icon} onClick={this.select}>
@@ -63,7 +62,6 @@ class PlayersGrid extends React.Component {
 
   render() {
     const { classes, players } = this.props;
-    //const players = this.props.data.players ? this.props.data.players : [];
     return (
       <GridList className={classes.list}>
         {players.map((p, i) => (
@@ -94,7 +92,6 @@ PlayersGrid.propTypes = {
 Player.propTypes = {
   classes: PropTypes.object.isRequired,
   player: PropTypes.object.isRequired,
-  tournament: PropTypes.string.isRequired,
   ranking: PropTypes.number.isRequired,
   deselect: PropTypes.func.isRequired,
   select: PropTypes.func.isRequired,
