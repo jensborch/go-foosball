@@ -1,4 +1,4 @@
-import reducer, { getPlayerScore } from '../score';
+import reducer, { getPlayerRanking } from '../ranking';
 import { types } from '../tournaments';
 
 test('Reducer should handle unknown types', () => {
@@ -23,7 +23,7 @@ test('Reducer should handle player events with players', () => {
     {},
     {
       type: types.RECEIVE_TOURNAMET_PLAYERS,
-      players: [{ nickname: 'a', score: 10 }, { nickname: 'b', score: 20 }],
+      players: [{ nickname: 'a', ranking: 10 }, { nickname: 'b', ranking: 20 }],
       id: 'id',
     }
   );
@@ -31,9 +31,9 @@ test('Reducer should handle player events with players', () => {
 });
 
 test('Selector should returne score', () => {
-  const score = getPlayerScore(
+  const score = getPlayerRanking(
     {
-      score: {
+      ranking: {
         t: {
           p: 42,
         },

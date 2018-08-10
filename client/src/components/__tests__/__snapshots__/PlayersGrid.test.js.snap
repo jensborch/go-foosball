@@ -25,7 +25,7 @@ exports[`Should render players 1`] = `
         className="MuiGridListTile-tile-3"
       >
         <div
-          class={undefined}
+          className={undefined}
         />
         <div
           className="MuiGridListTileBar-root-6 MuiGridListTileBar-titlePositionBottom-7 MuiGridListTileBar-rootSubtitle-9"
@@ -62,7 +62,7 @@ exports[`Should render players 1`] = `
                     className="MuiInput-input-29"
                     defaultValue={undefined}
                     disabled={false}
-                    id="score"
+                    id="ranking"
                     name={undefined}
                     onBlur={[Function]}
                     onChange={[Function]}
@@ -74,7 +74,7 @@ exports[`Should render players 1`] = `
                     required={false}
                     rows={undefined}
                     type="text"
-                    value={1500}
+                    value={42}
                   />
                 </div>
               </div>
@@ -107,7 +107,7 @@ exports[`Should render players 1`] = `
                   >
                     <g>
                       <path
-                        d="M14 10H2v2h12v-2zm0-4H2v2h12V6zM2 16h8v-2H2v2zm19.5-4.5L23 13l-6.99 7-4.51-4.5L13 14l3.01 3 5.49-5.5z"
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"
                       />
                     </g>
                   </svg>

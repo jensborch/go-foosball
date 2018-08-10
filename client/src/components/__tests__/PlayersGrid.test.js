@@ -4,13 +4,14 @@ import renderer from 'react-test-renderer';
 
 test('Should render players', () => {
   const props = {
-    id: 'uuid',
-    data: [
+    tournament: 'uuid',
+    players: [
       {
         nickname: 'nick',
         realname: 'name',
       },
     ],
+    ranking: 42,
     classes: {},
     deselect: () => {},
     select: () => {},
