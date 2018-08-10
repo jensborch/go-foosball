@@ -13,21 +13,13 @@ class Player extends React.Component {
   select = () => {
     this.props.select(
       this.props.tournament,
-      this.props.data.nickname,
+      this.props.player.nickname,
       this.state.ranking
     );
   };
 
-  deselect = () => {
-    this.props.deselect(this.props.tournament, this.props.data.nickname);
-  };
-
-  updateRanking = event => {
-    this.setState({ ranking: event.target.value });
-  };
-
   render() {
-    const { classes, player, ranking } = this.props;
+    const { classes, player } = this.props;
     return (
       <GridListTile key={player.nickname}>
         <div className={classes.cell} />
@@ -37,10 +29,8 @@ class Player extends React.Component {
           actionIcon={
             <div>
               <TextField
-                id="ranking"
-                type="text"
-                value={ranking}
-                onChange={this.updateRanking}
+                value={this.state.ranking}
+                onChange={(e) => this.setState({ ranking: e.target.value })}
               />
               <IconButton className={classes.icon} onClick={this.select}>
                 <AddCircle />
@@ -68,10 +58,9 @@ class PlayersGrid extends React.Component {
           <div key={p.nickname}>
             <Player
               player={p}
-              tournament={this.props.id}
+              tournament={this.props.tournament}
               ranking={this.props.ranking}
               select={this.props.select}
-              deselect={this.props.deselect}
               classes={classes}
             />
           </div>
@@ -92,8 +81,8 @@ PlayersGrid.propTypes = {
 Player.propTypes = {
   classes: PropTypes.object.isRequired,
   player: PropTypes.object.isRequired,
+  tournament: PropTypes.string.isRequired,
   ranking: PropTypes.number.isRequired,
-  deselect: PropTypes.func.isRequired,
   select: PropTypes.func.isRequired,
 };
 

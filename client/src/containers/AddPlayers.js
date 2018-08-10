@@ -26,8 +26,6 @@ const mapDispatchToProps = dispatch => {
     },
     select: (tournamentId, playerId, score) =>
       dispatch(actions.activateTournamentPlayer(tournamentId, playerId, score)),
-    deselect: (tournamentId, playerId) =>
-      dispatch(actions.deactivateTournamentPlayer(tournamentId, playerId)),
   };
 };
 

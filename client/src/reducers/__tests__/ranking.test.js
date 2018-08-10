@@ -30,6 +30,19 @@ test('Reducer should handle player events with players', () => {
   expect(state).toEqual({ id: { a: 10, b: 20 } });
 });
 
+test('Reducer should handle activet player events', () => {
+  const state = reducer(
+    {},
+    {
+      type: types.ACTIVATE_TOURNAMET_PLAYER,
+      tournamentId: 't',
+      nickname: 'n',
+      ranking: 0
+    }
+  );
+  expect(state).toEqual({ t: { n: 0 } });
+});
+
 test('Selector should returne score', () => {
   const score = getPlayerRanking(
     {
