@@ -18,6 +18,118 @@ exports[`Should render players 1`] = `
       }
     }
   >
+    <div>
+      <li
+        className="MuiGridListTile-root-2"
+      >
+        <div
+          className="MuiGridListTile-tile-3"
+        >
+          <div
+            className={undefined}
+          />
+          <div
+            className="MuiGridListTileBar-root-6 MuiGridListTileBar-titlePositionBottom-7 MuiGridListTileBar-rootSubtitle-9"
+          >
+            <div
+              className="MuiGridListTileBar-titleWrap-10 MuiGridListTileBar-titleWrapActionPosRight-12"
+            >
+              <div
+                className="MuiGridListTileBar-title-13"
+              >
+                nick
+              </div>
+              <div
+                className="MuiGridListTileBar-subtitle-14"
+              >
+                name
+              </div>
+            </div>
+            <div
+              className="MuiGridListTileBar-actionIcon-15"
+            >
+              <div>
+                <div
+                  aria-describedby={undefined}
+                  className="MuiFormControl-root-17 MuiFormControl-marginDense-19"
+                  lable="Ranking"
+                >
+                  <div
+                    className="MuiInput-root-21 MuiInput-formControl-22 MuiInput-underline-25"
+                  >
+                    <input
+                      aria-invalid={false}
+                      autoComplete={undefined}
+                      autoFocus={undefined}
+                      className="MuiInput-input-29 MuiInput-inputType-32 MuiInput-inputMarginDense-30"
+                      defaultValue={undefined}
+                      disabled={false}
+                      id={undefined}
+                      name={undefined}
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={undefined}
+                      onKeyUp={undefined}
+                      placeholder={undefined}
+                      readOnly={undefined}
+                      required={false}
+                      rows={undefined}
+                      type="number"
+                      value={42}
+                    />
+                  </div>
+                  <p
+                    className="MuiFormHelperText-root-34 MuiFormHelperText-marginDense-37"
+                    id={undefined}
+                  >
+                    Ranking
+                  </p>
+                </div>
+                <button
+                  className="MuiButtonBase-root-44 MuiIconButton-root-38"
+                  disabled={false}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  onMouseDown={[Function]}
+                  onMouseLeave={[Function]}
+                  onMouseUp={[Function]}
+                  onTouchEnd={[Function]}
+                  onTouchMove={[Function]}
+                  onTouchStart={[Function]}
+                  tabIndex="0"
+                  type="button"
+                >
+                  <span
+                    className="MuiIconButton-label-43"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="MuiSvgIcon-root-47"
+                      color={undefined}
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <g>
+                        <path
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"
+                        />
+                      </g>
+                    </svg>
+                  </span>
+                  <span
+                    className="MuiTouchRipple-root-54"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </div>
     <li
       className="MuiGridListTile-root-2"
     >
@@ -26,104 +138,80 @@ exports[`Should render players 1`] = `
       >
         <div
           className={undefined}
-        />
-        <div
-          className="MuiGridListTileBar-root-6 MuiGridListTileBar-titlePositionBottom-7 MuiGridListTileBar-rootSubtitle-9"
         >
           <div
-            className="MuiGridListTileBar-titleWrap-10 MuiGridListTileBar-titleWrapActionPosRight-12"
+            aria-describedby={undefined}
+            className="MuiFormControl-root-17"
+            lable="Name"
           >
             <div
-              className="MuiGridListTileBar-title-13"
+              className="MuiInput-root-21 MuiInput-formControl-22 MuiInput-underline-25"
             >
-              nick
+              <input
+                aria-invalid={false}
+                autoComplete={undefined}
+                autoFocus={undefined}
+                className="MuiInput-input-29"
+                defaultValue={undefined}
+                disabled={false}
+                id={undefined}
+                name={undefined}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={undefined}
+                onKeyUp={undefined}
+                placeholder={undefined}
+                readOnly={undefined}
+                required={false}
+                rows={undefined}
+                type="text"
+                value={undefined}
+              />
             </div>
-            <div
-              className="MuiGridListTileBar-subtitle-14"
+            <p
+              className="MuiFormHelperText-root-34"
+              id={undefined}
             >
-              name
-            </div>
+              Name
+            </p>
           </div>
           <div
-            className="MuiGridListTileBar-actionIcon-15"
+            aria-describedby={undefined}
+            className="MuiFormControl-root-17"
+            lable="Nickname"
           >
-            <div>
-              <div
-                aria-describedby={undefined}
-                className="MuiFormControl-root-17 MuiFormControl-marginDense-19"
-                lable="Ranking"
-              >
-                <div
-                  className="MuiInput-root-21 MuiInput-formControl-22 MuiInput-underline-25"
-                >
-                  <input
-                    aria-invalid={false}
-                    autoComplete={undefined}
-                    autoFocus={undefined}
-                    className="MuiInput-input-29 MuiInput-inputType-32 MuiInput-inputMarginDense-30"
-                    defaultValue={undefined}
-                    disabled={false}
-                    id={undefined}
-                    name={undefined}
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={undefined}
-                    onKeyUp={undefined}
-                    placeholder={undefined}
-                    readOnly={undefined}
-                    required={false}
-                    rows={undefined}
-                    type="number"
-                    value={42}
-                  />
-                </div>
-                <p
-                  className="MuiFormHelperText-root-34 MuiFormHelperText-marginDense-37"
-                  id={undefined}
-                >
-                  Ranking
-                </p>
-              </div>
-              <button
-                className="MuiButtonBase-root-44 MuiIconButton-root-38"
+            <div
+              className="MuiInput-root-21 MuiInput-formControl-22 MuiInput-underline-25"
+            >
+              <input
+                aria-invalid={false}
+                autoComplete={undefined}
+                autoFocus={undefined}
+                className="MuiInput-input-29"
+                defaultValue={undefined}
                 disabled={false}
+                id={undefined}
+                name={undefined}
                 onBlur={[Function]}
-                onClick={[Function]}
+                onChange={[Function]}
                 onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                onMouseDown={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-                onTouchEnd={[Function]}
-                onTouchMove={[Function]}
-                onTouchStart={[Function]}
-                tabIndex="0"
-                type="button"
-              >
-                <span
-                  className="MuiIconButton-label-43"
-                >
-                  <svg
-                    aria-hidden="true"
-                    className="MuiSvgIcon-root-47"
-                    color={undefined}
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <g>
-                      <path
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"
-                      />
-                    </g>
-                  </svg>
-                </span>
-                <span
-                  className="MuiTouchRipple-root-54"
-                />
-              </button>
+                onKeyDown={undefined}
+                onKeyUp={undefined}
+                placeholder={undefined}
+                readOnly={undefined}
+                required={false}
+                rows={undefined}
+                type="text"
+                value={undefined}
+              />
             </div>
+            <p
+              className="MuiFormHelperText-root-34"
+              id={undefined}
+            >
+              Nickname
+            </p>
           </div>
         </div>
       </div>

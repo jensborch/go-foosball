@@ -31,7 +31,7 @@ class Player extends React.Component {
               <TextField
                 type="number"
                 value={this.state.ranking}
-                onChange={(e)  => this.setState({ ranking: e.target.value })}
+                onChange={e => this.setState({ ranking: e.target.value })}
                 helperText="Ranking"
                 lable="Ranking"
                 margin="dense"
@@ -58,17 +58,25 @@ class PlayersGrid extends React.Component {
     const { classes, players } = this.props;
     return (
       <GridList className={classes.list}>
-        {players.map((p, i) => (
-          <div key={p.nickname}>
-            <Player
-              player={p}
-              tournament={this.props.tournament}
-              ranking={this.props.ranking}
-              select={this.props.select}
-              classes={classes}
-            />
-          </div>
-        ))}
+        <div>
+          {players.map((p, i) => (
+            <div key={p.nickname}>
+              <Player
+                player={p}
+                tournament={this.props.tournament}
+                ranking={this.props.ranking}
+                select={this.props.select}
+                classes={classes}
+              />
+            </div>
+          ))}
+          <GridListTile>
+            <div className={classes.cell}>
+              <TextField helperText="Name" lable="Name" />
+              <TextField helperText="Nickname" lable="Nickname" />
+            </div>
+          </GridListTile>
+        </div>
       </GridList>
     );
   }
