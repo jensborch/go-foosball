@@ -50,7 +50,8 @@ exports[`Should render players 1`] = `
             <div>
               <div
                 aria-describedby={undefined}
-                className="MuiFormControl-root-17"
+                className="MuiFormControl-root-17 MuiFormControl-marginDense-19"
+                lable="Ranking"
               >
                 <div
                   className="MuiInput-root-21 MuiInput-formControl-22 MuiInput-underline-25"
@@ -59,7 +60,7 @@ exports[`Should render players 1`] = `
                     aria-invalid={false}
                     autoComplete={undefined}
                     autoFocus={undefined}
-                    className="MuiInput-input-29"
+                    className="MuiInput-input-29 MuiInput-inputType-32 MuiInput-inputMarginDense-30"
                     defaultValue={undefined}
                     disabled={false}
                     id={undefined}
@@ -73,13 +74,19 @@ exports[`Should render players 1`] = `
                     readOnly={undefined}
                     required={false}
                     rows={undefined}
-                    type="text"
+                    type="number"
                     value={42}
                   />
                 </div>
+                <p
+                  className="MuiFormHelperText-root-34 MuiFormHelperText-marginDense-37"
+                  id={undefined}
+                >
+                  Ranking
+                </p>
               </div>
               <button
-                className="MuiButtonBase-root-40 MuiIconButton-root-34"
+                className="MuiButtonBase-root-44 MuiIconButton-root-38"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -96,11 +103,11 @@ exports[`Should render players 1`] = `
                 type="button"
               >
                 <span
-                  className="MuiIconButton-label-39"
+                  className="MuiIconButton-label-43"
                 >
                   <svg
                     aria-hidden="true"
-                    className="MuiSvgIcon-root-43"
+                    className="MuiSvgIcon-root-47"
                     color={undefined}
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -113,7 +120,7 @@ exports[`Should render players 1`] = `
                   </svg>
                 </span>
                 <span
-                  className="MuiTouchRipple-root-50"
+                  className="MuiTouchRipple-root-54"
                 />
               </button>
             </div>

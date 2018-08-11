@@ -1,8 +1,7 @@
 import { connect } from 'react-redux';
 import AddPlayersComponent from '../components/AddPlayers';
-import { fetchAllPlayers } from '../services';
+import { fetchAllPlayers, activatePlayer } from '../services';
 import { isInTournament } from '../reducers';
-import { actions } from '../reducers/tournaments';
 import { getTournamentRanking } from '../reducers/ranking';
 
 const mapStateToProps = (state, props) => {
@@ -24,8 +23,8 @@ const mapDispatchToProps = dispatch => {
     fetch: () => {
       dispatch(fetchAllPlayers());
     },
-    select: (tournamentId, playerId, score) =>
-      dispatch(actions.activateTournamentPlayer(tournamentId, playerId, score)),
+    select: (tournamentId, playerId, ranking) =>
+      dispatch(activatePlayer(tournamentId, playerId, ranking)),
   };
 };
 

@@ -37,13 +37,13 @@ test('Reducer should handle activet player events', () => {
       type: types.ACTIVATE_TOURNAMET_PLAYER,
       tournamentId: 't',
       nickname: 'n',
-      ranking: 0
+      ranking: 1
     }
   );
-  expect(state).toEqual({ t: { n: 0 } });
+  expect(state).toEqual({ t: { n: 1 } });
 });
 
-test('Selector should returne score', () => {
+test('Selector should returne ranking', () => {
   const score = getPlayerRanking(
     {
       ranking: {

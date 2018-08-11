@@ -3,11 +3,13 @@ import { types } from './tournaments';
 export default (state = {}, action) => {
   switch (action.type) {
     case types.ACTIVATE_TOURNAMET_PLAYER:
-    const {ranking, nickname, tournamentId} = action;
-    return {
-      ...state,
-      [tournamentId]: {...state[tournamentId], [nickname]: ranking}
-    };
+      const { ranking, nickname, tournamentId } = action;
+      return ranking
+        ? {
+            ...state,
+            [tournamentId]: { ...state[tournamentId], [nickname]: ranking },
+          }
+        : state;
     case types.RECEIVE_TOURNAMET_PLAYERS:
       const newplayers = action.players.reduce(
         (a, p) => ({

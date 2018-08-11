@@ -58,7 +58,7 @@ class AddPlayers extends React.Component {
             color="secondary"
             onClick={this.props.onClose}
           >
-            Cancel
+            Dismiss
           </Button>
         </div>
       </Modal>

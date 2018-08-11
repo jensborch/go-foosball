@@ -38,8 +38,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(fetchTournamentPlayers(id));
       dispatch(fetchTournaments());
     },
-    select: (tournamentId, playerId, ranking) =>
-      dispatch(activatePlayer(tournamentId, playerId, ranking)),
+    select: (tournamentId, playerId) =>
+      dispatch(activatePlayer(tournamentId, playerId)),
     deselect: (tournamentId, playerId) =>
       dispatch(deactivatePlayer(tournamentId, playerId)),
   };

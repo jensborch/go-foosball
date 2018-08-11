@@ -14,7 +14,7 @@ class Player extends React.Component {
     this.props.select(
       this.props.tournament,
       this.props.player.nickname,
-      this.state.ranking
+      parseInt(this.state.ranking)
     );
   };
 
@@ -29,8 +29,12 @@ class Player extends React.Component {
           actionIcon={
             <div>
               <TextField
+                type="number"
                 value={this.state.ranking}
-                onChange={(e) => this.setState({ ranking: e.target.value })}
+                onChange={(e)  => this.setState({ ranking: e.target.value })}
+                helperText="Ranking"
+                lable="Ranking"
+                margin="dense"
               />
               <IconButton className={classes.icon} onClick={this.select}>
                 <AddCircle />
