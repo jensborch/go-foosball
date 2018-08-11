@@ -14,7 +14,7 @@ class Player extends React.Component {
     this.props.select(
       this.props.tournament,
       this.props.player.nickname,
-      parseInt(this.state.ranking)
+      parseInt(this.state.ranking, 10)
     );
   };
 
