@@ -5,14 +5,12 @@
   "dependencies": {
     "@material-ui/core": "^3.0.0",
     "@material-ui/icons": "^3.0.0",
-    "eslint": "^4.19.1",
-    "eslint-plugin-react": "^7.11.1",
     "prop-types": "^15.6.2",
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.1",
+    "react-scripts": "1.1.5",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0"
@@ -26,9 +24,11 @@
     "prettier": "prettier --write \"src/**/*.js\""
   },
   "devDependencies": {
-    "eslint-config-prettier": "^2.10.0",
+    "eslint": "^4.1.1",
+    "eslint-config-prettier": "^3.0.1",
     "eslint-plugin-prettier": "^2.6.2",
-    "prettier": "1.11.1",
+    "eslint-plugin-react": "^7.11.1",
+    "prettier": "^1.14.2",
     "react-test-renderer": "^16.5.1"
   }
 }
