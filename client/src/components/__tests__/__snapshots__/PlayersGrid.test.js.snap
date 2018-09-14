@@ -6,52 +6,52 @@ exports[`Should render players 1`] = `
 >
   <div>
     <div
-      className="MuiPaper-root-2 MuiPaper-elevation1-5 MuiPaper-rounded-3 MuiCard-root-1"
+      className="MuiPaper-root-02 MuiPaper-elevation1-05 MuiPaper-rounded-03 MuiCard-root-01"
     >
       <div
-        className="MuiCardHeader-root-29"
+        className="MuiCardHeader-root-029"
       >
         <div
-          className="MuiCardHeader-content-32"
+          className="MuiCardHeader-content-032"
         >
           <span
-            className="MuiTypography-root-35 MuiTypography-headline-40 MuiCardHeader-title-33"
+            className="MuiTypography-root-035 MuiTypography-headline-040 MuiCardHeader-title-033"
           >
             nick
           </span>
           <span
-            className="MuiTypography-root-35 MuiTypography-body1-44 MuiTypography-colorTextSecondary-58 MuiCardHeader-subheader-34"
+            className="MuiTypography-root-035 MuiTypography-body1-044 MuiTypography-colorTextSecondary-058 MuiCardHeader-subheader-034"
           >
             name
           </span>
         </div>
       </div>
       <div
-        className="MuiCardContent-root-60"
+        className="MuiCardContent-root-060"
       >
         <div
           className={undefined}
         />
       </div>
       <div
-        className="MuiCardActions-root-61"
+        className="MuiCardActions-root-061"
       >
         <div
-          className="MuiCardActions-action-62"
+          className="MuiCardActions-action-062"
         >
           <div
             aria-describedby={undefined}
-            className="MuiFormControl-root-63 MuiFormControl-marginDense-65"
+            className="MuiFormControl-root-063 MuiFormControl-marginDense-065"
             lable="Ranking"
           >
             <div
-              className="MuiInput-root-67 MuiInput-formControl-68 MuiInput-underline-71"
+              className="MuiInput-root-067 MuiInput-formControl-068 MuiInput-underline-071"
             >
               <input
                 aria-invalid={false}
                 autoComplete={undefined}
                 autoFocus={undefined}
-                className="MuiInput-input-75 MuiInput-inputType-78 MuiInput-inputMarginDense-76"
+                className="MuiInput-input-075 MuiInput-inputType-078 MuiInput-inputMarginDense-076"
                 defaultValue={undefined}
                 disabled={false}
                 id={undefined}
@@ -70,14 +70,14 @@ exports[`Should render players 1`] = `
               />
             </div>
             <p
-              className="MuiFormHelperText-root-80 MuiFormHelperText-filled-85 MuiFormHelperText-marginDense-83"
+              className="MuiFormHelperText-root-080 MuiFormHelperText-filled-085 MuiFormHelperText-marginDense-083"
               id={undefined}
             >
               Ranking
             </p>
           </div>
           <button
-            className="MuiButtonBase-root-93 MuiIconButton-root-87"
+            className="MuiButtonBase-root-093 MuiIconButton-root-087"
             disabled={false}
             onBlur={[Function]}
             onClick={[Function]}
@@ -94,24 +94,26 @@ exports[`Should render players 1`] = `
             type="button"
           >
             <span
-              className="MuiIconButton-label-92"
+              className="MuiIconButton-label-092"
             >
               <svg
                 aria-hidden="true"
-                className="MuiSvgIcon-root-96"
+                className="MuiSvgIcon-root-096"
                 color={undefined}
                 focusable="false"
                 viewBox="0 0 24 24"
               >
-                <g>
-                  <path
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"
-                  />
-                </g>
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"
+                />
               </svg>
             </span>
             <span
-              className="MuiTouchRipple-root-103"
+              className="MuiTouchRipple-root-0103"
             />
           </button>
         </div>
@@ -119,24 +121,24 @@ exports[`Should render players 1`] = `
     </div>
   </div>
   <div
-    className="MuiPaper-root-2 MuiPaper-elevation1-5 MuiPaper-rounded-3 MuiCard-root-1"
+    className="MuiPaper-root-02 MuiPaper-elevation1-05 MuiPaper-rounded-03 MuiCard-root-01"
   >
     <div
-      className="MuiCardContent-root-60"
+      className="MuiCardContent-root-060"
     >
       <div
         aria-describedby={undefined}
-        className="MuiFormControl-root-63"
+        className="MuiFormControl-root-063"
         lable="Name"
       >
         <div
-          className="MuiInput-root-67 MuiInput-formControl-68 MuiInput-underline-71"
+          className="MuiInput-root-067 MuiInput-formControl-068 MuiInput-underline-071"
         >
           <input
             aria-invalid={false}
             autoComplete={undefined}
             autoFocus={undefined}
-            className="MuiInput-input-75"
+            className="MuiInput-input-075"
             defaultValue={undefined}
             disabled={false}
             id={undefined}
@@ -155,7 +157,7 @@ exports[`Should render players 1`] = `
           />
         </div>
         <p
-          className="MuiFormHelperText-root-80"
+          className="MuiFormHelperText-root-080"
           id={undefined}
         >
           Name
@@ -163,17 +165,17 @@ exports[`Should render players 1`] = `
       </div>
       <div
         aria-describedby={undefined}
-        className="MuiFormControl-root-63"
+        className="MuiFormControl-root-063"
         lable="Nickname"
       >
         <div
-          className="MuiInput-root-67 MuiInput-formControl-68 MuiInput-underline-71"
+          className="MuiInput-root-067 MuiInput-formControl-068 MuiInput-underline-071"
         >
           <input
             aria-invalid={false}
             autoComplete={undefined}
             autoFocus={undefined}
-            className="MuiInput-input-75"
+            className="MuiInput-input-075"
             defaultValue={undefined}
             disabled={false}
             id={undefined}
@@ -192,7 +194,7 @@ exports[`Should render players 1`] = `
           />
         </div>
         <p
-          className="MuiFormHelperText-root-80"
+          className="MuiFormHelperText-root-080"
           id={undefined}
         >
           Nickname
@@ -200,10 +202,10 @@ exports[`Should render players 1`] = `
       </div>
     </div>
     <div
-      className="MuiCardActions-root-61"
+      className="MuiCardActions-root-061"
     >
       <button
-        className="MuiButtonBase-root-93 MuiButton-root-110 MuiButton-text-112 MuiButton-outlined-118 MuiCardActions-action-62"
+        className="MuiButtonBase-root-093 MuiButton-root-0110 MuiButton-text-0112 MuiButton-outlined-0118 MuiCardActions-action-062"
         disabled={false}
         onBlur={[Function]}
         onFocus={[Function]}
@@ -219,12 +221,12 @@ exports[`Should render players 1`] = `
         type="button"
       >
         <span
-          className="MuiButton-label-111"
+          className="MuiButton-label-0111"
         >
           Create
         </span>
         <span
-          className="MuiTouchRipple-root-103"
+          className="MuiTouchRipple-root-0103"
         />
       </button>
     </div>

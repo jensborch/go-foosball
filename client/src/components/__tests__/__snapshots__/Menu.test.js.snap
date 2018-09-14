@@ -2,14 +2,14 @@
 
 exports[`Should render with title 1`] = `
 <header
-  className="MuiPaper-root-12 MuiPaper-elevation4-18 MuiAppBar-root-4 MuiAppBar-positionStatic-8 MuiAppBar-colorPrimary-10"
+  className="MuiPaper-root-013 MuiPaper-elevation4-019 MuiAppBar-root-04 MuiAppBar-positionStatic-08 MuiAppBar-colorPrimary-011"
 >
   <div
-    className="MuiToolbar-root-39 MuiToolbar-regular-41 MuiToolbar-gutters-40"
+    className="MuiToolbar-root-040 MuiToolbar-regular-042 MuiToolbar-gutters-041"
   >
     <a
       aria-label="Home"
-      className="MuiButtonBase-root-49 MuiIconButton-root-43 MuiIconButton-colorInherit-44 Menu-menuButton-2"
+      className="MuiButtonBase-root-050 MuiIconButton-root-044 MuiIconButton-colorInherit-045 Menu-menuButton-02"
       href="/"
       onBlur={[Function]}
       onClick={[Function]}
@@ -26,33 +26,35 @@ exports[`Should render with title 1`] = `
       tabIndex="0"
     >
       <span
-        className="MuiIconButton-label-48"
+        className="MuiIconButton-label-049"
       >
         <svg
           aria-hidden="true"
-          className="MuiSvgIcon-root-52"
+          className="MuiSvgIcon-root-053"
           color={undefined}
           focusable="false"
           viewBox="0 0 24 24"
         >
-          <g>
-            <path
-              d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"
-            />
-          </g>
+          <path
+            d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"
+          />
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
         </svg>
       </span>
       <span
-        className="MuiTouchRipple-root-59"
+        className="MuiTouchRipple-root-060"
       />
     </a>
     <h2
-      className="MuiTypography-root-66 MuiTypography-title-72 MuiTypography-colorInherit-85 Menu-flex-1"
+      className="MuiTypography-root-067 MuiTypography-title-073 MuiTypography-colorInherit-086 Menu-flex-01"
     >
       test
     </h2>
     <div
-      className="Menu-buttons-3"
+      className="Menu-buttons-03"
     />
   </div>
 </header>
