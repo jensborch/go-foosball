@@ -48,7 +48,7 @@ class Player extends React.Component {
 }
 
 class Players extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.fetch) {
       this.props.fetch(this.props.id);
     }

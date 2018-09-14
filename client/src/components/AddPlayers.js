@@ -21,7 +21,7 @@ const styles = theme => ({
   },
   cell: {
     height: '150px',
-    //width: '100px',
+    padding: '10px',
     backgroundColor:
       theme.palette.type === 'light'
         ? theme.palette.grey[300]
@@ -34,7 +34,7 @@ const styles = theme => ({
 });
 
 class AddPlayers extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetch();
   }
 

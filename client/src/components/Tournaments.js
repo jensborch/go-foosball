@@ -60,7 +60,7 @@ class Tournament extends React.Component {
 }
 
 class Tournaments extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetch();
   }
 

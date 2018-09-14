@@ -97,7 +97,7 @@ class Game extends React.Component {
 }
 
 class Games extends React.Component {
-  componentWillMount() {
+  componenDidMount() {
     this.props.fetch(this.props.id);
   }
 

@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
 import AddCircle from '@material-ui/icons/AddCircle';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 
 class Player extends React.Component {
   state = { ranking: this.props.ranking };
@@ -21,34 +23,40 @@ class Player extends React.Component {
   render() {
     const { classes, player } = this.props;
     return (
-      <GridListTile key={player.nickname}>
-        <div className={classes.cell} />
-        <GridListTileBar
-          title={player.nickname}
-          subtitle={player.realname}
-          actionIcon={
-            <div>
-              <TextField
-                type="number"
-                value={this.state.ranking}
-                onChange={e => this.setState({ ranking: e.target.value })}
-                helperText="Ranking"
-                lable="Ranking"
-                margin="dense"
-              />
-              <IconButton className={classes.icon} onClick={this.select}>
-                <AddCircle />
-              </IconButton>
-            </div>
-          }
-        />
-      </GridListTile>
+      <Card key={player.nickname}>
+        <CardHeader title={player.nickname} subheader={player.realname} />
+        <CardContent>
+          <div className={classes.cell} />
+        </CardContent>
+        <CardActions>
+          <div>
+            <TextField
+              type="number"
+              value={this.state.ranking}
+              onChange={e => this.setState({ ranking: e.target.value })}
+              helperText="Ranking"
+              lable="Ranking"
+              margin="dense"
+            />
+            <IconButton className={classes.icon} onClick={this.select}>
+              <AddCircle />
+            </IconButton>
+          </div>
+        </CardActions>
+      </Card>
     );
   }
 }
 
 class PlayersGrid extends React.Component {
-  componentWillMount() {
+  state = {
+    player: {
+      nickname: '',
+      realname: '',
+    },
+  };
+
+  componentDidMount() {
     if (this.props.fetch) {
       this.props.fetch(this.props.id);
     }
@@ -56,28 +64,46 @@ class PlayersGrid extends React.Component {
 
   render() {
     const { classes, players } = this.props;
+    const { player } = this.state;
     return (
-      <GridList className={classes.list}>
-        <div>
-          {players.map((p, i) => (
-            <div key={p.nickname}>
-              <Player
-                player={p}
-                tournament={this.props.tournament}
-                ranking={this.props.ranking}
-                select={this.props.select}
-                classes={classes}
-              />
-            </div>
-          ))}
-          <GridListTile>
-            <div className={classes.cell}>
-              <TextField helperText="Name" lable="Name" />
-              <TextField helperText="Nickname" lable="Nickname" />
-            </div>
-          </GridListTile>
-        </div>
-      </GridList>
+      <div className={classes.list}>
+        {players.map((p, i) => (
+          <div key={p.nickname}>
+            <Player
+              player={p}
+              tournament={this.props.tournament}
+              ranking={this.props.ranking}
+              select={this.props.select}
+              classes={classes}
+            />
+          </div>
+        ))}
+        <Card className={classes.card}>
+          <CardContent>
+            <TextField
+              helperText="Name"
+              value={player.realname}
+              onChange={event =>
+                this.setState({ player: { realname: event.target.value } })
+              }
+              lable="Name"
+            />
+            <TextField
+              helperText="Nickname"
+              value={player.nickname}
+              onChange={event =>
+                this.setState({ player: { nickname: event.target.value } })
+              }
+              lable="Nickname"
+            />
+          </CardContent>
+          <CardActions>
+            <Button variant="outlined" className={classes.button}>
+              Create
+            </Button>
+          </CardActions>
+        </Card>
+      </div>
     );
   }
 }

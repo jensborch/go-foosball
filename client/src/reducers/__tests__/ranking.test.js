@@ -37,7 +37,7 @@ test('Reducer should handle activet player events', () => {
       type: types.ACTIVATE_TOURNAMET_PLAYER,
       tournamentId: 't',
       nickname: 'n',
-      ranking: 1
+      ranking: 1,
     }
   );
   expect(state).toEqual({ t: { n: 1 } });

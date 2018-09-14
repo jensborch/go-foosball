@@ -31,7 +31,7 @@ class TournamentPlayers extends React.Component {
     open: false,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetch(this.props.id);
   }
 
