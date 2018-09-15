@@ -2,56 +2,47 @@
 
 exports[`Should render players 1`] = `
 <div
-  className={undefined}
+  className="MuiGrid-container-01 MuiGrid-spacing-xs-16-024"
 >
-  <div>
+  <div
+    className="MuiGrid-item-02"
+  >
     <div
-      className="MuiPaper-root-02 MuiPaper-elevation1-05 MuiPaper-rounded-03 MuiCard-root-01"
+      className="MuiPaper-root-099 MuiPaper-elevation1-0102 MuiPaper-rounded-0100 MuiCard-root-098"
     >
       <div
-        className="MuiCardHeader-root-029"
+        className={undefined}
+      />
+      <div
+        className="MuiCardContent-root-0126"
       >
-        <div
-          className="MuiCardHeader-content-032"
+        <h3
+          className="MuiTypography-root-0127 MuiTypography-headline-0132 MuiTypography-gutterBottom-0144"
         >
-          <span
-            className="MuiTypography-root-035 MuiTypography-headline-040 MuiCardHeader-title-033"
-          >
-            nick
-          </span>
-          <span
-            className="MuiTypography-root-035 MuiTypography-body1-044 MuiTypography-colorTextSecondary-058 MuiCardHeader-subheader-034"
-          >
-            name
-          </span>
-        </div>
+          nick
+           - 
+          name
+        </h3>
       </div>
       <div
-        className="MuiCardContent-root-060"
+        className="MuiCardActions-root-0152"
       >
         <div
-          className={undefined}
-        />
-      </div>
-      <div
-        className="MuiCardActions-root-061"
-      >
-        <div
-          className="MuiCardActions-action-062"
+          className="MuiCardActions-action-0153"
         >
           <div
             aria-describedby={undefined}
-            className="MuiFormControl-root-063 MuiFormControl-marginDense-065"
+            className="MuiFormControl-root-0154 MuiFormControl-marginDense-0156"
             lable="Ranking"
           >
             <div
-              className="MuiInput-root-067 MuiInput-formControl-068 MuiInput-underline-071"
+              className="MuiInput-root-0158 MuiInput-formControl-0159 MuiInput-underline-0162"
             >
               <input
                 aria-invalid={false}
                 autoComplete={undefined}
                 autoFocus={undefined}
-                className="MuiInput-input-075 MuiInput-inputType-078 MuiInput-inputMarginDense-076"
+                className="MuiInput-input-0166 MuiInput-inputType-0169 MuiInput-inputMarginDense-0167"
                 defaultValue={undefined}
                 disabled={false}
                 id={undefined}
@@ -70,14 +61,14 @@ exports[`Should render players 1`] = `
               />
             </div>
             <p
-              className="MuiFormHelperText-root-080 MuiFormHelperText-filled-085 MuiFormHelperText-marginDense-083"
+              className="MuiFormHelperText-root-0171 MuiFormHelperText-filled-0176 MuiFormHelperText-marginDense-0174"
               id={undefined}
             >
               Ranking
             </p>
           </div>
           <button
-            className="MuiButtonBase-root-093 MuiIconButton-root-087"
+            className="MuiButtonBase-root-0204 MuiButton-root-0178 MuiButton-text-0180 MuiButton-outlined-0186"
             disabled={false}
             onBlur={[Function]}
             onClick={[Function]}
@@ -94,26 +85,12 @@ exports[`Should render players 1`] = `
             type="button"
           >
             <span
-              className="MuiIconButton-label-092"
+              className="MuiButton-label-0179"
             >
-              <svg
-                aria-hidden="true"
-                className="MuiSvgIcon-root-096"
-                color={undefined}
-                focusable="false"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"
-                />
-              </svg>
+              Add
             </span>
             <span
-              className="MuiTouchRipple-root-0103"
+              className="MuiTouchRipple-root-0207"
             />
           </button>
         </div>
@@ -121,114 +98,130 @@ exports[`Should render players 1`] = `
     </div>
   </div>
   <div
-    className="MuiPaper-root-02 MuiPaper-elevation1-05 MuiPaper-rounded-03 MuiCard-root-01"
+    className="MuiGrid-item-02"
   >
     <div
-      className="MuiCardContent-root-060"
+      className="MuiPaper-root-099 MuiPaper-elevation1-0102 MuiPaper-rounded-0100 MuiCard-root-098"
     >
       <div
-        aria-describedby={undefined}
-        className="MuiFormControl-root-063"
-        lable="Name"
+        className="MuiCardContent-root-0126"
       >
         <div
-          className="MuiInput-root-067 MuiInput-formControl-068 MuiInput-underline-071"
+          className="MuiGrid-container-01 MuiGrid-direction-xs-column-04"
         >
-          <input
-            aria-invalid={false}
-            autoComplete={undefined}
-            autoFocus={undefined}
-            className="MuiInput-input-075"
-            defaultValue={undefined}
-            disabled={false}
-            id={undefined}
-            name={undefined}
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onKeyDown={undefined}
-            onKeyUp={undefined}
-            placeholder={undefined}
-            readOnly={undefined}
-            required={false}
-            rows={undefined}
-            type="text"
-            value=""
-          />
+          <div
+            className="MuiGrid-item-02"
+          >
+            <div
+              aria-describedby={undefined}
+              className="MuiFormControl-root-0154"
+              lable="Name"
+            >
+              <div
+                className="MuiInput-root-0158 MuiInput-formControl-0159 MuiInput-underline-0162"
+              >
+                <input
+                  aria-invalid={false}
+                  autoComplete={undefined}
+                  autoFocus={undefined}
+                  className="MuiInput-input-0166"
+                  defaultValue={undefined}
+                  disabled={false}
+                  id={undefined}
+                  name={undefined}
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={undefined}
+                  onKeyUp={undefined}
+                  placeholder={undefined}
+                  readOnly={undefined}
+                  required={false}
+                  rows={undefined}
+                  type="text"
+                  value=""
+                />
+              </div>
+              <p
+                className="MuiFormHelperText-root-0171"
+                id={undefined}
+              >
+                Name
+              </p>
+            </div>
+          </div>
+          <div
+            className="MuiGrid-item-02"
+          >
+            <div
+              aria-describedby={undefined}
+              className="MuiFormControl-root-0154"
+              lable="Nickname"
+            >
+              <div
+                className="MuiInput-root-0158 MuiInput-formControl-0159 MuiInput-underline-0162"
+              >
+                <input
+                  aria-invalid={false}
+                  autoComplete={undefined}
+                  autoFocus={undefined}
+                  className="MuiInput-input-0166"
+                  defaultValue={undefined}
+                  disabled={false}
+                  id={undefined}
+                  name={undefined}
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={undefined}
+                  onKeyUp={undefined}
+                  placeholder={undefined}
+                  readOnly={undefined}
+                  required={false}
+                  rows={undefined}
+                  type="text"
+                  value=""
+                />
+              </div>
+              <p
+                className="MuiFormHelperText-root-0171"
+                id={undefined}
+              >
+                Nickname
+              </p>
+            </div>
+          </div>
         </div>
-        <p
-          className="MuiFormHelperText-root-080"
-          id={undefined}
-        >
-          Name
-        </p>
       </div>
       <div
-        aria-describedby={undefined}
-        className="MuiFormControl-root-063"
-        lable="Nickname"
+        className="MuiCardActions-root-0152"
       >
-        <div
-          className="MuiInput-root-067 MuiInput-formControl-068 MuiInput-underline-071"
+        <button
+          className="MuiButtonBase-root-0204 MuiButton-root-0178 MuiButton-text-0180 MuiButton-outlined-0186 MuiCardActions-action-0153"
+          disabled={false}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex="0"
+          type="button"
         >
-          <input
-            aria-invalid={false}
-            autoComplete={undefined}
-            autoFocus={undefined}
-            className="MuiInput-input-075"
-            defaultValue={undefined}
-            disabled={false}
-            id={undefined}
-            name={undefined}
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onKeyDown={undefined}
-            onKeyUp={undefined}
-            placeholder={undefined}
-            readOnly={undefined}
-            required={false}
-            rows={undefined}
-            type="text"
-            value=""
+          <span
+            className="MuiButton-label-0179"
+          >
+            Create
+          </span>
+          <span
+            className="MuiTouchRipple-root-0207"
           />
-        </div>
-        <p
-          className="MuiFormHelperText-root-080"
-          id={undefined}
-        >
-          Nickname
-        </p>
+        </button>
       </div>
-    </div>
-    <div
-      className="MuiCardActions-root-061"
-    >
-      <button
-        className="MuiButtonBase-root-093 MuiButton-root-0110 MuiButton-text-0112 MuiButton-outlined-0118 MuiCardActions-action-062"
-        disabled={false}
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onKeyDown={[Function]}
-        onKeyUp={[Function]}
-        onMouseDown={[Function]}
-        onMouseLeave={[Function]}
-        onMouseUp={[Function]}
-        onTouchEnd={[Function]}
-        onTouchMove={[Function]}
-        onTouchStart={[Function]}
-        tabIndex="0"
-        type="button"
-      >
-        <span
-          className="MuiButton-label-0111"
-        >
-          Create
-        </span>
-        <span
-          className="MuiTouchRipple-root-0103"
-        />
-      </button>
     </div>
   </div>
 </div>

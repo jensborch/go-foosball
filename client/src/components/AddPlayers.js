@@ -5,6 +5,8 @@ import withRoot from '../withRoot';
 import PlayersGrid from './PlayersGrid';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 
 const styles = theme => ({
   paper: {
@@ -13,23 +15,26 @@ const styles = theme => ({
     left: '15%',
     width: '70%',
     height: '80%',
-    backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     display: 'flex',
-    flexFlow: 'column',
     justifyContent: 'space-between',
   },
+  card: {
+    height: '250px',
+    margin: theme.spacing.unit * 3,
+  },
   cell: {
-    height: '150px',
-    padding: '10px',
+    height: '100px',
     backgroundColor:
       theme.palette.type === 'light'
         ? theme.palette.grey[300]
         : theme.palette.grey[700],
   },
-  button: {
-    align: 'center',
-    padding: theme.spacing.unit * 3,
+  cardButton: {
+    margin: theme.spacing.unit,
+  },
+  dismissButton: {
+    margin: theme.spacing.unit * 2,
   },
 });
 
@@ -40,27 +45,33 @@ class AddPlayers extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { paper, list, button, players, ...childClasses } = classes;
+    const { paper, dismissButton, ...childClasses } = classes;
     return (
       <Modal open={this.props.open} onClose={this.props.onClose}>
-        <div className={paper}>
-          <PlayersGrid
-            players={this.props.players}
-            ranking={this.props.ranking}
-            tournament={this.props.tournament}
-            classes={childClasses}
-            select={this.props.select}
-            deselect={this.props.deselect}
-          />
-          <Button
-            className={button}
-            variant="raised"
-            color="secondary"
-            onClick={this.props.onClose}
+        <Paper className={paper}>
+          <Grid
+            container
+            direction="column"
+            justify="space-between"
+            spacing={8}
           >
-            Dismiss
-          </Button>
-        </div>
+            <PlayersGrid
+              players={this.props.players}
+              ranking={this.props.ranking}
+              tournament={this.props.tournament}
+              classes={childClasses}
+              select={this.props.select}
+            />
+            <Button
+              className={classes.dismissButton}
+              variant="raised"
+              color="secondary"
+              onClick={this.props.onClose}
+            >
+              Dismiss
+            </Button>
+          </Grid>
+        </Paper>
       </Modal>
     );
   }
@@ -69,7 +80,6 @@ class AddPlayers extends React.Component {
 AddPlayers.propTypes = {
   classes: PropTypes.object.isRequired,
   select: PropTypes.func.isRequired,
-  deselect: PropTypes.func.isRequired,
   fetch: PropTypes.func.isRequired,
   players: PropTypes.array.isRequired,
   ranking: PropTypes.number.isRequired,

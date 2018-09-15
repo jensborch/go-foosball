@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import AddCircle from '@material-ui/icons/AddCircle';
-import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 class Player extends React.Component {
   state = { ranking: this.props.ranking };
@@ -23,10 +22,12 @@ class Player extends React.Component {
   render() {
     const { classes, player } = this.props;
     return (
-      <Card key={player.nickname}>
-        <CardHeader title={player.nickname} subheader={player.realname} />
+      <Card className={classes.card} key={player.nickname}>
+        <div className={classes.cell} />
         <CardContent>
-          <div className={classes.cell} />
+          <Typography gutterBottom variant="headline" component="h3">
+            {player.nickname} - {player.realname}
+          </Typography>
         </CardContent>
         <CardActions>
           <div>
@@ -38,15 +39,51 @@ class Player extends React.Component {
               lable="Ranking"
               margin="dense"
             />
-            <IconButton className={classes.icon} onClick={this.select}>
-              <AddCircle />
-            </IconButton>
+            <Button
+              variant="outlined"
+              className={classes.cardButton}
+              onClick={this.select}
+            >
+              Add
+            </Button>
           </div>
         </CardActions>
       </Card>
     );
   }
 }
+
+const AddNewPlayer = ({ player, onChange, classes }) => {
+  return (
+    <Card className={classes.card}>
+      <CardContent>
+        <Grid container direction="column">
+          <Grid item>
+            <TextField
+              helperText="Name"
+              value={player.realname}
+              onChange={onChange}
+              lable="Name"
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              helperText="Nickname"
+              value={player.nickname}
+              onChange={onChange}
+              lable="Nickname"
+            />
+          </Grid>
+        </Grid>
+      </CardContent>
+      <CardActions>
+        <Button variant="outlined" className={classes.cardButton}>
+          Create
+        </Button>
+      </CardActions>
+    </Card>
+  );
+};
 
 class PlayersGrid extends React.Component {
   state = {
@@ -66,9 +103,9 @@ class PlayersGrid extends React.Component {
     const { classes, players } = this.props;
     const { player } = this.state;
     return (
-      <div className={classes.list}>
+      <Grid container spacing={16} direction="row">
         {players.map((p, i) => (
-          <div key={p.nickname}>
+          <Grid item key={p.nickname}>
             <Player
               player={p}
               tournament={this.props.tournament}
@@ -76,34 +113,18 @@ class PlayersGrid extends React.Component {
               select={this.props.select}
               classes={classes}
             />
-          </div>
+          </Grid>
         ))}
-        <Card className={classes.card}>
-          <CardContent>
-            <TextField
-              helperText="Name"
-              value={player.realname}
-              onChange={event =>
-                this.setState({ player: { realname: event.target.value } })
-              }
-              lable="Name"
-            />
-            <TextField
-              helperText="Nickname"
-              value={player.nickname}
-              onChange={event =>
-                this.setState({ player: { nickname: event.target.value } })
-              }
-              lable="Nickname"
-            />
-          </CardContent>
-          <CardActions>
-            <Button variant="outlined" className={classes.button}>
-              Create
-            </Button>
-          </CardActions>
-        </Card>
-      </div>
+        <Grid item>
+          <AddNewPlayer
+            player={player}
+            classes={classes}
+            onChange={event =>
+              this.setState({ player: { realname: event.target.value } })
+            }
+          />
+        </Grid>
+      </Grid>
     );
   }
 }

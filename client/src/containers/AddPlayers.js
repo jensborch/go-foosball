@@ -28,8 +28,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const AddPlayers = connect(mapStateToProps, mapDispatchToProps)(
-  AddPlayersComponent
-);
+const AddPlayers = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddPlayersComponent);
 
 export default AddPlayers;
