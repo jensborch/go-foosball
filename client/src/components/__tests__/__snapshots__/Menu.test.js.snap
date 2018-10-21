@@ -2,14 +2,14 @@
 
 exports[`Should render with title 1`] = `
 <header
-  className="MuiPaper-root-013 MuiPaper-elevation4-019 MuiAppBar-root-04 MuiAppBar-positionStatic-08 MuiAppBar-colorPrimary-011"
+  className="MuiPaper-root-13 MuiPaper-elevation4-19 MuiAppBar-root-4 MuiAppBar-positionStatic-8 MuiAppBar-colorPrimary-11"
 >
   <div
-    className="MuiToolbar-root-040 MuiToolbar-regular-042 MuiToolbar-gutters-041"
+    className="MuiToolbar-root-40 MuiToolbar-regular-42 MuiToolbar-gutters-41"
   >
     <a
       aria-label="Home"
-      className="MuiButtonBase-root-050 MuiIconButton-root-044 MuiIconButton-colorInherit-045 Menu-menuButton-02"
+      className="MuiButtonBase-root-50 MuiIconButton-root-44 MuiIconButton-colorInherit-45 Menu-menuButton-2"
       href="/"
       onBlur={[Function]}
       onClick={[Function]}
@@ -26,13 +26,13 @@ exports[`Should render with title 1`] = `
       tabIndex="0"
     >
       <span
-        className="MuiIconButton-label-049"
+        className="MuiIconButton-label-49"
       >
         <svg
           aria-hidden="true"
-          className="MuiSvgIcon-root-053"
-          color={undefined}
+          className="MuiSvgIcon-root-53"
           focusable="false"
+          role="presentation"
           viewBox="0 0 24 24"
         >
           <path
@@ -45,16 +45,16 @@ exports[`Should render with title 1`] = `
         </svg>
       </span>
       <span
-        className="MuiTouchRipple-root-060"
+        className="MuiTouchRipple-root-97"
       />
     </a>
-    <h2
-      className="MuiTypography-root-067 MuiTypography-title-073 MuiTypography-colorInherit-086 Menu-flex-01"
+    <h6
+      className="MuiTypography-root-62 MuiTypography-h6-79 MuiTypography-colorInherit-91 Menu-flex-1"
     >
       test
-    </h2>
+    </h6>
     <div
-      className="Menu-buttons-03"
+      className="Menu-buttons-3"
     />
   </div>
 </header>

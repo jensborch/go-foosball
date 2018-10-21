@@ -41,7 +41,7 @@ function Players(props) {
   return (
     <div className={classes.row}>
       <div className={classes.row}>
-        <Typography className={classes.name} variant="subheading">
+        <Typography className={classes.name} variant="subtitle1">
           {data[0]}
         </Typography>
         <Avatar className={classes.avatar}>{data[0].substring(0, 2)}</Avatar>
@@ -49,7 +49,7 @@ function Players(props) {
       {data.length > 1 ? (
         <div className={classes.row}>
           <Avatar className={classes.avatar}>{data[1].substring(0, 2)}</Avatar>
-          <Typography className={classes.name} variant="subheading">
+          <Typography className={classes.name} variant="subtitle1">
             {data[1]}
           </Typography>
         </div>

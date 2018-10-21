@@ -42,8 +42,8 @@ class Tournament extends React.Component {
           subheader={data.created.toLocaleDateString()}
         />
         <CardContent>
-          <Typography variant="body2">Score pr. game: {data.score}</Typography>
-          <Typography variant="body2">
+          <Typography variant="body1">Score pr. game: {data.score}</Typography>
+          <Typography variant="body1">
             Initial ranking: {data.initial}
           </Typography>
         </CardContent>

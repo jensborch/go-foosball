@@ -25,7 +25,7 @@ class Player extends React.Component {
       <Card className={classes.card} key={player.nickname}>
         <div className={classes.cell} />
         <CardContent>
-          <Typography gutterBottom variant="headline" component="h3">
+          <Typography gutterBottom variant="h5" component="h3">
             {player.nickname} - {player.realname}
           </Typography>
         </CardContent>

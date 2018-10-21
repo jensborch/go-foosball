@@ -93,10 +93,10 @@ class Timer extends React.Component {
       <Modal open={this.props.open} onClose={this.props.onClose}>
         <div className={classes.paper}>
           <div className={classes.content}>
-            <Typography noWrap={true} variant="display3">
+            <Typography noWrap={true} variant="h2">
               Timer
             </Typography>
-            <Typography noWrap={true} variant="display4">
+            <Typography noWrap={true} variant="h1">
               {this.state.countdown}
             </Typography>
           </div>

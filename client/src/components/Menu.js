@@ -40,7 +40,7 @@ class Menu extends React.Component {
           >
             <HomeIcon />
           </IconButton>
-          <Typography variant="title" color="inherit" className={classes.flex}>
+          <Typography variant="h6" color="inherit" className={classes.flex}>
             {this.props.title}
           </Typography>
           <div className={classes.buttons}>{this.props.children}</div>
