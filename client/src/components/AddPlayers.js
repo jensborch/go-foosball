@@ -50,6 +50,7 @@ class AddPlayers extends React.Component {
       <Modal open={this.props.open} onClose={this.props.onClose}>
         <Paper className={paper}>
           <Grid
+            style={{ overflow: 'auto' }}
             container
             direction="column"
             justify="space-between"
