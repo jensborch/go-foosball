@@ -53,46 +53,61 @@ class Player extends React.Component {
   }
 }
 
-const AddNewPlayer = ({ player, onChange, classes }) => {
-  return (
-    <Card className={classes.card}>
-      <CardContent>
-        <Grid container direction="column">
-          <Grid item>
-            <TextField
-              helperText="Name"
-              value={player.realname}
-              onChange={onChange}
-              lable="Name"
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              helperText="Nickname"
-              value={player.nickname}
-              onChange={onChange}
-              lable="Nickname"
-            />
-          </Grid>
-        </Grid>
-      </CardContent>
-      <CardActions>
-        <Button variant="outlined" className={classes.cardButton}>
-          Create
-        </Button>
-      </CardActions>
-    </Card>
-  );
-};
-
-class PlayersGrid extends React.Component {
+class NewPlayer extends React.Component {
   state = {
-    player: {
-      nickname: '',
-      realname: '',
-    },
+    nickname: '',
+    realname: '',
   };
 
+  add = () => {
+    this.props.add(this.state.nickname, this.state.realname);
+  };
+
+  render() {
+    const { classes } = this.props;
+    return (
+      <Card className={classes.card}>
+        <CardContent>
+          <Grid container direction="column">
+            <Grid item>
+              <TextField
+                helperText="Name"
+                value={this.state.realname}
+                onChange={event =>
+                  this.setState({
+                    realname: event.target.value,
+                  })
+                }
+                lable="Name"
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                helperText="Nickname"
+                value={this.state.nickname}
+                onChange={event =>
+                  this.setState({ nickname: event.target.value })
+                }
+                lable="Nickname"
+              />
+            </Grid>
+          </Grid>
+        </CardContent>
+        <CardActions>
+          <Button
+            variant="outlined"
+            className={classes.cardButton}
+            onClick={this.add}
+          >
+            Create
+          </Button>
+        </CardActions>
+      </Card>
+    );
+  }
+}
+
+class PlayersGrid extends React.Component {
   componentDidMount() {
     if (this.props.fetch) {
       this.props.fetch(this.props.id);
@@ -101,7 +116,6 @@ class PlayersGrid extends React.Component {
 
   render() {
     const { classes, players } = this.props;
-    const { player } = this.state;
     return (
       <Grid container spacing={16} direction="row">
         {players.map((p, i) => (
@@ -116,12 +130,9 @@ class PlayersGrid extends React.Component {
           </Grid>
         ))}
         <Grid item>
-          <AddNewPlayer
-            player={player}
+          <NewPlayer
             classes={classes}
-            onChange={event =>
-              this.setState({ player: { realname: event.target.value } })
-            }
+            add={(nickname, realname) => console.log(nickname + ' ' + realname)}
           />
         </Grid>
       </Grid>
@@ -135,6 +146,12 @@ PlayersGrid.propTypes = {
   tournament: PropTypes.string.isRequired,
   ranking: PropTypes.number.isRequired,
   fetch: PropTypes.func,
+  add: PropTypes.func,
+};
+
+NewPlayer.propTypes = {
+  classes: PropTypes.object.isRequired,
+  add: PropTypes.func.isRequired,
 };
 
 Player.propTypes = {

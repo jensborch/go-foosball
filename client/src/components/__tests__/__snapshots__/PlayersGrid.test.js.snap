@@ -165,6 +165,7 @@ exports[`Should render players 1`] = `
           className="MuiButtonBase-root-232 MuiButton-root-206 MuiButton-text-208 MuiButton-outlined-214 MuiCardActions-action-163"
           disabled={false}
           onBlur={[Function]}
+          onClick={[Function]}
           onFocus={[Function]}
           onKeyDown={[Function]}
           onKeyUp={[Function]}
