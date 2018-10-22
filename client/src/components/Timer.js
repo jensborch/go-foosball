@@ -102,7 +102,7 @@ class Timer extends React.Component {
           </div>
           <Button
             className={classes.button}
-            variant="raised"
+            variant="contained"
             color="secondary"
             onClick={this.props.onClose}
           >
