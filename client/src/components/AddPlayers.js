@@ -64,7 +64,7 @@ class AddPlayers extends React.Component {
             />
             <Button
               className={classes.dismissButton}
-              variant="raised"
+              variant="contained"
               color="secondary"
               onClick={this.props.onClose}
             >
