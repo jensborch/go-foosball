@@ -62,6 +62,7 @@ class AddPlayers extends React.Component {
               tournament={this.props.tournament}
               classes={childClasses}
               select={this.props.select}
+              add={this.props.add}
             />
             <Button
               className={classes.dismissButton}
@@ -81,6 +82,7 @@ class AddPlayers extends React.Component {
 AddPlayers.propTypes = {
   classes: PropTypes.object.isRequired,
   select: PropTypes.func.isRequired,
+  add: PropTypes.func.isRequired,
   fetch: PropTypes.func.isRequired,
   players: PropTypes.array.isRequired,
   ranking: PropTypes.number.isRequired,

@@ -130,10 +130,7 @@ class PlayersGrid extends React.Component {
           </Grid>
         ))}
         <Grid item>
-          <NewPlayer
-            classes={classes}
-            add={(nickname, realname) => console.log(nickname + ' ' + realname)}
-          />
+          <NewPlayer classes={classes} add={this.props.add} />
         </Grid>
       </Grid>
     );

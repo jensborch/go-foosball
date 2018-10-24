@@ -23,6 +23,9 @@ const mapDispatchToProps = dispatch => {
     fetch: () => {
       dispatch(fetchAllPlayers());
     },
+    add: () => {
+      //dispatch(fetchAllPlayers());
+    },
     select: (tournamentId, playerId, ranking) =>
       dispatch(activatePlayer(tournamentId, playerId, ranking)),
   };
