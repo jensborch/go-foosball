@@ -55,7 +55,7 @@ exports[`Should render players 1`] = `
             </p>
           </div>
           <button
-            className="MuiButtonBase-root-232 MuiButton-root-206 MuiButton-text-208 MuiButton-outlined-214"
+            className="MuiButtonBase-root-232 MuiButton-root-206 MuiButton-outlined-214"
             disabled={false}
             onBlur={[Function]}
             onClick={[Function]}
@@ -162,7 +162,7 @@ exports[`Should render players 1`] = `
         className="MuiCardActions-root-162"
       >
         <button
-          className="MuiButtonBase-root-232 MuiButton-root-206 MuiButton-text-208 MuiButton-outlined-214 MuiCardActions-action-163"
+          className="MuiButtonBase-root-232 MuiButton-root-206 MuiButton-outlined-214 MuiCardActions-action-163"
           disabled={false}
           onBlur={[Function]}
           onClick={[Function]}
