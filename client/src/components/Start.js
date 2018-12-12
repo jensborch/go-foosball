@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import Launch from '@material-ui/icons/Launch';
 import Timer from './Timer';
 
@@ -29,15 +29,14 @@ class Start extends React.Component {
     const { classes } = this.props;
     return (
       <div>
-        <Button
-          variant="fab"
+        <Fab
           color="default"
           aria-label="add"
           className={classes.button}
           onClick={this.handleOpen}
         >
           <Launch />
-        </Button>
+        </Fab>
         <Timer
           timeout={2 * 60}
           open={this.state.open}
