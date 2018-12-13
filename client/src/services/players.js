@@ -14,9 +14,9 @@ export function fetchAllPlayers() {
   };
 }
 
-export function createPlayer(tournamentId, nickname, realname) {
+export function createPlayer(nickname, realname) {
   return function(dispatch) {
-    return fetch(`http://localhost:8080/tournaments/players`, {
+    return fetch('http://localhost:8080/players/', {
       method: 'POST',
       redirect: 'follow',
       headers: new Headers({

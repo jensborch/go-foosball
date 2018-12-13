@@ -59,8 +59,8 @@ class NewPlayer extends React.Component {
     realname: '',
   };
 
-  add = () => {
-    this.props.add(this.state.nickname, this.state.realname);
+  create = () => {
+    this.props.create(this.state.nickname, this.state.realname);
   };
 
   render() {
@@ -97,7 +97,7 @@ class NewPlayer extends React.Component {
           <Button
             variant="outlined"
             className={classes.cardButton}
-            onClick={this.add}
+            onClick={this.create}
           >
             Create
           </Button>
@@ -130,7 +130,7 @@ class PlayersGrid extends React.Component {
           </Grid>
         ))}
         <Grid item>
-          <NewPlayer classes={classes} add={this.props.add} />
+          <NewPlayer classes={classes} create={this.props.create} />
         </Grid>
       </Grid>
     );
@@ -143,12 +143,12 @@ PlayersGrid.propTypes = {
   tournament: PropTypes.string.isRequired,
   ranking: PropTypes.number.isRequired,
   fetch: PropTypes.func,
-  add: PropTypes.func,
+  create: PropTypes.func.isRequired,
 };
 
 NewPlayer.propTypes = {
   classes: PropTypes.object.isRequired,
-  add: PropTypes.func.isRequired,
+  create: PropTypes.func.isRequired,
 };
 
 Player.propTypes = {
