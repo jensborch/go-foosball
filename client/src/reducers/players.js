@@ -2,6 +2,7 @@ import { types as tournamentTypes } from './tournaments';
 export const types = {
   RECEIVE_ALL_PLAYERS: 'PLAYERS/RECEIVE_ALL_PLAYERS',
   REQUEST_ALL_PLAYERS: 'PLAYERS/REQUEST_ALL_PLAYERS',
+  ADD_PLAYER: 'PLAYERS/ADD_PLAYER',
 };
 
 export const actions = {
@@ -12,6 +13,11 @@ export const actions = {
   }),
   requestAllPlayers: () => ({
     type: types.REQUEST_ALL_PLAYERS,
+  }),
+  addPlayer: (nickname, realname) => ({
+    type: types.ADD_PLAYER,
+    nickname,
+    realname,
   }),
 };
 
@@ -32,6 +38,14 @@ export default (state = {}, action) => {
       return {
         ...state,
         ...newplayers,
+      };
+    case types.ADD_PLAYER:
+      return {
+        ...state,
+        [action.nickname]: {
+          nickname: action.nickname,
+          realname: action.realname,
+        },
       };
     default:
       return state;
