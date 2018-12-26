@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Should render players 1`] = `
+exports[`PlayersGrid Should render players 1`] = `
 <div
   className="MuiGrid-container-1 MuiGrid-spacing-xs-16-24"
 >

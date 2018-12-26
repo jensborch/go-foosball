@@ -13,3 +13,22 @@ export function fetchAllPlayers() {
       });
   };
 }
+
+export function createPlayer(nickname, realname) {
+  return function(dispatch) {
+    return fetch('http://localhost:8080/players/', {
+      method: 'POST',
+      redirect: 'follow',
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify({
+        nickname,
+        realname,
+      }),
+    })
+      .then(handleErrors)
+      .then(response => dispatch(actions.addPlayer(nickname, realname)));
+  };
+}

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
 const styles = theme => ({
@@ -19,15 +19,14 @@ class Refresh extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <Button
+      <Fab
         onClick={this.handleClick}
-        variant="fab"
         color="default"
         aria-label="add"
         className={classes.button}
       >
         <RefreshIcon />
-      </Button>
+      </Fab>
     );
   }
 }

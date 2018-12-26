@@ -1,5 +1,5 @@
 import { fetchRandomgames } from './games';
-import { fetchAllPlayers } from './players';
+import { fetchAllPlayers, createPlayer } from './players';
 import {
   activatePlayer,
   deactivatePlayer,
@@ -8,6 +8,7 @@ import {
 } from './tournaments';
 
 export {
+  createPlayer,
   fetchRandomgames,
   fetchAllPlayers,
   activatePlayer,

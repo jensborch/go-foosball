@@ -2,7 +2,7 @@ import React from 'react';
 import PlayersGrid from '../PlayersGrid';
 import renderer from 'react-test-renderer';
 
-test('Should render players', () => {
+describe('PlayersGrid', () => {
   const props = {
     tournament: 'uuid',
     players: [
@@ -15,9 +15,12 @@ test('Should render players', () => {
     classes: {},
     deselect: () => {},
     select: () => {},
+    create: () => {},
     score: 1500,
   };
-  const component = renderer.create(<PlayersGrid {...props} />);
-  let tree = component.toJSON();
-  expect(tree).toMatchSnapshot();
+  test('Should render players', () => {
+    const component = renderer.create(<PlayersGrid {...props} />);
+    let tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });
