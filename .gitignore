@@ -4,4 +4,5 @@ debug.test
 test.db
 /go-foosball
 /*.db
-.vscode
+.vscode/*
+!.vscode/extensions.json

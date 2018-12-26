@@ -6,6 +6,12 @@
 
 Foosball tournament REST service written in Go.
 
+# Download
+
+```
+go get -d github.com/jensborch/go-foosball
+```
+
 # Build
 
 ```
