@@ -71,7 +71,7 @@ class Players extends React.Component {
             />
             {i !== players.length - 1 ? (
               <li>
-                <Divider inset />
+                <Divider variant="inset" />
               </li>
             ) : null}
           </div>
