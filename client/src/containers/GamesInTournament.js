@@ -16,6 +16,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const GamesInTournament = connect(mapStateToProps, mapDispatchToProps)(Games);
+const GamesInTournament = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Games);
 
 export default GamesInTournament;

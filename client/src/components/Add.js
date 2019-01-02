@@ -7,11 +7,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import AddIcon from '@material-ui/icons/Add';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-
-const actions = [
-  { icon: <PersonIcon />, name: 'Add player' },
-  { icon: <AddIcon />, name: 'Add table' },
-];
+import AddPlayers from '../containers/AddPlayers';
 
 const styles = theme => ({
   button: {
@@ -22,6 +18,7 @@ const styles = theme => ({
 class Add extends React.Component {
   state = {
     open: false,
+    playersOpen: false,
   };
 
   handleClose = () => {
@@ -30,6 +27,18 @@ class Add extends React.Component {
 
   handleOpen = () => {
     this.setState({ open: true });
+  };
+
+  handlePlayersClose = () => {
+    this.setState({ playersOpen: false });
+  };
+
+  handlePlayersOpen = () => {
+    this.setState({ playersOpen: true });
+  };
+
+  addTable = () => {
+    console.log(this.props.tournament);
   };
 
   render() {
@@ -51,15 +60,22 @@ class Add extends React.Component {
           open={this.state.open}
           direction="down"
         >
-          {actions.map(action => (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              onClick={this.handleClick}
-            />
-          ))}
+          <SpeedDialAction
+            tooltipTitle="Add table"
+            icon={<PersonIcon />}
+            onClick={this.handlePlayersOpen}
+          />
+          <SpeedDialAction
+            tooltipTitle="Add table"
+            icon={<AddIcon />}
+            onClick={this.addTable}
+          />
         </SpeedDial>
+        <AddPlayers
+          open={this.state.playersOpen}
+          onClose={this.handlePlayersClose}
+          id={this.props.tournament}
+        />
       </div>
     );
   }
@@ -67,6 +83,7 @@ class Add extends React.Component {
 
 Add.propTypes = {
   classes: PropTypes.object.isRequired,
+  tournament: PropTypes.string.isRequired,
 };
 
 export default withRoot(withStyles(styles)(Add));

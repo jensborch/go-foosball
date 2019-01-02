@@ -15,10 +15,14 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-const AllTournaments = connect(mapStateToProps, mapDispatchToProps)(
-  Tournaments
-);
+const AllTournaments = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Tournaments);
 
 export default AllTournaments;
 
-export const RefreshTournaments = connect(null, mapDispatchToProps)(Refresh);
+export const RefreshTournaments = connect(
+  null,
+  mapDispatchToProps
+)(Refresh);

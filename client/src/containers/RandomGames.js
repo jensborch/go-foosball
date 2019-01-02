@@ -13,6 +13,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const RandomGames = connect(mapStateToProps, mapDispatchToProps)(Refresh);
+const RandomGames = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Refresh);
 
 export default RandomGames;

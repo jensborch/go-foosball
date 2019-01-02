@@ -36,7 +36,7 @@ class Tournament extends React.Component {
         <Menu title="Tournament">
           <Start />
           <RandomGames id={this.props.match.params.id} />
-          <Add />
+          <Add tournament={this.props.match.params.id} />
         </Menu>
         <div className={classes.content}>
           <TournamentPlayers id={this.props.match.params.id} />

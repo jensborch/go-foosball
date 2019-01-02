@@ -45,8 +45,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const TournamentPlayers = connect(mapStateToProps, mapDispatchToProps)(
-  TournamentPlayersComponent
-);
+const TournamentPlayers = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TournamentPlayersComponent);
 
 export default TournamentPlayers;
