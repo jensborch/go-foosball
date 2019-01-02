@@ -6,7 +6,7 @@ import TournamentPlayers from '../containers/TournamentPlayers';
 import Menu from '../components/Menu';
 import Header from '../components/Header';
 import Start from '../components/Start';
-import Add from '../components/Add';
+import AddSpeedDial from '../components/AddSpeedDial';
 import GamesInTournament from '../containers/GamesInTournament';
 import RandomGames from '../containers/RandomGames';
 
@@ -36,7 +36,7 @@ class Tournament extends React.Component {
         <Menu title="Tournament">
           <Start />
           <RandomGames id={this.props.match.params.id} />
-          <Add tournament={this.props.match.params.id} />
+          <AddSpeedDial tournament={this.props.match.params.id} />
         </Menu>
         <div className={classes.content}>
           <TournamentPlayers id={this.props.match.params.id} />

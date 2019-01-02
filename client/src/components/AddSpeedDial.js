@@ -15,7 +15,7 @@ const styles = theme => ({
   },
 });
 
-class Add extends React.Component {
+class AddSpeedDial extends React.Component {
   state = {
     open: false,
     playersOpen: false,
@@ -81,9 +81,9 @@ class Add extends React.Component {
   }
 }
 
-Add.propTypes = {
+AddSpeedDial.propTypes = {
   classes: PropTypes.object.isRequired,
   tournament: PropTypes.string.isRequired,
 };
 
-export default withRoot(withStyles(styles)(Add));
+export default withRoot(withStyles(styles)(AddSpeedDial));
