@@ -8,6 +8,7 @@ import AddIcon from '@material-ui/icons/Add';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import AddPlayers from '../containers/AddPlayers';
+import AddTableDialog from '../components/AddTableDialog';
 
 const styles = theme => ({
   button: {
@@ -19,6 +20,7 @@ class AddSpeedDial extends React.Component {
   state = {
     open: false,
     playersOpen: false,
+    tablesOpen: false,
   };
 
   handleClose = () => {
@@ -37,8 +39,12 @@ class AddSpeedDial extends React.Component {
     this.setState({ playersOpen: true });
   };
 
-  addTable = () => {
-    console.log(this.props.tournament);
+  handleTablesClose = () => {
+    this.setState({ tablesOpen: false });
+  };
+
+  handleTablesOpen = () => {
+    this.setState({ tablesOpen: true });
   };
 
   render() {
@@ -68,13 +74,18 @@ class AddSpeedDial extends React.Component {
           <SpeedDialAction
             tooltipTitle="Add table"
             icon={<AddIcon />}
-            onClick={this.addTable}
+            onClick={this.handleTablesOpen}
           />
         </SpeedDial>
         <AddPlayers
           open={this.state.playersOpen}
           onClose={this.handlePlayersClose}
           id={this.props.tournament}
+        />
+        <AddTableDialog
+          open={this.state.tablesOpen}
+          tables={[{ name: 'test' }]}
+          onClose={this.handleTablesClose}
         />
       </div>
     );
