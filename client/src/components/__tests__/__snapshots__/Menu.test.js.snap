@@ -13,6 +13,7 @@ exports[`Should render with title 1`] = `
       href="/"
       onBlur={[Function]}
       onClick={[Function]}
+      onContextMenu={[Function]}
       onFocus={[Function]}
       onKeyDown={[Function]}
       onKeyUp={[Function]}
