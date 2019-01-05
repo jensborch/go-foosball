@@ -7,13 +7,13 @@ export const types = {
 export const actions = {
   receiveAllTables: tables => ({
     type: types.RECEIVE_ALL_TABLES,
-    tables: tables,
+    tables,
     receivedAt: Date.now(),
   }),
   requestAllTables: () => ({
     type: types.REQUEST_ALL_TABLES,
   }),
-  addTables: (name, right, left) => ({
+  addTable: (name, right, left) => ({
     type: types.ADD_TABLE,
     name,
     color: { right: right, left: left },
@@ -23,10 +23,11 @@ export const actions = {
 export default (state = {}, action) => {
   switch (action.type) {
     case types.RECEIVE_ALL_TABLES:
-      const newTables = action.players.reduce(
+      const newTables = action.tables.reduce(
         (a, t) => ({
           ...a,
-          [t.name]: {
+          [t.uuid]: {
+            uuid: t.uuid,
             name: t.name,
             color: t.color,
           },
@@ -37,7 +38,7 @@ export default (state = {}, action) => {
         ...state,
         ...newTables,
       };
-    case types.ADD_PLAYER:
+    case types.ADD_TABLE:
       return {
         ...state,
         [action.name]: {
@@ -50,6 +51,10 @@ export default (state = {}, action) => {
   }
 };
 
-export function getTable(state, name) {
-  return state.tables[name];
+export function getTable(state, id) {
+  return state.tables[id];
+}
+
+export function getTables(state) {
+  return state.tables;
 }

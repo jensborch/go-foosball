@@ -1,20 +1,20 @@
-import { actions } from '../reducers/players';
+import { actions } from '../reducers/tables';
 import { handleErrors, transformDateFormat } from './util';
 
 export function fetchAllTables() {
   return function(dispatch) {
-    dispatch(actions.requestAllPlayers());
+    dispatch(actions.requestAllTables());
     return fetch('http://localhost:8080/tables/')
       .then(handleErrors)
       .then(response => response.json())
       .then(json => json.map(transformDateFormat))
       .then(json => {
-        dispatch(actions.receiveAllPlayers(json));
+        dispatch(actions.receiveAllTables(json));
       });
   };
 }
 
-export function createTables(nickname, realname) {
+export function createTable(name, right, left) {
   return function(dispatch) {
     return fetch('http://localhost:8080/tables/', {
       method: 'POST',
@@ -24,11 +24,11 @@ export function createTables(nickname, realname) {
         'Content-Type': 'application/json',
       }),
       body: JSON.stringify({
-        nickname,
-        realname,
+        name,
+        color: { right, left },
       }),
     })
       .then(handleErrors)
-      .then(response => dispatch(actions.addPlayer(nickname, realname)));
+      .then(response => dispatch(actions.addTable(name, right, left)));
   };
 }

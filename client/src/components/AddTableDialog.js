@@ -23,6 +23,10 @@ class AddTableDialog extends React.Component {
     this.props.onClose();
   };
 
+  componentDidMount() {
+    this.props.fetch();
+  }
+
   render() {
     const { tables, open } = this.props;
     return (
@@ -58,6 +62,7 @@ AddTableDialog.propTypes = {
   addTable: PropTypes.func.isRequired,
   tables: PropTypes.array.isRequired,
   tournament: PropTypes.string.isRequired,
+  fetch: PropTypes.func.isRequired,
 };
 
 export default withRoot(AddTableDialog);

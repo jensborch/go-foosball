@@ -5,6 +5,7 @@ import active from './active';
 import inactive from './inactive';
 import random from './random';
 import ranking from './ranking';
+import tables from './tables';
 
 const rootReducer = combineReducers({
   tournaments,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   inactive,
   random,
   ranking,
+  tables,
 });
 export default rootReducer;
 
