@@ -4,7 +4,7 @@ import { fetchAllTables, createTable } from './../services';
 
 const mapStateToProps = (state, props) => {
   return {
-    tables: Array.from(state.tables),
+    tables: Object.keys(state.tables).map(id => ({ ...state.tables[id] })),
     tournament: props.tournament,
   };
 };

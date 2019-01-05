@@ -6,7 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { PropTypes } from 'prop-types';
-import { Divider } from '@material-ui/core/Divider';
+import Divider from '@material-ui/core/Divider';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import AddIcon from '@material-ui/icons/Add';
 class AddTableDialog extends React.Component {
