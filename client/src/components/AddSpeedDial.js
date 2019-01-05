@@ -8,7 +8,7 @@ import AddIcon from '@material-ui/icons/Add';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import AddPlayers from '../containers/AddPlayers';
-import AddTableDialog from '../components/AddTableDialog';
+import AddTableDialog from '../containers/AddTableDialog';
 
 const styles = theme => ({
   button: {
@@ -84,7 +84,7 @@ class AddSpeedDial extends React.Component {
         />
         <AddTableDialog
           open={this.state.tablesOpen}
-          tables={[{ name: 'test' }]}
+          tournament={this.props.tournament}
           onClose={this.handleTablesClose}
         />
       </div>
