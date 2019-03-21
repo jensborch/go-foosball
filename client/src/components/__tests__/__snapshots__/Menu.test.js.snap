@@ -46,7 +46,7 @@ exports[`Should render with title 1`] = `
         </svg>
       </span>
       <span
-        className="MuiTouchRipple-root-97"
+        className="MuiTouchRipple-root-98"
       />
     </a>
     <h6

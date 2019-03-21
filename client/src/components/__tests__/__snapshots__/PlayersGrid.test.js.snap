@@ -23,22 +23,22 @@ exports[`PlayersGrid Should render players 1`] = `
         </h3>
       </div>
       <div
-        className="MuiCardActions-root-162"
+        className="MuiCardActions-root-163"
       >
         <div
-          className="MuiCardActions-action-164"
+          className="MuiCardActions-action-165"
         >
           <div
-            className="MuiFormControl-root-165 MuiFormControl-marginDense-167"
+            className="MuiFormControl-root-166 MuiFormControl-marginDense-168"
             lable="Ranking"
           >
             <div
-              className="MuiInputBase-root-182 MuiInput-root-169 MuiInput-underline-173 MuiInputBase-formControl-183 MuiInput-formControl-170 MuiInputBase-marginDense-189"
+              className="MuiInputBase-root-183 MuiInput-root-170 MuiInput-underline-174 MuiInputBase-formControl-184 MuiInput-formControl-171 MuiInputBase-marginDense-190"
               onClick={[Function]}
             >
               <input
                 aria-invalid={false}
-                className="MuiInputBase-input-192 MuiInput-input-177 MuiInputBase-inputType-195 MuiInput-inputType-180 MuiInputBase-inputMarginDense-193 MuiInput-inputMarginDense-178"
+                className="MuiInputBase-input-193 MuiInput-input-178 MuiInputBase-inputType-196 MuiInput-inputType-181 MuiInputBase-inputMarginDense-194 MuiInput-inputMarginDense-179"
                 disabled={false}
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -49,13 +49,13 @@ exports[`PlayersGrid Should render players 1`] = `
               />
             </div>
             <p
-              className="MuiFormHelperText-root-199 MuiFormHelperText-marginDense-202 MuiFormHelperText-filled-205"
+              className="MuiFormHelperText-root-200 MuiFormHelperText-marginDense-203 MuiFormHelperText-filled-206"
             >
               Ranking
             </p>
           </div>
           <button
-            className="MuiButtonBase-root-233 MuiButton-root-207 MuiButton-outlined-215"
+            className="MuiButtonBase-root-234 MuiButton-root-208 MuiButton-outlined-216"
             disabled={false}
             onBlur={[Function]}
             onClick={[Function]}
@@ -73,12 +73,12 @@ exports[`PlayersGrid Should render players 1`] = `
             type="button"
           >
             <span
-              className="MuiButton-label-208"
+              className="MuiButton-label-209"
             >
               Add
             </span>
             <span
-              className="MuiTouchRipple-root-236"
+              className="MuiTouchRipple-root-237"
             />
           </button>
         </div>
@@ -101,16 +101,16 @@ exports[`PlayersGrid Should render players 1`] = `
             className="MuiGrid-item-2"
           >
             <div
-              className="MuiFormControl-root-165"
+              className="MuiFormControl-root-166"
               lable="Name"
             >
               <div
-                className="MuiInputBase-root-182 MuiInput-root-169 MuiInput-underline-173 MuiInputBase-formControl-183 MuiInput-formControl-170"
+                className="MuiInputBase-root-183 MuiInput-root-170 MuiInput-underline-174 MuiInputBase-formControl-184 MuiInput-formControl-171"
                 onClick={[Function]}
               >
                 <input
                   aria-invalid={false}
-                  className="MuiInputBase-input-192 MuiInput-input-177"
+                  className="MuiInputBase-input-193 MuiInput-input-178"
                   disabled={false}
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -121,7 +121,7 @@ exports[`PlayersGrid Should render players 1`] = `
                 />
               </div>
               <p
-                className="MuiFormHelperText-root-199"
+                className="MuiFormHelperText-root-200"
               >
                 Name
               </p>
@@ -131,16 +131,16 @@ exports[`PlayersGrid Should render players 1`] = `
             className="MuiGrid-item-2"
           >
             <div
-              className="MuiFormControl-root-165"
+              className="MuiFormControl-root-166"
               lable="Nickname"
             >
               <div
-                className="MuiInputBase-root-182 MuiInput-root-169 MuiInput-underline-173 MuiInputBase-formControl-183 MuiInput-formControl-170"
+                className="MuiInputBase-root-183 MuiInput-root-170 MuiInput-underline-174 MuiInputBase-formControl-184 MuiInput-formControl-171"
                 onClick={[Function]}
               >
                 <input
                   aria-invalid={false}
-                  className="MuiInputBase-input-192 MuiInput-input-177"
+                  className="MuiInputBase-input-193 MuiInput-input-178"
                   disabled={false}
                   onBlur={[Function]}
                   onChange={[Function]}
@@ -151,7 +151,7 @@ exports[`PlayersGrid Should render players 1`] = `
                 />
               </div>
               <p
-                className="MuiFormHelperText-root-199"
+                className="MuiFormHelperText-root-200"
               >
                 Nickname
               </p>
@@ -160,10 +160,10 @@ exports[`PlayersGrid Should render players 1`] = `
         </div>
       </div>
       <div
-        className="MuiCardActions-root-162"
+        className="MuiCardActions-root-163"
       >
         <button
-          className="MuiButtonBase-root-233 MuiButton-root-207 MuiButton-outlined-215 MuiCardActions-action-164"
+          className="MuiButtonBase-root-234 MuiButton-root-208 MuiButton-outlined-216 MuiCardActions-action-165"
           disabled={false}
           onBlur={[Function]}
           onClick={[Function]}
@@ -181,12 +181,12 @@ exports[`PlayersGrid Should render players 1`] = `
           type="button"
         >
           <span
-            className="MuiButton-label-208"
+            className="MuiButton-label-209"
           >
             Create
           </span>
           <span
-            className="MuiTouchRipple-root-236"
+            className="MuiTouchRipple-root-237"
           />
         </button>
       </div>
