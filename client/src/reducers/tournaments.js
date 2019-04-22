@@ -11,7 +11,7 @@ export const types = {
 export const actions = {
   requestTournaments: () => ({ type: types.REQUEST_TOURNAMETS }),
   receiveTournaments: tournaments => ({
-    type: types.CREATE_TOURNAMET,
+    type: types.RECEIVE_TOURNAMETS,
     tournaments,
     receivedAt: Date.now(),
   }),
