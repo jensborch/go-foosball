@@ -1,21 +1,32 @@
 export const types = {
   REQUEST_TOURNAMETS: 'TOURNAMETS/REQUEST_TOURNAMETS',
   RECEIVE_TOURNAMETS: 'TOURNAMETS/RECEIVE_TOURNAMETS',
+  CREATE_TOURNAMET: 'TOURNAMETS/CREATE_TOURNAMET',
   REQUEST_TOURNAMET_PLAYERS: 'TOURNAMETS/REQUEST_TOURNAMET_PLAYERS',
   RECEIVE_TOURNAMET_PLAYERS: 'TOURNAMETS/RECEIVE_TOURNAMET_PLAYERS',
+  RECEIVE_TOURNAMET: 'TOURNAMETS/RECEIVE_TOURNAMET',
   ACTIVATE_TOURNAMET_PLAYER: 'TOURNAMETS/ACTIVATE_TOURNAMET_PLAYER',
   DEACTIVATE_TOURNAMET_PLAYER: 'TOURNAMETS/DEACTIVATE_TOURNAMET_PLAYER',
 };
 export const actions = {
   requestTournaments: () => ({ type: types.REQUEST_TOURNAMETS }),
   receiveTournaments: tournaments => ({
-    type: types.RECEIVE_TOURNAMETS,
+    type: types.CREATE_TOURNAMET,
     tournaments,
+    receivedAt: Date.now(),
+  }),
+  createTournament: () => ({
+    type: types.CREATE_TOURNAMET,
     receivedAt: Date.now(),
   }),
   requestTournamentPlayers: id => ({
     type: types.REQUEST_TOURNAMET_PLAYERS,
     id: id,
+  }),
+  receiveTournament: (id) => ({
+    type: types.RECEIVE_TOURNAMET,
+    id,
+    receivedAt: Date.now(),
   }),
   receiveTournamentPlayers: (id, players) => ({
     type: types.RECEIVE_TOURNAMET_PLAYERS,

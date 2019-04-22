@@ -59,6 +59,28 @@ class Tournament extends React.Component {
   }
 }
 
+class NewTournament extends React.Component {
+  create = () => {
+    this.props.addTournament();
+  };
+
+  render() {
+    return (
+      <Card elevation={4}>
+        <CardHeader
+          title="New Tournament"
+          subheader="Fill out the form and press add to create the tournament."
+        />
+        <CardActions>
+          <Button size="small" color="primary" onClick={this.create}>
+            Add
+          </Button>
+        </CardActions>
+      </Card>
+    );
+  }
+}
+
 class Tournaments extends React.Component {
   componentDidMount() {
     this.props.fetch();
@@ -69,6 +91,7 @@ class Tournaments extends React.Component {
     const { data } = this.props;
     return (
       <div className={classes.root}>
+        <NewTournament />
         {Object.values(data).map(tournament => (
           <Tournament
             key={tournament.uuid}
