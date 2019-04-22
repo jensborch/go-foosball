@@ -6,7 +6,7 @@ import {
   deactivatePlayer,
   fetchTournaments,
   fetchTournamentPlayers,
-  createTournement,
+  createTournament,
 } from './tournaments';
 
 export {
@@ -19,5 +19,5 @@ export {
   fetchTournamentPlayers,
   fetchAllTables,
   createTable,
-  createTournement,
+  createTournament,
 };

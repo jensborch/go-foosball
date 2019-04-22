@@ -13,8 +13,8 @@ const mapDispatchToProps = dispatch => ({
   fetch: () => {
     dispatch(fetchTournaments());
   },
-  addTournament: (tournament, table) => {
-    dispatch(createTournament(tournament, table));
+  createTournament: (name, score, initial) => {
+    dispatch(createTournament(name, score, initial));
   },
 });
 

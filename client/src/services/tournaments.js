@@ -26,6 +26,27 @@ export function fetchTournamentPlayers(id) {
   };
 }
 
+export function createTournament(name, score, initial) {
+  return function(dispatch) {
+    dispatch(actions.requestCreateTournament());
+    return fetch(`http://localhost:8080/tournaments/`, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify({
+        name,
+        score: parseInt(score),
+        initial: parseInt(initial),
+      }),
+    })
+      .then(handleErrors)
+      .then(response => fetchTournaments());
+  };
+}
+
 export function activatePlayer(tournamentId, nickname, ranking) {
   return function(dispatch) {
     dispatch(actions.requestTournaments());

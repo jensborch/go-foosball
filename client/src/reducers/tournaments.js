@@ -15,7 +15,7 @@ export const actions = {
     tournaments,
     receivedAt: Date.now(),
   }),
-  createTournament: () => ({
+  requestCreateTournament: () => ({
     type: types.CREATE_TOURNAMET,
     receivedAt: Date.now(),
   }),
