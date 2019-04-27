@@ -23,7 +23,7 @@ export const actions = {
     type: types.REQUEST_TOURNAMET_PLAYERS,
     id: id,
   }),
-  receiveTournament: (id) => ({
+  receiveTournament: id => ({
     type: types.RECEIVE_TOURNAMET,
     id,
     receivedAt: Date.now(),
@@ -44,6 +44,16 @@ export const actions = {
     type: types.DEACTIVATE_TOURNAMET_PLAYER,
     tournamentId,
     nickname,
+  }),
+  activateTournamentTable: (tournamentId, tableId) => ({
+    type: types.ACTIVATE_TOURNAMET_PLAYER,
+    tournamentId,
+    tableId,
+  }),
+  deactivateTournamentTable: (tournamentId, tableId) => ({
+    type: types.DEACTIVATE_TOURNAMET_PLAYER,
+    tournamentId,
+    tableId,
   }),
 };
 

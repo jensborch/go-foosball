@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import AddTableDialogComponent from '../components/AddTableDialog';
-import { fetchAllTables, createTable } from './../services';
+import { fetchAllTables, createTable, activateTable } from './../services';
 
 const mapStateToProps = (state, props) => {
   return {
@@ -12,7 +12,7 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = dispatch => {
   return {
     addTable: (tournament, table) => {
-      dispatch(createTable(tournament, table));
+      dispatch(activateTable(tournament, table));
     },
     fetch: () => {
       dispatch(fetchAllTables());

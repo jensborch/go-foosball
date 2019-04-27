@@ -86,3 +86,40 @@ export function deactivatePlayer(tournamentId, playerId) {
       );
   };
 }
+
+export function activateTable(tournamentId, tableId) {
+  return function(dispatch) {
+    dispatch(actions.requestTournaments());
+    return fetch(`http://localhost:8080/tournaments/${tournamentId}/tables`, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify({
+        uuid: tableId,
+      }),
+    })
+      .then(handleErrors)
+      .then(response =>
+        dispatch(actions.activateTournamentTable(tournamentId, tableId))
+      );
+  };
+}
+
+export function deactivateTable(tournamentId, tableId) {
+  return function(dispatch) {
+    dispatch(actions.requestTournaments());
+    return fetch(
+      `http://localhost:8080/tournaments/${tournamentId}/tables/${tableId}`,
+      {
+        method: 'DELETE',
+      }
+    )
+      .then(handleErrors)
+      .then(response =>
+        dispatch(actions.deactivateTournamentTable(tournamentId, tableId))
+      );
+  };
+}

@@ -23,7 +23,6 @@ class AddTableDialog extends React.Component {
 
   handleSelect = table => {
     this.props.addTable(this.props.tournament, table);
-    this.props.onClose();
   };
 
   handleAdd = () => {
@@ -53,7 +52,7 @@ class AddTableDialog extends React.Component {
               <ListItem
                 button
                 key={table.name}
-                onClick={() => this.handleSelect(table.name)}
+                onClick={() => this.handleSelect(table.uuid)}
               >
                 <ListItemText primary={table.name} />
               </ListItem>
