@@ -17,6 +17,9 @@ const mapDispatchToProps = dispatch => {
     fetch: () => {
       dispatch(fetchAllTables());
     },
+    createTable: (name, right, left) => {
+      dispatch(createTable(name, right, left));
+    },
   };
 };
 

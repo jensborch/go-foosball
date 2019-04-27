@@ -9,7 +9,14 @@ import { PropTypes } from 'prop-types';
 import Divider from '@material-ui/core/Divider';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import AddIcon from '@material-ui/icons/Add';
+import { Grid, TextField, Button } from '@material-ui/core';
 class AddTableDialog extends React.Component {
+  state = {
+    name: '',
+    rightColor: '',
+    leftColor: '',
+  };
+
   handleClose = () => {
     this.props.onClose();
   };
@@ -26,6 +33,14 @@ class AddTableDialog extends React.Component {
   componentDidMount() {
     this.props.fetch();
   }
+
+  create = () => {
+    this.props.createTable(
+      this.state.name,
+      this.state.rightColor,
+      this.state.leftColor
+    );
+  };
 
   render() {
     const { tables, open } = this.props;
@@ -51,6 +66,45 @@ class AddTableDialog extends React.Component {
               <ListItemText primary="New table" />
             </ListItem>
           </List>
+          <Grid container direction="column">
+            <Grid item>
+              <TextField
+                helperText="Name"
+                value={this.state.name}
+                onChange={event =>
+                  this.setState({
+                    name: event.target.value,
+                  })
+                }
+                lable="Name"
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                helperText="Right Color"
+                value={this.state.rightColor}
+                onChange={event =>
+                  this.setState({ rightColor: event.target.value })
+                }
+                lable="Right Color"
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                helperText="Left Color"
+                value={this.state.leftColor}
+                onChange={event =>
+                  this.setState({ leftColor: event.target.value })
+                }
+                lable="Lef Color"
+              />
+            </Grid>
+            <Grid item>
+              <Button variant="outlined" onClick={this.create}>
+                Create
+              </Button>
+            </Grid>
+          </Grid>
         </div>
       </Dialog>
     );
