@@ -48,15 +48,6 @@ class TournamentPlayers extends React.Component {
     const { paper, ...childClasses } = classes;
     return (
       <Paper className={paper} elevation={4}>
-        <Players
-          classes={childClasses}
-          fetch={this.props.fetch}
-          select={this.props.select}
-          deselect={this.props.deselect}
-          data={this.props.data}
-          id={this.props.id}
-        />
-        <Divider />
         <BottomNavigation showLabels>
           <BottomNavigationAction
             onClick={this.handleOpen}
@@ -69,6 +60,15 @@ class TournamentPlayers extends React.Component {
             id={this.props.id}
           />
         </BottomNavigation>
+        <Divider />
+        <Players
+          classes={childClasses}
+          fetch={this.props.fetch}
+          select={this.props.select}
+          deselect={this.props.deselect}
+          data={this.props.data}
+          id={this.props.id}
+        />
       </Paper>
     );
   }
