@@ -4,21 +4,16 @@ import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Divider } from '@material-ui/core';
+import { Divider, ListItemSecondaryAction, Chip } from '@material-ui/core';
 
 class Table extends React.Component {
   constructor(props) {
     super(props);
-    this.select = this.select.bind(this);
     this.deselect = this.deselect.bind(this);
   }
 
-  select() {
-    this.props.select(this.props.tournamentId, this.props.tables.uuid);
-  }
-
   deselect() {
-    this.props.deselect(this.props.tournamentId, this.props.tables.uuid);
+    this.props.deselect(this.props.tournamentId, this.props.table.uuid);
   }
 
   render() {
@@ -30,6 +25,13 @@ class Table extends React.Component {
         <ListItemText primary={table.name} secondary="Name" />
         <ListItemText primary={table.color.right} secondary="Right color" />
         <ListItemText primary={table.color.left} secondary="Left color" />
+        <ListItemSecondaryAction>
+          <Chip
+            label="Remove"
+            className={classes.chip}
+            onClick={this.deselect}
+          />
+        </ListItemSecondaryAction>
       </ListItem>
     );
   }
@@ -50,8 +52,7 @@ class Tables extends React.Component {
             <div key={p.uuid}>
               <Table
                 table={p}
-                tournament={this.props.tournamentId}
-                select={this.props.select}
+                tournamentId={this.props.tournamentId}
                 deselect={this.props.deselect}
                 classes={classes}
               />
@@ -77,9 +78,8 @@ Tables.propTypes = {
 Table.propTypes = {
   classes: PropTypes.object.isRequired,
   table: PropTypes.object.isRequired,
-  tournament: PropTypes.string.isRequired,
+  tournamentId: PropTypes.string.isRequired,
   deselect: PropTypes.func.isRequired,
-  select: PropTypes.func.isRequired,
 };
 
 export default Tables;
