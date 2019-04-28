@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { fetchRandomgames } from '../services';
+import { fetchRandomgames, registerGame } from '../services';
 import Games from '../components/Games';
 
 const mapStateToProps = (state, props) => {
@@ -13,6 +13,22 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = dispatch => {
   return {
     fetch: id => dispatch(fetchRandomgames(id)),
+    registerGame: (
+      tournamentId,
+      tableId,
+      leftPLayers,
+      rightPlayers,
+      wereRightWinner
+    ) =>
+      dispatch(
+        registerGame(
+          tournamentId,
+          tableId,
+          leftPLayers,
+          rightPlayers,
+          wereRightWinner
+        )
+      ),
   };
 };
 
