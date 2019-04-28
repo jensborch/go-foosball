@@ -29,6 +29,10 @@ export function createTable(name, right, left) {
       }),
     })
       .then(handleErrors)
-      .then(response => dispatch(actions.addTable(name, right, left)));
+      .then(response => response.json())
+      .then(json => transformDateFormat(json))
+      .then(response =>
+        dispatch(actions.addTable(response.uuid, name, right, left))
+      );
   };
 }

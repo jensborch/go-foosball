@@ -13,8 +13,9 @@ export const actions = {
   requestAllTables: () => ({
     type: types.REQUEST_ALL_TABLES,
   }),
-  addTable: (name, right, left) => ({
+  addTable: (uuid, name, right, left) => ({
     type: types.ADD_TABLE,
+    uuid,
     name,
     color: { right: right, left: left },
   }),
@@ -29,7 +30,10 @@ export default (state = {}, action) => {
           [t.uuid]: {
             uuid: t.uuid,
             name: t.name,
-            color: t.color,
+            color: {
+              right: t.color.right,
+              left: t.color.left,
+            },
           },
         }),
         {}
@@ -41,9 +45,13 @@ export default (state = {}, action) => {
     case types.ADD_TABLE:
       return {
         ...state,
-        [action.name]: {
+        [action.uuid]: {
+          uuid: action.uuid,
           name: action.name,
-          color: action.color,
+          color: {
+            right: action.color.right,
+            left: action.color.left,
+          },
         },
       };
     default:

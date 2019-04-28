@@ -22,7 +22,7 @@ class AddTableDialog extends React.Component {
   };
 
   handleSelect = table => {
-    this.props.addTable(this.props.tournament, table);
+    this.props.addTable(this.props.tournamentId, table);
   };
 
   handleAdd = () => {
@@ -114,7 +114,7 @@ AddTableDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   addTable: PropTypes.func.isRequired,
   tables: PropTypes.array.isRequired,
-  tournament: PropTypes.string.isRequired,
+  tournamentId: PropTypes.string.isRequired,
   fetch: PropTypes.func.isRequired,
 };
 

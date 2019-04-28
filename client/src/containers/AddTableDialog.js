@@ -5,14 +5,14 @@ import { fetchAllTables, createTable, activateTable } from './../services';
 const mapStateToProps = (state, props) => {
   return {
     tables: Object.keys(state.tables).map(id => ({ ...state.tables[id] })),
-    tournament: props.tournament,
+    tournamentId: props.tournamentId,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    addTable: (tournament, table) => {
-      dispatch(activateTable(tournament, table));
+    addTable: (tournamentId, table) => {
+      dispatch(activateTable(tournamentId, table));
     },
     fetch: () => {
       dispatch(fetchAllTables());
