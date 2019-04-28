@@ -3,7 +3,7 @@ package model
 import (
 	"math/rand"
 
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 )
 
 // Tournament played
@@ -27,7 +27,7 @@ type TournamentTable struct {
 	Games        []Game     `json:"games,omitempty"`
 }
 
-// AddTables adds tables to a tournament
+// AddTables adds tables to tournament
 func (t *Tournament) AddTables(tables ...Table) {
 	var tournamentTables []TournamentTable
 	for _, table := range tables {
@@ -140,6 +140,7 @@ func (t *Tournament) Table(id string) *TournamentTable {
 type TournamentRepository interface {
 	Store(tournament *Tournament) error
 	Remove(tournament *Tournament) error
+	RemoveTable(tournament *Tournament, table string) error
 	Update(tournament *Tournament) error
 	Find(uuid string) (*Tournament, Found, error)
 	FindAll() []*Tournament

@@ -17,6 +17,12 @@ func (r *tournamentRepository) Remove(t *model.Tournament) error {
 	return r.db.Where("uuid = ?", t.UUID).Delete(&model.Tournament{}).Error
 }
 
+func (r *tournamentRepository) RemoveTable(tournament *model.Tournament, tableId string) error {
+	return r.db.Table("tournament_tables").
+		Where("table_id = (?)", r.db.Table("tables").Select("id").Where("uuid = ?", tableId).QueryExpr()).
+		Where("tournament_id = ?", tournament.ID).Delete(&model.TournamentTable{}).Error
+}
+
 func (r *tournamentRepository) Update(t *model.Tournament) error {
 	return r.db.Save(t).Error
 }
