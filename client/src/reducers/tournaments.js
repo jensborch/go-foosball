@@ -9,6 +9,8 @@ export const types = {
   RECEIVE_TOURNAMET: 'TOURNAMETS/RECEIVE_TOURNAMET',
   ACTIVATE_TOURNAMET_PLAYER: 'TOURNAMETS/ACTIVATE_TOURNAMET_PLAYER',
   DEACTIVATE_TOURNAMET_PLAYER: 'TOURNAMETS/DEACTIVATE_TOURNAMET_PLAYER',
+  ACTIVATE_TOURNAMET_TABLE: 'TOURNAMETS/ACTIVATE_TOURNAMET_TABLE',
+  DEACTIVATE_TOURNAMET_TABLE: 'TOURNAMETS/DEACTIVATE_TOURNAMET_TABLE',
 };
 export const actions = {
   requestTournaments: () => ({ type: types.REQUEST_TOURNAMETS }),
@@ -58,12 +60,12 @@ export const actions = {
     nickname,
   }),
   activateTournamentTable: (tournamentId, tableId) => ({
-    type: types.ACTIVATE_TOURNAMET_PLAYER,
+    type: types.ACTIVATE_TOURNAMET_TABLE,
     tournamentId,
     tableId,
   }),
   deactivateTournamentTable: (tournamentId, tableId) => ({
-    type: types.DEACTIVATE_TOURNAMET_PLAYER,
+    type: types.DEACTIVATE_TOURNAMET_TABLE,
     tournamentId,
     tableId,
   }),

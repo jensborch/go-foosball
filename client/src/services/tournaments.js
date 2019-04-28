@@ -61,7 +61,6 @@ export function createTournament(name, score, initial) {
 
 export function activatePlayer(tournamentId, nickname, ranking) {
   return function(dispatch) {
-    dispatch(actions.requestTournaments());
     return fetch(`http://localhost:8080/tournaments/${tournamentId}/players`, {
       method: 'POST',
       redirect: 'follow',
@@ -85,7 +84,6 @@ export function activatePlayer(tournamentId, nickname, ranking) {
 
 export function deactivatePlayer(tournamentId, playerId) {
   return function(dispatch) {
-    dispatch(actions.requestTournaments());
     return fetch(
       `http://localhost:8080/tournaments/${tournamentId}/players/${playerId}`,
       {
@@ -101,7 +99,6 @@ export function deactivatePlayer(tournamentId, playerId) {
 
 export function activateTable(tournamentId, tableId) {
   return function(dispatch) {
-    dispatch(actions.requestTournaments());
     return fetch(`http://localhost:8080/tournaments/${tournamentId}/tables`, {
       method: 'POST',
       redirect: 'follow',
@@ -122,7 +119,6 @@ export function activateTable(tournamentId, tableId) {
 
 export function deactivateTable(tournamentId, tableId) {
   return function(dispatch) {
-    dispatch(actions.requestTournaments());
     return fetch(
       `http://localhost:8080/tournaments/${tournamentId}/tables/${tableId}`,
       {
