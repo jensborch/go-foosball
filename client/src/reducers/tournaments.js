@@ -3,7 +3,9 @@ export const types = {
   RECEIVE_TOURNAMETS: 'TOURNAMETS/RECEIVE_TOURNAMETS',
   CREATE_TOURNAMET: 'TOURNAMETS/CREATE_TOURNAMET',
   REQUEST_TOURNAMET_PLAYERS: 'TOURNAMETS/REQUEST_TOURNAMET_PLAYERS',
+  REQUEST_TOURNAMET_TABLES: 'TOURNAMETS/REQUEST_TOURNAMET_TABLES',
   RECEIVE_TOURNAMET_PLAYERS: 'TOURNAMETS/RECEIVE_TOURNAMET_PLAYERS',
+  RECEIVE_TOURNAMET_TABLES: 'TOURNAMETS/RECEIVE_TOURNAMET_TABLES',
   RECEIVE_TOURNAMET: 'TOURNAMETS/RECEIVE_TOURNAMET',
   ACTIVATE_TOURNAMET_PLAYER: 'TOURNAMETS/ACTIVATE_TOURNAMET_PLAYER',
   DEACTIVATE_TOURNAMET_PLAYER: 'TOURNAMETS/DEACTIVATE_TOURNAMET_PLAYER',
@@ -23,6 +25,10 @@ export const actions = {
     type: types.REQUEST_TOURNAMET_PLAYERS,
     id: id,
   }),
+  requestTournamentTables: id => ({
+    type: types.REQUEST_TOURNAMET_TABLES,
+    id: id,
+  }),
   receiveTournament: id => ({
     type: types.RECEIVE_TOURNAMET,
     id,
@@ -32,6 +38,12 @@ export const actions = {
     type: types.RECEIVE_TOURNAMET_PLAYERS,
     id,
     players,
+    receivedAt: Date.now(),
+  }),
+  receiveTournamentTables: (id, tables) => ({
+    type: types.RECEIVE_TOURNAMET_TABLES,
+    id,
+    tables,
     receivedAt: Date.now(),
   }),
   activateTournamentPlayer: (tournamentId, nickname, ranking) => ({
@@ -67,6 +79,24 @@ export default (state = {}, action) => {
         }),
         {}
       );
+    case types.RECEIVE_TOURNAMET_TABLES:
+      return {
+        ...state,
+        tables: action.tables.reduce(
+          (a, t) => [
+            ...a,
+            {
+              uuid: t.table.uuid,
+              name: t.table.name,
+              color: {
+                right: t.table.color.right,
+                left: t.table.color.left,
+              },
+            },
+          ],
+          []
+        ),
+      };
     default:
       return state;
   }
@@ -74,4 +104,8 @@ export default (state = {}, action) => {
 
 export function getTournaments(state) {
   return state.tournaments;
+}
+
+export function getTables(state) {
+  return state.tournaments.tables;
 }

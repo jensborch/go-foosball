@@ -26,6 +26,18 @@ export function fetchTournamentPlayers(id) {
   };
 }
 
+export function fetchTournamentTables(id) {
+  return function(dispatch) {
+    dispatch(actions.requestTournamentTables(id));
+    return fetch(`http://localhost:8080/tournaments/${id}/tables`)
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(json => {
+        dispatch(actions.receiveTournamentTables(id, json));
+      });
+  };
+}
+
 export function createTournament(name, score, initial) {
   return function(dispatch) {
     dispatch(actions.requestCreateTournament());

@@ -9,6 +9,7 @@ import {
   createTournament,
   activateTable,
   deactivateTable,
+  fetchTournamentTables,
 } from './tournaments';
 
 export {
@@ -24,4 +25,5 @@ export {
   createTournament,
   activateTable,
   deactivateTable,
+  fetchTournamentTables,
 };
