@@ -59,7 +59,7 @@ func main() {
 	tournaments.DELETE("/:id/players/:name", resources.DeleteTournamentPlayer("id", "name", db))
 	tournaments.GET("/:id/tables", resources.GetTournamentTables("id", db))
 	tournaments.POST("/:id/tables", resources.PostTournamentTables("id", db))
-	//tournaments.DELETE("/:tournament/tables/:table", resources.DeleteTournamentTable("tournament", "table", db))
+	tournaments.DELETE("/:id/tables/:table", resources.DeleteTournamentTable("id", "table", db))
 	tournaments.POST("/:id/tables/:table/games", resources.PostGame("id", "table", db))
 	tournaments.GET("/:id/events", resources.GetTournamentEvents("id"))
 	tournaments.GET("/:id/games", resources.GetGamesInTournament("id", db))
