@@ -67,7 +67,7 @@ class AddSpeedDial extends React.Component {
           direction="down"
         >
           <SpeedDialAction
-            tooltipTitle="Add Person"
+            tooltipTitle="Add player"
             icon={<PersonIcon />}
             onClick={this.handlePlayersOpen}
           />

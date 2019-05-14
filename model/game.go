@@ -6,41 +6,48 @@ import (
 	"fmt"
 	"math"
 	"reflect"
+	"time"
 
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 )
 
 // Game played
 type Game struct {
 	Base
-	UUID              string           `gorm:"size:36;unique_index"`
-	TournamentTableID uint             `json:"-"`
-	TournamentTable   TournamentTable  `gorm:"association_save_reference:false;save_associations:false" json:"table"`
-	RightPlayerOneID  uint             `json:"-"`
-	RightPlayerTwoID  uint             `json:"-"`
-	LeftPlayerOneID   uint             `json:"-"`
-	LeftPlayerTwoID   uint             `json:"-"`
-	RightPlayerOne    TournamentPlayer `gorm:"association_save_reference:false;save_associations:false" json:"-"`
-	RightPlayerTwo    TournamentPlayer `gorm:"association_save_reference:false;save_associations:false" json:"-"`
-	LeftPlayerOne     TournamentPlayer `gorm:"association_save_reference:false;save_associations:false" json:"-"`
-	LeftPlayerTwo     TournamentPlayer `gorm:"association_save_reference:false;save_associations:false" json:"-"`
-	RightScore        int              `json:"rightScore,omitempty"`
-	LeftScore         int              `json:"leftScore,omitempty"`
-	Winner            Winner           `json:"winner"`
+	UUID              string `gorm:"size:36;unique_index"`
+	TournamentTableID uint
+	TournamentTable   TournamentTable `gorm:"association_save_reference:false;save_associations:false"`
+	RightPlayerOneID  uint
+	RightPlayerTwoID  uint
+	LeftPlayerOneID   uint
+	LeftPlayerTwoID   uint
+	RightPlayerOne    TournamentPlayer `gorm:"association_save_reference:false;save_associations:false"`
+	RightPlayerTwo    TournamentPlayer `gorm:"association_save_reference:false;save_associations:false"`
+	LeftPlayerOne     TournamentPlayer `gorm:"association_save_reference:false;save_associations:false"`
+	LeftPlayerTwo     TournamentPlayer `gorm:"association_save_reference:false;save_associations:false"`
+	RightScore        int
+	LeftScore         int
+	Winner            Winner
 }
 
 // MarshalJSON creates JSON game representation
 func (g *Game) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&struct {
-		UUID         string   `json:"uuid"`
-		Table        Table    `json:"table"`
-		RightPlayers []string `json:"rightPlayers"`
-		LeftPlayers  []string `json:"leftPlayers"`
-		RightScore   int      `json:"rightScore"`
-		LeftScore    int      `json:"leftScore"`
-		Winner       Winner   `json:"winner,omitempty"`
+		CreatedAt    time.Time `json:"created"`
+		UpdatedAt    time.Time `json:"updated"`
+		UUID         string    `json:"uuid"`
+		Tournament   string    `json:"tournament"`
+		Table        Table     `json:"table"`
+		RightPlayers []string  `json:"rightPlayers"`
+		LeftPlayers  []string  `json:"leftPlayers"`
+		RightScore   int       `json:"rightScore"`
+		LeftScore    int       `json:"leftScore"`
+		Winner       Winner    `json:"winner,omitempty"`
 	}{
+		CreatedAt:    g.CreatedAt,
+		UpdatedAt:    g.UpdatedAt,
 		UUID:         g.UUID,
+		Tournament:   g.TournamentTable.Tournament.UUID,
 		Table:        g.TournamentTable.Table,
 		RightPlayers: g.RightPlayerNames(),
 		LeftPlayers:  g.LeftPlayerNames(),

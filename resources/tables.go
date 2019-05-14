@@ -125,6 +125,22 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 // DeleteTournamentTable deletes a table from a tournament
 func DeleteTournamentTable(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		//TODO
+		tourId := c.Param(tournamentParam)
+		r := persistence.NewTournamentRepository(db)
+		if t, found, err := r.Find(tourId); found {
+			tableId := c.Param(tableParam)
+			if err := r.RemoveTable(t, tableId); err != nil {
+				c.Status(http.StatusNoContent)
+			} else {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			}
+			return
+		} else if err == nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", tourId)})
+			return
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
 	}
 }

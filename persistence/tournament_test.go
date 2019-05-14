@@ -56,6 +56,45 @@ func TestStoreTournament(t *testing.T) {
 	}
 }
 
+func TestRemoveTableInTournament(t *testing.T) {
+	table1 := model.NewTable("1", model.Color{Right: "red", Left: "green"})
+	tournament := model.NewTournament("Foosball tournament 1", *table1)
+
+	db := InitDB(t)
+	defer db.Close()
+
+	r := NewTournamentRepository(db)
+
+	err := r.Store(tournament)
+	if err != nil {
+		t.Errorf("Failed to store: %s", err.Error())
+	}
+
+	found, _, err := r.Find(tournament.UUID)
+	if err != nil {
+		t.Errorf("Failed to find tournament")
+	}
+
+	if len(found.TournamentTables) != 1 {
+		t.Errorf("Tournament should have a table, got: %d.", len(found.TournamentTables))
+	}
+
+	err = r.RemoveTable(tournament, found.TournamentTables[0].Table.UUID)
+	if err != nil {
+		t.Errorf("Failed to remove table: %s", err.Error())
+	}
+
+	found, _, err = r.Find(tournament.UUID)
+	if err != nil {
+		t.Errorf("Failed to find tournament")
+	}
+
+	if len(found.TournamentTables) != 0 {
+		t.Errorf("Tournament should have no tables after updating db, got: %d.", len(found.TournamentTables))
+	}
+
+}
+
 func TestAddPlayers2Tournament(t *testing.T) {
 	table := model.NewTable("1", model.Color{Right: "red", Left: "green"})
 	tournament := model.NewTournament("Foosball tournament 1", *table)

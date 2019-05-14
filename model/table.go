@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 )
 
 // Table used in tournament
