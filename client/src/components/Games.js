@@ -59,6 +59,16 @@ function Players(props) {
 }
 
 class Game extends React.Component {
+  registerGame(wereRightWinner) {
+    this.props.registerGame(
+      this.props.data.tournamentId,
+      this.props.data.table.uuid,
+      this.props.data.leftPlayers,
+      this.props.data.rightPlayers,
+      wereRightWinner
+    );
+  }
+
   render() {
     const { classes } = this.props;
     const { data } = this.props;
@@ -70,16 +80,22 @@ class Game extends React.Component {
             className={classes.score}
             color="secondary"
             variant="determinate"
-            value={data.rightScore / (data.rightScore + data.leftScore) * 100}
+            value={(data.rightScore / (data.rightScore + data.leftScore)) * 100}
           />
           <div size="small" className={classes.row}>
-            <Button className={classes.button}>
+            <Button
+              className={classes.button}
+              onClick={() => this.registerGame(true)}
+            >
               {data.table.color.right} wins {data.rightScore} points
             </Button>
           </div>
           <Divider />
           <div size="small" className={classes.row}>
-            <Button className={classes.button}>
+            <Button
+              className={classes.button}
+              onClick={() => this.registerGame(false)}
+            >
               {data.table.color.left} wins {data.leftScore} points
             </Button>
           </div>
@@ -87,7 +103,7 @@ class Game extends React.Component {
             className={classes.score}
             color="secondary"
             variant="determinate"
-            value={data.leftScore / (data.rightScore + data.leftScore) * 100}
+            value={(data.leftScore / (data.rightScore + data.leftScore)) * 100}
           />
           <Players data={data.leftPlayers} classes={classes} />
         </CardContent>
@@ -107,7 +123,12 @@ class Games extends React.Component {
     return (
       <div>
         {data.map(game => (
-          <Game key={game.uuid} classes={classes} data={game} />
+          <Game
+            key={game.uuid}
+            classes={classes}
+            data={game}
+            registerGame={this.props.registerGame}
+          />
         ))}
       </div>
     );

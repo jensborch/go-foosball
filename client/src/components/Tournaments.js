@@ -10,6 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
+import { TextField } from '@material-ui/core';
 
 const styles = theme => ({
   card: {
@@ -59,6 +60,60 @@ class Tournament extends React.Component {
   }
 }
 
+class NewTournament extends React.Component {
+  state = {
+    name: '',
+    score: '50',
+    initial: '1500',
+  };
+
+  create = () => {
+    this.props.createTournament(
+      this.state.name,
+      this.state.score,
+      this.state.initial
+    );
+  };
+
+  render() {
+    return (
+      <Card elevation={4}>
+        <CardHeader
+          title="New Tournament"
+          subheader="Fill out the form and press add to create the tournament."
+        />
+        <CardContent>
+          <TextField
+            helperText="Name"
+            value={this.state.name}
+            onChange={event => this.setState({ name: event.target.value })}
+            lable="Name"
+          />
+          <TextField
+            helperText="Score"
+            value={this.state.score}
+            onChange={event => this.setState({ score: event.target.value })}
+            lable="Score"
+            keyboardType="number-pad"
+          />
+          <TextField
+            helperText="Initial"
+            value={this.state.initial}
+            onChange={event => this.setState({ initial: event.target.value })}
+            lable="Initial"
+            keyboardType="number-pad"
+          />
+        </CardContent>
+        <CardActions>
+          <Button size="small" color="primary" onClick={this.create}>
+            Add
+          </Button>
+        </CardActions>
+      </Card>
+    );
+  }
+}
+
 class Tournaments extends React.Component {
   componentDidMount() {
     this.props.fetch();
@@ -69,6 +124,7 @@ class Tournaments extends React.Component {
     const { data } = this.props;
     return (
       <div className={classes.root}>
+        <NewTournament createTournament={this.props.createTournament} />
         {Object.values(data).map(tournament => (
           <Tournament
             key={tournament.uuid}

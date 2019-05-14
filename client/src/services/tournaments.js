@@ -26,9 +26,41 @@ export function fetchTournamentPlayers(id) {
   };
 }
 
+export function fetchTournamentTables(id) {
+  return function(dispatch) {
+    dispatch(actions.requestTournamentTables(id));
+    return fetch(`http://localhost:8080/tournaments/${id}/tables`)
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(json => {
+        dispatch(actions.receiveTournamentTables(id, json));
+      });
+  };
+}
+
+export function createTournament(name, score, initial) {
+  return function(dispatch) {
+    dispatch(actions.requestCreateTournament());
+    return fetch(`http://localhost:8080/tournaments/`, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify({
+        name,
+        score: parseInt(score),
+        initial: parseInt(initial),
+      }),
+    })
+      .then(handleErrors)
+      .then(response => fetchTournaments());
+  };
+}
+
 export function activatePlayer(tournamentId, nickname, ranking) {
   return function(dispatch) {
-    dispatch(actions.requestTournaments());
     return fetch(`http://localhost:8080/tournaments/${tournamentId}/players`, {
       method: 'POST',
       redirect: 'follow',
@@ -52,7 +84,6 @@ export function activatePlayer(tournamentId, nickname, ranking) {
 
 export function deactivatePlayer(tournamentId, playerId) {
   return function(dispatch) {
-    dispatch(actions.requestTournaments());
     return fetch(
       `http://localhost:8080/tournaments/${tournamentId}/players/${playerId}`,
       {
@@ -62,6 +93,41 @@ export function deactivatePlayer(tournamentId, playerId) {
       .then(handleErrors)
       .then(response =>
         dispatch(actions.deactivateTournamentPlayer(tournamentId, playerId))
+      );
+  };
+}
+
+export function activateTable(tournamentId, tableId) {
+  return function(dispatch) {
+    return fetch(`http://localhost:8080/tournaments/${tournamentId}/tables`, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify({
+        uuid: tableId,
+      }),
+    })
+      .then(handleErrors)
+      .then(response =>
+        dispatch(actions.activateTournamentTable(tournamentId, tableId))
+      );
+  };
+}
+
+export function deactivateTable(tournamentId, tableId) {
+  return function(dispatch) {
+    return fetch(
+      `http://localhost:8080/tournaments/${tournamentId}/tables/${tableId}`,
+      {
+        method: 'DELETE',
+      }
+    )
+      .then(handleErrors)
+      .then(response =>
+        dispatch(actions.deactivateTournamentTable(tournamentId, tableId))
       );
   };
 }

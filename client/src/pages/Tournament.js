@@ -9,6 +9,7 @@ import Start from '../components/Start';
 import AddSpeedDial from '../components/AddSpeedDial';
 import GamesInTournament from '../containers/GamesInTournament';
 import RandomGames from '../containers/RandomGames';
+import TournamentTables from '../containers/TournamentTables';
 
 const styles = theme => ({
   root: {
@@ -40,6 +41,7 @@ class Tournament extends React.Component {
         </Menu>
         <div className={classes.content}>
           <TournamentPlayers id={this.props.match.params.id} />
+          <TournamentTables id={this.props.match.params.id} />
           <GamesInTournament id={this.props.match.params.id} />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { fetchRandomgames } from './games';
+import { fetchRandomgames, registerGame } from './games';
 import { fetchAllPlayers, createPlayer } from './players';
 import { fetchAllTables, createTable } from './tables';
 import {
@@ -6,6 +6,10 @@ import {
   deactivatePlayer,
   fetchTournaments,
   fetchTournamentPlayers,
+  createTournament,
+  activateTable,
+  deactivateTable,
+  fetchTournamentTables,
 } from './tournaments';
 
 export {
@@ -18,4 +22,9 @@ export {
   fetchTournamentPlayers,
   fetchAllTables,
   createTable,
+  createTournament,
+  activateTable,
+  deactivateTable,
+  fetchTournamentTables,
+  registerGame,
 };

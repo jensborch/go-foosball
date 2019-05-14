@@ -4,16 +4,14 @@ import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import Tables from './Tables';
+import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import AddTableDialog from '../containers/AddTableDialog';
 import AddIcon from '@material-ui/icons/Add';
-import Players from './Players';
-import AddPlayers from '../containers/AddPlayers';
 
 const styles = theme => ({
   paper: {
-    maxWidth: 250,
-    minWidth: 250,
+    minWidth: 450,
     margin: 20,
     display: 'flex',
     flexFlow: 'column',
@@ -26,13 +24,13 @@ const styles = theme => ({
   },
 });
 
-class TournamentPlayers extends React.Component {
+class TournamentTables extends React.Component {
   state = {
     open: false,
   };
 
   componentDidMount() {
-    this.props.fetch(this.props.id);
+    this.props.fetch(this.props.tournamentId);
   }
 
   handleClose = () => {
@@ -54,33 +52,33 @@ class TournamentPlayers extends React.Component {
             label="Add"
             icon={<AddIcon />}
           />
-          <AddPlayers
+          <AddTableDialog
             open={this.state.open}
             onClose={this.handleClose}
-            id={this.props.id}
+            tournamentId={this.props.tournamentId}
           />
         </BottomNavigation>
         <Divider />
-        <Players
+        <Tables
           classes={childClasses}
           fetch={this.props.fetch}
           select={this.props.select}
           deselect={this.props.deselect}
-          data={this.props.data}
-          id={this.props.id}
+          tables={this.props.tables}
+          tournamentId={this.props.tournamentId}
         />
       </Paper>
     );
   }
 }
 
-TournamentPlayers.propTypes = {
+TournamentTables.propTypes = {
   classes: PropTypes.object.isRequired,
   fetch: PropTypes.func.isRequired,
   select: PropTypes.func.isRequired,
   deselect: PropTypes.func.isRequired,
-  data: PropTypes.array.isRequired,
-  id: PropTypes.string.isRequired,
+  talbes: PropTypes.array.isRequired,
+  tournamentId: PropTypes.string.isRequired,
 };
 
-export default withRoot(withStyles(styles)(TournamentPlayers));
+export default withRoot(withStyles(styles)(TournamentTables));
