@@ -6,40 +6,35 @@
 
 Foosball tournament REST service written in Go.
 
-# Download
+## Build
 
-```
-go get -d github.com/jensborch/go-foosball
+```sh
+make deps build
 ```
 
-# Build
-
-```
-make deps ensure build
-```
 or
-```
-go get -u github.com/golang/dep/cmd/dep
+
+```sh
 go get github.com/GeertJohan/go.rice
 go get github.com/GeertJohan/go.rice/rice
-dep ensure
 go build -o go-foosball
 rice append --exec go-foosball
 ```
 
-# Test
+## Test
 
-```
+```sh
 make test
 ```
+
 or
-```
+
+```sh
 go test -cover ./...
 ```
 
-# Run
+## Run
 
+```sh
+./go-foosball
 ```
-go-foosball
-```
-

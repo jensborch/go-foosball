@@ -1,6 +1,6 @@
 GOARCH = amd64
 
-BIN = ../../../../bin
+BIN = ~/go/bin
 
 VERSION=0.8.0
 COMMIT=$(shell git rev-parse HEAD)
@@ -17,12 +17,8 @@ endif
 all: test vet build
 
 deps:
-	go get -u github.com/golang/dep/cmd/dep
 	go get github.com/GeertJohan/go.rice
 	go get github.com/GeertJohan/go.rice/rice
-
-ensure:
-	${BIN}/dep ensure
 
 build:
 	go build ${LDFLAGS} -o ${BINARY}
