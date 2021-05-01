@@ -1,6 +1,6 @@
 # Foosball REST service
 
-[![Build Status](https://travis-ci.org/jensborch/go-foosball.svg?branch=master)](https://travis-ci.org/jensborch/go-foosball) 
+[![Build Status](https://github.com/jensborch/go-foosball/actions/workflows/go.yml/badge.svg)](https://github.com/jensborch/go-foosball/actions/workflows/go.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/jensborch/go-foosball)](https://goreportcard.com/report/github.com/jensborch/go-foosball)
 [![codecov](https://codecov.io/gh/jensborch/go-foosball/branch/master/graph/badge.svg)](https://codecov.io/gh/jensborch/go-foosball)
 
