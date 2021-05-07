@@ -1,6 +1,7 @@
 # Foosball REST service
 
-[![Build Status](https://github.com/jensborch/go-foosball/actions/workflows/go.yml/badge.svg)](https://github.com/jensborch/go-foosball/actions/workflows/go.yml)
+[![Go CI build](https://github.com/jensborch/go-foosball/actions/workflows/go.yml/badge.svg)](https://github.com/jensborch/go-foosball/actions/workflows/go.yml)
+[![JS CI build](https://github.com/jensborch/go-foosball/actions/workflows/js.yml/badge.svg)](https://github.com/jensborch/go-foosball/actions/workflows/js.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/jensborch/go-foosball)](https://goreportcard.com/report/github.com/jensborch/go-foosball)
 [![codecov](https://codecov.io/gh/jensborch/go-foosball/branch/master/graph/badge.svg)](https://codecov.io/gh/jensborch/go-foosball)
 
