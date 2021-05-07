@@ -3,7 +3,7 @@ export const types = {
 };
 
 export const actions = {
-  registerGame: json => ({
+  registerGame: (json) => ({
     type: types.REGISTERED_GAME,
     json,
     receivedAt: Date.now(),

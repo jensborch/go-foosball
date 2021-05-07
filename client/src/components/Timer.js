@@ -6,7 +6,7 @@ import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import withRoot from '../withRoot';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     position: 'absolute',
     top: '15%',

@@ -23,7 +23,10 @@ test('Reducer should handle player events with players', () => {
     {},
     {
       type: types.RECEIVE_TOURNAMET_PLAYERS,
-      players: [{ nickname: 'a', ranking: 10 }, { nickname: 'b', ranking: 20 }],
+      players: [
+        { nickname: 'a', ranking: 10 },
+        { nickname: 'b', ranking: 20 },
+      ],
       id: 'id',
     }
   );

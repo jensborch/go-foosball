@@ -14,7 +14,7 @@ export const types = {
 };
 export const actions = {
   requestTournaments: () => ({ type: types.REQUEST_TOURNAMETS }),
-  receiveTournaments: tournaments => ({
+  receiveTournaments: (tournaments) => ({
     type: types.RECEIVE_TOURNAMETS,
     tournaments,
     receivedAt: Date.now(),
@@ -23,15 +23,15 @@ export const actions = {
     type: types.CREATE_TOURNAMET,
     receivedAt: Date.now(),
   }),
-  requestTournamentPlayers: id => ({
+  requestTournamentPlayers: (id) => ({
     type: types.REQUEST_TOURNAMET_PLAYERS,
     id: id,
   }),
-  requestTournamentTables: id => ({
+  requestTournamentTables: (id) => ({
     type: types.REQUEST_TOURNAMET_TABLES,
     id: id,
   }),
-  receiveTournament: id => ({
+  receiveTournament: (id) => ({
     type: types.RECEIVE_TOURNAMET,
     id,
     receivedAt: Date.now(),

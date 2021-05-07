@@ -5,7 +5,9 @@ export default (state = {}, action) => {
     case types.RECEIVE_TOURNAMET_PLAYERS:
       return {
         ...state,
-        [action.id]: action.players.filter(p => !p.active).map(p => p.nickname),
+        [action.id]: action.players
+          .filter((p) => !p.active)
+          .map((p) => p.nickname),
       };
     case types.DEACTIVATE_TOURNAMET_PLAYER:
       return {

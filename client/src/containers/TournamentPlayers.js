@@ -13,14 +13,14 @@ const mapStateToProps = (state, props) => {
   const players = [];
   const active = getActivePlayers(state, props.id);
   const inactive = getInactivePlayers(state, props.id);
-  active.forEach(nickname => {
+  active.forEach((nickname) => {
     players.push({
       ...state.players[nickname],
       ranking: getPlayerRanking(state, props.id, nickname),
       active: true,
     });
   });
-  inactive.forEach(nickname => {
+  inactive.forEach((nickname) => {
     players.push({
       ...state.players[nickname],
       ranking: getPlayerRanking(state, props.id, nickname),
@@ -32,9 +32,9 @@ const mapStateToProps = (state, props) => {
     data: players.sort((p1, p2) => p1.realname.localeCompare(p2.realname)),
   };
 };
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    fetch: id => {
+    fetch: (id) => {
       dispatch(fetchTournamentPlayers(id));
       dispatch(fetchTournaments());
     },

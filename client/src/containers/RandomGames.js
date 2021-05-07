@@ -7,15 +7,12 @@ const mapStateToProps = (state, props) => {
     id: props.id,
   };
 };
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    fetch: id => dispatch(fetchRandomgames(id)),
+    fetch: (id) => dispatch(fetchRandomgames(id)),
   };
 };
 
-const RandomGames = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Refresh);
+const RandomGames = connect(mapStateToProps, mapDispatchToProps)(Refresh);
 
 export default RandomGames;

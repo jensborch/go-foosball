@@ -10,9 +10,9 @@ const mapStateToProps = (state, props) => {
     data: games,
   };
 };
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    fetch: id => dispatch(fetchRandomgames(id)),
+    fetch: (id) => dispatch(fetchRandomgames(id)),
     registerGame: (
       tournamentId,
       tableId,
@@ -32,9 +32,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const GamesInTournament = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Games);
+const GamesInTournament = connect(mapStateToProps, mapDispatchToProps)(Games);
 
 export default GamesInTournament;

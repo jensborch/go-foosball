@@ -9,7 +9,7 @@ import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import AddTableDialog from '../containers/AddTableDialog';
 import AddIcon from '@material-ui/icons/Add';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     minWidth: 450,
     margin: 20,

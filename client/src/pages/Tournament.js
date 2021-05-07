@@ -11,7 +11,7 @@ import GamesInTournament from '../containers/GamesInTournament';
 import RandomGames from '../containers/RandomGames';
 import TournamentTables from '../containers/TournamentTables';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     flexGrow: 1,
   },

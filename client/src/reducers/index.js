@@ -20,7 +20,7 @@ export default rootReducer;
 
 export function isPlayerActive(state, tournament, player) {
   if (state.active[tournament]) {
-    const p = state.active[tournament].find(p => p === player);
+    const p = state.active[tournament].find((p) => p === player);
     return p !== undefined;
   } else {
     return false;
@@ -29,7 +29,7 @@ export function isPlayerActive(state, tournament, player) {
 
 export function isPlayerInactive(state, tournament, player) {
   if (state.inactive[tournament]) {
-    const p = state.inactive[tournament].find(p => p === player);
+    const p = state.inactive[tournament].find((p) => p === player);
     return p !== undefined;
   } else {
     return false;

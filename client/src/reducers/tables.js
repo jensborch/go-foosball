@@ -5,7 +5,7 @@ export const types = {
 };
 
 export const actions = {
-  receiveAllTables: tables => ({
+  receiveAllTables: (tables) => ({
     type: types.RECEIVE_ALL_TABLES,
     tables,
     receivedAt: Date.now(),

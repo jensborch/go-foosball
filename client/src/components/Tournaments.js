@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import { TextField } from '@material-ui/core';
 
-const styles = theme => ({
+const styles = (theme) => ({
   card: {
     minWidth: 275,
   },
@@ -86,20 +86,20 @@ class NewTournament extends React.Component {
           <TextField
             helperText="Name"
             value={this.state.name}
-            onChange={event => this.setState({ name: event.target.value })}
+            onChange={(event) => this.setState({ name: event.target.value })}
             lable="Name"
           />
           <TextField
             helperText="Score"
             value={this.state.score}
-            onChange={event => this.setState({ score: event.target.value })}
+            onChange={(event) => this.setState({ score: event.target.value })}
             lable="Score"
             keyboardType="number-pad"
           />
           <TextField
             helperText="Initial"
             value={this.state.initial}
-            onChange={event => this.setState({ initial: event.target.value })}
+            onChange={(event) => this.setState({ initial: event.target.value })}
             lable="Initial"
             keyboardType="number-pad"
           />
@@ -125,7 +125,7 @@ class Tournaments extends React.Component {
     return (
       <div className={classes.root}>
         <NewTournament createTournament={this.props.createTournament} />
-        {Object.values(data).map(tournament => (
+        {Object.values(data).map((tournament) => (
           <Tournament
             key={tournament.uuid}
             data={tournament}

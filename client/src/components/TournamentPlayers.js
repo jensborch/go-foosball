@@ -10,7 +10,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Players from './Players';
 import AddPlayers from '../containers/AddPlayers';
 
-const styles = theme => ({
+const styles = (theme) => ({
   paper: {
     maxWidth: 250,
     minWidth: 250,

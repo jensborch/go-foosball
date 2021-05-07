@@ -6,7 +6,7 @@ import Fab from '@material-ui/core/Fab';
 import Launch from '@material-ui/icons/Launch';
 import Timer from './Timer';
 
-const styles = theme => ({
+const styles = (theme) => ({
   button: {
     margin: theme.spacing.unit,
   },

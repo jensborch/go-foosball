@@ -4,12 +4,12 @@ import { fetchTournaments, createTournament } from '../services';
 import Refresh from '../components/Refresh';
 import { getTournaments } from '../reducers/tournaments';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     data: getTournaments(state),
   };
 };
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   fetch: () => {
     dispatch(fetchTournaments());
   },
@@ -25,7 +25,4 @@ const AllTournaments = connect(
 
 export default AllTournaments;
 
-export const RefreshTournaments = connect(
-  null,
-  mapDispatchToProps
-)(Refresh);
+export const RefreshTournaments = connect(null, mapDispatchToProps)(Refresh);

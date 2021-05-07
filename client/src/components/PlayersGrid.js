@@ -34,7 +34,7 @@ class Player extends React.Component {
             <TextField
               type="number"
               value={this.state.ranking}
-              onChange={e => this.setState({ ranking: e.target.value })}
+              onChange={(e) => this.setState({ ranking: e.target.value })}
               helperText="Ranking"
               lable="Ranking"
               margin="dense"
@@ -73,7 +73,7 @@ class NewPlayer extends React.Component {
               <TextField
                 helperText="Name"
                 value={this.state.realname}
-                onChange={event =>
+                onChange={(event) =>
                   this.setState({
                     realname: event.target.value,
                   })
@@ -85,7 +85,7 @@ class NewPlayer extends React.Component {
               <TextField
                 helperText="Nickname"
                 value={this.state.nickname}
-                onChange={event =>
+                onChange={(event) =>
                   this.setState({ nickname: event.target.value })
                 }
                 lable="Nickname"

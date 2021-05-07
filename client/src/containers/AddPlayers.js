@@ -6,7 +6,7 @@ import { getTournamentRanking } from '../reducers/ranking';
 
 const mapStateToProps = (state, props) => {
   const players = [];
-  Object.keys(state.players).forEach(id => {
+  Object.keys(state.players).forEach((id) => {
     if (isInTournament(state, props.id, id)) {
       players.push(state.players[id]);
     }
@@ -18,7 +18,7 @@ const mapStateToProps = (state, props) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     fetch: () => {
       dispatch(fetchAllPlayers());

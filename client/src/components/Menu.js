@@ -9,7 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 import withRoot from '../withRoot';
 import { Link } from 'react-router-dom';
 
-const styles = theme => ({
+const styles = (theme) => ({
   flex: {
     flex: 1,
   },
@@ -33,7 +33,7 @@ class Menu extends React.Component {
         <Toolbar>
           <IconButton
             to="/"
-            component={props => <Link {...props} />}
+            component={(props) => <Link {...props} />}
             className={classes.menuButton}
             color="inherit"
             aria-label="Home"

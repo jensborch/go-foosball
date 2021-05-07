@@ -10,7 +10,7 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import AddPlayers from '../containers/AddPlayers';
 import AddTableDialog from '../containers/AddTableDialog';
 
-const styles = theme => ({
+const styles = (theme) => ({
   button: {
     margin: theme.spacing.unit,
   },

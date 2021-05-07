@@ -10,7 +10,7 @@ import Divider from '@material-ui/core/Divider';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Button from '@material-ui/core/Button';
 
-const styles = theme => ({
+const styles = (theme) => ({
   card: {
     minWidth: 300,
     margin: 20,
@@ -122,7 +122,7 @@ class Games extends React.Component {
     const { data } = this.props;
     return (
       <div>
-        {data.map(game => (
+        {data.map((game) => (
           <Game
             key={game.uuid}
             classes={classes}

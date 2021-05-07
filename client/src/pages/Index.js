@@ -8,7 +8,7 @@ import AllTournaments, {
 import Header from '../components/Header';
 import Menu from '../components/Menu';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     flexGrow: 1,
   },

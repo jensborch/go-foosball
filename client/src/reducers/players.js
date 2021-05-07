@@ -6,7 +6,7 @@ export const types = {
 };
 
 export const actions = {
-  receiveAllPlayers: players => ({
+  receiveAllPlayers: (players) => ({
     type: types.RECEIVE_ALL_PLAYERS,
     players: players,
     receivedAt: Date.now(),

@@ -13,9 +13,9 @@ const mapStateToProps = (state, props) => {
     tables: getTables(state),
   };
 };
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    fetch: tournamentId => {
+    fetch: (tournamentId) => {
       dispatch(fetchTournamentTables(tournamentId));
     },
     select: (tournamentId, tableId) =>

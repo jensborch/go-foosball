@@ -3,12 +3,12 @@ import { actions as gameActions } from '../reducers/games';
 import { handleErrors, transformDateFormat } from './util';
 
 export function fetchRandomgames(id) {
-  return function(dispatch) {
+  return function (dispatch) {
     return fetch(`http://localhost:8080/tournaments/${id}/games/random`)
       .then(handleErrors)
-      .then(response => response.json())
-      .then(json => json.map(transformDateFormat))
-      .then(json => {
+      .then((response) => response.json())
+      .then((json) => json.map(transformDateFormat))
+      .then((json) => {
         dispatch(actions.receiveRandomGames(id, json));
       });
   };
@@ -21,7 +21,7 @@ export function registerGame(
   rightPlayers,
   wereRightWinner
 ) {
-  return function(dispatch) {
+  return function (dispatch) {
     return fetch(
       `http://localhost:8080/tournaments/${tournamentId}/tables/${tableId}/games`,
       {
@@ -39,9 +39,9 @@ export function registerGame(
       }
     )
       .then(handleErrors)
-      .then(response => response.json())
-      .then(json => transformDateFormat(json))
-      .then(json => {
+      .then((response) => response.json())
+      .then((json) => transformDateFormat(json))
+      .then((json) => {
         dispatch(gameActions.registerGame(json));
       });
   };

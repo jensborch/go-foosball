@@ -21,7 +21,7 @@ class AddTableDialog extends React.Component {
     this.props.onClose();
   };
 
-  handleSelect = table => {
+  handleSelect = (table) => {
     this.props.addTable(this.props.tournamentId, table);
   };
 
@@ -48,7 +48,7 @@ class AddTableDialog extends React.Component {
         <DialogTitle>Add table</DialogTitle>
         <div>
           <List>
-            {tables.map(table => (
+            {tables.map((table) => (
               <ListItem
                 button
                 key={table.name}
@@ -70,7 +70,7 @@ class AddTableDialog extends React.Component {
               <TextField
                 helperText="Name"
                 value={this.state.name}
-                onChange={event =>
+                onChange={(event) =>
                   this.setState({
                     name: event.target.value,
                   })
@@ -82,7 +82,7 @@ class AddTableDialog extends React.Component {
               <TextField
                 helperText="Right Color"
                 value={this.state.rightColor}
-                onChange={event =>
+                onChange={(event) =>
                   this.setState({ rightColor: event.target.value })
                 }
                 lable="Right Color"
@@ -92,7 +92,7 @@ class AddTableDialog extends React.Component {
               <TextField
                 helperText="Left Color"
                 value={this.state.leftColor}
-                onChange={event =>
+                onChange={(event) =>
                   this.setState({ leftColor: event.target.value })
                 }
                 lable="Lef Color"
