@@ -1,4 +1,4 @@
-import { handleErrors, transformDateFormat } from './util';
+import { handleErrors, transformDateFormat } from "./util";
 
 export interface Tournament {
   created: Date;
@@ -11,7 +11,7 @@ export interface Tournament {
 export type Tournaments = Tournament[];
 
 export function fetchTournaments<Tournaments>(): Promise<Tournaments> {
-  return fetch('http://localhost:8080/tournaments/')
+  return fetch("http://localhost:8080/tournaments/")
     .then(handleErrors)
     .then((response) => response.json())
     .then((json) => json.map(transformDateFormat) as Promise<Tournaments>);
@@ -39,11 +39,11 @@ export function fetchTournamentTables(id: string): Promise<Tables> {
 
 export function createTournament(name: string, score: string, initial: string) {
   return fetch(`http://localhost:8080/tournaments/`, {
-    method: 'POST',
-    redirect: 'follow',
+    method: "POST",
+    redirect: "follow",
     headers: new Headers({
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     }),
     body: JSON.stringify({
       name,
@@ -61,11 +61,11 @@ export function activatePlayer(
   ranking: number
 ) {
   return fetch(`http://localhost:8080/tournaments/${tournamentId}/players`, {
-    method: 'POST',
-    redirect: 'follow',
+    method: "POST",
+    redirect: "follow",
     headers: new Headers({
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     }),
     body: JSON.stringify({
       nickname,
@@ -78,18 +78,18 @@ export function deactivatePlayer(tournamentId: string, playerId: string) {
   return fetch(
     `http://localhost:8080/tournaments/${tournamentId}/players/${playerId}`,
     {
-      method: 'DELETE',
+      method: "DELETE",
     }
   ).then(handleErrors);
 }
 
 export function activateTable(tournamentId: string, tableId: string) {
   return fetch(`http://localhost:8080/tournaments/${tournamentId}/tables`, {
-    method: 'POST',
-    redirect: 'follow',
+    method: "POST",
+    redirect: "follow",
     headers: new Headers({
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     }),
     body: JSON.stringify({
       uuid: tableId,
@@ -101,7 +101,7 @@ export function deactivateTable(tournamentId: string, tableId: string) {
   return fetch(
     `http://localhost:8080/tournaments/${tournamentId}/tables/${tableId}`,
     {
-      method: 'DELETE',
+      method: "DELETE",
     }
   ).then(handleErrors);
 }
