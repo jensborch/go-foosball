@@ -1,23 +1,23 @@
-import Avatar from "@material-ui/core/Avatar";
-import { FunctionComponent, useEffect, useState } from "react";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
-import Typography from "@material-ui/core/Typography";
-import { Link } from "react-router-dom";
-import Button from "@material-ui/core/Button";
-import { makeStyles, TextField } from "@material-ui/core";
+import Avatar from '@material-ui/core/Avatar';
+import { FunctionComponent, useEffect, useState } from 'react';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Typography from '@material-ui/core/Typography';
+import { Link } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import { makeStyles, TextField } from '@material-ui/core';
 
 const useStyles = makeStyles({
   card: {
     minWidth: 275,
   },
   root: {
-    display: "flex",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexWrap: 'wrap',
     padding: 20,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   avatar: {
     //backgroundColor: theme.palette.secondary.main,
@@ -64,20 +64,21 @@ export interface NewTournamentProps {
   score?: number;
   initial?: string;
   create: () => void;
+  onChange: (value: boolean) => void;
 }
 
 const NewTournament: FunctionComponent<NewTournamentProps> = ({
-  name = "",
+  name = '',
   score = 50,
   initial = 1500,
   create,
+  onChange
 }) => {
   const [state, setState] = useState({
     name,
     score,
     initial,
   });
-
   return (
     <Card elevation={4}>
       <CardHeader
@@ -94,9 +95,10 @@ const NewTournament: FunctionComponent<NewTournamentProps> = ({
         <TextField
           helperText="Score"
           value={state.score}
-          onChange={(event) =>
-            setState({ ...state, score: parseInt(event.target.value) })
-          }
+          onChange={(event) => {
+            setState({ ...state, score: parseInt(event.target.value) });
+            onChange(true);
+          }}
           label="Score"
         />
         <TextField
@@ -126,12 +128,17 @@ const Tournaments = (props: TournamentsProps) => {
   const { create, fetch } = props;
   const classes = useStyles();
   const [tournaments, setTournaments] = useState<TournamentProps[]>([]);
+  const [update, setUpdate] = useState<boolean>(true);
   useEffect(() => {
-    setTournaments(fetch());
-  }, [fetch]);
+    if (update) {
+      setTournaments(fetch());
+    } else {
+      setUpdate(false);
+    }
+  }, [fetch, update]);
   return (
     <div className={classes.root}>
-      <NewTournament create={create} />
+      <NewTournament create={create} onChange={setUpdate} />
       {Object.values(tournaments).map((tournament) => (
         <Tournament key={tournament.uuid} {...tournament} />
       ))}
