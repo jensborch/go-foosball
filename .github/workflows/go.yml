@@ -19,4 +19,4 @@ jobs:
     - name: Build and analyze
       run: ./go.test.sh
     - name: Codecov
-      run: curl -s https://codecov.io/bash | bash
+      uses: codecov/codecov-action@v2
