@@ -31,7 +31,7 @@ import (
 //go:embed client/build
 var client embed.FS
 
-// React client static web server content.
+// Static html for testing.
 //go:embed html
 var html embed.FS
 
