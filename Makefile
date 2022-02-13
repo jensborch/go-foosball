@@ -19,7 +19,7 @@ all: test vet build
 build:
 	go build ${LDFLAGS} -o ${BINARY}
 
-build-linux: 
+build-linux:
 	GOOS=linux GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}
 
 build-windows:
@@ -33,3 +33,6 @@ vet:
 	
 clean:
 	go clean
+
+$(shell if [ ! -d "./client/build" ]; then mkdir -p  ./client/build; fi)
+$(shell if [ ! -f "./client/build/test.html" ]; then touch  ./client/build/test.html; fi)
