@@ -38,6 +38,11 @@ func GetPlayers(db *gorm.DB) func(*gin.Context) {
 }
 
 // PostPlayer creates a new player
+// @Summary      Create a new player
+// @Accept       json
+// @Produce      json
+// @Success      200      {object}  model.Player
+// @Router       /players [post]
 func PostPlayer(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var player model.Player

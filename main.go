@@ -1,23 +1,39 @@
 package main
 
 import (
+	"embed"
 	"flag"
+	"io/fs"
 	"net/http"
 	"strconv"
 
-	"embed"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+
+	_ "github.com/jensborch/go-foosball/docs"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/resources"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
+// @title           Go-foosball API
+// @version         0.8
+// @description     Foosball tournament REST service.
+
+// @BasePath /
+
 // React client static web server content.
 //go:embed client/build
-var content embed.FS
+var client embed.FS
+
+// React client static web server content.
+//go:embed html
+var html embed.FS
 
 func main() {
 	var (
@@ -75,9 +91,24 @@ func main() {
 	games.GET("/", resources.GetGames(db))
 	games.GET("/:id", resources.GetGame("id", db))
 
-	router.GET("/client", func(c *gin.Context) {
-		c.FileFromFS("fs/file.go", http.FS(content))
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
+	router.GET("/client/*any", func(c *gin.Context) {
+		serveStatic(c, client, "/client/", "client/build")
+	})
+
+	router.GET("/html/*any", func(c *gin.Context) {
+		serveStatic(c, html, "/html/", "html")
 	})
 
 	router.Run(":" + strconv.FormatUint(uint64(port), 10))
+}
+
+func serveStatic(c *gin.Context, f fs.FS, prefix string, dir string) {
+	subfs, err := fs.Sub(f, dir)
+	if err != nil {
+		panic(err)
+	}
+	path := c.Request.URL.Path[len(prefix):len(c.Request.URL.Path)]
+	c.FileFromFS(path, http.FS(subfs))
 }

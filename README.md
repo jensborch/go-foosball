@@ -16,6 +16,7 @@ make build
 or
 
 ```sh
+$(go env GOPATH)/bin/swag init
 go build -o go-foosball
 ```
 
@@ -36,3 +37,7 @@ go test -cover ./...
 ```sh
 ./go-foosball
 ```
+
+## Swagger
+
+http://localhost:8080/swagger/index.html

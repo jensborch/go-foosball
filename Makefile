@@ -5,6 +5,7 @@ BIN = ~/go/bin
 VERSION=0.8.1
 COMMIT=$(shell git rev-parse HEAD)
 BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
+GOPATH=$(shell go env GOPATH)
 
 LDFLAGS = -ldflags "-X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X main.BRANCH=${BRANCH}"
 
@@ -16,13 +17,16 @@ endif
 
 all: test vet build
 
-build:
+swagger: 
+	$(GOPATH)/bin/swag init
+
+build: swagger
 	go build ${LDFLAGS} -o ${BINARY}
 
-build-linux:
+build-linux: swagger
 	GOOS=linux GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}
 
-build-windows:
+build-windows: swagger
 	GOOS=windows GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}.exe
 
 test:
