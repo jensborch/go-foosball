@@ -20,13 +20,13 @@ all: test vet build
 swagger: 
 	$(GOPATH)/bin/swag init
 
-build: swagger
+build:
 	go build ${LDFLAGS} -o ${BINARY}
 
-build-linux: swagger
+build-linux:
 	GOOS=linux GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}
 
-build-windows: swagger
+build-windows:
 	GOOS=windows GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}.exe
 
 test:

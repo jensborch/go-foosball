@@ -16,7 +16,6 @@ make build
 or
 
 ```sh
-$(go env GOPATH)/bin/swag init
 go build -o go-foosball
 ```
 
@@ -39,5 +38,17 @@ go test -cover ./...
 ```
 
 ## Swagger
+
+```sh
+make swagger
+```
+
+or
+
+```sh
+$(go env GOPATH)/bin/swag init
+```
+
+Swagger can be viewed using: 
 
 http://localhost:8080/swagger/index.html
