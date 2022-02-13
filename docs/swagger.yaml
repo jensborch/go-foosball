@@ -1,0 +1,36 @@
+basePath: /
+definitions:
+  model.Player:
+    properties:
+      created:
+        type: string
+      nickname:
+        type: string
+      realname:
+        type: string
+      rfid:
+        type: string
+      updated:
+        type: string
+    required:
+    - nickname
+    type: object
+info:
+  contact: {}
+  description: Foosball tournament REST service.
+  title: Go-foosball API
+  version: "0.8"
+paths:
+  /players:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Player'
+      summary: Create a new player
+swagger: "2.0"

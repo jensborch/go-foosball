@@ -1,0 +1,56 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Foosball tournament REST service.",
+        "title": "Go-foosball API",
+        "contact": {},
+        "version": "0.8"
+    },
+    "basePath": "/",
+    "paths": {
+        "/players": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a new player",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Player"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.Player": {
+            "type": "object",
+            "required": [
+                "nickname"
+            ],
+            "properties": {
+                "created": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "realname": {
+                    "type": "string"
+                },
+                "rfid": {
+                    "type": "string"
+                },
+                "updated": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
