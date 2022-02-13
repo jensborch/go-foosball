@@ -2,7 +2,7 @@ GOARCH = amd64
 
 BIN = ~/go/bin
 
-VERSION=0.8.0
+VERSION=0.8.1
 COMMIT=$(shell git rev-parse HEAD)
 BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 
@@ -16,21 +16,14 @@ endif
 
 all: test vet build
 
-deps:
-	go get github.com/GeertJohan/go.rice
-	go get github.com/GeertJohan/go.rice/rice
-
 build:
 	go build ${LDFLAGS} -o ${BINARY}
-	${BIN}/rice append --exec ${BINARY}
 
 build-linux: 
 	GOOS=linux GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}
-	${BIN}/rice append --exec ${BINARY}
 
 build-windows:
 	GOOS=windows GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}.exe
-	${BIN}/rice append --exec ${BINARY}.exe
 
 test:
 	go test -cover ./...

@@ -5,7 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	rice "github.com/GeertJohan/go.rice"
+	"embed"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jensborch/go-foosball/model"
@@ -13,6 +14,10 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
+
+// React client static web server content.
+//go:embed client/build
+var content embed.FS
 
 func main() {
 	var (
@@ -70,11 +75,9 @@ func main() {
 	games.GET("/", resources.GetGames(db))
 	games.GET("/:id", resources.GetGame("id", db))
 
-	if i, err := rice.MustFindBox("html").String("index.html"); err == nil {
-		router.GET("/", func(c *gin.Context) {
-			c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(i))
-		})
-	}
+	router.GET("/client", func(c *gin.Context) {
+		c.FileFromFS("fs/file.go", http.FS(content))
+	})
 
 	router.Run(":" + strconv.FormatUint(uint64(port), 10))
 }
