@@ -1,5 +1,8 @@
 basePath: /
 definitions:
+  gin.H:
+    additionalProperties: true
+    type: object
   model.Player:
     properties:
       created:
@@ -22,7 +25,7 @@ info:
   version: "0.8"
 paths:
   /players:
-    post:
+    get:
       consumes:
       - application/json
       produces:
@@ -31,6 +34,89 @@ paths:
         "200":
           description: OK
           schema:
+            items:
+              $ref: '#/definitions/model.Player'
+            type: array
+      summary: List players
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create player
+        in: body
+        name: player
+        required: true
+        schema:
+          $ref: '#/definitions/model.Player'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
             $ref: '#/definitions/model.Player'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
       summary: Create a new player
+  /players/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Player ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete player
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Player ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Player'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get player
 swagger: "2.0"

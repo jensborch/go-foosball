@@ -18,7 +18,7 @@ endif
 all: test vet build
 
 swagger: 
-	$(GOPATH)/bin/swag init
+	$(GOPATH)/bin/swag init --parseDependency true
 
 build:
 	go build ${LDFLAGS} -o ${BINARY}

@@ -13,6 +13,14 @@ import (
 )
 
 // GetPlayer gets player info
+// @Summary      Get player
+// @Accept       json
+// @Produce      json
+// @Param        id       path      string  true  "Player ID"
+// @Success      200      {object}  model.Player
+// @Failure      404      {object}  gin.H
+// @Failure      500      {object}  gin.H
+// @Router       /players/{id} [get]
 func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		name := c.Param(param)
@@ -29,6 +37,11 @@ func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 // GetPlayers get a list of all players
+// @Summary      List players
+// @Accept       json
+// @Produce      json
+// @Success      200      {array}   model.Player
+// @Router       /players [get]
 func GetPlayers(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		r := persistence.NewPlayerRepository(db)
@@ -41,7 +54,11 @@ func GetPlayers(db *gorm.DB) func(*gin.Context) {
 // @Summary      Create a new player
 // @Accept       json
 // @Produce      json
+// @Param        player   body      model.Player true  "Create player"
 // @Success      200      {object}  model.Player
+// @Failure      400      {object}  gin.H
+// @Failure      409      {object}  gin.H
+// @Failure      500      {object}  gin.H
 // @Router       /players [post]
 func PostPlayer(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
@@ -69,13 +86,21 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 }
 
 //DeletePlayer deletes a player
+// @Summary      Delete player
+// @Accept       json
+// @Produce      json
+// @Param        id       path      string  true  "Player ID"
+// @Success      204      {object}  gin.H
+// @Failure      404      {object}  gin.H
+// @Failure      500      {object}  gin.H
+// @Router       /players/{id} [delete]
 func DeletePlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		name := c.Param(param)
 		r := persistence.NewPlayerRepository(db)
 		found, err := r.Remove(name)
 		if found && err == nil {
-			c.JSON(http.StatusOK, struct{}{})
+			c.JSON(http.StatusNoContent, gin.H{})
 		} else if !found {
 			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find %s", name)})
 		} else {
