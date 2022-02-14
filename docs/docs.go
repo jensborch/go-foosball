@@ -66,19 +66,19 @@ const docTemplate_swagger = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/gin.H"
+                            "$ref": "#/definitions/resources.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/gin.H"
+                            "$ref": "#/definitions/resources.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/gin.H"
+                            "$ref": "#/definitions/resources.ErrorResponse"
                         }
                     }
                 }
@@ -112,13 +112,13 @@ const docTemplate_swagger = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/gin.H"
+                            "$ref": "#/definitions/resources.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/gin.H"
+                            "$ref": "#/definitions/resources.ErrorResponse"
                         }
                     }
                 }
@@ -144,19 +144,19 @@ const docTemplate_swagger = `{
                     "204": {
                         "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/gin.H"
+                            "$ref": "#/definitions/resources.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/gin.H"
+                            "$ref": "#/definitions/resources.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/gin.H"
+                            "$ref": "#/definitions/resources.ErrorResponse"
                         }
                     }
                 }
@@ -164,10 +164,6 @@ const docTemplate_swagger = `{
         }
     },
     "definitions": {
-        "gin.H": {
-            "type": "object",
-            "additionalProperties": true
-        },
         "model.Player": {
             "type": "object",
             "required": [
@@ -187,6 +183,14 @@ const docTemplate_swagger = `{
                     "type": "string"
                 },
                 "updated": {
+                    "type": "string"
+                }
+            }
+        },
+        "resources.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
                     "type": "string"
                 }
             }

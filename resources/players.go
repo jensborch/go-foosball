@@ -18,8 +18,8 @@ import (
 // @Produce      json
 // @Param        id       path      string  true  "Player ID"
 // @Success      200      {object}  model.Player
-// @Failure      404      {object}  gin.H
-// @Failure      500      {object}  gin.H
+// @Failure      404      {object}  ErrorResponse
+// @Failure      500      {object}  ErrorResponse
 // @Router       /players/{id} [get]
 func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
@@ -29,9 +29,9 @@ func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 		if found {
 			c.JSON(http.StatusOK, p)
 		} else if err == nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find %s", name)})
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", name)))
 		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 		}
 	}
 }
@@ -56,27 +56,27 @@ func GetPlayers(db *gorm.DB) func(*gin.Context) {
 // @Produce      json
 // @Param        player   body      model.Player true  "Create player"
 // @Success      200      {object}  model.Player
-// @Failure      400      {object}  gin.H
-// @Failure      409      {object}  gin.H
-// @Failure      500      {object}  gin.H
+// @Failure      400      {object}  ErrorResponse
+// @Failure      409      {object}  ErrorResponse
+// @Failure      500      {object}  ErrorResponse
 // @Router       /players [post]
 func PostPlayer(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var player model.Player
 		if err := c.ShouldBindWith(&player, binding.JSON); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
 		}
 		tx := db.Begin()
 		r := persistence.NewPlayerRepository(tx)
 		if _, found, _ := r.Find(player.Nickname); found {
-			c.JSON(http.StatusConflict, gin.H{"error": fmt.Sprintf("Player %s already exists", player.Nickname)})
+			c.JSON(http.StatusConflict, NewErrorResponse(fmt.Sprintf("Player %s already exists", player.Nickname)))
 			tx.Rollback()
 			return
 		}
 		p := model.NewPlayer(player.Nickname, player.RealName)
 		if err := r.Store(p); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 			tx.Rollback()
 			return
 		}
@@ -90,9 +90,9 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Player ID"
-// @Success      204      {object}  gin.H
-// @Failure      404      {object}  gin.H
-// @Failure      500      {object}  gin.H
+// @Success      204      {object}  ErrorResponse
+// @Failure      404      {object}  ErrorResponse
+// @Failure      500      {object}  ErrorResponse
 // @Router       /players/{id} [delete]
 func DeletePlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
@@ -102,9 +102,9 @@ func DeletePlayer(param string, db *gorm.DB) func(*gin.Context) {
 		if found && err == nil {
 			c.JSON(http.StatusNoContent, gin.H{})
 		} else if !found {
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find %s", name)})
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", name)))
 		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 		}
 	}
 }
