@@ -52,7 +52,7 @@ const docTemplate_swagger = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Player"
+                            "$ref": "#/definitions/resources.CreatePlayerRequest"
                         }
                     }
                 ],
@@ -183,6 +183,23 @@ const docTemplate_swagger = `{
                     "type": "string"
                 },
                 "updated": {
+                    "type": "string"
+                }
+            }
+        },
+        "resources.CreatePlayerRequest": {
+            "type": "object",
+            "required": [
+                "nickname"
+            ],
+            "properties": {
+                "nickname": {
+                    "type": "string"
+                },
+                "realname": {
+                    "type": "string"
+                },
+                "rfid": {
                     "type": "string"
                 }
             }

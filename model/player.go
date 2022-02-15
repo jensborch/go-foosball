@@ -53,10 +53,11 @@ type PlayerRepository interface {
 }
 
 // NewPlayer create new player
-func NewPlayer(nickname, realName string) *Player {
+func NewPlayer(nickname, realName string, rfid string) *Player {
 	return &Player{
 		Nickname:          nickname,
 		RealName:          realName,
+		RFID:              rfid,
 		TournamentPlayers: make([]TournamentPlayer, 0, 10),
 	}
 }

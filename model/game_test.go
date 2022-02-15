@@ -6,17 +6,17 @@ import (
 
 func initSingleGame(tournament *Tournament) *Game {
 	g := NewGame(tournament.TournamentTables[0])
-	g.AddPlayer(*NewPlayer("tt", "Thomas"))
-	g.AddPlayer(*NewPlayer("jj", "Jens"))
+	g.AddPlayer(*NewPlayer("tt", "Thomas", "rfid1"))
+	g.AddPlayer(*NewPlayer("jj", "Jens", "rfid2"))
 	return g
 }
 
 func initDuroGame(tournament *Tournament) *Game {
 	g := NewGame(tournament.TournamentTables[0])
-	g.AddPlayer(*NewPlayer("tt", "Thomas"))
-	g.AddPlayer(*NewPlayer("rr", "Rikke"))
-	g.AddPlayer(*NewPlayer("jj", "Jens"))
-	g.AddPlayer(*NewPlayer("kk", "Kristine"))
+	g.AddPlayer(*NewPlayer("tt", "Thomas", "rfid1"))
+	g.AddPlayer(*NewPlayer("rr", "Rikke", "rfid2"))
+	g.AddPlayer(*NewPlayer("jj", "Jens", "rfid3"))
+	g.AddPlayer(*NewPlayer("kk", "Kristine", "rfid4"))
 	return g
 }
 

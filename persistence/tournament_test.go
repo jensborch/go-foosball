@@ -103,8 +103,8 @@ func TestAddPlayers2Tournament(t *testing.T) {
 	defer db.Close()
 
 	r := NewTournamentRepository(db)
-	p1 := model.NewPlayer("p1", "n2")
-	p2 := model.NewPlayer("p2", "n2")
+	p1 := model.NewPlayer("p1", "n2", "rfid")
+	p2 := model.NewPlayer("p2", "n2", "rfid")
 
 	tournament.AddPlayer(p1)
 	err := r.Store(tournament)
@@ -172,8 +172,8 @@ func TestCalculateGameScore(t *testing.T) {
 	defer db.Close()
 
 	r := NewTournamentRepository(db)
-	p1 := model.NewPlayer("p1", "n2")
-	p2 := model.NewPlayer("p2", "n2")
+	p1 := model.NewPlayer("p1", "n2", "rfid")
+	p2 := model.NewPlayer("p2", "n2", "rfid")
 
 	tournament.AddPlayer(p1)
 	tournament.AddPlayer(p2)

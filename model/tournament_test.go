@@ -30,11 +30,11 @@ func TestAddTables2Tournament(t *testing.T) {
 
 func TestRandomGamesOneTable(t *testing.T) {
 	tournament := InitTournament()
-	tournament.AddPlayer(NewPlayer("1", "n1"))
-	tournament.AddPlayer(NewPlayer("2", "n2"))
-	tournament.AddPlayer(NewPlayer("3", "n3"))
-	tournament.AddPlayer(NewPlayer("4", "n4"))
-	tournament.AddPlayer(NewPlayer("5", "n5"))
+	tournament.AddPlayer(NewPlayer("1", "n1", "rfid"))
+	tournament.AddPlayer(NewPlayer("2", "n2", "rfid"))
+	tournament.AddPlayer(NewPlayer("3", "n3", "rfid"))
+	tournament.AddPlayer(NewPlayer("4", "n4", "rfid"))
+	tournament.AddPlayer(NewPlayer("5", "n5", "rfid"))
 
 	g := tournament.RandomGames()
 
@@ -49,12 +49,12 @@ func TestRandomGamesOneTable(t *testing.T) {
 
 func TestRandomGamesTwoTable(t *testing.T) {
 	tournament := InitTournament()
-	tournament.AddPlayer(NewPlayer("1", "n1"))
-	tournament.AddPlayer(NewPlayer("2", "n2"))
-	tournament.AddPlayer(NewPlayer("3", "n3"))
-	tournament.AddPlayer(NewPlayer("4", "n4"))
-	tournament.AddPlayer(NewPlayer("5", "n5"))
-	tournament.AddPlayer(NewPlayer("6", "n6"))
+	tournament.AddPlayer(NewPlayer("1", "n1", "rfid"))
+	tournament.AddPlayer(NewPlayer("2", "n2", "rfid"))
+	tournament.AddPlayer(NewPlayer("3", "n3", "rfid"))
+	tournament.AddPlayer(NewPlayer("4", "n4", "rfid"))
+	tournament.AddPlayer(NewPlayer("5", "n5", "rfid"))
+	tournament.AddPlayer(NewPlayer("6", "n6", "rfid"))
 
 	g := tournament.RandomGames()
 
@@ -65,7 +65,7 @@ func TestRandomGamesTwoTable(t *testing.T) {
 
 func TestAddPlayer2Tournament(t *testing.T) {
 	tournament := InitTournament()
-	p1 := NewPlayer("jj", "Jens")
+	p1 := NewPlayer("jj", "Jens", "rfid")
 
 	tournament.AddPlayer(p1)
 
@@ -73,7 +73,7 @@ func TestAddPlayer2Tournament(t *testing.T) {
 		t.Errorf("Tournament must have one player, got: %d.", len(p1.TournamentPlayers))
 	}
 
-	p2 := NewPlayer("tt", "Thomas")
+	p2 := NewPlayer("tt", "Thomas", "rfid")
 
 	tournament.AddPlayer(p2)
 
@@ -84,7 +84,7 @@ func TestAddPlayer2Tournament(t *testing.T) {
 
 func TestDeactivatePlayerInTournament(t *testing.T) {
 	tournament := InitTournament()
-	p := NewPlayer("jj", "Jens")
+	p := NewPlayer("jj", "Jens", "rfid")
 	tournament.AddPlayer(p)
 
 	if !p.TournamentPlayers[0].Active {

@@ -50,11 +50,17 @@ func GetPlayers(db *gorm.DB) func(*gin.Context) {
 	}
 }
 
+type CreatePlayerRequest struct {
+	Nickname string `json:"nickname" binding:"required"`
+	RealName string `json:"realname"`
+	RFID     string `json:"rfid"`
+}
+
 // PostPlayer creates a new player
 // @Summary      Create a new player
 // @Accept       json
 // @Produce      json
-// @Param        player   body      model.Player true  "Create player"
+// @Param        player   body      CreatePlayerRequest true  "Create player"
 // @Success      200      {object}  model.Player
 // @Failure      400      {object}  ErrorResponse
 // @Failure      409      {object}  ErrorResponse
@@ -62,7 +68,7 @@ func GetPlayers(db *gorm.DB) func(*gin.Context) {
 // @Router       /players [post]
 func PostPlayer(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		var player model.Player
+		var player CreatePlayerRequest
 		if err := c.ShouldBindWith(&player, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
@@ -74,7 +80,7 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 			tx.Rollback()
 			return
 		}
-		p := model.NewPlayer(player.Nickname, player.RealName)
+		p := model.NewPlayer(player.Nickname, player.RealName, player.RFID)
 		if err := r.Store(p); err != nil {
 			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 			tx.Rollback()

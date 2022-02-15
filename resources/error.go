@@ -1,13 +1,13 @@
 package resources
 
-// NewError create error response
+// NewError creates an new error response
 func NewErrorResponse(error string) *ErrorResponse {
 	return &ErrorResponse{
 		Error: error,
 	}
 }
 
-// Error provides a error response
+// ErrorResponse provides an error response for the API
 type ErrorResponse struct {
 	Error string `json:"error"`
 }

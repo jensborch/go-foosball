@@ -26,8 +26,8 @@ func TestStorePlayer(t *testing.T) {
 	db := InitDB(t)
 	defer db.Close()
 
-	p1 := model.NewPlayer("tt", "Thomas")
-	p2 := model.NewPlayer("jj", "Jens")
+	p1 := model.NewPlayer("tt", "Thomas", "rfid1")
+	p2 := model.NewPlayer("jj", "Jens", "rfid2")
 
 	r := NewPlayerRepository(db)
 
@@ -58,7 +58,7 @@ func TestStorePlayer(t *testing.T) {
 }
 
 func TestUpdatePlayer(t *testing.T) {
-	p := model.NewPlayer("tt", "Thomas")
+	p := model.NewPlayer("tt", "Thomas", "rfid")
 	db := InitDB(t)
 	defer db.Close()
 

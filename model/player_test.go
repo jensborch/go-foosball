@@ -5,7 +5,7 @@ import (
 )
 
 func TestCreatePlayer(t *testing.T) {
-	p := NewPlayer("jj", "Jens")
+	p := NewPlayer("jj", "Jens", "")
 
 	if p.Nickname != "jj" {
 		t.Errorf("Player nickname is incorrect, got: %s, want: %s.", p.Nickname, "jj")
@@ -22,7 +22,7 @@ func TestCreatePlayer(t *testing.T) {
 }
 
 func TestCreateTournamentPlayer(t *testing.T) {
-	p := NewPlayer("jj", "Jens")
+	p := NewPlayer("jj", "Jens", "rfid")
 	tournament := InitTournament()
 	tp := NewTournamentPlayer(p, *tournament)
 

@@ -15,6 +15,17 @@ definitions:
     required:
     - nickname
     type: object
+  resources.CreatePlayerRequest:
+    properties:
+      nickname:
+        type: string
+      realname:
+        type: string
+      rfid:
+        type: string
+    required:
+    - nickname
+    type: object
   resources.ErrorResponse:
     properties:
       error:
@@ -49,7 +60,7 @@ paths:
         name: player
         required: true
         schema:
-          $ref: '#/definitions/model.Player'
+          $ref: '#/definitions/resources.CreatePlayerRequest'
       produces:
       - application/json
       responses:
