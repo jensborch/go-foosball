@@ -1,5 +1,50 @@
 basePath: /
 definitions:
+  model.Color:
+    properties:
+      left:
+        type: string
+      right:
+        type: string
+    required:
+    - left
+    - right
+    type: object
+  model.Game:
+    properties:
+      created:
+        type: string
+      leftPlayerOne:
+        $ref: '#/definitions/model.TournamentPlayer'
+      leftPlayerOneID:
+        type: integer
+      leftPlayerTwo:
+        $ref: '#/definitions/model.TournamentPlayer'
+      leftPlayerTwoID:
+        type: integer
+      leftScore:
+        type: integer
+      rightPlayerOne:
+        $ref: '#/definitions/model.TournamentPlayer'
+      rightPlayerOneID:
+        type: integer
+      rightPlayerTwo:
+        $ref: '#/definitions/model.TournamentPlayer'
+      rightPlayerTwoID:
+        type: integer
+      rightScore:
+        type: integer
+      tournamentTable:
+        $ref: '#/definitions/model.TournamentTable'
+      tournamentTableID:
+        type: integer
+      updated:
+        type: string
+      uuid:
+        type: string
+      winner:
+        type: string
+    type: object
   model.Player:
     properties:
       created:
@@ -14,6 +59,73 @@ definitions:
         type: string
     required:
     - nickname
+    type: object
+  model.Table:
+    properties:
+      color:
+        $ref: '#/definitions/model.Color'
+      created:
+        type: string
+      name:
+        type: string
+      updated:
+        type: string
+      uuid:
+        type: string
+    required:
+    - color
+    - name
+    type: object
+  model.Tournament:
+    properties:
+      created:
+        type: string
+      initial:
+        type: integer
+      name:
+        type: string
+      score:
+        type: integer
+      updated:
+        type: string
+      uuid:
+        type: string
+    required:
+    - initial
+    - name
+    - score
+    type: object
+  model.TournamentPlayer:
+    properties:
+      active:
+        type: boolean
+      created:
+        type: string
+      player:
+        $ref: '#/definitions/model.Player'
+      playerID:
+        type: integer
+      ranking:
+        type: integer
+      tournament:
+        $ref: '#/definitions/model.Tournament'
+      tournamentID:
+        type: integer
+      updated:
+        type: string
+    type: object
+  model.TournamentTable:
+    properties:
+      created:
+        type: string
+      games:
+        items:
+          $ref: '#/definitions/model.Game'
+        type: array
+      table:
+        $ref: '#/definitions/model.Table'
+      updated:
+        type: string
     type: object
   resources.CreatePlayerRequest:
     properties:
@@ -31,12 +143,64 @@ definitions:
       error:
         type: string
     type: object
+  resources.GameRepresentation:
+    properties:
+      players:
+        items:
+          type: string
+        type: array
+      winner:
+        type: string
+    required:
+    - players
+    - winner
+    type: object
 info:
   contact: {}
   description: Foosball tournament REST service.
   title: Go-foosball API
   version: "0.8"
 paths:
+  /games:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Game'
+            type: array
+      summary: Get all gamne results
+  /games/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Game ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Game'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Get gamne results
   /players:
     get:
       consumes:
@@ -132,4 +296,93 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Get player
+  /tournaments/{id}/games:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Game'
+            type: array
+      summary: Get all games in a tournament
+  /tournaments/{id}/games/random:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Game'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Get random game for a tournament
+  /tournaments/{id}/tables/{table}/games:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Table ID
+        in: path
+        name: table
+        required: true
+        type: string
+      - description: Submit game results
+        in: body
+        name: game
+        required: true
+        schema:
+          $ref: '#/definitions/resources.GameRepresentation'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Game'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Submit gamne results
 swagger: "2.0"

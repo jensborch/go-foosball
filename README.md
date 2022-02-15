@@ -46,7 +46,7 @@ make swagger
 or
 
 ```sh
-$(go env GOPATH)/bin/swag init --parseDependency true
+$(go env GOPATH)/bin/swag init
 ```
 
 Swagger can be viewed using: 
