@@ -334,6 +334,80 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "/tournaments": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get all tournaments",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tournament ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Tournament"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tournaments/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get tournament",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tournament ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Tournament"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/resources.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/resources.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/tournaments/{id}/games": {
             "get": {
                 "consumes": [
@@ -390,6 +464,49 @@ const docTemplate_swagger = `{
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/model.Game"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/resources.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/resources.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tournaments/{id}/players": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get players in tournament",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tournament ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/resources.PlayerRepresenatation"
                             }
                         }
                     },
@@ -846,6 +963,26 @@ const docTemplate_swagger = `{
                     }
                 },
                 "winner": {
+                    "type": "string"
+                }
+            }
+        },
+        "resources.PlayerRepresenatation": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "ranking": {
+                    "type": "integer"
+                },
+                "realname": {
+                    "type": "string"
+                },
+                "rfid": {
                     "type": "string"
                 }
             }

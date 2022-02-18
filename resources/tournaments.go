@@ -15,6 +15,14 @@ import (
 )
 
 // GetTournament gets info about a tournament
+// @Summary      Get tournament
+// @Accept       json
+// @Produce      json
+// @Param        id       path      string  true  "Tournament ID"
+// @Success      200      {array}   model.Tournament
+// @Failure      404      {object}  ErrorResponse
+// @Failure      500      {object}  ErrorResponse
+// @Router       /tournaments/{id} [get]
 func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
@@ -23,16 +31,22 @@ func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
 			c.JSON(http.StatusOK, t)
 			return
 		} else if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", id)})
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 			return
 		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 			return
 		}
 	}
 }
 
 // GetTournaments gets a list of all tournaments
+// @Summary      Get all tournaments
+// @Accept       json
+// @Produce      json
+// @Param        id       path      string  true  "Tournament ID"
+// @Success      200      {array}   model.Tournament
+// @Router       /tournaments [get]
 func GetTournaments(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		r := persistence.NewTournamentRepository(db)
@@ -50,6 +64,14 @@ type PlayerRepresenatation struct {
 }
 
 // GetTournamentPlayes get players in a given tournament
+// @Summary      Get players in tournament
+// @Accept       json
+// @Produce      json
+// @Param        id       path      string  true  "Tournament ID"
+// @Success      200      {array}   PlayerRepresenatation
+// @Failure      404      {object}  ErrorResponse
+// @Failure      500      {object}  ErrorResponse
+// @Router       /tournaments/{id}/players [get]
 func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
@@ -76,10 +98,16 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 	}
 }
 
+type TournamentRepresentation struct {
+	Name           string `json:"name" binding:"required" gorm:"type:varchar(100)"`
+	GameScore      uint   `json:"score" binding:"required"`
+	InitialRanking uint   `json:"initial" binding:"required"`
+}
+
 // PostTournament creats tournament
 func PostTournament(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		var tournament model.Tournament
+		var tournament TournamentRepresentation
 		if err := c.ShouldBindWith(&tournament, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return

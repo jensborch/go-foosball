@@ -155,6 +155,19 @@ definitions:
     - players
     - winner
     type: object
+  resources.PlayerRepresenatation:
+    properties:
+      active:
+        type: boolean
+      nickname:
+        type: string
+      ranking:
+        type: integer
+      realname:
+        type: string
+      rfid:
+        type: string
+    type: object
   resources.TableRepresentation:
     properties:
       uuid:
@@ -374,6 +387,54 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Get table
+  /tournaments:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Tournament'
+            type: array
+      summary: Get all tournaments
+  /tournaments/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Tournament'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Get tournament
   /tournaments/{id}/games:
     get:
       consumes:
@@ -422,6 +483,34 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Get random game for a tournament
+  /tournaments/{id}/players:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/resources.PlayerRepresenatation'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Get players in tournament
   /tournaments/{id}/tables:
     get:
       consumes:

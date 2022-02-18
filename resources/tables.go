@@ -48,6 +48,11 @@ func GetTables(db *gorm.DB) func(*gin.Context) {
 	}
 }
 
+type CreateTableRepresentation struct {
+	Name  string      `json:"name"`
+	Color model.Color `json:"color"`
+}
+
 // PostTable creats new table
 // @Summary      Create table
 // @Accept       json
@@ -60,7 +65,7 @@ func GetTables(db *gorm.DB) func(*gin.Context) {
 // @Router       /tables/ [post]
 func PostTable(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		var table model.Table
+		var table CreateTableRepresentation
 		if err := c.ShouldBindWith(&table, binding.JSON); err == nil {
 			tx := db.Begin()
 			t := model.NewTable(table.Name, table.Color)
