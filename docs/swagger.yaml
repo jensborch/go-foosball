@@ -155,6 +155,13 @@ definitions:
     - players
     - winner
     type: object
+  resources.TableRepresentation:
+    properties:
+      uuid:
+        type: string
+    required:
+    - uuid
+    type: object
 info:
   contact: {}
   description: Foosball tournament REST service.
@@ -296,6 +303,77 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Get player
+  /tables:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Table'
+            type: array
+      summary: Get all tables
+  /tables/:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: The table
+        in: body
+        name: table
+        required: true
+        schema:
+          $ref: '#/definitions/model.Table'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Table'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Create table
+  /tables/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Table ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Table'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Get table
   /tournaments/{id}/games:
     get:
       consumes:
@@ -344,6 +422,69 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Get random game for a tournament
+  /tournaments/{id}/tables:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.TournamentTable'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Get tables in a tournament
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: The table
+        in: body
+        name: table
+        required: true
+        schema:
+          $ref: '#/definitions/resources.TableRepresentation'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.TournamentTable'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Add table to tournament
   /tournaments/{id}/tables/{table}/games:
     post:
       consumes:
@@ -385,4 +526,35 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Submit gamne results
+  /tournaments/{id}/tables/{tableId}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Table ID
+        in: path
+        name: tableId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Remove table from tournament
 swagger: "2.0"
