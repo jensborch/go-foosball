@@ -155,6 +155,15 @@ definitions:
     - players
     - winner
     type: object
+  resources.PlayerInTournamentRepresenatation:
+    properties:
+      nickname:
+        type: string
+      ranking:
+        type: integer
+    required:
+    - nickname
+    type: object
   resources.PlayerRepresenatation:
     properties:
       active:
@@ -174,6 +183,19 @@ definitions:
         type: string
     required:
     - uuid
+    type: object
+  resources.TournamentRepresentation:
+    properties:
+      initial:
+        type: integer
+      name:
+        type: string
+      score:
+        type: integer
+    required:
+    - initial
+    - name
+    - score
     type: object
 info:
   contact: {}
@@ -195,6 +217,8 @@ paths:
               $ref: '#/definitions/model.Game'
             type: array
       summary: Get all gamne results
+      tags:
+      - game
   /games/{id}:
     get:
       consumes:
@@ -221,6 +245,8 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Get gamne results
+      tags:
+      - game
   /players:
     get:
       consumes:
@@ -235,6 +261,8 @@ paths:
               $ref: '#/definitions/model.Player'
             type: array
       summary: List players
+      tags:
+      - player
     post:
       consumes:
       - application/json
@@ -265,6 +293,8 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Create a new player
+      tags:
+      - player
   /players/{id}:
     delete:
       consumes:
@@ -279,9 +309,7 @@ paths:
       - application/json
       responses:
         "204":
-          description: No Content
-          schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+          description: ""
         "404":
           description: Not Found
           schema:
@@ -291,6 +319,8 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Delete player
+      tags:
+      - player
     get:
       consumes:
       - application/json
@@ -316,6 +346,8 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Get player
+      tags:
+      - player
   /tables:
     get:
       consumes:
@@ -361,6 +393,8 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Create table
+      tags:
+      - table
   /tables/{id}:
     get:
       consumes:
@@ -407,10 +441,38 @@ paths:
               $ref: '#/definitions/model.Tournament'
             type: array
       summary: Get all tournaments
-  /tournaments/{id}:
-    get:
+      tags:
+      - tournament
+    post:
       consumes:
       - application/json
+      parameters:
+      - description: The tournament
+        in: body
+        name: tournament
+        required: true
+        schema:
+          $ref: '#/definitions/resources.TournamentRepresentation'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Tournament'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Create tournament
+      tags:
+      - tournament
+  /tournaments/{id}:
+    get:
       parameters:
       - description: Tournament ID
         in: path
@@ -418,23 +480,15 @@ paths:
         required: true
         type: string
       produces:
-      - application/json
+      - application/x-json-stream
       responses:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Tournament'
-            type: array
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/resources.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/resources.ErrorResponse'
-      summary: Get tournament
+            $ref: '#/definitions/model.Player'
+      summary: Opens a web socket for tournamnent player event
+      tags:
+      - tournament
   /tournaments/{id}/games:
     get:
       consumes:
@@ -455,6 +509,8 @@ paths:
               $ref: '#/definitions/model.Game'
             type: array
       summary: Get all games in a tournament
+      tags:
+      - tournament
   /tournaments/{id}/games/random:
     get:
       consumes:
@@ -483,6 +539,8 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Get random game for a tournament
+      tags:
+      - tournament
   /tournaments/{id}/players:
     get:
       consumes:
@@ -511,6 +569,76 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Get players in tournament
+      tags:
+      - tournament
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: The tournament
+        in: body
+        name: player
+        required: true
+        schema:
+          $ref: '#/definitions/resources.PlayerInTournamentRepresenatation'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Player'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Add player to tournament
+      tags:
+      - tournament
+  /tournaments/{id}/players/{player}:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Player ID
+        in: path
+        name: player
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Remove player from tournament
+      tags:
+      - tournament
   /tournaments/{id}/tables:
     get:
       consumes:
@@ -539,6 +667,8 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Get tables in a tournament
+      tags:
+      - tournament
     post:
       consumes:
       - application/json
@@ -574,6 +704,8 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Add table to tournament
+      tags:
+      - tournament
   /tournaments/{id}/tables/{table}/games:
     post:
       consumes:
@@ -615,6 +747,8 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Submit gamne results
+      tags:
+      - tournament
   /tournaments/{id}/tables/{tableId}:
     delete:
       consumes:
@@ -634,9 +768,7 @@ paths:
       - application/json
       responses:
         "204":
-          description: No Content
-          schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+          description: ""
         "404":
           description: Not Found
           schema:
@@ -646,4 +778,6 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Remove table from tournament
+      tags:
+      - tournament
 swagger: "2.0"

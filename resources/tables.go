@@ -55,6 +55,7 @@ type CreateTableRepresentation struct {
 
 // PostTable creats new table
 // @Summary      Create table
+// @Tags         table
 // @Accept       json
 // @Produce      json
 // @Param        table    body      model.Table true  "The table"
@@ -84,6 +85,7 @@ func PostTable(db *gorm.DB) func(*gin.Context) {
 
 // GetTournamentTables list tables in a tournament
 // @Summary      Get tables in a tournament
+// @Tags         tournament
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
@@ -115,6 +117,7 @@ type TableRepresentation struct {
 
 // PostTournamentTables adds a table to a tournament
 // @Summary      Add table to tournament
+// @Tags         tournament
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
@@ -169,11 +172,12 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 
 // DeleteTournamentTable deletes a table from a tournament
 // @Summary      Remove table from tournament
+// @Tags         tournament
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
 // @Param        tableId  path      string  true  "Table ID"
-// @Success      204      {object}  ErrorResponse
+// @Success      204
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
 // @Router       /tournaments/{id}/tables/{tableId} [delete]

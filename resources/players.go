@@ -14,6 +14,7 @@ import (
 
 // GetPlayer gets player info
 // @Summary      Get player
+// @Tags         player
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Player ID"
@@ -38,6 +39,7 @@ func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 
 // GetPlayers get a list of all players
 // @Summary      List players
+// @Tags         player
 // @Accept       json
 // @Produce      json
 // @Success      200      {array}   model.Player
@@ -58,6 +60,7 @@ type CreatePlayerRequest struct {
 
 // PostPlayer creates a new player
 // @Summary      Create a new player
+// @Tags         player
 // @Accept       json
 // @Produce      json
 // @Param        player   body      CreatePlayerRequest true  "Create player"
@@ -93,10 +96,11 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 
 //DeletePlayer deletes a player
 // @Summary      Delete player
+// @Tags         player
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Player ID"
-// @Success      204      {object}  ErrorResponse
+// @Success      204
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
 // @Router       /players/{id} [delete]

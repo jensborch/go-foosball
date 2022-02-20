@@ -24,6 +24,9 @@ const docTemplate_swagger = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "game"
+                ],
                 "summary": "Get all gamne results",
                 "responses": {
                     "200": {
@@ -45,6 +48,9 @@ const docTemplate_swagger = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "game"
                 ],
                 "summary": "Get gamne results",
                 "parameters": [
@@ -86,6 +92,9 @@ const docTemplate_swagger = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "player"
+                ],
                 "summary": "List players",
                 "responses": {
                     "200": {
@@ -105,6 +114,9 @@ const docTemplate_swagger = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "player"
                 ],
                 "summary": "Create a new player",
                 "parameters": [
@@ -154,6 +166,9 @@ const docTemplate_swagger = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "player"
+                ],
                 "summary": "Get player",
                 "parameters": [
                     {
@@ -192,6 +207,9 @@ const docTemplate_swagger = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "player"
+                ],
                 "summary": "Delete player",
                 "parameters": [
                     {
@@ -204,10 +222,7 @@ const docTemplate_swagger = `{
                 ],
                 "responses": {
                     "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
-                        }
+                        "description": ""
                     },
                     "404": {
                         "description": "Not Found",
@@ -253,6 +268,9 @@ const docTemplate_swagger = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "table"
                 ],
                 "summary": "Create table",
                 "parameters": [
@@ -342,6 +360,9 @@ const docTemplate_swagger = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "tournament"
+                ],
                 "summary": "Get all tournaments",
                 "parameters": [
                     {
@@ -363,38 +384,38 @@ const docTemplate_swagger = `{
                         }
                     }
                 }
-            }
-        },
-        "/tournaments/{id}": {
-            "get": {
+            },
+            "post": {
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get tournament",
+                "tags": [
+                    "tournament"
+                ],
+                "summary": "Create tournament",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Tournament ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
+                        "description": "The tournament",
+                        "name": "tournament",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/resources.TournamentRepresentation"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Tournament"
-                            }
+                            "$ref": "#/definitions/model.Tournament"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/resources.ErrorResponse"
                         }
@@ -408,6 +429,34 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "/tournaments/{id}": {
+            "get": {
+                "produces": [
+                    "application/x-json-stream"
+                ],
+                "tags": [
+                    "tournament"
+                ],
+                "summary": "Opens a web socket for tournamnent player event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tournament ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Player"
+                        }
+                    }
+                }
+            }
+        },
         "/tournaments/{id}/games": {
             "get": {
                 "consumes": [
@@ -415,6 +464,9 @@ const docTemplate_swagger = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tournament"
                 ],
                 "summary": "Get all games in a tournament",
                 "parameters": [
@@ -446,6 +498,9 @@ const docTemplate_swagger = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tournament"
                 ],
                 "summary": "Get random game for a tournament",
                 "parameters": [
@@ -490,6 +545,9 @@ const docTemplate_swagger = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "tournament"
+                ],
                 "summary": "Get players in tournament",
                 "parameters": [
                     {
@@ -523,6 +581,109 @@ const docTemplate_swagger = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tournament"
+                ],
+                "summary": "Add player to tournament",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tournament ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "The tournament",
+                        "name": "player",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/resources.PlayerInTournamentRepresenatation"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Player"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/resources.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/resources.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/resources.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tournaments/{id}/players/{player}": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tournament"
+                ],
+                "summary": "Remove player from tournament",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tournament ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Player ID",
+                        "name": "player",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/resources.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/resources.ErrorResponse"
+                        }
+                    }
+                }
             }
         },
         "/tournaments/{id}/tables": {
@@ -532,6 +693,9 @@ const docTemplate_swagger = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tournament"
                 ],
                 "summary": "Get tables in a tournament",
                 "parameters": [
@@ -573,6 +737,9 @@ const docTemplate_swagger = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tournament"
                 ],
                 "summary": "Add table to tournament",
                 "parameters": [
@@ -629,6 +796,9 @@ const docTemplate_swagger = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "tournament"
+                ],
                 "summary": "Remove table from tournament",
                 "parameters": [
                     {
@@ -648,10 +818,7 @@ const docTemplate_swagger = `{
                 ],
                 "responses": {
                     "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
-                        }
+                        "description": ""
                     },
                     "404": {
                         "description": "Not Found",
@@ -675,6 +842,9 @@ const docTemplate_swagger = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "tournament"
                 ],
                 "summary": "Submit gamne results",
                 "parameters": [
@@ -967,6 +1137,20 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "resources.PlayerInTournamentRepresenatation": {
+            "type": "object",
+            "required": [
+                "nickname"
+            ],
+            "properties": {
+                "nickname": {
+                    "type": "string"
+                },
+                "ranking": {
+                    "type": "integer"
+                }
+            }
+        },
         "resources.PlayerRepresenatation": {
             "type": "object",
             "properties": {
@@ -995,6 +1179,25 @@ const docTemplate_swagger = `{
             "properties": {
                 "uuid": {
                     "type": "string"
+                }
+            }
+        },
+        "resources.TournamentRepresentation": {
+            "type": "object",
+            "required": [
+                "initial",
+                "name",
+                "score"
+            ],
+            "properties": {
+                "initial": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "score": {
+                    "type": "integer"
                 }
             }
         }

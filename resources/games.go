@@ -14,6 +14,7 @@ import (
 
 // GetGamesInTournament find all games in tournament
 // @Summary      Get all games in a tournament
+// @Tags         tournament
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
@@ -28,6 +29,7 @@ func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
 
 // GetRandomGames for a tournament
 // @Summary      Get random game for a tournament
+// @Tags         tournament
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
@@ -59,6 +61,7 @@ type GameRepresentation struct {
 
 // PostGame saves a played game
 // @Summary      Submit gamne results
+// @Tags         tournament
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
@@ -108,6 +111,7 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 
 // GetGame returns a game played
 // @Summary      Get gamne results
+// @Tags         game
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Game ID"
@@ -133,6 +137,7 @@ func GetGame(param string, db *gorm.DB) func(*gin.Context) {
 
 // GetGames returns all games
 // @Summary      Get all gamne results
+// @Tags         game
 // @Accept       json
 // @Produce      json
 // @Success      200      {array}  model.Game
