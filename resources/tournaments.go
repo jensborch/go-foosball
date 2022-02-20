@@ -167,25 +167,25 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			t      *model.Tournament
 		)
 		if err = c.ShouldBindWith(&player, binding.JSON); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
 		}
 		tx := db.Begin()
 		tournamentRepo := persistence.NewTournamentRepository(tx)
 		if t, found, err = tournamentRepo.Find(id); !found {
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", id)})
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 			tx.Rollback()
 			return
 		}
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 			tx.Rollback()
 			return
 		}
 		playerRepo := persistence.NewPlayerRepository(tx)
 		var p *model.Player
 		if p, found, err = playerRepo.Find(player.Nickname); !found {
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find player %s", player.Nickname)})
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s", player.Nickname)))
 			tx.Rollback()
 			return
 		}
@@ -195,12 +195,12 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			t.AddPlayerWithRanking(p, player.Ranking)
 		}
 		if err = tournamentRepo.Update(t); err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not update player %s", player.Nickname)})
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not update player %s", player.Nickname)))
 			tx.Rollback()
 			return
 		}
 		if p, _, err = playerRepo.Find(p.Nickname); err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find player %s after update", player.Nickname)})
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s after update", player.Nickname)))
 			tx.Rollback()
 			return
 		}
@@ -229,21 +229,21 @@ func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm
 		r := persistence.NewTournamentRepository(tx)
 		if t, found, err := r.Find(tID); !found {
 			tx.Rollback()
-			c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find tournament %s", tID)})
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", tID)))
 		} else if err != nil {
 			tx.Rollback()
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 		} else {
 			log.Printf("Deactivation player %s in tournament %s", pID, tID)
 			if found := t.DeactivatePlayer(pID); found {
 				if err := r.Update(t); err != nil {
 					tx.Rollback()
-					c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+					c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 					return
 				}
 				if p, found, err := persistence.NewPlayerRepository(tx).Find(pID); !found || err != nil {
 					tx.Rollback()
-					c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error finding player %s after update", pID)})
+					c.JSON(http.StatusInternalServerError, NewErrorResponse(fmt.Sprintf("Error finding player %s after update", pID)))
 				} else {
 					tx.Commit()
 					pEvents.publish(tID, *p)
@@ -251,7 +251,7 @@ func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm
 				}
 			} else {
 				tx.Rollback()
-				c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("Could not find player %s", pID)})
+				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s", pID)))
 			}
 		}
 	}
@@ -297,7 +297,7 @@ var pEvents = &playerEvents{
 // @Produce      json-stream
 // @Param        id       path      string  true  "Tournament ID"
 // @Success      200      {object} model.Player
-// @Router       /tournaments/{id} [get]
+// @Router       /tournaments/{id}/events [get]
 func GetTournamentEvents(param string) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
