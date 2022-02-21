@@ -46,7 +46,6 @@ func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
 // @Tags         tournament
 // @Accept       json
 // @Produce      json
-// @Param        id       path      string  true  "Tournament ID"
 // @Success      200      {array}   model.Tournament
 // @Router       /tournaments [get]
 func GetTournaments(db *gorm.DB) func(*gin.Context) {
@@ -62,7 +61,17 @@ type PlayerRepresenatation struct {
 	RealName string `json:"realname"`
 	RFID     string `json:"rfid,omitempty"`
 	Active   bool   `json:"active"`
-	Ranking  uint   `json:"ranking"`
+	Ranking  uint   `json:"ranking,omitempty"`
+}
+
+func NewPlayerRepresentation(p *model.Player, tournamentId string) PlayerRepresenatation {
+	return PlayerRepresenatation{
+		Nickname: p.Nickname,
+		RealName: p.RealName,
+		RFID:     p.RFID,
+		Active:   p.IsActive(tournamentId),
+		Ranking:  p.GetRanking(tournamentId),
+	}
 }
 
 // GetTournamentPlayes get players in a given tournament
@@ -85,23 +94,13 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 		foundPlayers := persistence.NewPlayerRepository(db).FindByTournament(id)
 		players := make([]PlayerRepresenatation, len(foundPlayers))
 		for i, p := range foundPlayers {
-			var ranking uint
-			if r, e := p.GetScore(id); e == nil {
-				ranking = r
-			}
-			players[i] = PlayerRepresenatation{
-				Nickname: p.Nickname,
-				RealName: p.RealName,
-				RFID:     p.RFID,
-				Active:   p.IsActive(id),
-				Ranking:  ranking,
-			}
+			players[i] = NewPlayerRepresentation(p, id)
 		}
 		c.JSON(http.StatusOK, players)
 	}
 }
 
-type TournamentRepresentation struct {
+type TournamentCreateRepresentation struct {
 	Name           string `json:"name" binding:"required" gorm:"type:varchar(100)"`
 	GameScore      uint   `json:"score" binding:"required"`
 	InitialRanking uint   `json:"initial" binding:"required"`
@@ -112,14 +111,14 @@ type TournamentRepresentation struct {
 // @Tags         tournament
 // @Accept       json
 // @Produce      json
-// @Param        tournament  body      TournamentRepresentation true  "The tournament"
+// @Param        tournament  body      TournamentCreateRepresentation  true  "The tournament"
 // @Success      200         {object}  model.Tournament
 // @Failure      400         {object}  ErrorResponse
 // @Failure      500         {object}  ErrorResponse
 // @Router       /tournaments [post]
 func PostTournament(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		var tournament TournamentRepresentation
+		var tournament TournamentCreateRepresentation
 		if err := c.ShouldBindWith(&tournament, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
@@ -140,7 +139,7 @@ func PostTournament(db *gorm.DB) func(*gin.Context) {
 }
 
 // PlayerInTournamentRepresenatation for adding players to tournament
-type PlayerInTournamentRepresenatation struct {
+type AddPlayer2TournamentRepresenatation struct {
 	Nickname string `json:"nickname" binding:"required"`
 	Ranking  uint   `json:"ranking"`
 }
@@ -151,8 +150,8 @@ type PlayerInTournamentRepresenatation struct {
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
-// @Param        player   body      PlayerInTournamentRepresenatation true  "The tournament"
-// @Success      200      {object}  model.Player
+// @Param        player   body      AddPlayer2TournamentRepresenatation  true  "The tournament"
+// @Success      200      {object}  PlayerRepresenatation
 // @Failure      400      {object}  ErrorResponse
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
@@ -161,7 +160,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
 		var (
-			player PlayerInTournamentRepresenatation
+			player AddPlayer2TournamentRepresenatation
 			err    error
 			found  model.Found
 			t      *model.Tournament
@@ -184,7 +183,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 		}
 		playerRepo := persistence.NewPlayerRepository(tx)
 		var p *model.Player
-		if p, found, err = playerRepo.Find(player.Nickname); !found {
+		if p, found, _ = playerRepo.Find(player.Nickname); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s", player.Nickname)))
 			tx.Rollback()
 			return
@@ -200,13 +199,14 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			return
 		}
 		if p, _, err = playerRepo.Find(p.Nickname); err != nil {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s after update", player.Nickname)))
+			c.JSON(http.StatusInternalServerError, NewErrorResponse(fmt.Sprintf("Could not find player %s after update", player.Nickname)))
 			tx.Rollback()
 			return
 		}
-		pEvents.publish(t.UUID, *p)
+		pr := NewPlayerRepresentation(p, id)
+		pEvents.publish(t.UUID, pr)
 		tx.Commit()
-		c.JSON(http.StatusOK, p)
+		c.JSON(http.StatusOK, pr)
 	}
 }
 
@@ -220,7 +220,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 // @Success      204
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
-// @Router       /tournaments/{id}/players/{player} [post]
+// @Router       /tournaments/{id}/players/{player} [delete]
 func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		tID := c.Param(tournamentParam)
@@ -246,8 +246,9 @@ func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm
 					c.JSON(http.StatusInternalServerError, NewErrorResponse(fmt.Sprintf("Error finding player %s after update", pID)))
 				} else {
 					tx.Commit()
-					pEvents.publish(tID, *p)
-					c.JSON(http.StatusOK, p)
+					pr := NewPlayerRepresentation(p, tID)
+					pEvents.publish(tID, pr)
+					c.Status(http.StatusNoContent)
 				}
 			} else {
 				tx.Rollback()
@@ -267,7 +268,7 @@ type playerEvents struct {
 	websockets map[string]*websocket.Conn
 }
 
-func (e *playerEvents) publish(uuid string, player model.Player) {
+func (e *playerEvents) publish(uuid string, player PlayerRepresenatation) {
 	e.Lock()
 	if e.websockets[uuid] != nil {
 		e.websockets[uuid].WriteJSON(player)
@@ -296,7 +297,8 @@ var pEvents = &playerEvents{
 // @Tags         tournament
 // @Produce      json-stream
 // @Param        id       path      string  true  "Tournament ID"
-// @Success      200      {object} model.Player
+// @Success      200      {object}  PlayerRepresenatation
+// @Failure      400      {string}  string
 // @Router       /tournaments/{id}/events [get]
 func GetTournamentEvents(param string) func(c *gin.Context) {
 	return func(c *gin.Context) {

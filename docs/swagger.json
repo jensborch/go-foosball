@@ -239,6 +239,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "table"
+                ],
                 "summary": "Get all tables",
                 "responses": {
                     "200": {
@@ -272,7 +275,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Table"
+                            "$ref": "#/definitions/resources.CreateTableRepresentation"
                         }
                     }
                 ],
@@ -311,6 +314,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "table"
                 ],
                 "summary": "Get table",
                 "parameters": [
@@ -356,15 +362,6 @@
                     "tournament"
                 ],
                 "summary": "Get all tournaments",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Tournament ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -395,7 +392,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/resources.TournamentRepresentation"
+                            "$ref": "#/definitions/resources.TournamentCreateRepresentation"
                         }
                     }
                 ],
@@ -489,7 +486,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Player"
+                            "$ref": "#/definitions/resources.PlayerRepresenatation"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -645,7 +648,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/resources.PlayerInTournamentRepresenatation"
+                            "$ref": "#/definitions/resources.AddPlayer2TournamentRepresenatation"
                         }
                     }
                 ],
@@ -653,7 +656,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Player"
+                            "$ref": "#/definitions/resources.PlayerRepresenatation"
                         }
                     },
                     "400": {
@@ -678,7 +681,7 @@
             }
         },
         "/tournaments/{id}/players/{player}": {
-            "post": {
+            "delete": {
                 "consumes": [
                     "application/json"
                 ],
@@ -1095,16 +1098,10 @@
                 "player": {
                     "$ref": "#/definitions/model.Player"
                 },
-                "playerID": {
-                    "type": "integer"
-                },
                 "ranking": {
                     "type": "integer"
                 },
                 "tournament": {
-                    "$ref": "#/definitions/model.Tournament"
-                },
-                "tournamentID": {
                     "type": "integer"
                 },
                 "updated": {
@@ -1132,6 +1129,20 @@
                 }
             }
         },
+        "resources.AddPlayer2TournamentRepresenatation": {
+            "type": "object",
+            "required": [
+                "nickname"
+            ],
+            "properties": {
+                "nickname": {
+                    "type": "string"
+                },
+                "ranking": {
+                    "type": "integer"
+                }
+            }
+        },
         "resources.CreatePlayerRequest": {
             "type": "object",
             "required": [
@@ -1145,6 +1156,17 @@
                     "type": "string"
                 },
                 "rfid": {
+                    "type": "string"
+                }
+            }
+        },
+        "resources.CreateTableRepresentation": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/model.Color"
+                },
+                "name": {
                     "type": "string"
                 }
             }
@@ -1172,20 +1194,6 @@
                 },
                 "winner": {
                     "type": "string"
-                }
-            }
-        },
-        "resources.PlayerInTournamentRepresenatation": {
-            "type": "object",
-            "required": [
-                "nickname"
-            ],
-            "properties": {
-                "nickname": {
-                    "type": "string"
-                },
-                "ranking": {
-                    "type": "integer"
                 }
             }
         },
@@ -1220,7 +1228,7 @@
                 }
             }
         },
-        "resources.TournamentRepresentation": {
+        "resources.TournamentCreateRepresentation": {
             "type": "object",
             "required": [
                 "initial",

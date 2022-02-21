@@ -247,6 +247,9 @@ const docTemplate_swagger = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "table"
+                ],
                 "summary": "Get all tables",
                 "responses": {
                     "200": {
@@ -280,7 +283,7 @@ const docTemplate_swagger = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Table"
+                            "$ref": "#/definitions/resources.CreateTableRepresentation"
                         }
                     }
                 ],
@@ -319,6 +322,9 @@ const docTemplate_swagger = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "table"
                 ],
                 "summary": "Get table",
                 "parameters": [
@@ -364,15 +370,6 @@ const docTemplate_swagger = `{
                     "tournament"
                 ],
                 "summary": "Get all tournaments",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Tournament ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -403,7 +400,7 @@ const docTemplate_swagger = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/resources.TournamentRepresentation"
+                            "$ref": "#/definitions/resources.TournamentCreateRepresentation"
                         }
                     }
                 ],
@@ -497,7 +494,13 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Player"
+                            "$ref": "#/definitions/resources.PlayerRepresenatation"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -653,7 +656,7 @@ const docTemplate_swagger = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/resources.PlayerInTournamentRepresenatation"
+                            "$ref": "#/definitions/resources.AddPlayer2TournamentRepresenatation"
                         }
                     }
                 ],
@@ -661,7 +664,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Player"
+                            "$ref": "#/definitions/resources.PlayerRepresenatation"
                         }
                     },
                     "400": {
@@ -686,7 +689,7 @@ const docTemplate_swagger = `{
             }
         },
         "/tournaments/{id}/players/{player}": {
-            "post": {
+            "delete": {
                 "consumes": [
                     "application/json"
                 ],
@@ -1103,16 +1106,10 @@ const docTemplate_swagger = `{
                 "player": {
                     "$ref": "#/definitions/model.Player"
                 },
-                "playerID": {
-                    "type": "integer"
-                },
                 "ranking": {
                     "type": "integer"
                 },
                 "tournament": {
-                    "$ref": "#/definitions/model.Tournament"
-                },
-                "tournamentID": {
                     "type": "integer"
                 },
                 "updated": {
@@ -1140,6 +1137,20 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "resources.AddPlayer2TournamentRepresenatation": {
+            "type": "object",
+            "required": [
+                "nickname"
+            ],
+            "properties": {
+                "nickname": {
+                    "type": "string"
+                },
+                "ranking": {
+                    "type": "integer"
+                }
+            }
+        },
         "resources.CreatePlayerRequest": {
             "type": "object",
             "required": [
@@ -1153,6 +1164,17 @@ const docTemplate_swagger = `{
                     "type": "string"
                 },
                 "rfid": {
+                    "type": "string"
+                }
+            }
+        },
+        "resources.CreateTableRepresentation": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/model.Color"
+                },
+                "name": {
                     "type": "string"
                 }
             }
@@ -1180,20 +1202,6 @@ const docTemplate_swagger = `{
                 },
                 "winner": {
                     "type": "string"
-                }
-            }
-        },
-        "resources.PlayerInTournamentRepresenatation": {
-            "type": "object",
-            "required": [
-                "nickname"
-            ],
-            "properties": {
-                "nickname": {
-                    "type": "string"
-                },
-                "ranking": {
-                    "type": "integer"
                 }
             }
         },
@@ -1228,7 +1236,7 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "resources.TournamentRepresentation": {
+        "resources.TournamentCreateRepresentation": {
             "type": "object",
             "required": [
                 "initial",

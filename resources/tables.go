@@ -13,6 +13,7 @@ import (
 
 // GetTable get info about a table
 // @Summary      Get table
+// @Tags         table
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Table ID"
@@ -38,6 +39,7 @@ func GetTable(param string, db *gorm.DB) func(*gin.Context) {
 
 // GetTables get list of all tables
 // @Summary      Get all tables
+// @Tags         table
 // @Accept       json
 // @Produce      json
 // @Success      200      {array}  model.Table
@@ -58,7 +60,7 @@ type CreateTableRepresentation struct {
 // @Tags         table
 // @Accept       json
 // @Produce      json
-// @Param        table    body      model.Table true  "The table"
+// @Param        table    body      CreateTableRepresentation true  "The table"
 // @Success      200      {object}  model.Table
 // @Failure      400      {object}  ErrorResponse
 // @Failure      404      {object}  ErrorResponse

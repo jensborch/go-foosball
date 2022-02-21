@@ -14,12 +14,12 @@ type Player struct {
 // TournamentPlayer is a player in a tournament
 type TournamentPlayer struct {
 	Base
-	PlayerID     uint
-	Player       Player
-	TournamentID uint
-	Tournament   Tournament
-	Ranking      uint
-	Active       bool
+	PlayerID     uint       `json:"-"`
+	Player       Player     `json:"player"`
+	TournamentID uint       `json:"tournament"`
+	Tournament   Tournament `json:"-"`
+	Ranking      uint       `json:"ranking"`
+	Active       bool       `json:"active"`
 }
 
 // IsActive returns true if player is active in tournament
@@ -34,12 +34,30 @@ func (p *Player) IsActive(tournamentID string) bool {
 
 // GetScore returns score for a given tournament
 func (p *Player) GetScore(tournamentID string) (uint, error) {
+	if p, err := p.GetTournamentPlayer(tournamentID); err != nil {
+		return p.Ranking, nil
+	} else {
+		return 0, err
+	}
+}
+
+// GetRanking returns ranking or 0.
+func (p *Player) GetRanking(id string) uint {
+	var ranking uint
+	if r, e := p.GetScore(id); e == nil {
+		ranking = r
+	}
+	return ranking
+}
+
+// GetTournamentPlayer returns TournamentPlayer for tournament
+func (p *Player) GetTournamentPlayer(tournamentID string) (*TournamentPlayer, error) {
 	for _, t := range p.TournamentPlayers {
 		if t.Tournament.UUID == tournamentID {
-			return t.Ranking, nil
+			return &t, nil
 		}
 	}
-	return 0, fmt.Errorf("Player %s is not in tournament %s", p.Nickname, tournamentID)
+	return nil, fmt.Errorf("Player %s is not in tournament %s", p.Nickname, tournamentID)
 }
 
 // PlayerRepository provides access players

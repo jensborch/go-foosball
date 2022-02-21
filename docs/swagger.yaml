@@ -103,13 +103,9 @@ definitions:
         type: string
       player:
         $ref: '#/definitions/model.Player'
-      playerID:
-        type: integer
       ranking:
         type: integer
       tournament:
-        $ref: '#/definitions/model.Tournament'
-      tournamentID:
         type: integer
       updated:
         type: string
@@ -127,6 +123,15 @@ definitions:
       updated:
         type: string
     type: object
+  resources.AddPlayer2TournamentRepresenatation:
+    properties:
+      nickname:
+        type: string
+      ranking:
+        type: integer
+    required:
+    - nickname
+    type: object
   resources.CreatePlayerRequest:
     properties:
       nickname:
@@ -137,6 +142,13 @@ definitions:
         type: string
     required:
     - nickname
+    type: object
+  resources.CreateTableRepresentation:
+    properties:
+      color:
+        $ref: '#/definitions/model.Color'
+      name:
+        type: string
     type: object
   resources.ErrorResponse:
     properties:
@@ -154,15 +166,6 @@ definitions:
     required:
     - players
     - winner
-    type: object
-  resources.PlayerInTournamentRepresenatation:
-    properties:
-      nickname:
-        type: string
-      ranking:
-        type: integer
-    required:
-    - nickname
     type: object
   resources.PlayerRepresenatation:
     properties:
@@ -184,7 +187,7 @@ definitions:
     required:
     - uuid
     type: object
-  resources.TournamentRepresentation:
+  resources.TournamentCreateRepresentation:
     properties:
       initial:
         type: integer
@@ -362,6 +365,8 @@ paths:
               $ref: '#/definitions/model.Table'
             type: array
       summary: Get all tables
+      tags:
+      - table
   /tables/:
     post:
       consumes:
@@ -372,7 +377,7 @@ paths:
         name: table
         required: true
         schema:
-          $ref: '#/definitions/model.Table'
+          $ref: '#/definitions/resources.CreateTableRepresentation'
       produces:
       - application/json
       responses:
@@ -421,16 +426,12 @@ paths:
           schema:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Get table
+      tags:
+      - table
   /tournaments:
     get:
       consumes:
       - application/json
-      parameters:
-      - description: Tournament ID
-        in: path
-        name: id
-        required: true
-        type: string
       produces:
       - application/json
       responses:
@@ -452,7 +453,7 @@ paths:
         name: tournament
         required: true
         schema:
-          $ref: '#/definitions/resources.TournamentRepresentation'
+          $ref: '#/definitions/resources.TournamentCreateRepresentation'
       produces:
       - application/json
       responses:
@@ -515,7 +516,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Player'
+            $ref: '#/definitions/resources.PlayerRepresenatation'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
       summary: Opens a web socket for tournamnent player event
       tags:
       - tournament
@@ -615,14 +620,14 @@ paths:
         name: player
         required: true
         schema:
-          $ref: '#/definitions/resources.PlayerInTournamentRepresenatation'
+          $ref: '#/definitions/resources.AddPlayer2TournamentRepresenatation'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Player'
+            $ref: '#/definitions/resources.PlayerRepresenatation'
         "400":
           description: Bad Request
           schema:
@@ -639,7 +644,7 @@ paths:
       tags:
       - tournament
   /tournaments/{id}/players/{player}:
-    post:
+    delete:
       consumes:
       - application/json
       parameters:

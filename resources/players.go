@@ -110,7 +110,7 @@ func DeletePlayer(param string, db *gorm.DB) func(*gin.Context) {
 		r := persistence.NewPlayerRepository(db)
 		found, err := r.Remove(name)
 		if found && err == nil {
-			c.JSON(http.StatusNoContent, gin.H{})
+			c.Status(http.StatusNoContent)
 		} else if !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", name)))
 		} else {
