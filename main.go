@@ -44,6 +44,11 @@ func main() {
 	flag.StringVar(&dbfile, "db", "foosball.db", "the database file")
 	flag.Parse()
 
+	setupServer(dbfile).Run(":" + strconv.FormatUint(uint64(port), 10))
+}
+
+func setupServer(dbfile string) *gin.Engine {
+
 	router := gin.Default()
 	corsConf := cors.DefaultConfig()
 	corsConf.AllowAllOrigins = true
@@ -101,7 +106,7 @@ func main() {
 		serveStatic(c, html, "/html/", "html")
 	})
 
-	router.Run(":" + strconv.FormatUint(uint64(port), 10))
+	return router
 }
 
 func serveStatic(c *gin.Context, f fs.FS, prefix string, dir string) {

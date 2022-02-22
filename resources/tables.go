@@ -24,15 +24,15 @@ import (
 func GetTable(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		if t, found, err := persistence.NewTableRepository(db).Find(id); found {
-			c.JSON(http.StatusOK, t)
-			return
-		} else if err == nil {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", id)))
-			return
+		defer HandlePanic(c)
+		if t, found, err := persistence.NewTableRepository(db).Find(id); err == nil {
+			if found {
+				c.JSON(http.StatusOK, t)
+			} else {
+				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", id)))
+			}
 		} else {
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
-			return
+			panic(err)
 		}
 	}
 }
@@ -102,7 +102,7 @@ func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 		if t, found, err := tournamentRepo.Find(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 			return
-		} else if err != nil {
+		} else if err == nil {
 			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 			return
 		} else {

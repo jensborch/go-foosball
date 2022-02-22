@@ -26,13 +26,15 @@ func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		name := c.Param(param)
 		r := persistence.NewPlayerRepository(db)
-		p, found, err := r.Find(name)
-		if found {
-			c.JSON(http.StatusOK, p)
-		} else if err == nil {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", name)))
+		defer HandlePanic(c)
+		if p, found, err := r.Find(name); err == nil {
+			if found {
+				c.JSON(http.StatusOK, p)
+			} else {
+				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", name)))
+			}
 		} else {
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
+			panic(err)
 		}
 	}
 }
@@ -77,20 +79,19 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 			return
 		}
 		tx := db.Begin()
+		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewPlayerRepository(tx)
-		if _, found, _ := r.Find(player.Nickname); found {
+		if _, found, err := r.Find(player.Nickname); found && err == nil {
 			c.JSON(http.StatusConflict, NewErrorResponse(fmt.Sprintf("Player %s already exists", player.Nickname)))
-			tx.Rollback()
 			return
+		} else if err != nil {
+			panic(err)
 		}
 		p := model.NewPlayer(player.Nickname, player.RealName, player.RFID)
 		if err := r.Store(p); err != nil {
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
-			tx.Rollback()
-			return
+			panic(err)
 		}
 		c.JSON(http.StatusOK, p)
-		tx.Commit()
 	}
 }
 
@@ -108,11 +109,12 @@ func DeletePlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		name := c.Param(param)
 		r := persistence.NewPlayerRepository(db)
-		found, err := r.Remove(name)
-		if found && err == nil {
-			c.Status(http.StatusNoContent)
-		} else if !found {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", name)))
+		if found, err := r.Remove(name); err == nil {
+			if found {
+				c.Status(http.StatusNoContent)
+			} else {
+				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", name)))
+			}
 		} else {
 			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 		}

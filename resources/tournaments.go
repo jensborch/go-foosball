@@ -27,16 +27,16 @@ import (
 func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
+		defer HandlePanic(c)
 		r := persistence.NewTournamentRepository(db)
-		if t, found, err := r.Find(id); found {
-			c.JSON(http.StatusOK, t)
-			return
-		} else if err != nil {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
-			return
+		if t, found, err := r.Find(id); err == nil {
+			if found {
+				c.JSON(http.StatusOK, t)
+			} else {
+				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
+			}
 		} else {
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
-			return
+			panic(err)
 		}
 	}
 }
@@ -87,16 +87,18 @@ func NewPlayerRepresentation(p *model.Player, tournamentId string) PlayerReprese
 func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		if _, found, _ := persistence.NewTournamentRepository(db).Find(id); !found {
+		defer HandlePanic(c)
+		if _, found, err := persistence.NewTournamentRepository(db).Find(id); !found && err == nil {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 			return
+		} else if err != nil {
+			panic(err)
 		}
 		foundPlayers := persistence.NewPlayerRepository(db).FindByTournament(id)
 		players := make([]PlayerRepresenatation, len(foundPlayers))
 		for i, p := range foundPlayers {
 			players[i] = NewPlayerRepresentation(p, id)
 		}
-		c.JSON(http.StatusOK, players)
 	}
 }
 
@@ -124,17 +126,14 @@ func PostTournament(db *gorm.DB) func(*gin.Context) {
 			return
 		}
 		tx := db.Begin()
+		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewTournamentRepository(tx)
 		t := model.NewTournament(tournament.Name)
 		t.GameScore = tournament.GameScore
 		t.InitialRanking = tournament.InitialRanking
 		if err := r.Store(t); err != nil {
-			tx.Rollback()
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
-			return
+			panic(err)
 		}
-		tx.Commit()
-		c.JSON(http.StatusOK, t)
 	}
 }
 
@@ -160,65 +159,52 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
 		var (
-			player AddPlayer2TournamentRepresenatation
-			err    error
-			found  model.Found
-			t      *model.Tournament
-			tp     *model.TournamentPlayer
+			err   error
+			found model.Found
+			pr    AddPlayer2TournamentRepresenatation
+			t     *model.Tournament
+			p     *model.Player
+			tp    *model.TournamentPlayer
 		)
-		if err = c.ShouldBindWith(&player, binding.JSON); err != nil {
+		if err := c.ShouldBindWith(&pr, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
 		}
 		tx := db.Begin()
+		defer HandlePanicInTransaction(c, tx)
 		tournamentRepo := persistence.NewTournamentRepository(tx)
-		if t, found, err = tournamentRepo.Find(id); !found {
+		if _, found, err = tournamentRepo.Find(id); !found && err == nil {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
-			tx.Rollback()
 			return
-		}
-		if handleError(err, c, tx) {
-			return
+		} else if err != nil {
+			panic(c)
 		}
 		playerRepo := persistence.NewPlayerRepository(tx)
-		var p *model.Player
-		if p, found, err = playerRepo.Find(player.Nickname); !found {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s", player.Nickname)))
-			tx.Rollback()
+		if p, found, err = playerRepo.Find(pr.Nickname); !found && err == nil {
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s", pr.Nickname)))
 			return
-		}
-		if handleError(err, c, tx) {
-			return
+		} else if err != nil {
+			panic(err)
 		}
 		if tp, err = p.GetTournamentPlayer(id); err == nil && tp.Active {
-			c.JSON(http.StatusBadRequest, NewErrorResponse(fmt.Sprintf("Player %s is already active in tournament %s", player.Nickname, id)))
-			tx.Rollback()
+			c.JSON(http.StatusBadRequest, NewErrorResponse(fmt.Sprintf("Player %s is already active in tournament %s", pr.Nickname, id)))
 			return
+		} else if err != nil {
+			panic(err)
 		}
-		if handleError(err, c, tx) {
-			return
-		}
-		if player.Ranking == 0 {
-			log.Printf("Adding player %s with no ranking", player.Nickname)
+		if pr.Ranking == 0 {
+			log.Printf("Adding player %s with no ranking", pr.Nickname)
 			t.AddPlayer(p)
 		} else {
-			log.Printf("Adding player %s with ranking %d", player.Nickname, player.Ranking)
-			t.AddPlayerWithRanking(p, player.Ranking)
+			log.Printf("Adding player %s with ranking %d", pr.Nickname, pr.Ranking)
+			t.AddPlayerWithRanking(p, pr.Ranking)
 		}
 		if err = tournamentRepo.Update(t); err != nil {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not update player %s", player.Nickname)))
-			tx.Rollback()
-			return
+			panic(err)
 		}
-		if p, _, err = playerRepo.Find(p.Nickname); err != nil {
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(fmt.Sprintf("Could not find player %s after update", player.Nickname)))
-			tx.Rollback()
-			return
-		}
-		pr := NewPlayerRepresentation(p, id)
-		pEvents.publish(t.UUID, pr)
-		tx.Commit()
-		c.JSON(http.StatusOK, pr)
+		result := NewPlayerRepresentation(p, id)
+		pEvents.publish(t.UUID, result)
+		c.JSON(http.StatusOK, result)
 	}
 }
 
@@ -238,32 +224,26 @@ func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm
 		tID := c.Param(tournamentParam)
 		pID := c.Param(playerParam)
 		tx := db.Begin()
+		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewTournamentRepository(tx)
-		if t, found, err := r.Find(tID); !found {
-			tx.Rollback()
+		if t, found, err := r.Find(tID); !found && err == nil {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", tID)))
 		} else if err != nil {
-			tx.Rollback()
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
+			panic(err)
 		} else {
 			log.Printf("Deactivation player %s in tournament %s", pID, tID)
 			if found := t.DeactivatePlayer(pID); found {
 				if err := r.Update(t); err != nil {
-					tx.Rollback()
-					c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
-					return
+					panic(err)
 				}
 				if p, found, err := persistence.NewPlayerRepository(tx).Find(pID); !found || err != nil {
-					tx.Rollback()
-					c.JSON(http.StatusInternalServerError, NewErrorResponse(fmt.Sprintf("Error finding player %s after update", pID)))
+					panic(err)
 				} else {
-					tx.Commit()
 					pr := NewPlayerRepresentation(p, tID)
 					pEvents.publish(tID, pr)
 					c.Status(http.StatusNoContent)
 				}
 			} else {
-				tx.Rollback()
 				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s", pID)))
 			}
 		}
@@ -329,13 +309,4 @@ func GetTournamentEvents(param string) func(c *gin.Context) {
 			}
 		}
 	}
-}
-
-func handleError(err error, c *gin.Context, tx *gorm.DB) bool {
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
-		tx.Rollback()
-		return true
-	}
-	return false
 }
