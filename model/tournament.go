@@ -53,6 +53,7 @@ func (t *Tournament) AddPlayerWithRanking(p *Player, ranking uint) {
 	for i, tp := range t.TournamentPlayers {
 		if tp.Player.Nickname == p.Nickname {
 			t.TournamentPlayers[i].Active = true
+			t.TournamentPlayers[i].Ranking = ranking
 			found = true
 			break
 		}
