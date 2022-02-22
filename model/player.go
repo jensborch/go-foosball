@@ -32,22 +32,13 @@ func (p *Player) IsActive(tournamentID string) bool {
 	return false
 }
 
-// GetScore returns score for a given tournament
-func (p *Player) GetScore(tournamentID string) (uint, error) {
-	if p, err := p.GetTournamentPlayer(tournamentID); err != nil {
-		return p.Ranking, nil
+// GetRanking returns ranking or 0 in a given tournament.
+func (p *Player) GetRanking(tournamentID string) uint {
+	if p, err := p.GetTournamentPlayer(tournamentID); err == nil {
+		return p.Ranking
 	} else {
-		return 0, err
+		return 0
 	}
-}
-
-// GetRanking returns ranking or 0.
-func (p *Player) GetRanking(id string) uint {
-	var ranking uint
-	if r, e := p.GetScore(id); e == nil {
-		ranking = r
-	}
-	return ranking
 }
 
 // GetTournamentPlayer returns TournamentPlayer for tournament

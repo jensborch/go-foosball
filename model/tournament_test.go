@@ -80,6 +80,21 @@ func TestAddPlayer2Tournament(t *testing.T) {
 	if len(tournament.TournamentPlayers) != 2 {
 		t.Errorf("Tournament must have two player, got: %d.", len(tournament.TournamentPlayers))
 	}
+
+	if p1.TournamentPlayers[0].Ranking != 1500 {
+		t.Errorf("Tournament must have player with default ranking, got: %d.", p1.TournamentPlayers[0].Ranking)
+	}
+}
+
+func TestAddPlayer2TournamentWithRanking(t *testing.T) {
+	tournament := InitTournament()
+	p := NewPlayer("jj", "Jens", "rfid")
+
+	tournament.AddPlayerWithRanking(p, 1000)
+
+	if p.TournamentPlayers[0].Ranking != 1000 {
+		t.Errorf("Tournament must have player with ranking, got: %d.", p.TournamentPlayers[0].Ranking)
+	}
 }
 
 func TestDeactivatePlayerInTournament(t *testing.T) {

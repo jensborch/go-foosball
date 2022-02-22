@@ -176,6 +176,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			tx.Rollback()
 			return
 		}
+
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 			tx.Rollback()
@@ -189,8 +190,10 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			return
 		}
 		if player.Ranking == 0 {
+			log.Printf("Adding player %s with no ranking", player.Nickname)
 			t.AddPlayer(p)
 		} else {
+			log.Printf("Adding player %s with ranking %d", player.Nickname, player.Ranking)
 			t.AddPlayerWithRanking(p, player.Ranking)
 		}
 		if err = tournamentRepo.Update(t); err != nil {
