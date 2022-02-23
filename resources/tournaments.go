@@ -99,6 +99,7 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 		for i, p := range foundPlayers {
 			players[i] = NewPlayerRepresentation(p, id)
 		}
+		c.JSON(http.StatusOK, players)
 	}
 }
 
@@ -173,11 +174,11 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)
 		tournamentRepo := persistence.NewTournamentRepository(tx)
-		if _, found, err = tournamentRepo.Find(id); !found && err == nil {
+		if t, found, err = tournamentRepo.Find(id); !found && err == nil {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 			return
 		} else if err != nil {
-			panic(c)
+			panic(err)
 		}
 		playerRepo := persistence.NewPlayerRepository(tx)
 		if p, found, err = playerRepo.Find(pr.Nickname); !found && err == nil {
@@ -202,6 +203,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 		if err = tournamentRepo.Update(t); err != nil {
 			panic(err)
 		}
+		p, _, _ = playerRepo.Find(pr.Nickname)
 		result := NewPlayerRepresentation(p, id)
 		pEvents.publish(t.UUID, result)
 		c.JSON(http.StatusOK, result)

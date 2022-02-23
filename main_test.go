@@ -9,18 +9,21 @@ import (
 	"testing"
 
 	"github.com/jensborch/go-foosball/model"
+	"github.com/jinzhu/gorm"
 )
 
-func startServer() *httptest.Server {
+func startServer() (*httptest.Server, *gorm.DB) {
 	if err := os.Remove("test.db"); err != nil {
 		fmt.Println("Could not delete test DB", err)
 	}
-	return httptest.NewServer(setupServer("test.db"))
+	engine, db := setupServer("test.db")
+	return httptest.NewServer(engine), db
 }
 
 func TestGetPlayers(t *testing.T) {
-	ts := startServer()
+	ts, db := startServer()
 	defer ts.Close()
+	defer db.Close()
 
 	resp, err := http.Get(fmt.Sprintf("%s/players", ts.URL))
 

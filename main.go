@@ -44,11 +44,12 @@ func main() {
 	flag.StringVar(&dbfile, "db", "foosball.db", "the database file")
 	flag.Parse()
 
-	setupServer(dbfile).Run(":" + strconv.FormatUint(uint64(port), 10))
+	engine, db := setupServer(dbfile)
+	defer db.Close()
+	engine.Run(":" + strconv.FormatUint(uint64(port), 10))
 }
 
-func setupServer(dbfile string) *gin.Engine {
-
+func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	router := gin.Default()
 	corsConf := cors.DefaultConfig()
 	corsConf.AllowAllOrigins = true
@@ -59,7 +60,6 @@ func setupServer(dbfile string) *gin.Engine {
 	if err != nil {
 		panic("failed to connect database")
 	}
-	defer db.Close()
 
 	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{}, &model.Player{}, &model.TournamentPlayer{}, &model.Game{})
 
@@ -106,7 +106,7 @@ func setupServer(dbfile string) *gin.Engine {
 		serveStatic(c, html, "/html/", "html")
 	})
 
-	return router
+	return router, db
 }
 
 func serveStatic(c *gin.Context, f fs.FS, prefix string, dir string) {

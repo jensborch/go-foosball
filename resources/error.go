@@ -29,8 +29,9 @@ func HandlePanicInTransaction(c *gin.Context, tx *gorm.DB) {
 			c.JSON(http.StatusInternalServerError, NewErrorResponse("Unknown error"))
 		}
 		tx.Rollback()
+	} else {
+		tx.Commit()
 	}
-	tx.Commit()
 }
 
 //HandlePanic provides a defer function to handle panics
