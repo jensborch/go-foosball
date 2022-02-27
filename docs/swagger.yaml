@@ -473,6 +473,31 @@ paths:
       tags:
       - tournament
   /tournaments/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Remove tournament
+      tags:
+      - tournament
     get:
       consumes:
       - application/json

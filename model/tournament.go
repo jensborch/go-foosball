@@ -47,35 +47,48 @@ func (t *Tournament) AddPlayer(p *Player) {
 	t.AddPlayerWithRanking(p, t.InitialRanking)
 }
 
-// AddPlayerWithRanking adds a player to a tournament with ranking
-func (t *Tournament) AddPlayerWithRanking(p *Player, ranking uint) {
-	var found = false
+func (t *Tournament) FindPlayerInTournament(p *Player) (*TournamentPlayer, Found) {
+	return t.FindPlayerInTournamentByNickname(p.Nickname)
+}
+
+func (t *Tournament) FindPlayerInTournamentByNickname(nickname string) (*TournamentPlayer, Found) {
+	i, found := t.indexOfPlayer(nickname)
+	if found {
+		return &t.TournamentPlayers[i], found
+	} else {
+		return nil, found
+	}
+}
+
+func (t *Tournament) indexOfPlayer(nickname string) (int, Found) {
 	for i, tp := range t.TournamentPlayers {
-		if tp.Player.Nickname == p.Nickname {
-			t.TournamentPlayers[i].Active = true
-			t.TournamentPlayers[i].Ranking = ranking
-			found = true
-			break
+		if tp.Player.Nickname == nickname {
+			return i, true
 		}
 	}
-	if !found {
+	return -1, false
+}
+
+// AddPlayerWithRanking adds a player to a tournament with ranking
+func (t *Tournament) AddPlayerWithRanking(p *Player, ranking uint) {
+	if i, found := t.indexOfPlayer(p.Nickname); found {
+		t.TournamentPlayers[i].Active = true
+		t.TournamentPlayers[i].Ranking = ranking
+	} else {
 		newPlayer := TournamentPlayer{
 			Player:  *p,
 			Ranking: ranking,
 			Active:  true,
 		}
-		p.TournamentPlayers = append(p.TournamentPlayers, newPlayer)
 		t.TournamentPlayers = append(t.TournamentPlayers, newPlayer)
 	}
 }
 
 // DeactivatePlayer deactivates player in tournament
-func (t *Tournament) DeactivatePlayer(nickName string) Found {
-	for i, tp := range t.TournamentPlayers {
-		if tp.Player.Nickname == nickName {
-			t.TournamentPlayers[i].Active = false
-			return true
-		}
+func (t *Tournament) DeactivatePlayer(nickname string) Found {
+	if i, found := t.indexOfPlayer(nickname); found {
+		t.TournamentPlayers[i].Active = false
+		return true
 	}
 	return false
 }

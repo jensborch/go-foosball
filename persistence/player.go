@@ -19,13 +19,13 @@ func (r *playerRepository) Store(player *model.Player) error {
 
 func (r *playerRepository) Remove(nickname string) (model.Found, error) {
 	if len(nickname) > 0 {
-		p, found, _ := r.Find(nickname)
-		if found && len(p.TournamentPlayers) == 0 {
+		//TODO add check for tournament
+		if _, found, _ := r.Find(nickname); found {
 			return true, r.db.Where("nickname = ?", nickname).Delete(&model.Player{}).Error
 		}
-		return found, fmt.Errorf("Player %s could not be found or is in tournament", nickname)
+		return false, fmt.Errorf("player %s could not be found or is in tournament", nickname)
 	}
-	return false, errors.New("Nickname must be defined - empty string not allowed")
+	return false, errors.New("nickname must be defined - empty string not allowed")
 }
 
 func (r *playerRepository) Update(player *model.Player) error {
@@ -34,28 +34,23 @@ func (r *playerRepository) Update(player *model.Player) error {
 
 func (r *playerRepository) Find(nickname string) (*model.Player, model.Found, error) {
 	var player model.Player
-	return &player, !r.db.Preload(
-		"TournamentPlayers").Preload(
-		"TournamentPlayers.Tournament").Where(
+	return &player, !r.db.Where(
 		"nickname = ?", nickname).First(&player).RecordNotFound(), r.db.Error
 }
 
 func (r *playerRepository) FindByTournament(id string) []*model.Player {
 	var players []*model.Player
 	r.db.Joins(
-		"LEFT JOIN tournament_players ON tournament_players.player_id = players.id "+
-			"LEFT JOIN tournaments ON tournament_players.tournament_id = tournaments.id").Preload(
-		"TournamentPlayers").Preload(
-		"TournamentPlayers.Tournament").Where(
+		"LEFT JOIN tournament_players ON tournament_players.player_id = players.id ").Joins(
+		"LEFT JOIN tournaments ON tournament_players.tournament_id = tournaments.id").Preload(
+		"TournamentPlayers").Where(
 		"tournaments.uuid = ?", id).Group("players.nickname").Find(&players)
 	return players
 }
 
 func (r *playerRepository) FindAll() []*model.Player {
 	var players []*model.Player
-	r.db.Preload(
-		"TournamentPlayers").Preload(
-		"TournamentPlayers.Tournament").Find(&players)
+	r.db.Find(&players)
 	return players
 }
 

@@ -69,8 +69,8 @@ func TestAddPlayer2Tournament(t *testing.T) {
 
 	tournament.AddPlayer(p1)
 
-	if len(p1.TournamentPlayers) != 1 {
-		t.Errorf("Tournament must have one player, got: %d.", len(p1.TournamentPlayers))
+	if len(tournament.TournamentPlayers) != 1 {
+		t.Errorf("Tournament must have one player, got: %d.", len(tournament.TournamentPlayers))
 	}
 
 	p2 := NewPlayer("tt", "Thomas", "rfid")
@@ -81,8 +81,8 @@ func TestAddPlayer2Tournament(t *testing.T) {
 		t.Errorf("Tournament must have two player, got: %d.", len(tournament.TournamentPlayers))
 	}
 
-	if p1.TournamentPlayers[0].Ranking != 1500 {
-		t.Errorf("Tournament must have player with default ranking, got: %d.", p1.TournamentPlayers[0].Ranking)
+	if tournament.TournamentPlayers[0].Ranking != 1500 {
+		t.Errorf("Tournament must have player with default ranking, got: %d.", tournament.TournamentPlayers[0].Ranking)
 	}
 }
 
@@ -90,10 +90,14 @@ func TestAddPlayer2TournamentWithRanking(t *testing.T) {
 	tournament := InitTournament()
 	p := NewPlayer("jj", "Jens", "rfid")
 
-	tournament.AddPlayerWithRanking(p, 1000)
+	tournament.AddPlayerWithRanking(p, 700)
 
-	if p.TournamentPlayers[0].Ranking != 1000 {
-		t.Errorf("Tournament must have player with ranking, got: %d.", p.TournamentPlayers[0].Ranking)
+	if tournament.TournamentPlayers[0].Ranking != 700 {
+		t.Errorf("Player must have ranking 700, got: %d.", tournament.TournamentPlayers[0].Ranking)
+	}
+	tp, _ := tournament.FindPlayerInTournament(p)
+	if tp.Ranking != 700 {
+		t.Errorf("Tournament must have player with ranking 700, got: %d.", tournament.TournamentPlayers[0].Ranking)
 	}
 }
 
@@ -102,7 +106,7 @@ func TestDeactivatePlayerInTournament(t *testing.T) {
 	p := NewPlayer("jj", "Jens", "rfid")
 	tournament.AddPlayer(p)
 
-	if !p.TournamentPlayers[0].Active {
+	if !tournament.TournamentPlayers[0].Active {
 		t.Errorf("Player should be active")
 	}
 
@@ -112,5 +116,21 @@ func TestDeactivatePlayerInTournament(t *testing.T) {
 
 	if tournament.TournamentPlayers[0].Active {
 		t.Errorf("Player should not be active")
+	}
+}
+
+func TestAddExistingPlayer2Tournament(t *testing.T) {
+	tournament := InitTournament()
+	p := NewPlayer("jj", "Jens", "rfid")
+	tournament.AddPlayerWithRanking(p, 500)
+	tournament.DeactivatePlayer(p.Nickname)
+	tournament.AddPlayerWithRanking(p, 600)
+
+	if tournament.TournamentPlayers[0].Ranking != 600 {
+		t.Errorf("Player must have ranking 600, got: %d.", tournament.TournamentPlayers[0].Ranking)
+	}
+	tp, _ := tournament.FindPlayerInTournament(p)
+	if tp.Ranking != 600 {
+		t.Errorf("Tournament must have player with ranking 600, got: %d.", tournament.TournamentPlayers[0].Ranking)
 	}
 }

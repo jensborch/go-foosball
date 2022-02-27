@@ -37,16 +37,4 @@ func TestCreateTournamentPlayer(t *testing.T) {
 	if n := tp.Player.Nickname; n != "jj" {
 		t.Errorf("Player nickname is incorrect, got: %s, want: %s.", n, "jj")
 	}
-
-	if l := len(tp.Player.TournamentPlayers); l != 1 {
-		t.Errorf("Player should have one tournament player, got: %d.", l)
-	}
-
-	if !p.IsActive(tournament.UUID) {
-		t.Error("Player should be active")
-	}
-	r := p.GetRanking(tournament.UUID)
-	if r != 1500 {
-		t.Errorf("Player should have score of 1500, but got: %d", r)
-	}
 }
