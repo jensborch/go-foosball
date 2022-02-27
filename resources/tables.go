@@ -102,7 +102,7 @@ func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 		if t, found, err := tournamentRepo.Find(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 			return
-		} else if err == nil {
+		} else if err != nil {
 			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 			return
 		} else {
