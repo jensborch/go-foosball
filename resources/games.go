@@ -40,14 +40,15 @@ func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
 func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		if t, found, err := persistence.NewTournamentRepository(db).Find(id); !found {
+		r := persistence.NewTournamentRepository(db)
+		if games, found, err := r.RandomGames(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 			return
 		} else if err != nil {
 			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 			return
 		} else {
-			c.JSON(http.StatusOK, t.RandomGames())
+			c.JSON(http.StatusOK, games)
 			return
 		}
 	}
@@ -74,38 +75,36 @@ type GameRepresentation struct {
 // @Router       /tournaments/{id}/tables/{table}/games [post]
 func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		tournamentID := c.Param(tournamentParam)
+		tourID := c.Param(tournamentParam)
 		tableID := c.Param(tableParam)
 		tx := db.Begin()
-		if t, found, err := persistence.NewTournamentRepository(tx).Find(tournamentID); !found {
-			tx.Rollback()
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", tournamentID)))
-			return
-		} else if err != nil {
-			tx.Rollback()
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
-			return
-		} else if table := t.Table(tableID); table != nil {
-			var g GameRepresentation
-			if err := c.ShouldBindWith(&g, binding.JSON); err == nil {
+		defer HandlePanicInTransaction(c, tx)
+		r := persistence.NewTournamentRepository(tx)
+		if table, found, err := r.FindTable(tourID, tableID); err == nil && found {
+			var gr GameRepresentation
+			if err := c.ShouldBindWith(&gr, binding.JSON); err == nil {
 				pRepo := persistence.NewPlayerRepository(tx)
-				game := model.NewGame(*table)
-				for _, pID := range g.Players {
-					player, _, _ := pRepo.Find(pID)
-					game.AddPlayer(*player)
+				game := model.NewGame(table)
+				for _, pID := range gr.Players {
+					if player, found, err := pRepo.Find(pID); found && err == nil {
+						if _, err := r.AddPlayer(tourID, player); err != nil {
+							panic(err)
+						}
+					} else {
+						c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Player %s does not exist in tournament %s", pID, tourID)))
+						return
+					}
 				}
-				game.Winner = g.Winner
-				persistence.NewGameRepository(tx).Store(game)
-				tx.Commit()
+				game.Winner = gr.Winner
+				if err := persistence.NewGameRepository(tx).Store(game); err != nil {
+					panic(err)
+				}
 				c.JSON(http.StatusOK, game)
 			} else {
-				tx.Rollback()
 				c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			}
-			return
 		}
-		tx.Rollback()
-		c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find table %s in tournament %s", tableID, tournamentID)))
+		c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find table %s in tournament %s", tableID, tourID)))
 	}
 }
 

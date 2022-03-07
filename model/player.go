@@ -11,12 +11,12 @@ type Player struct {
 // TournamentPlayer is a player in a tournament
 type TournamentPlayer struct {
 	Base
-	PlayerID     uint       `json:"-"`
-	Player       Player     `json:"player"`
-	TournamentID uint       `json:"tournament"`
-	Tournament   Tournament `json:"-"`
-	Ranking      uint       `json:"ranking"`
-	Active       bool       `json:"active"`
+	//PlayerID uint   `json:"-"`
+	Player Player `json:"player"`
+	//TournamentID uint       `json:"tournament"`
+	Tournament Tournament `json:"-"`
+	Ranking    uint       `json:"ranking"`
+	Active     bool       `json:"active"`
 }
 
 // PlayerRepository provides access players
@@ -39,12 +39,21 @@ func NewPlayer(nickname, realName string, rfid string) *Player {
 }
 
 // NewTournamentPlayer create new player in tournament
-func NewTournamentPlayer(player *Player, tournament Tournament) *TournamentPlayer {
-	tp := &TournamentPlayer{
-		Tournament: tournament,
+func NewTournamentPlayer(player *Player, tournament *Tournament) *TournamentPlayer {
+	return &TournamentPlayer{
+		Tournament: *tournament,
+		Player:     *player,
 		Ranking:    tournament.InitialRanking,
 		Active:     true,
 	}
-	tp.Player = *player
-	return tp
+}
+
+// NewTournamentPlayer create new player in tournament
+func NewTournamentPlayerWithRanking(player *Player, tournament *Tournament, ranking uint) *TournamentPlayer {
+	return &TournamentPlayer{
+		Tournament: *tournament,
+		Player:     *player,
+		Ranking:    ranking,
+		Active:     true,
+	}
 }

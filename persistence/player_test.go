@@ -7,12 +7,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
-func initTournament() *model.Tournament {
-	table1 := model.NewTable("1", model.Color{Right: "red", Left: "green"})
-	table2 := model.NewTable("2", model.Color{Right: "black", Left: "blue"})
-	return model.NewTournament("test", *table1, *table2)
-}
-
 func TestRemoveNotFound(t *testing.T) {
 	db := InitDB(t)
 	defer db.Close()

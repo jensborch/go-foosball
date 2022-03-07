@@ -99,14 +99,14 @@ func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
 		tournamentRepo := persistence.NewTournamentRepository(db)
-		if t, found, err := tournamentRepo.Find(id); !found {
+		if tables, found, err := tournamentRepo.FindAllTables(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 			return
 		} else if err != nil {
 			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 			return
 		} else {
-			c.JSON(http.StatusOK, t.TournamentTables)
+			c.JSON(http.StatusOK, tables)
 			return
 		}
 	}
@@ -132,43 +132,27 @@ type TableRepresentation struct {
 func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		var (
-			representation TableRepresentation
-			table          *model.Table
-			tournament     *model.Tournament
-			found          model.Found
-			err            error
-		)
-		if err = c.ShouldBindWith(&representation, binding.JSON); err != nil {
+		var representation TableRepresentation
+		if err := c.ShouldBindWith(&representation, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
 		}
 		tx := db.Begin()
+		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewTournamentRepository(tx)
-		if tournament, found, err = r.Find(id); !found {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", tournament.Name)))
-			tx.Rollback()
-			return
-		}
-		if table, found, err = persistence.NewTableRepository(tx).Find(representation.UUID); !found {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find table %s", representation.UUID)))
-			tx.Rollback()
-			return
-		}
-		tournament.AddTables(*table)
-		if err = r.Update(tournament); err != nil {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not add table to tournament %s", tournament.UUID)))
-			tx.Rollback()
-			return
-		}
-		tx.Commit()
-		for _, t := range tournament.TournamentTables {
-			if t.Table.UUID == table.UUID {
-				c.JSON(http.StatusOK, t)
-				return
+		if table, found, err := persistence.NewTableRepository(tx).Find(representation.UUID); err == nil && found {
+			if found, err := r.AddTables(id, table); err == nil && found {
+				c.JSON(http.StatusOK, table)
+			} else if err != nil {
+				panic(err)
+			} else {
+				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 			}
+		} else if err != nil {
+			panic(err)
+		} else {
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find table %s", representation.UUID)))
 		}
-		c.JSON(http.StatusInternalServerError, NewErrorResponse(fmt.Sprintf("Could not find table %s in tournament %s", table.UUID, tournament.UUID)))
 	}
 }
 
@@ -186,21 +170,16 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 func DeleteTournamentTable(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		tourId := c.Param(tournamentParam)
-		r := persistence.NewTournamentRepository(db)
-		if t, found, err := r.Find(tourId); found {
-			tableId := c.Param(tableParam)
-			if err := r.RemoveTable(t, tableId); err != nil {
-				c.Status(http.StatusNoContent)
-			} else {
-				c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
-			}
-			return
-		} else if err == nil {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", tourId)))
-			return
+		tableId := c.Param(tableParam)
+		tx := db.Begin()
+		defer HandlePanicInTransaction(c, tx)
+		r := persistence.NewTournamentRepository(tx)
+		if found, err := r.RemoveTable(tourId, tableId); err == nil && found {
+			c.Status(http.StatusNoContent)
+		} else if err != nil {
+			panic(err)
 		} else {
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
-			return
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s or table %s", tourId, tableId)))
 		}
 	}
 }

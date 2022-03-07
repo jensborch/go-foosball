@@ -3,7 +3,6 @@ package model
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"math"
 	"reflect"
 	"time"
@@ -14,20 +13,15 @@ import (
 // Game played
 type Game struct {
 	Base
-	UUID              string `gorm:"size:36;unique_index"`
-	TournamentTableID uint
-	TournamentTable   TournamentTable `gorm:"association_save_reference:false;save_associations:false"`
-	RightPlayerOneID  uint
-	RightPlayerTwoID  uint
-	LeftPlayerOneID   uint
-	LeftPlayerTwoID   uint
-	RightPlayerOne    TournamentPlayer `gorm:"association_save_reference:false;save_associations:false"`
-	RightPlayerTwo    TournamentPlayer `gorm:"association_save_reference:false;save_associations:false"`
-	LeftPlayerOne     TournamentPlayer `gorm:"association_save_reference:false;save_associations:false"`
-	LeftPlayerTwo     TournamentPlayer `gorm:"association_save_reference:false;save_associations:false"`
-	RightScore        int
-	LeftScore         int
-	Winner            Winner
+	UUID            string          `gorm:"size:36;unique_index"`
+	TournamentTable TournamentTable `gorm:"not null"`
+	RightPlayerOne  TournamentPlayer
+	RightPlayerTwo  TournamentPlayer
+	LeftPlayerOne   TournamentPlayer
+	LeftPlayerTwo   TournamentPlayer
+	RightScore      int
+	LeftScore       int
+	Winner          Winner
 }
 
 // MarshalJSON creates JSON game representation
@@ -47,8 +41,6 @@ func (g *Game) MarshalJSON() ([]byte, error) {
 		CreatedAt:    g.CreatedAt,
 		UpdatedAt:    g.UpdatedAt,
 		UUID:         g.UUID,
-		Tournament:   g.TournamentTable.Tournament.UUID,
-		Table:        g.TournamentTable.Table,
 		RightPlayers: g.RightPlayerNames(),
 		LeftPlayers:  g.LeftPlayerNames(),
 		RightScore:   g.GetOrCalculateRightScore(),
@@ -124,7 +116,7 @@ func (g *Game) UpdateScore() error {
 		g.LeftScore = int(left)
 		return nil
 	default:
-		return errors.New("No winner in this game")
+		return errors.New("no winner in this game")
 	}
 }
 
@@ -178,40 +170,19 @@ func isEmptyPlayer(p TournamentPlayer) bool {
 	return reflect.DeepEqual(p, TournamentPlayer{})
 }
 
-// AddPlayer adds a player to a game
-func (g *Game) AddPlayer(p Player) error {
-	tp, err := g.findOrCreateTournamentPlayer(p)
-	if err == nil {
-		return g.AddTournamentPlayer(*tp)
-	}
-	return err
-}
-
-func (g *Game) findOrCreateTournamentPlayer(p Player) (*TournamentPlayer, error) {
-	for _, tp := range g.TournamentTable.Tournament.TournamentPlayers {
-		if p.Nickname == tp.Player.Nickname {
-			if !tp.Active {
-				return nil, fmt.Errorf("Player %s is not active", p.Nickname)
-			}
-			return &tp, nil
-		}
-	}
-	return NewTournamentPlayer(&p, g.TournamentTable.Tournament), nil
-}
-
 //AddTournamentPlayer adds a tournament player to a game
-func (g *Game) AddTournamentPlayer(p TournamentPlayer) error {
+func (g *Game) AddTournamentPlayer(p *TournamentPlayer) error {
 	switch {
 	case isEmptyPlayer(g.RightPlayerOne):
-		g.RightPlayerOne = p
+		g.RightPlayerOne = *p
 	case isEmptyPlayer(g.LeftPlayerOne):
-		g.LeftPlayerOne = p
+		g.LeftPlayerOne = *p
 	case isEmptyPlayer(g.RightPlayerTwo):
-		g.RightPlayerTwo = p
+		g.RightPlayerTwo = *p
 	case isEmptyPlayer(g.LeftPlayerTwo):
-		g.LeftPlayerTwo = p
+		g.LeftPlayerTwo = *p
 	default:
-		return errors.New("All players have been added")
+		return errors.New("all players have been added")
 	}
 	return nil
 }
@@ -225,10 +196,10 @@ type GameRepository interface {
 }
 
 // NewGame creates a new game
-func NewGame(table TournamentTable) *Game {
+func NewGame(table *TournamentTable) *Game {
 	id := uuid.Must(uuid.NewV4(), nil).String()
 	return &Game{
 		UUID:            id,
-		TournamentTable: table,
+		TournamentTable: *table,
 	}
 }
