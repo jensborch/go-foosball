@@ -24,7 +24,10 @@ func (r *tournamentRepository) RemoveTable(tournamentUuid string, tableUuid stri
 		Where("table_id = (?)", r.db.Model(&model.Table{}).
 			Select("id").
 			Where("uuid = ?", tableUuid).QueryExpr()).
-		Where("tournament_id = ?", tournamentUuid).Delete(&model.TournamentTable{})
+		Where("tournament_id = (?)", r.db.Model(&model.Tournament{}).
+			Select("id").
+			Where("uuid = ?", tournamentUuid).QueryExpr()).
+		Delete(&model.TournamentTable{})
 	return !result.RecordNotFound(), result.Error
 }
 
@@ -51,13 +54,13 @@ func (r *tournamentRepository) FindAllTables(uuid string) ([]*model.TournamentTa
 }
 
 func (r *tournamentRepository) FindTable(tournamentUuid string, tableUuid string) (*model.TournamentTable, model.Found, error) {
-	var table *model.TournamentTable
+	var table model.TournamentTable
 	result := r.db.Model(&model.TournamentTable{}).
 		Joins("inner join tournaments on tournament_tables.tournament_id = tournaments.id").
 		Joins("inner join tables on tournament_tables.table_id = tables.id").
 		Where("tables.uuid = ?", tableUuid).
-		Where("tournaments.uuid = ?", tournamentUuid).Find(table)
-	return table, !result.RecordNotFound(), result.Error
+		Where("tournaments.uuid = ?", tournamentUuid).Find(&table)
+	return &table, !result.RecordNotFound(), result.Error
 }
 
 func (r *tournamentRepository) AddPlayerWithRanking(uuid string, p *model.Player, ranking uint) (model.Found, error) {
@@ -83,18 +86,18 @@ func (r *tournamentRepository) FindAllPlayers(tournamentUuid string) ([]*model.T
 	var players []*model.TournamentPlayer
 	result := r.db.Model(&model.TournamentPlayer{}).
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
-		Where("tournaments.id = ?", tournamentUuid).Find(players)
+		Where("tournaments.id = ?", tournamentUuid).Find(&players)
 	return players, !result.RecordNotFound(), result.Error
 }
 
 func (r *tournamentRepository) FindPlayer(tournamentUuid string, nickname string) (*model.TournamentPlayer, model.Found, error) {
-	var players *model.TournamentPlayer
+	var players model.TournamentPlayer
 	result := r.db.Model(&model.TournamentPlayer{}).
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Joins("inner join players on tournament_players.player_id = players.id").
 		Where("players.nickname = ?", nickname).
-		Where("tournaments.id = ?", tournamentUuid).Find(players)
-	return players, !result.RecordNotFound(), result.Error
+		Where("tournaments.id = ?", tournamentUuid).Find(&players)
+	return &players, !result.RecordNotFound(), result.Error
 }
 
 func (r *tournamentRepository) ActivePlayers(tournamentUuid string) ([]*model.TournamentPlayer, model.Found, error) {
@@ -103,7 +106,7 @@ func (r *tournamentRepository) ActivePlayers(tournamentUuid string) ([]*model.To
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Joins("inner join players on tournament_players.player_id = players.id").
 		Where("tournament_players.active = ?", true).
-		Where("tournaments.id = ?", tournamentUuid).Find(players)
+		Where("tournaments.id = ?", tournamentUuid).Find(&players)
 	return players, !result.RecordNotFound(), result.Error
 }
 
