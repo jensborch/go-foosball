@@ -11,12 +11,12 @@ type Player struct {
 // TournamentPlayer is a player in a tournament
 type TournamentPlayer struct {
 	Base
-	//PlayerID uint   `json:"-"`
-	Player Player `json:"player"`
-	//TournamentID uint       `json:"tournament"`
-	Tournament Tournament `json:"-"`
-	Ranking    uint       `json:"ranking"`
-	Active     bool       `json:"active"`
+	PlayerID     uint       `json:"-"`
+	Player       Player     `json:"player"`
+	TournamentID uint       `json:"tournament"`
+	Tournament   Tournament `json:"-"`
+	Ranking      uint       `json:"ranking"`
+	Active       bool       `json:"active"`
 }
 
 // PlayerRepository provides access players

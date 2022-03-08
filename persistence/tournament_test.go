@@ -47,20 +47,28 @@ func TestRemoveTableInTournament(t *testing.T) {
 	db := InitDB(t)
 	defer db.Close()
 
-	r := NewTournamentRepository(db)
+	tourRepo := NewTournamentRepository(db)
 
-	err := r.Store(tournament)
-	if err != nil {
+	tourRepo.Store(tournament)
+
+	tableRepo := NewTableRepository(db)
+
+	table := model.NewTable("Test", model.Color{
+		Right: "1",
+		Left:  "2",
+	})
+
+	tableRepo.Store(table)
+
+	if found, err := tourRepo.AddTables(tournament.UUID, table); err != nil || !found {
 		t.Errorf("Failed to store: %s", err.Error())
 	}
 
-	found, _, err := r.Find(tournament.UUID)
-	if err != nil {
-		t.Errorf("Failed to find tournament")
-	}
-
-	if found == nil {
-		t.Errorf("Tournament should be found, got: nil.")
+	if tables, found, err := tourRepo.FindAllTables(tournament.UUID); err != nil || !found {
+		t.Errorf("Failed to find table: %s", err.Error())
+		if len(tables) != 1 {
+			t.Errorf("Tournament should have one tabel, got %d", len(tables))
+		}
 	}
 
 }

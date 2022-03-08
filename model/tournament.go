@@ -14,8 +14,10 @@ type Tournament struct {
 }
 type TournamentTable struct {
 	Base
-	Table      Table      `json:"table"`
-	Tournament Tournament `json:"tournament"`
+	TableID      uint       `json:"-"`
+	Table        Table      `json:"table"`
+	TournamentID uint       `json:"-"`
+	Tournament   Tournament `json:"tournament"`
 }
 
 // TournamentRepository provides access games etc.
@@ -27,7 +29,6 @@ type TournamentRepository interface {
 	FindAll() []*Tournament
 	RemoveTable(tournamentUuid string, tableUuid string) (Found, error)
 	AddTables(tournamentUuid string, tables ...*Table) (Found, error)
-	RandomGames(uuid string) ([]*Game, Found, error)
 	FindAllTables(uuid string) ([]*TournamentTable, Found, error)
 	FindTable(tournamentUuid string, tableUuid string) (*TournamentTable, Found, error)
 	AddPlayer(tournamentUuid string, p *Player) (Found, error)
@@ -36,6 +37,7 @@ type TournamentRepository interface {
 	FindPlayer(tournamentUuid string, nickname string) (*TournamentPlayer, Found, error)
 	DeactivatePlayer(tournamentUuid string, nickname string) (Found, error)
 	ActivatePlayer(tournamentUuid string, nickname string) (Found, error)
+	RandomGames(uuid string) ([]*Game, Found, error)
 }
 
 // NewTournament creates a new tournament
