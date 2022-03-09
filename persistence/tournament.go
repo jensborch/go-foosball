@@ -79,7 +79,6 @@ func (r *tournamentRepository) AddPlayer(uuid string, p *model.Player) (model.Fo
 	} else {
 		return found, err
 	}
-
 }
 
 func (r *tournamentRepository) FindAllPlayers(tournamentUuid string) ([]*model.TournamentPlayer, model.Found, error) {

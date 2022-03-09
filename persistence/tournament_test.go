@@ -4,23 +4,27 @@ import (
 	"testing"
 
 	"github.com/jensborch/go-foosball/model"
+	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
-func TestStoreTournament(t *testing.T) {
-	tournament1 := model.NewTournament("Foosball tournament 1")
-
+func initTournament(t *testing.T) (model.TournamentRepository, *model.Tournament, *gorm.DB) {
+	tournament := model.NewTournament("Foosball tournament 1")
 	db := InitDB(t)
-	defer db.Close()
-
 	r := NewTournamentRepository(db)
 
-	err := r.Store(tournament1)
+	err := r.Store(tournament)
 	if err != nil {
 		t.Errorf("Failed to store: %s", err.Error())
 	}
+	return r, tournament, db
+}
 
-	found, _, err := r.Find(tournament1.UUID)
+func TestStoreTournament(t *testing.T) {
+	r, tournament, db := initTournament(t)
+	defer db.Close()
+
+	found, _, err := r.Find(tournament.UUID)
 	if err != nil {
 		t.Errorf("Failed to find tournament")
 	}
@@ -42,14 +46,8 @@ func TestStoreTournament(t *testing.T) {
 }
 
 func TestAddRemoveTournamentTable(t *testing.T) {
-	tournament := model.NewTournament("Foosball tournament 1")
-
-	db := InitDB(t)
+	tourRepo, tournament, db := initTournament(t)
 	defer db.Close()
-
-	tourRepo := NewTournamentRepository(db)
-
-	tourRepo.Store(tournament)
 
 	tableRepo := NewTableRepository(db)
 
@@ -83,6 +81,26 @@ func TestAddRemoveTournamentTable(t *testing.T) {
 		t.Errorf("Not tables should be found, got %d", len(tables))
 	}
 
+}
+
+func TestAddRemoveTournamentPlayer(t *testing.T) {
+	tourRepo, tournament, db := initTournament(t)
+	defer db.Close()
+
+	playerRepo := NewPlayerRepository(db)
+
+	player := model.NewPlayer("test", "test", "")
+
+	playerRepo.Store(player)
+
+	tourRepo.AddPlayer(tournament.UUID, player)
+
+	if players, found, err := tourRepo.FindAllPlayers(tournament.UUID); err != nil || !found {
+		t.Errorf("Failed to find player: %s", err.Error())
+		if len(players) != 1 {
+			t.Errorf("Tournament should have one player, got %d", len(players))
+		}
+	}
 }
 
 /*func TestAddPlayers2Tournament(t *testing.T) {
