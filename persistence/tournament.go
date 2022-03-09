@@ -95,7 +95,7 @@ func (r *tournamentRepository) FindPlayer(tournamentUuid string, nickname string
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Joins("inner join players on tournament_players.player_id = players.id").
 		Where("players.nickname = ?", nickname).
-		Where("tournaments.id = ?", tournamentUuid).Find(&players)
+		Where("tournaments.uuid = ?", tournamentUuid).Find(&players)
 	return &players, !result.RecordNotFound(), result.Error
 }
 

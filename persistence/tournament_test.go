@@ -89,17 +89,32 @@ func TestAddRemoveTournamentPlayer(t *testing.T) {
 
 	playerRepo := NewPlayerRepository(db)
 
-	player := model.NewPlayer("test", "test", "")
+	player1 := model.NewPlayer("test1", "test", "")
+	player2 := model.NewPlayer("test2", "test", "")
 
-	playerRepo.Store(player)
+	playerRepo.Store(player1)
+	playerRepo.Store(player2)
 
-	tourRepo.AddPlayer(tournament.UUID, player)
+	tourRepo.AddPlayer(tournament.UUID, player1)
+	tourRepo.AddPlayerWithRanking(tournament.UUID, player2, 2000)
 
 	if players, found, err := tourRepo.FindAllPlayers(tournament.UUID); err != nil || !found {
-		t.Errorf("Failed to find player: %s", err.Error())
-		if len(players) != 1 {
-			t.Errorf("Tournament should have one player, got %d", len(players))
+		t.Errorf("Failed to find players: %s", err.Error())
+		if len(players) != 2 {
+			t.Errorf("Tournament should have two player, got %d", len(players))
 		}
+	}
+
+	if player, found, err := tourRepo.FindPlayer(tournament.UUID, player1.Nickname); err != nil || !found {
+		t.Errorf("Failed to find player 1 %s", err.Error())
+	} else if player.Ranking != 1500 {
+		t.Errorf("Player 1 should have rating 1500, got %d", player.Ranking)
+	}
+
+	if player, found, err := tourRepo.FindPlayer(tournament.UUID, player1.Nickname); err != nil || !found {
+		t.Errorf("Failed to find player 2 %s", err.Error())
+	} else if player.Ranking != 1500 {
+		t.Errorf("Player 1 should have rating 1500, got %d", player.Ranking)
 	}
 }
 
