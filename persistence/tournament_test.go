@@ -111,102 +111,46 @@ func TestAddRemoveTournamentPlayer(t *testing.T) {
 		t.Errorf("Player 1 should have rating 1500, got %d", player.Ranking)
 	}
 
-	if player, found, err := tourRepo.FindPlayer(tournament.UUID, player1.Nickname); err != nil || !found {
+	if player, found, err := tourRepo.FindPlayer(tournament.UUID, player2.Nickname); err != nil || !found {
 		t.Errorf("Failed to find player 2 %s", err.Error())
-	} else if player.Ranking != 1500 {
-		t.Errorf("Player 1 should have rating 1500, got %d", player.Ranking)
+	} else if player.Ranking != 2000 {
+		t.Errorf("Player 2 should have rating 2000, got %d", player.Ranking)
 	}
 }
 
-/*func TestAddPlayers2Tournament(t *testing.T) {
-	table := model.NewTable("1", model.Color{Right: "red", Left: "green"})
-	tournament := model.NewTournament("Foosball tournament 1")
-
-	db := InitDB(t)
+func TestRandomGame(t *testing.T) {
+	tourRepo, tournament, db := initTournament(t)
 	defer db.Close()
 
-	r := NewTournamentRepository(db)
-	p1 := model.NewPlayer("p1", "n2", "rfid")
-	p2 := model.NewPlayer("p2", "n2", "rfid")
+	playerRepo := NewPlayerRepository(db)
 
-	tournament.AddPlayer(p1)
-	err := r.Store(tournament)
-	if err != nil {
-		t.Errorf("Failed to store: %s", err.Error())
+	player1 := model.NewPlayer("test1", "test", "")
+	player2 := model.NewPlayer("test2", "test", "")
+	player3 := model.NewPlayer("test3", "test", "")
+	player4 := model.NewPlayer("test4", "test", "")
+
+	playerRepo.Store(player1)
+	playerRepo.Store(player2)
+	playerRepo.Store(player3)
+	playerRepo.Store(player4)
+
+	tourRepo.AddPlayerWithRanking(tournament.UUID, player1, 2500)
+	tourRepo.AddPlayerWithRanking(tournament.UUID, player2, 2000)
+	tourRepo.AddPlayer(tournament.UUID, player3)
+	tourRepo.AddPlayer(tournament.UUID, player4)
+
+	tableRepo := NewTableRepository(db)
+	table := model.NewTable("Test", model.Color{
+		Right: "1",
+		Left:  "2",
+	})
+	tableRepo.Store(table)
+
+	tourRepo.AddTables(tournament.UUID, table)
+
+	if games, found, err := tourRepo.RandomGames(tournament.UUID); err != nil || !found {
+		t.Errorf("Failed to generate random games %s", err.Error())
+	} else if len(games) == 1 {
+		t.Errorf("Should genrate 1 random games, got %d", len(games))
 	}
-
-	tournament, found, err := r.Find(tournament.UUID)
-	if !found {
-		t.Errorf("Tournament not found")
-	}
-	if err != nil {
-		t.Errorf("Failed to find: %s", err.Error())
-	}
-
-	tournament.AddPlayer(p2)
-	err = r.Update(tournament)
-	if err != nil {
-		t.Errorf("Failed to update: %s", err.Error())
-	}
-
-	tournament, _, _ = r.Find(tournament.UUID)
-
-	if l := len(tournament.TournamentPlayers); l != 2 {
-		t.Errorf("Tournament should have two players, got: %d.", l)
-	}
-
-	if id := tournament.TournamentPlayers[0].Tournament.ID; id == 0 {
-		t.Errorf("Players should have tournament with id, got: %d.", id)
-	}
-
-	randomGames := tournament.RandomGames()
-	if len(randomGames) != 1 {
-		t.Errorf("Tournament be able to create random game, got: %d.", len(randomGames))
-	}
-
-	players := NewPlayerRepository(db).FindByTournament(tournament.UUID)
-	if len(players) != 2 {
-		t.Errorf("Tournament should have two players, got: %d.", len(players))
-	}
-
-	if len(tournament.ActivePlayers()) != 2 {
-		t.Errorf("Tournament should have two active players, got: %d.", len(tournament.ActivePlayers()))
-	}
-
-	tournament.DeactivatePlayer(p1.Nickname)
-	err = r.Update(tournament)
-	if err != nil {
-		t.Errorf("Failed to update: %s", err.Error())
-	}
-
-	tournament, _, _ = r.Find(tournament.UUID)
-
-	if len(tournament.ActivePlayers()) != 1 {
-		t.Errorf("Tournament should have one active player, got: %d.", len(tournament.ActivePlayers()))
-	}
-
-}*/
-
-/*func TestCalculateGameScore(t *testing.T) {
-	table := model.NewTable("1", model.Color{Right: "red", Left: "green"})
-	tournament := model.NewTournament("Foosball tournament 1", *table)
-
-	db := InitDB(t)
-	defer db.Close()
-
-	r := NewTournamentRepository(db)
-	p1 := model.NewPlayer("p1", "n2", "rfid")
-	p2 := model.NewPlayer("p2", "n2", "rfid")
-
-	tournament.AddPlayer(p1)
-	tournament.AddPlayer(p2)
-
-	r.Store(tournament)
-	tournament, _, _ = r.Find(tournament.UUID)
-
-	games := tournament.RandomGames()
-
-	if s := games[0].GetOrCalculateLeftScore(); s != 25 {
-		t.Errorf("Games should have score, wanted %d, got: %d.", 25, s)
-	}
-}*/
+}
