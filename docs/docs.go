@@ -34,7 +34,7 @@ const docTemplate_swagger = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Game"
+                                "$ref": "#/definitions/model.GameJson"
                             }
                         }
                     }
@@ -66,7 +66,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Game"
+                            "$ref": "#/definitions/model.GameJson"
                         }
                     },
                     "404": {
@@ -451,10 +451,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Tournament"
-                            }
+                            "$ref": "#/definitions/model.Tournament"
                         }
                     },
                     "404": {
@@ -571,7 +568,7 @@ const docTemplate_swagger = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Game"
+                                "$ref": "#/definitions/model.GameJson"
                             }
                         }
                     }
@@ -605,7 +602,7 @@ const docTemplate_swagger = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Game"
+                                "$ref": "#/definitions/model.GameJson"
                             }
                         }
                     },
@@ -963,7 +960,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Game"
+                            "$ref": "#/definitions/model.GameJson"
                         }
                     },
                     "400": {
@@ -1004,47 +1001,35 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "model.Game": {
+        "model.GameJson": {
             "type": "object",
             "properties": {
                 "created": {
                     "type": "string"
                 },
-                "leftPlayerOne": {
-                    "$ref": "#/definitions/model.TournamentPlayer"
-                },
-                "leftPlayerOneID": {
-                    "type": "integer"
-                },
-                "leftPlayerTwo": {
-                    "$ref": "#/definitions/model.TournamentPlayer"
-                },
-                "leftPlayerTwoID": {
-                    "type": "integer"
+                "leftPlayers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "leftScore": {
                     "type": "integer"
                 },
-                "rightPlayerOne": {
-                    "$ref": "#/definitions/model.TournamentPlayer"
-                },
-                "rightPlayerOneID": {
-                    "type": "integer"
-                },
-                "rightPlayerTwo": {
-                    "$ref": "#/definitions/model.TournamentPlayer"
-                },
-                "rightPlayerTwoID": {
-                    "type": "integer"
+                "rightPlayers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "rightScore": {
                     "type": "integer"
                 },
-                "tournamentTable": {
-                    "$ref": "#/definitions/model.TournamentTable"
+                "table": {
+                    "$ref": "#/definitions/model.Table"
                 },
-                "tournamentTableID": {
-                    "type": "integer"
+                "tournament": {
+                    "type": "string"
                 },
                 "updated": {
                     "type": "string"
@@ -1132,43 +1117,17 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "model.TournamentPlayer": {
-            "type": "object",
-            "properties": {
-                "active": {
-                    "type": "boolean"
-                },
-                "created": {
-                    "type": "string"
-                },
-                "player": {
-                    "$ref": "#/definitions/model.Player"
-                },
-                "ranking": {
-                    "type": "integer"
-                },
-                "tournament": {
-                    "type": "integer"
-                },
-                "updated": {
-                    "type": "string"
-                }
-            }
-        },
         "model.TournamentTable": {
             "type": "object",
             "properties": {
                 "created": {
                     "type": "string"
                 },
-                "games": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Game"
-                    }
-                },
                 "table": {
                     "$ref": "#/definitions/model.Table"
+                },
+                "tournament": {
+                    "$ref": "#/definitions/model.Tournament"
                 },
                 "updated": {
                     "type": "string"

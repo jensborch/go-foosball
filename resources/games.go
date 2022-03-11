@@ -18,7 +18,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
-// @Success      200      {array}   model.Game
+// @Success      200      {array}   model.GameJson
 // @Router       /tournaments/{id}/games [get]
 func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
@@ -33,7 +33,7 @@ func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
-// @Success      200      {array}   model.Game
+// @Success      200      {array}   model.GameJson
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
 // @Router       /tournaments/{id}/games/random [get]
@@ -68,7 +68,7 @@ type GameRepresentation struct {
 // @Param        id       path      string  true  "Tournament ID"
 // @Param        table    path      string  true  "Table ID"
 // @Param        game     body      GameRepresentation true  "Submit game results"
-// @Success      200      {object}  model.Game
+// @Success      200      {object}  model.GameJson
 // @Failure      400      {object}  ErrorResponse
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
@@ -114,7 +114,7 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Game ID"
-// @Success      200      {object}  model.Game
+// @Success      200      {object}  model.GameJson
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
 // @Router       /games/{id} [get]
@@ -139,7 +139,7 @@ func GetGame(param string, db *gorm.DB) func(*gin.Context) {
 // @Tags         game
 // @Accept       json
 // @Produce      json
-// @Success      200      {array}  model.Game
+// @Success      200      {array}  model.GameJson
 // @Router       /games [get]
 func GetGames(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {

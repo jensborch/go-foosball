@@ -24,20 +24,22 @@ type Game struct {
 	Winner          Winner
 }
 
+type GameJson struct {
+	CreatedAt    time.Time `json:"created"`
+	UpdatedAt    time.Time `json:"updated"`
+	UUID         string    `json:"uuid"`
+	Tournament   string    `json:"tournament"`
+	Table        Table     `json:"table"`
+	RightPlayers []string  `json:"rightPlayers"`
+	LeftPlayers  []string  `json:"leftPlayers"`
+	RightScore   int       `json:"rightScore"`
+	LeftScore    int       `json:"leftScore"`
+	Winner       Winner    `json:"winner,omitempty"`
+}
+
 // MarshalJSON creates JSON game representation
 func (g *Game) MarshalJSON() ([]byte, error) {
-	return json.Marshal(&struct {
-		CreatedAt    time.Time `json:"created"`
-		UpdatedAt    time.Time `json:"updated"`
-		UUID         string    `json:"uuid"`
-		Tournament   string    `json:"tournament"`
-		Table        Table     `json:"table"`
-		RightPlayers []string  `json:"rightPlayers"`
-		LeftPlayers  []string  `json:"leftPlayers"`
-		RightScore   int       `json:"rightScore"`
-		LeftScore    int       `json:"leftScore"`
-		Winner       Winner    `json:"winner,omitempty"`
-	}{
+	return json.Marshal(&GameJson{
 		CreatedAt:    g.CreatedAt,
 		UpdatedAt:    g.UpdatedAt,
 		UUID:         g.UUID,
