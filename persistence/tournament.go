@@ -81,7 +81,7 @@ func (r *tournamentRepository) AddPlayer(uuid string, p *model.Player) (model.Fo
 	}
 }
 
-func (r *tournamentRepository) FindAllPlayers(tournamentUuid string) ([]*model.TournamentPlayer, model.Found, error) {
+func (r *tournamentRepository) FindAllActivePlayers(tournamentUuid string) ([]*model.TournamentPlayer, model.Found, error) {
 	var players []*model.TournamentPlayer
 	result := r.db.Model(&model.TournamentPlayer{}).
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").

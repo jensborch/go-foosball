@@ -98,7 +98,7 @@ func TestAddRemoveTournamentPlayer(t *testing.T) {
 	tourRepo.AddPlayer(tournament.UUID, player1)
 	tourRepo.AddPlayerWithRanking(tournament.UUID, player2, 2000)
 
-	if players, found, err := tourRepo.FindAllPlayers(tournament.UUID); err != nil || !found {
+	if players, found, err := tourRepo.FindAllActivePlayers(tournament.UUID); err != nil || !found {
 		t.Errorf("Failed to find players: %s", err.Error())
 		if len(players) != 2 {
 			t.Errorf("Tournament should have two player, got %d", len(players))
@@ -152,5 +152,51 @@ func TestRandomGame(t *testing.T) {
 		t.Errorf("Failed to generate random games %s", err.Error())
 	} else if len(games) == 1 {
 		t.Errorf("Should genrate 1 random games, got %d", len(games))
+	}
+}
+
+func TestActivatePlayer(t *testing.T) {
+	tourRepo, tournament, db := initTournament(t)
+	defer db.Close()
+
+	playerRepo := NewPlayerRepository(db)
+
+	player1 := model.NewPlayer("test1", "test", "")
+	player2 := model.NewPlayer("test2", "test", "")
+
+	playerRepo.Store(player1)
+	playerRepo.Store(player2)
+
+	tourRepo.AddPlayer(tournament.UUID, player1)
+	tourRepo.AddPlayer(tournament.UUID, player2)
+
+	if found, err := tourRepo.DeactivatePlayer(tournament.UUID, player1.Nickname); err != nil || !found {
+		t.Errorf("Failed deactivate player 1: %s", err.Error())
+	}
+
+	if players, found, err := tourRepo.FindAllActivePlayers(tournament.UUID); err != nil || !found {
+		t.Errorf("Failed to find players: %s", err.Error())
+		if len(players) != 1 {
+			t.Errorf("Tournament should have one active player, got %d", len(players))
+		}
+	}
+
+	if player, _, _ := tourRepo.FindPlayer(tournament.UUID, player1.Nickname); player.Active {
+		t.Errorf("Deactivated player should not be active")
+	}
+
+	if found, err := tourRepo.ActivatePlayer(tournament.UUID, player1.Nickname); err != nil || !found {
+		t.Errorf("Failed activate player 1: %s", err.Error())
+	}
+
+	if players, found, err := tourRepo.FindAllActivePlayers(tournament.UUID); err != nil || !found {
+		t.Errorf("Failed to find players: %s", err.Error())
+		if len(players) != 2 {
+			t.Errorf("Tournament should have two active players, got %d", len(players))
+		}
+	}
+
+	if player, _, _ := tourRepo.FindPlayer(tournament.UUID, player1.Nickname); !player.Active {
+		t.Errorf("Activated player should be active")
 	}
 }

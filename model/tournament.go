@@ -33,7 +33,7 @@ type TournamentRepository interface {
 	FindTable(tournamentUuid string, tableUuid string) (*TournamentTable, Found, error)
 	AddPlayer(tournamentUuid string, p *Player) (Found, error)
 	AddPlayerWithRanking(uuid string, p *Player, ranking uint) (Found, error)
-	FindAllPlayers(tournamentUuid string) ([]*TournamentPlayer, Found, error)
+	FindAllActivePlayers(tournamentUuid string) ([]*TournamentPlayer, Found, error)
 	FindPlayer(tournamentUuid string, nickname string) (*TournamentPlayer, Found, error)
 	DeactivatePlayer(tournamentUuid string, nickname string) (Found, error)
 	ActivatePlayer(tournamentUuid string, nickname string) (Found, error)

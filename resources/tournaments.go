@@ -87,7 +87,7 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
 		defer HandlePanic(c)
-		if players, found, err := persistence.NewTournamentRepository(db).FindAllPlayers(id); err == nil && found {
+		if players, found, err := persistence.NewTournamentRepository(db).FindAllActivePlayers(id); err == nil && found {
 			c.JSON(http.StatusOK, players)
 		} else if err != nil {
 			panic(err)
