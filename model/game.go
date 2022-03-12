@@ -13,15 +13,20 @@ import (
 // Game played
 type Game struct {
 	Base
-	UUID            string          `gorm:"size:36;unique_index"`
-	TournamentTable TournamentTable `gorm:"not null"`
-	RightPlayerOne  TournamentPlayer
-	RightPlayerTwo  TournamentPlayer
-	LeftPlayerOne   TournamentPlayer
-	LeftPlayerTwo   TournamentPlayer
-	RightScore      int
-	LeftScore       int
-	Winner          Winner
+	UUID              string          `gorm:"size:36;unique_index"`
+	TournamentTableID uint            `json:"-" gorm:"not null"`
+	TournamentTable   TournamentTable `gorm:"not null"`
+	RightPlayerOneID  uint            `json:"-" gorm:"not null"`
+	RightPlayerOne    TournamentPlayer
+	RightPlayerTwoID  uint `json:"-"`
+	RightPlayerTwo    TournamentPlayer
+	LeftPlayerOneID   uint `json:"-" gorm:"not null"`
+	LeftPlayerOne     TournamentPlayer
+	LeftPlayerTwoID   uint `json:"-"`
+	LeftPlayerTwo     TournamentPlayer
+	RightScore        int
+	LeftScore         int
+	Winner            Winner
 }
 
 type GameJson struct {

@@ -11,10 +11,10 @@ type Player struct {
 // TournamentPlayer is a player in a tournament
 type TournamentPlayer struct {
 	Base
-	PlayerID     uint       `json:"-"`
+	PlayerID     uint       `json:"-" gorm:"unique_index:player_tournament;not null"`
 	Player       Player     `json:"player"`
-	TournamentID uint       `json:"tournament"`
-	Tournament   Tournament `json:"-"`
+	TournamentID uint       `json:"-" gorm:"unique_index:player_tournament;not null"`
+	Tournament   Tournament `json:"tournament"`
 	Ranking      uint       `json:"ranking"`
 	Active       bool       `json:"active"`
 }
