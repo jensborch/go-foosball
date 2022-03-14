@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "gorm.io/driver/sqlite"
 )
 
 func testDefer(c *gin.Context) {

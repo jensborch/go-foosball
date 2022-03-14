@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jensborch/go-foosball/model"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type playerRepository struct {
@@ -34,8 +34,8 @@ func (r *playerRepository) Update(player *model.Player) error {
 
 func (r *playerRepository) Find(nickname string) (*model.Player, model.Found, error) {
 	var player model.Player
-	return &player, !r.db.Where(
-		"nickname = ?", nickname).First(&player).RecordNotFound(), r.db.Error
+	result := r.db.Where("nickname = ?", nickname).First(&player)
+	return &player, result.RowsAffected > 0, result.Error
 }
 
 func (r *playerRepository) FindByTournament(id string) []*model.Player {

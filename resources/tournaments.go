@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // GetTournament gets info about a tournament

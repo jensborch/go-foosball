@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/jensborch/go-foosball/model"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 func startServer() (*httptest.Server, *gorm.DB) {
@@ -21,9 +21,8 @@ func startServer() (*httptest.Server, *gorm.DB) {
 }
 
 func TestGetPlayers(t *testing.T) {
-	ts, db := startServer()
+	ts, _ := startServer()
 	defer ts.Close()
-	defer db.Close()
 
 	resp, err := http.Get(fmt.Sprintf("%s/players", ts.URL))
 

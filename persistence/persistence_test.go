@@ -4,12 +4,12 @@ import (
 	"testing"
 
 	"github.com/jensborch/go-foosball/model"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 func InitDB(t *testing.T) *gorm.DB {
-	db, err := gorm.Open("sqlite3", ":memory:")
+	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
 	if err != nil {
 		t.Errorf("Failed to connect database: %s", err.Error())
 	}

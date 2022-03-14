@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // GetTable get info about a table

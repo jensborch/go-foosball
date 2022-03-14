@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // GetPlayer gets player info

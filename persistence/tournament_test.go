@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/jensborch/go-foosball/model"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 func initTournament(t *testing.T) (model.TournamentRepository, *model.Tournament, *gorm.DB) {
@@ -21,8 +21,7 @@ func initTournament(t *testing.T) (model.TournamentRepository, *model.Tournament
 }
 
 func TestStoreTournament(t *testing.T) {
-	r, tournament, db := initTournament(t)
-	defer db.Close()
+	r, tournament, _ := initTournament(t)
 
 	found, _, err := r.Find(tournament.UUID)
 	if err != nil {
@@ -47,7 +46,6 @@ func TestStoreTournament(t *testing.T) {
 
 func TestAddRemoveTournamentTable(t *testing.T) {
 	tourRepo, tournament, db := initTournament(t)
-	defer db.Close()
 
 	tableRepo := NewTableRepository(db)
 
@@ -77,15 +75,14 @@ func TestAddRemoveTournamentTable(t *testing.T) {
 		t.Errorf("Failed to find table: %s", err.Error())
 	}
 
-	if tables, found, err := tourRepo.FindAllTables(tournament.UUID); err != nil || !found || len(tables) != 0 {
-		t.Errorf("Not tables should be found, got %d", len(tables))
+	if tables, _, err := tourRepo.FindAllTables(tournament.UUID); err != nil || len(tables) != 0 {
+		t.Errorf("Tables should not be found, got %d", len(tables))
 	}
 
 }
 
 func TestAddRemoveTournamentPlayer(t *testing.T) {
 	tourRepo, tournament, db := initTournament(t)
-	defer db.Close()
 
 	playerRepo := NewPlayerRepository(db)
 
@@ -99,20 +96,20 @@ func TestAddRemoveTournamentPlayer(t *testing.T) {
 	tourRepo.AddPlayerWithRanking(tournament.UUID, player2, 2000)
 
 	if players, found, err := tourRepo.FindAllActivePlayers(tournament.UUID); err != nil || !found {
-		t.Errorf("Failed to find players: %s", err.Error())
+		t.Errorf("Failed to find players, got %t", found)
 		if len(players) != 2 {
 			t.Errorf("Tournament should have two player, got %d", len(players))
 		}
 	}
 
 	if player, found, err := tourRepo.FindPlayer(tournament.UUID, player1.Nickname); err != nil || !found {
-		t.Errorf("Failed to find player 1 %s", err.Error())
+		t.Errorf("Failed to find player 1, got %t", found)
 	} else if player.Ranking != 1500 {
 		t.Errorf("Player 1 should have rating 1500, got %d", player.Ranking)
 	}
 
 	if player, found, err := tourRepo.FindPlayer(tournament.UUID, player2.Nickname); err != nil || !found {
-		t.Errorf("Failed to find player 2 %s", err.Error())
+		t.Errorf("Failed to find player 2, got %t", found)
 	} else if player.Ranking != 2000 {
 		t.Errorf("Player 2 should have rating 2000, got %d", player.Ranking)
 	}
@@ -120,7 +117,6 @@ func TestAddRemoveTournamentPlayer(t *testing.T) {
 
 func TestRandomGame(t *testing.T) {
 	tourRepo, tournament, db := initTournament(t)
-	defer db.Close()
 
 	playerRepo := NewPlayerRepository(db)
 
@@ -149,15 +145,14 @@ func TestRandomGame(t *testing.T) {
 	tourRepo.AddTables(tournament.UUID, table)
 
 	if games, found, err := tourRepo.RandomGames(tournament.UUID); err != nil || !found {
-		t.Errorf("Failed to generate random games %s", err.Error())
-	} else if len(games) == 1 {
+		t.Errorf("Failed to generate random games, got %t", found)
+	} else if len(games) != 1 {
 		t.Errorf("Should genrate 1 random games, got %d", len(games))
 	}
 }
 
 func TestActivatePlayer(t *testing.T) {
 	tourRepo, tournament, db := initTournament(t)
-	defer db.Close()
 
 	playerRepo := NewPlayerRepository(db)
 
@@ -175,7 +170,7 @@ func TestActivatePlayer(t *testing.T) {
 	}
 
 	if players, found, err := tourRepo.FindAllActivePlayers(tournament.UUID); err != nil || !found {
-		t.Errorf("Failed to find players: %s", err.Error())
+		t.Errorf("Failed to find players, got %t", found)
 		if len(players) != 1 {
 			t.Errorf("Tournament should have one active player, got %d", len(players))
 		}
@@ -186,11 +181,11 @@ func TestActivatePlayer(t *testing.T) {
 	}
 
 	if found, err := tourRepo.ActivatePlayer(tournament.UUID, player1.Nickname); err != nil || !found {
-		t.Errorf("Failed activate player 1: %s", err.Error())
+		t.Errorf("Failed activate player 1, got %t", found)
 	}
 
 	if players, found, err := tourRepo.FindAllActivePlayers(tournament.UUID); err != nil || !found {
-		t.Errorf("Failed to find players: %s", err.Error())
+		t.Errorf("Failed to find players, got %t", found)
 		if len(players) != 2 {
 			t.Errorf("Tournament should have two active players, got %d", len(players))
 		}

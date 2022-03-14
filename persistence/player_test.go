@@ -4,12 +4,11 @@ import (
 	"testing"
 
 	"github.com/jensborch/go-foosball/model"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "gorm.io/driver/sqlite"
 )
 
 func TestRemoveNotFound(t *testing.T) {
 	db := InitDB(t)
-	defer db.Close()
 	r := NewPlayerRepository(db)
 	if f, _ := r.Remove("test"); f {
 		t.Errorf("Player should not be found")
@@ -18,7 +17,6 @@ func TestRemoveNotFound(t *testing.T) {
 
 func TestStorePlayer(t *testing.T) {
 	db := InitDB(t)
-	defer db.Close()
 
 	p1 := model.NewPlayer("tt", "Thomas", "rfid1")
 	p2 := model.NewPlayer("jj", "Jens", "rfid2")
@@ -54,7 +52,6 @@ func TestStorePlayer(t *testing.T) {
 func TestUpdatePlayer(t *testing.T) {
 	p := model.NewPlayer("tt", "Thomas", "rfid")
 	db := InitDB(t)
-	defer db.Close()
 
 	pr := NewPlayerRepository(db)
 	pr.Store(p)

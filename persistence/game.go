@@ -2,7 +2,7 @@ package persistence
 
 import (
 	"github.com/jensborch/go-foosball/model"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type gameRepository struct {
@@ -19,7 +19,8 @@ func (r *gameRepository) Remove(g *model.Game) error {
 
 func (r *gameRepository) Find(uuid string) (*model.Game, model.Found, error) {
 	var g model.Game
-	return &g, !r.db.Where("uuid = ?", uuid).First(&g).RecordNotFound(), r.db.Error
+	result := r.db.Where("uuid = ?", uuid).First(&g)
+	return &g, result.RowsAffected > 0, result.Error
 }
 
 func (r *gameRepository) FindAll() []*model.Game {
