@@ -5,6 +5,7 @@ import (
 
 	"github.com/jensborch/go-foosball/model"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type tournamentRepository struct {
@@ -48,6 +49,7 @@ func (r *tournamentRepository) AddTables(tournamentUuid string, tables ...*model
 func (r *tournamentRepository) FindAllTables(uuid string) ([]*model.TournamentTable, model.Found, error) {
 	var tables []*model.TournamentTable
 	result := r.db.Model(&model.TournamentTable{}).
+		Preload(clause.Associations).
 		Joins("join tournaments on tournament_tables.tournament_id = tournaments.id").
 		Where("tournaments.uuid = ?", uuid).Find(&tables)
 	return tables, result.RowsAffected > 0, result.Error
@@ -56,6 +58,7 @@ func (r *tournamentRepository) FindAllTables(uuid string) ([]*model.TournamentTa
 func (r *tournamentRepository) FindTable(tournamentUuid string, tableUuid string) (*model.TournamentTable, model.Found, error) {
 	var table model.TournamentTable
 	result := r.db.Model(&model.TournamentTable{}).
+		Preload(clause.Associations).
 		Joins("inner join tournaments on tournament_tables.tournament_id = tournaments.id").
 		Joins("inner join tables on tournament_tables.table_id = tables.id").
 		Where("tables.uuid = ?", tableUuid).
@@ -85,6 +88,7 @@ func (r *tournamentRepository) AddPlayer(uuid string, p *model.Player) (model.Fo
 func (r *tournamentRepository) FindAllActivePlayers(tournamentUuid string) ([]*model.TournamentPlayer, model.Found, error) {
 	var players []*model.TournamentPlayer
 	result := r.db.Model(&model.TournamentPlayer{}).
+		Preload(clause.Associations).
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Where("tournaments.uuid = ?", tournamentUuid).Find(&players)
 	return players, result.RowsAffected > 0, result.Error
@@ -93,6 +97,7 @@ func (r *tournamentRepository) FindAllActivePlayers(tournamentUuid string) ([]*m
 func (r *tournamentRepository) FindPlayer(tournamentUuid string, nickname string) (*model.TournamentPlayer, model.Found, error) {
 	var players model.TournamentPlayer
 	result := r.db.Model(&model.TournamentPlayer{}).
+		Preload(clause.Associations).
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Joins("inner join players on tournament_players.player_id = players.id").
 		Where("players.nickname = ?", nickname).
@@ -103,6 +108,7 @@ func (r *tournamentRepository) FindPlayer(tournamentUuid string, nickname string
 func (r *tournamentRepository) ActivePlayers(tournamentUuid string) ([]*model.TournamentPlayer, model.Found, error) {
 	var players []*model.TournamentPlayer
 	result := r.db.Model(&model.TournamentPlayer{}).
+		Preload(clause.Associations).
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Joins("inner join players on tournament_players.player_id = players.id").
 		Where("tournament_players.active = ?", true).

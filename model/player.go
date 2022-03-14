@@ -4,16 +4,16 @@ package model
 type Player struct {
 	Base
 	Nickname string `json:"nickname" binding:"required" gorm:"size:50;unique_index"`
-	RealName string `json:"realname" gorm:"type:varchar(100);not null"`
+	RealName string `json:"realname" gorm:"type:varchar(100)"`
 	RFID     string `json:"rfid,omitempty" gorm:"type:varchar(36)"`
 }
 
 // TournamentPlayer is a player in a tournament
 type TournamentPlayer struct {
 	Base
-	PlayerID     uint       `json:"-" gorm:"unique_index:player_tournament;not null"`
+	PlayerID     uint       `json:"-" gorm:"index:player_tournament,unique"`
 	Player       Player     `json:"player"`
-	TournamentID uint       `json:"-" gorm:"unique_index:player_tournament;not null"`
+	TournamentID uint       `json:"-" gorm:"index:player_tournament,unique"`
 	Tournament   Tournament `json:"tournament"`
 	Ranking      uint       `json:"ranking"`
 	Active       bool       `json:"active"`

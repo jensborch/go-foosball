@@ -81,11 +81,9 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewPlayerRepository(tx)
-		if _, found, err := r.Find(player.Nickname); found && err == nil {
+		if _, found, _ := r.Find(player.Nickname); found {
 			c.JSON(http.StatusConflict, NewErrorResponse(fmt.Sprintf("Player %s already exists", player.Nickname)))
 			return
-		} else if err != nil {
-			panic(err)
 		}
 		p := model.NewPlayer(player.Nickname, player.RealName, player.RFID)
 		if err := r.Store(p); err != nil {
