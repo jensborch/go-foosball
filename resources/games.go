@@ -96,6 +96,7 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 				}
 			}
 			game.Winner = gr.Winner
+			game.UpdateScore()
 			if err := persistence.NewGameRepository(tx).Store(game); err != nil {
 				panic(err)
 			}

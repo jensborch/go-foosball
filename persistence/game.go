@@ -3,6 +3,7 @@ package persistence
 import (
 	"github.com/jensborch/go-foosball/model"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type gameRepository struct {
@@ -19,28 +20,24 @@ func (r *gameRepository) Remove(g *model.Game) error {
 
 func (r *gameRepository) Find(uuid string) (*model.Game, model.Found, error) {
 	var g model.Game
-	result := r.db.Where("uuid = ?", uuid).First(&g)
+	result := r.db.Preload(clause.Associations).Where("uuid = ?", uuid).First(&g)
 	return &g, result.RowsAffected > 0, result.Error
 }
 
 func (r *gameRepository) FindAll() []*model.Game {
 	var games []*model.Game
-	r.db.Preload(
-		"RightPlayerOne").Preload(
-		"RightPlayerTwo").Preload(
-		"LeftPlayerOne").Preload(
-		"LeftPlayerTwo").Preload(
-		"TournamentTable").Preload(
-		"TournamentTable.Table").Find(&games)
+	r.db.Preload(clause.Associations).Find(&games)
 	return games
 }
 
 func (r *gameRepository) FindByTournament(id string) []*model.Game {
 	var games []*model.Game
-	r.db.Joins(
-		"JOIN tournament_tables ON games.tournament_table_id == tournament_tables.id "+
-			"JOIN tournaments ON tournaments.id == tournament_tables.tournament_id").Where(
-		"tournaments.uuid = ?", id).Find(&games)
+	r.db.Preload(clause.Associations).
+		Joins("inner join tournament_tables ON games.tournament_table_id == tournament_tables.id").
+		Joins("inner join tables ON tournament_tables.id = tables.id").
+		Joins("inner join tournaments ON tournaments.id == tournament_tables.tournament_id").
+		Where("tournaments.uuid = ?", id).
+		Find(&games)
 	return games
 }
 
