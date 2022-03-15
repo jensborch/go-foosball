@@ -77,34 +77,32 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 	return func(c *gin.Context) {
 		tourID := c.Param(tournamentParam)
 		tableID := c.Param(tableParam)
+		var gr GameRepresentation
+		if err := c.ShouldBindWith(&gr, binding.JSON); err != nil {
+			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+			return
+		}
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)
-		r := persistence.NewTournamentRepository(tx)
-		if table, found, err := r.FindTable(tourID, tableID); err == nil && found {
-			var gr GameRepresentation
-			if err := c.ShouldBindWith(&gr, binding.JSON); err == nil {
-				pRepo := persistence.NewPlayerRepository(tx)
-				game := model.NewGame(table)
-				for _, pID := range gr.Players {
-					if player, found, err := pRepo.Find(pID); found && err == nil {
-						if _, err := r.AddPlayer(tourID, player); err != nil {
-							panic(err)
-						}
-					} else {
-						c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Player %s does not exist in tournament %s", pID, tourID)))
-						return
-					}
+		tourRepo := persistence.NewTournamentRepository(tx)
+		if table, found, _ := tourRepo.FindTable(tourID, tableID); found {
+			game := model.NewGame(table)
+			for _, nickname := range gr.Players {
+				if player, found, _ := tourRepo.FindPlayer(tourID, nickname); found {
+					game.AddTournamentPlayer(player)
+				} else {
+					c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s in tournament %s", nickname, tourID)))
+					return
 				}
-				game.Winner = gr.Winner
-				if err := persistence.NewGameRepository(tx).Store(game); err != nil {
-					panic(err)
-				}
-				c.JSON(http.StatusOK, game)
-			} else {
-				c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			}
+			game.Winner = gr.Winner
+			if err := persistence.NewGameRepository(tx).Store(game); err != nil {
+				panic(err)
+			}
+			c.JSON(http.StatusOK, game)
+		} else {
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find table %s or tournament %s", tableID, tourID)))
 		}
-		c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find table %s in tournament %s", tableID, tourID)))
 	}
 }
 

@@ -33,7 +33,6 @@ type GameJson struct {
 	CreatedAt    time.Time `json:"created"`
 	UpdatedAt    time.Time `json:"updated"`
 	UUID         string    `json:"uuid"`
-	Tournament   string    `json:"tournament"`
 	Table        Table     `json:"table"`
 	RightPlayers []string  `json:"rightPlayers"`
 	LeftPlayers  []string  `json:"leftPlayers"`
@@ -48,6 +47,7 @@ func (g *Game) MarshalJSON() ([]byte, error) {
 		CreatedAt:    g.CreatedAt,
 		UpdatedAt:    g.UpdatedAt,
 		UUID:         g.UUID,
+		Table:        g.TournamentTable.Table,
 		RightPlayers: g.RightPlayerNames(),
 		LeftPlayers:  g.LeftPlayerNames(),
 		RightScore:   g.GetOrCalculateRightScore(),

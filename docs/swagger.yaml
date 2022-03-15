@@ -28,8 +28,6 @@ definitions:
         type: integer
       table:
         $ref: '#/definitions/model.Table'
-      tournament:
-        type: string
       updated:
         type: string
       uuid:

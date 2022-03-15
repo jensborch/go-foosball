@@ -1028,9 +1028,6 @@ const docTemplate_swagger = `{
                 "table": {
                     "$ref": "#/definitions/model.Table"
                 },
-                "tournament": {
-                    "type": "string"
-                },
                 "updated": {
                     "type": "string"
                 },
