@@ -10,34 +10,41 @@ type gameRepository struct {
 	db *gorm.DB
 }
 
-func (r *gameRepository) Store(g *model.Game) error {
-	return r.db.Create(g).Error
+func (r *gameRepository) Store(g *model.Game) {
+	if err := r.db.Create(g).Error; err != nil {
+		panic(err)
+	}
 }
 
-func (r *gameRepository) Remove(g *model.Game) error {
-	return r.db.Where("uuid = ?", g.UUID).Delete(&model.Game{}).Error
+func (r *gameRepository) Remove(uuid string) model.Found {
+	err := r.db.Where("uuid = ?", uuid).Delete(&model.Game{}).Error
+	return HasBeenFound(err)
 }
 
-func (r *gameRepository) Find(uuid string) (*model.Game, model.Found, error) {
+func (r *gameRepository) Find(uuid string) (*model.Game, model.Found) {
 	var g model.Game
 	result := r.db.Preload(clause.Associations).Where("uuid = ?", uuid).First(&g)
-	return &g, result.RowsAffected > 0, result.Error
+	return &g, HasBeenFound(result.Error)
 }
 
 func (r *gameRepository) FindAll() []*model.Game {
 	var games []*model.Game
-	r.db.Preload(clause.Associations).Find(&games)
+	if err := r.db.Preload(clause.Associations).Find(&games).Error; err != nil {
+		panic(err)
+	}
 	return games
 }
 
 func (r *gameRepository) FindByTournament(id string) []*model.Game {
 	var games []*model.Game
-	r.db.Preload(clause.Associations).
+	if err := r.db.Preload(clause.Associations).
 		Joins("inner join tournament_tables ON games.tournament_table_id == tournament_tables.id").
 		Joins("inner join tables ON tournament_tables.id = tables.id").
 		Joins("inner join tournaments ON tournaments.id == tournament_tables.tournament_id").
 		Where("tournaments.uuid = ?", id).
-		Find(&games)
+		Find(&games); err != nil {
+		panic(err)
+	}
 	return games
 }
 

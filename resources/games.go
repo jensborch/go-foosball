@@ -41,11 +41,8 @@ func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
 		r := persistence.NewTournamentRepository(db)
-		if games, found, err := r.RandomGames(id); !found {
+		if games, found := r.RandomGames(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
-			return
-		} else if err != nil {
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 			return
 		} else {
 			c.JSON(http.StatusOK, games)
@@ -85,10 +82,10 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)
 		tourRepo := persistence.NewTournamentRepository(tx)
-		if table, found, _ := tourRepo.FindTable(tourID, tableID); found {
+		if table, found := tourRepo.FindTable(tourID, tableID); found {
 			game := model.NewGame(table)
 			for _, nickname := range gr.Players {
-				if player, found, _ := tourRepo.FindPlayer(tourID, nickname); found {
+				if player, found := tourRepo.FindPlayer(tourID, nickname); found {
 					game.AddTournamentPlayer(player)
 				} else {
 					c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s in tournament %s", nickname, tourID)))
@@ -97,9 +94,7 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 			}
 			game.Winner = gr.Winner
 			game.UpdateScore()
-			if err := persistence.NewGameRepository(tx).Store(game); err != nil {
-				panic(err)
-			}
+			persistence.NewGameRepository(tx).Store(game)
 			c.JSON(http.StatusOK, game)
 		} else {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find table %s or tournament %s", tableID, tourID)))
@@ -120,11 +115,8 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 func GetGame(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		if g, found, err := persistence.NewGameRepository(db).Find(id); !found {
+		if g, found := persistence.NewGameRepository(db).Find(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find game %s", id)))
-			return
-		} else if err != nil {
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 			return
 		} else {
 			c.JSON(http.StatusOK, g)

@@ -22,22 +22,22 @@ type TournamentTable struct {
 
 // TournamentRepository provides access games etc.
 type TournamentRepository interface {
-	Store(tournament *Tournament) error
-	Remove(tournament *Tournament) error
-	Update(tournament *Tournament) error
-	Find(uuid string) (*Tournament, Found, error)
+	Store(tournament *Tournament)
+	Remove(uuid string) Found
+	Update(tournament *Tournament)
+	Find(uuid string) (*Tournament, Found)
 	FindAll() []*Tournament
-	RemoveTable(tournamentUuid string, tableUuid string) (Found, error)
-	AddTables(tournamentUuid string, tables ...*Table) (Found, error)
-	FindAllTables(uuid string) ([]*TournamentTable, Found, error)
-	FindTable(tournamentUuid string, tableUuid string) (*TournamentTable, Found, error)
-	AddPlayer(tournamentUuid string, p *Player) (Found, error)
-	AddPlayerWithRanking(uuid string, p *Player, ranking uint) (Found, error)
-	FindAllActivePlayers(tournamentUuid string) ([]*TournamentPlayer, Found, error)
-	FindPlayer(tournamentUuid string, nickname string) (*TournamentPlayer, Found, error)
-	DeactivatePlayer(tournamentUuid string, nickname string) (Found, error)
-	ActivatePlayer(tournamentUuid string, nickname string) (Found, error)
-	RandomGames(uuid string) ([]*Game, Found, error)
+	RemoveTable(tournamentUuid string, tableUuid string) Found
+	AddTables(tournamentUuid string, table *Table) (*TournamentTable, Found)
+	FindAllTables(uuid string) ([]*TournamentTable, Found)
+	FindTable(tournamentUuid string, tableUuid string) (*TournamentTable, Found)
+	AddPlayer(tournamentUuid string, p *Player) (*TournamentPlayer, Found)
+	AddPlayerWithRanking(uuid string, p *Player, ranking uint) (*TournamentPlayer, Found)
+	FindAllActivePlayers(tournamentUuid string) ([]*TournamentPlayer, Found)
+	FindPlayer(tournamentUuid string, nickname string) (*TournamentPlayer, Found)
+	DeactivatePlayer(tournamentUuid string, nickname string) Found
+	ActivatePlayer(tournamentUuid string, nickname string) Found
+	RandomGames(uuid string) ([]*Game, Found)
 }
 
 // NewTournament creates a new tournament

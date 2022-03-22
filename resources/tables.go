@@ -99,11 +99,8 @@ func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
 		tournamentRepo := persistence.NewTournamentRepository(db)
-		if tables, found, err := tournamentRepo.FindAllTables(id); !found {
+		if tables, found := tournamentRepo.FindAllTables(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
-			return
-		} else if err != nil {
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 			return
 		} else {
 			c.JSON(http.StatusOK, tables)
@@ -141,10 +138,8 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewTournamentRepository(tx)
 		if table, found, err := persistence.NewTableRepository(tx).Find(representation.UUID); err == nil && found {
-			if found, err := r.AddTables(id, table); err == nil && found {
+			if _, found := r.AddTables(id, table); found {
 				c.JSON(http.StatusOK, table)
-			} else if err != nil {
-				panic(err)
 			} else {
 				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 			}
@@ -174,10 +169,8 @@ func DeleteTournamentTable(tournamentParam string, tableParam string, db *gorm.D
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewTournamentRepository(tx)
-		if found, err := r.RemoveTable(tourId, tableId); err == nil && found {
+		if found := r.RemoveTable(tourId, tableId); found {
 			c.Status(http.StatusNoContent)
-		} else if err != nil {
-			panic(err)
 		} else {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s or table %s", tourId, tableId)))
 		}

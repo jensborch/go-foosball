@@ -196,8 +196,9 @@ func (g *Game) AddTournamentPlayer(p *TournamentPlayer) error {
 
 // GameRepository provides access games etc.
 type GameRepository interface {
-	Store(game *Game) error
-	Find(uuid string) (*Game, Found, error)
+	Store(game *Game)
+	Find(uuid string) (*Game, Found)
+	Remove(uuid string) Found
 	FindAll() []*Game
 	FindByTournament(uuid string) []*Game
 }
