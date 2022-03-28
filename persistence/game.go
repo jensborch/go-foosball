@@ -37,12 +37,13 @@ func (r *gameRepository) FindAll() []*model.Game {
 
 func (r *gameRepository) FindByTournament(id string) []*model.Game {
 	var games []*model.Game
-	if err := r.db.Preload(clause.Associations).
-		Joins("inner join tournament_tables ON games.tournament_table_id == tournament_tables.id").
-		Joins("inner join tables ON tournament_tables.id = tables.id").
-		Joins("inner join tournaments ON tournaments.id == tournament_tables.tournament_id").
+	if err := r.db.Model(&model.Game{}).
+		Preload(clause.Associations).
+		Joins("inner join tournament_tables on games.tournament_table_id == tournament_tables.id").
+		Joins("inner join tables on tournament_tables.table_id = tables.id").
+		Joins("inner join tournaments on tournaments.id == tournament_tables.tournament_id").
 		Where("tournaments.uuid = ?", id).
-		Find(&games); err != nil {
+		Find(&games).Error; err != nil {
 		panic(err)
 	}
 	return games
