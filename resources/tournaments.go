@@ -157,22 +157,16 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 		defer HandlePanicInTransaction(c, tx)
 		tourRepo := persistence.NewTournamentRepository(tx)
 		playerRepo := persistence.NewPlayerRepository(tx)
-		if p, found, err := playerRepo.Find(pr.Nickname); !found {
+		if p, found := playerRepo.Find(pr.Nickname); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s", pr.Nickname)))
-		} else if err != nil {
-			panic(err)
 		} else {
 			if pr.Ranking == 0 {
 				if result, found := tourRepo.AddPlayer(id, p); found {
 					c.JSON(http.StatusOK, result)
-				} else {
-					panic(err)
 				}
 			} else {
 				if result, found := tourRepo.AddPlayerWithRanking(id, p, pr.Ranking); found {
 					c.JSON(http.StatusOK, result)
-				} else {
-					panic(err)
 				}
 			}
 		}

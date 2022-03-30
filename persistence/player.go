@@ -1,9 +1,6 @@
 package persistence
 
 import (
-	"errors"
-	"fmt"
-
 	"github.com/jensborch/go-foosball/model"
 	"gorm.io/gorm"
 )
@@ -12,30 +9,37 @@ type playerRepository struct {
 	db *gorm.DB
 }
 
-func (r *playerRepository) Store(player *model.Player) error {
+func (r *playerRepository) Store(player *model.Player) {
 	r.db.Unscoped().Where("nickname = ?", player.Nickname).Delete(&model.Player{})
-	return r.db.Create(player).Error
+	if err := r.db.Create(player).Error; err != nil {
+		panic(err)
+	}
 }
 
-func (r *playerRepository) Remove(nickname string) (model.Found, error) {
+func (r *playerRepository) Remove(nickname string) model.Found {
 	if len(nickname) > 0 {
 		//TODO add check for tournament
-		if _, found, _ := r.Find(nickname); found {
-			return true, r.db.Where("nickname = ?", nickname).Delete(&model.Player{}).Error
+		if _, found := r.Find(nickname); found {
+			if err := r.db.Where("nickname = ?", nickname).Delete(&model.Player{}).Error; err != nil {
+				panic(err)
+			} else {
+				return true
+			}
 		}
-		return false, fmt.Errorf("player %s could not be found or is in tournament", nickname)
 	}
-	return false, errors.New("nickname must be defined - empty string not allowed")
+	return false
 }
 
-func (r *playerRepository) Update(player *model.Player) error {
-	return r.db.Save(player).Error
+func (r *playerRepository) Update(player *model.Player) {
+	if err := r.db.Save(player).Error; err != nil {
+		panic(err)
+	}
 }
 
-func (r *playerRepository) Find(nickname string) (*model.Player, model.Found, error) {
+func (r *playerRepository) Find(nickname string) (*model.Player, model.Found) {
 	var player model.Player
 	result := r.db.Where("nickname = ?", nickname).First(&player)
-	return &player, result.RowsAffected > 0, result.Error
+	return &player, HasBeenFound(result.Error)
 }
 
 func (r *playerRepository) FindByTournament(id string) []*model.Player {

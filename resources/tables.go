@@ -23,16 +23,12 @@ import (
 // @Router       /tables/{id} [get]
 func GetTable(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		id := c.Param(param)
 		defer HandlePanic(c)
-		if t, found, err := persistence.NewTableRepository(db).Find(id); err == nil {
-			if found {
-				c.JSON(http.StatusOK, t)
-			} else {
-				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", id)))
-			}
+		id := c.Param(param)
+		if t, found := persistence.NewTableRepository(db).Find(id); found {
+			c.JSON(http.StatusOK, t)
 		} else {
-			panic(err)
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", id)))
 		}
 	}
 }
@@ -46,6 +42,7 @@ func GetTable(param string, db *gorm.DB) func(*gin.Context) {
 // @Router       /tables [get]
 func GetTables(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		c.JSON(http.StatusOK, persistence.NewTableRepository(db).FindAll())
 	}
 }
@@ -70,18 +67,14 @@ func PostTable(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var table CreateTableRepresentation
 		if err := c.ShouldBindWith(&table, binding.JSON); err == nil {
-			tx := db.Begin()
-			t := model.NewTable(table.Name, table.Color)
-			if err := persistence.NewTableRepository(tx).Store(t); err == nil {
-				tx.Commit()
-				c.JSON(http.StatusOK, t)
-			} else {
-				c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
-				tx.Rollback()
-			}
-		} else {
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+			return
 		}
+		tx := db.Begin()
+		defer HandlePanicInTransaction(c, tx)
+		t := model.NewTable(table.Name, table.Color)
+		persistence.NewTableRepository(tx).Store(t)
+		c.JSON(http.StatusOK, t)
 	}
 }
 
@@ -97,14 +90,13 @@ func PostTable(db *gorm.DB) func(*gin.Context) {
 // @Router       /tournaments/{id}/tables [get]
 func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		id := c.Param(param)
 		tournamentRepo := persistence.NewTournamentRepository(db)
 		if tables, found := tournamentRepo.FindAllTables(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
-			return
 		} else {
 			c.JSON(http.StatusOK, tables)
-			return
 		}
 	}
 }
@@ -137,17 +129,13 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewTournamentRepository(tx)
-		if table, found, err := persistence.NewTableRepository(tx).Find(representation.UUID); err == nil && found {
+		if table, found := persistence.NewTableRepository(tx).Find(representation.UUID); found {
 			if _, found := r.AddTables(id, table); found {
 				c.JSON(http.StatusOK, table)
-			} else {
-				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
+				return
 			}
-		} else if err != nil {
-			panic(err)
-		} else {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find table %s", representation.UUID)))
 		}
+		c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 	}
 }
 
