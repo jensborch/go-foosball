@@ -15,13 +15,13 @@ func (r *tableRepository) Store(t *model.Table) {
 	}
 }
 
-func (r *tableRepository) Remove(uuid string) model.Found {
-	return HasBeenFound(r.db.Where("uuid = ?", uuid).Delete(&model.Table{}).Error)
+func (r *tableRepository) Remove(id string) model.Found {
+	return HasBeenFound(r.db.Where("ID = ?", id).Delete(&model.Table{}).Error)
 }
 
-func (r *tableRepository) Find(uuid string) (*model.Table, model.Found) {
+func (r *tableRepository) Find(id string) (*model.Table, model.Found) {
 	var t model.Table
-	rersult := r.db.Where("uuid = ?", uuid).First(&t)
+	rersult := r.db.Where("ID = ?", id).First(&t)
 	return &t, HasBeenFound(rersult.Error)
 }
 

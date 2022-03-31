@@ -1,6 +1,7 @@
 package model
 
 import (
+	"strconv"
 	"time"
 
 	"gorm.io/gorm"
@@ -15,4 +16,8 @@ type Base struct {
 	CreatedAt time.Time      `json:"created"`
 	UpdatedAt time.Time      `json:"updated"`
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
+}
+
+func (g *Base) IdAsString() string {
+	return strconv.FormatUint(uint64(g.ID), 10)
 }

@@ -39,10 +39,6 @@ func initDuroGame() *Game {
 func TestCreateSingleGame(t *testing.T) {
 	g := initSingleGame()
 
-	if len(g.UUID) != 36 {
-		t.Errorf("Player should have UUID, got: %s", g.UUID)
-	}
-
 	if g.Right()[0].RealName != "Thomas" {
 		t.Errorf("Right player is incorrect, got: %s, want: %s.", g.Right()[0].RealName, "Thomas")
 	}
@@ -68,10 +64,6 @@ func TestCreateSingleGame(t *testing.T) {
 
 func TestCreateDuroGame(t *testing.T) {
 	g := initDuroGame()
-
-	if len(g.UUID) != 36 {
-		t.Errorf("Player should have UUID, got: %s", g.UUID)
-	}
 
 	if g.Right()[1].RealName != "Emilie" {
 		t.Errorf("Right player is incorrect, got: %s, want: %s.", g.Right()[1].RealName, "Emilie")

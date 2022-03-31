@@ -1025,13 +1025,10 @@ const docTemplate_swagger = `{
                 "rightScore": {
                     "type": "integer"
                 },
-                "table": {
-                    "$ref": "#/definitions/model.Table"
+                "tableId": {
+                    "type": "integer"
                 },
                 "updated": {
-                    "type": "string"
-                },
-                "uuid": {
                     "type": "string"
                 },
                 "winner": {
@@ -1080,9 +1077,6 @@ const docTemplate_swagger = `{
                 },
                 "updated": {
                     "type": "string"
-                },
-                "uuid": {
-                    "type": "string"
                 }
             }
         },
@@ -1108,9 +1102,6 @@ const docTemplate_swagger = `{
                 },
                 "updated": {
                     "type": "string"
-                },
-                "uuid": {
-                    "type": "string"
                 }
             }
         },
@@ -1122,9 +1113,6 @@ const docTemplate_swagger = `{
                 },
                 "table": {
                     "$ref": "#/definitions/model.Table"
-                },
-                "tournament": {
-                    "$ref": "#/definitions/model.Tournament"
                 },
                 "updated": {
                     "type": "string"
@@ -1222,10 +1210,10 @@ const docTemplate_swagger = `{
         "resources.TableRepresentation": {
             "type": "object",
             "required": [
-                "uuid"
+                "ID"
             ],
             "properties": {
-                "uuid": {
+                "ID": {
                     "type": "string"
                 }
             }

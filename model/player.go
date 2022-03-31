@@ -14,7 +14,7 @@ type TournamentPlayer struct {
 	PlayerID     uint       `json:"-" gorm:"index:player_tournament,unique"`
 	Player       Player     `json:"player"`
 	TournamentID uint       `json:"-" gorm:"index:player_tournament,unique"`
-	Tournament   Tournament `json:"tournament"`
+	Tournament   Tournament `json:"-"`
 	Ranking      uint       `json:"ranking"`
 	Active       bool       `json:"active"`
 }

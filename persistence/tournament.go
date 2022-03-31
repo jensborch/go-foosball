@@ -18,25 +18,25 @@ func (r *tournamentRepository) Store(t *model.Tournament) {
 	}
 }
 
-func (r *tournamentRepository) Remove(uuid string) model.Found {
-	err := r.db.Where("uuid = ?", uuid).Delete(&model.Tournament{}).Error
+func (r *tournamentRepository) Remove(id string) model.Found {
+	err := r.db.Where("ID = ?", id).Delete(&model.Tournament{}).Error
 	return HasBeenFound(err)
 }
 
-func (r *tournamentRepository) RemoveTable(tournamentUuid string, tableUuid string) model.Found {
+func (r *tournamentRepository) RemoveTable(tournamentId string, tableId string) model.Found {
 	err := r.db.Model(&model.TournamentTable{}).
 		Where("table_id = (?)", r.db.Model(&model.Table{}).
 			Select("id").
-			Where("uuid = ?", tableUuid)).
+			Where("ID = ?", tableId)).
 		Where("tournament_id = (?)", r.db.Model(&model.Tournament{}).
 			Select("id").
-			Where("uuid = ?", tournamentUuid)).
+			Where("ID = ?", tournamentId)).
 		Delete(&model.TournamentTable{}).Error
 	return HasBeenFound(err)
 }
 
-func (r *tournamentRepository) AddTables(tournamentUuid string, table *model.Table) (*model.TournamentTable, model.Found) {
-	if t, found := r.Find(tournamentUuid); found {
+func (r *tournamentRepository) AddTables(tournamentId string, table *model.Table) (*model.TournamentTable, model.Found) {
+	if t, found := r.Find(tournamentId); found {
 		t := model.NewTournamentTable(t, table)
 		if err := r.db.Create(t).Error; err != nil {
 			panic(err)
@@ -47,28 +47,28 @@ func (r *tournamentRepository) AddTables(tournamentUuid string, table *model.Tab
 	}
 }
 
-func (r *tournamentRepository) FindAllTables(uuid string) ([]*model.TournamentTable, model.Found) {
+func (r *tournamentRepository) FindAllTables(id string) ([]*model.TournamentTable, model.Found) {
 	var tables []*model.TournamentTable
 	err := r.db.Model(&model.TournamentTable{}).
 		Preload(clause.Associations).
 		Joins("join tournaments on tournament_tables.tournament_id = tournaments.id").
-		Where("tournaments.uuid = ?", uuid).Find(&tables).Error
+		Where("tournaments.ID = ?", id).Find(&tables).Error
 	return tables, HasBeenFound(err)
 }
 
-func (r *tournamentRepository) FindTable(tournamentUuid string, tableUuid string) (*model.TournamentTable, model.Found) {
+func (r *tournamentRepository) FindTable(tournamentId string, tableId string) (*model.TournamentTable, model.Found) {
 	var table model.TournamentTable
 	err := r.db.Model(&model.TournamentTable{}).
 		Preload(clause.Associations).
 		Joins("inner join tournaments on tournament_tables.tournament_id = tournaments.id").
 		Joins("inner join tables on tournament_tables.table_id = tables.id").
-		Where("tables.uuid = ?", tableUuid).
-		Where("tournaments.uuid = ?", tournamentUuid).Find(&table).Error
+		Where("tables.ID = ?", tableId).
+		Where("tournaments.ID = ?", tournamentId).Find(&table).Error
 	return &table, HasBeenFound(err)
 }
 
-func (r *tournamentRepository) AddPlayerWithRanking(uuid string, p *model.Player, ranking uint) (*model.TournamentPlayer, model.Found) {
-	if t, found := r.Find(uuid); found {
+func (r *tournamentRepository) AddPlayerWithRanking(id string, p *model.Player, ranking uint) (*model.TournamentPlayer, model.Found) {
+	if t, found := r.Find(id); found {
 		tp := model.NewTournamentPlayerWithRanking(p, t, ranking)
 		r.db.Create(tp)
 		/*if err := r.db.Create(tp); err != nil {
@@ -80,8 +80,8 @@ func (r *tournamentRepository) AddPlayerWithRanking(uuid string, p *model.Player
 	}
 }
 
-func (r *tournamentRepository) AddPlayer(uuid string, p *model.Player) (*model.TournamentPlayer, model.Found) {
-	if t, found := r.Find(uuid); found {
+func (r *tournamentRepository) AddPlayer(id string, p *model.Player) (*model.TournamentPlayer, model.Found) {
+	if t, found := r.Find(id); found {
 		tp := model.NewTournamentPlayer(p, t)
 		r.db.Create(tp)
 		/*if err := r.db.Create(tp); err != nil {
@@ -93,39 +93,39 @@ func (r *tournamentRepository) AddPlayer(uuid string, p *model.Player) (*model.T
 	}
 }
 
-func (r *tournamentRepository) FindAllActivePlayers(tournamentUuid string) ([]*model.TournamentPlayer, model.Found) {
+func (r *tournamentRepository) FindAllActivePlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {
 	var players []*model.TournamentPlayer
 	err := r.db.Model(&model.TournamentPlayer{}).
 		Preload(clause.Associations).
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
-		Where("tournaments.uuid = ?", tournamentUuid).Find(&players).Error
+		Where("tournaments.ID = ?", tournamentId).Find(&players).Error
 	return players, HasBeenFound(err)
 }
 
-func (r *tournamentRepository) FindPlayer(tournamentUuid string, nickname string) (*model.TournamentPlayer, model.Found) {
+func (r *tournamentRepository) FindPlayer(tournamentId string, nickname string) (*model.TournamentPlayer, model.Found) {
 	var players model.TournamentPlayer
 	err := r.db.Model(&model.TournamentPlayer{}).
 		Preload(clause.Associations).
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Joins("inner join players on tournament_players.player_id = players.id").
 		Where("players.nickname = ?", nickname).
-		Where("tournaments.uuid = ?", tournamentUuid).Find(&players).Error
+		Where("tournaments.ID = ?", tournamentId).Find(&players).Error
 	return &players, HasBeenFound(err)
 }
 
-func (r *tournamentRepository) ActivePlayers(tournamentUuid string) ([]*model.TournamentPlayer, model.Found) {
+func (r *tournamentRepository) ActivePlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {
 	var players []*model.TournamentPlayer
 	err := r.db.Model(&model.TournamentPlayer{}).
 		Preload(clause.Associations).
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Joins("inner join players on tournament_players.player_id = players.id").
 		Where("tournament_players.active = ?", true).
-		Where("tournaments.uuid = ?", tournamentUuid).Find(&players).Error
+		Where("tournaments.ID = ?", tournamentId).Find(&players).Error
 	return players, HasBeenFound(err)
 }
 
-func (r *tournamentRepository) DeactivatePlayer(tournamentUuid string, nickname string) model.Found {
-	if player, found := r.FindPlayer(tournamentUuid, nickname); found {
+func (r *tournamentRepository) DeactivatePlayer(tournamentId string, nickname string) model.Found {
+	if player, found := r.FindPlayer(tournamentId, nickname); found {
 		player.Active = false
 		if err := r.db.Save(player).Error; err != nil {
 			panic(err)
@@ -135,8 +135,8 @@ func (r *tournamentRepository) DeactivatePlayer(tournamentUuid string, nickname 
 	return false
 }
 
-func (r *tournamentRepository) ActivatePlayer(tournamentUuid string, nickname string) model.Found {
-	if player, found := r.FindPlayer(tournamentUuid, nickname); found {
+func (r *tournamentRepository) ActivatePlayer(tournamentId string, nickname string) model.Found {
+	if player, found := r.FindPlayer(tournamentId, nickname); found {
 		player.Active = true
 		if err := r.db.Save(player).Error; err != nil {
 			panic(err)
@@ -146,8 +146,8 @@ func (r *tournamentRepository) ActivatePlayer(tournamentUuid string, nickname st
 	return false
 }
 
-func (r *tournamentRepository) ShuffleActivePlayers(tournamentUuid string) ([]*model.TournamentPlayer, model.Found) {
-	if players, found := r.ActivePlayers(tournamentUuid); found {
+func (r *tournamentRepository) ShuffleActivePlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {
+	if players, found := r.ActivePlayers(tournamentId); found {
 		rand.Shuffle(len(players), func(i, j int) {
 			players[i], players[j] = players[j], players[i]
 		})
@@ -157,12 +157,12 @@ func (r *tournamentRepository) ShuffleActivePlayers(tournamentUuid string) ([]*m
 	}
 }
 
-func (r *tournamentRepository) RandomGames(tournamentUuid string) ([]*model.Game, model.Found) {
-	if players, found := r.ShuffleActivePlayers(tournamentUuid); found {
+func (r *tournamentRepository) RandomGames(tournamentId string) ([]*model.Game, model.Found) {
+	if players, found := r.ShuffleActivePlayers(tournamentId); found {
 		games := make([]*model.Game, 0, 2)
 		if len(players) >= 2 {
 			i := 0
-			tables, _ := r.FindAllTables(tournamentUuid)
+			tables, _ := r.FindAllTables(tournamentId)
 			for _, table := range tables {
 				g := model.NewGame(table)
 				playersInGameIndex := min(i+4, len(players))
@@ -193,9 +193,9 @@ func (r *tournamentRepository) Update(t *model.Tournament) {
 	}
 }
 
-func (r *tournamentRepository) Find(uuid string) (*model.Tournament, model.Found) {
+func (r *tournamentRepository) Find(id string) (*model.Tournament, model.Found) {
 	var t model.Tournament
-	error := r.db.Where(&model.Tournament{UUID: uuid}).First(&t).Error
+	error := r.db.First(&t, id).Error
 	return &t, HasBeenFound(error)
 }
 

@@ -1017,13 +1017,10 @@
                 "rightScore": {
                     "type": "integer"
                 },
-                "table": {
-                    "$ref": "#/definitions/model.Table"
+                "tableId": {
+                    "type": "integer"
                 },
                 "updated": {
-                    "type": "string"
-                },
-                "uuid": {
                     "type": "string"
                 },
                 "winner": {
@@ -1072,9 +1069,6 @@
                 },
                 "updated": {
                     "type": "string"
-                },
-                "uuid": {
-                    "type": "string"
                 }
             }
         },
@@ -1100,9 +1094,6 @@
                 },
                 "updated": {
                     "type": "string"
-                },
-                "uuid": {
-                    "type": "string"
                 }
             }
         },
@@ -1114,9 +1105,6 @@
                 },
                 "table": {
                     "$ref": "#/definitions/model.Table"
-                },
-                "tournament": {
-                    "$ref": "#/definitions/model.Tournament"
                 },
                 "updated": {
                     "type": "string"
@@ -1214,10 +1202,10 @@
         "resources.TableRepresentation": {
             "type": "object",
             "required": [
-                "uuid"
+                "ID"
             ],
             "properties": {
-                "uuid": {
+                "ID": {
                     "type": "string"
                 }
             }

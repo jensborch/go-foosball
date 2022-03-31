@@ -1,13 +1,8 @@
 package model
 
-import (
-	uuid "github.com/satori/go.uuid"
-)
-
 // Tournament played
 type Tournament struct {
 	Base
-	UUID           string `json:"uuid" gorm:"size:36;unique_index"`
 	Name           string `json:"name" binding:"required" gorm:"type:varchar(100)"`
 	GameScore      uint   `json:"score" binding:"required"`
 	InitialRanking uint   `json:"initial" binding:"required"`
@@ -16,35 +11,33 @@ type TournamentTable struct {
 	Base
 	TableID      uint       `json:"-"`
 	Table        Table      `json:"table"`
-	TournamentID uint       `json:"-"`
-	Tournament   Tournament `json:"tournament"`
+	TournamentId uint       `json:"-"`
+	Tournament   Tournament `json:"-"`
 }
 
 // TournamentRepository provides access games etc.
 type TournamentRepository interface {
 	Store(tournament *Tournament)
-	Remove(uuid string) Found
+	Remove(id string) Found
 	Update(tournament *Tournament)
-	Find(uuid string) (*Tournament, Found)
+	Find(id string) (*Tournament, Found)
 	FindAll() []*Tournament
-	RemoveTable(tournamentUuid string, tableUuid string) Found
-	AddTables(tournamentUuid string, table *Table) (*TournamentTable, Found)
-	FindAllTables(uuid string) ([]*TournamentTable, Found)
-	FindTable(tournamentUuid string, tableUuid string) (*TournamentTable, Found)
-	AddPlayer(tournamentUuid string, p *Player) (*TournamentPlayer, Found)
-	AddPlayerWithRanking(uuid string, p *Player, ranking uint) (*TournamentPlayer, Found)
-	FindAllActivePlayers(tournamentUuid string) ([]*TournamentPlayer, Found)
-	FindPlayer(tournamentUuid string, nickname string) (*TournamentPlayer, Found)
-	DeactivatePlayer(tournamentUuid string, nickname string) Found
-	ActivatePlayer(tournamentUuid string, nickname string) Found
-	RandomGames(uuid string) ([]*Game, Found)
+	RemoveTable(tournamentId string, tableId string) Found
+	AddTables(tournamentId string, table *Table) (*TournamentTable, Found)
+	FindAllTables(id string) ([]*TournamentTable, Found)
+	FindTable(tournamentId string, tableId string) (*TournamentTable, Found)
+	AddPlayer(tournamentId string, p *Player) (*TournamentPlayer, Found)
+	AddPlayerWithRanking(id string, p *Player, ranking uint) (*TournamentPlayer, Found)
+	FindAllActivePlayers(tournamentId string) ([]*TournamentPlayer, Found)
+	FindPlayer(tournamentId string, nickname string) (*TournamentPlayer, Found)
+	DeactivatePlayer(tournamentId string, nickname string) Found
+	ActivatePlayer(tournamentId string, nickname string) Found
+	RandomGames(id string) ([]*Game, Found)
 }
 
 // NewTournament creates a new tournament
 func NewTournament(name string) *Tournament {
-	id := uuid.Must(uuid.NewV4(), nil).String()
 	result := &Tournament{
-		UUID:           id,
 		Name:           name,
 		GameScore:      50,
 		InitialRanking: 1500,

@@ -103,7 +103,7 @@ func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 
 // TableRepresentation JSON representation for adding table to tournament
 type TableRepresentation struct {
-	UUID string `json:"uuid" binding:"required"`
+	ID string `json:"ID" binding:"required"`
 }
 
 // PostTournamentTables adds a table to a tournament
@@ -129,7 +129,7 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewTournamentRepository(tx)
-		if table, found := persistence.NewTableRepository(tx).Find(representation.UUID); found {
+		if table, found := persistence.NewTableRepository(tx).Find(representation.ID); found {
 			if _, found := r.AddTables(id, table); found {
 				c.JSON(http.StatusOK, table)
 				return

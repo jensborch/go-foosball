@@ -26,11 +26,9 @@ definitions:
         type: array
       rightScore:
         type: integer
-      table:
-        $ref: '#/definitions/model.Table'
+      tableId:
+        type: integer
       updated:
-        type: string
-      uuid:
         type: string
       winner:
         type: string
@@ -60,8 +58,6 @@ definitions:
         type: string
       updated:
         type: string
-      uuid:
-        type: string
     required:
     - color
     - name
@@ -78,8 +74,6 @@ definitions:
         type: integer
       updated:
         type: string
-      uuid:
-        type: string
     required:
     - initial
     - name
@@ -91,8 +85,6 @@ definitions:
         type: string
       table:
         $ref: '#/definitions/model.Table'
-      tournament:
-        $ref: '#/definitions/model.Tournament'
       updated:
         type: string
     type: object
@@ -155,10 +147,10 @@ definitions:
     type: object
   resources.TableRepresentation:
     properties:
-      uuid:
+      ID:
         type: string
     required:
-    - uuid
+    - ID
     type: object
   resources.TournamentCreateRepresentation:
     properties:

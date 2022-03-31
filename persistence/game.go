@@ -16,14 +16,14 @@ func (r *gameRepository) Store(g *model.Game) {
 	}
 }
 
-func (r *gameRepository) Remove(uuid string) model.Found {
-	err := r.db.Where("uuid = ?", uuid).Delete(&model.Game{}).Error
+func (r *gameRepository) Remove(id string) model.Found {
+	err := r.db.Where("ID = ?", id).Delete(&model.Game{}).Error
 	return HasBeenFound(err)
 }
 
-func (r *gameRepository) Find(uuid string) (*model.Game, model.Found) {
+func (r *gameRepository) Find(id string) (*model.Game, model.Found) {
 	var g model.Game
-	result := r.db.Preload(clause.Associations).Where("uuid = ?", uuid).First(&g)
+	result := r.db.Preload(clause.Associations).Where("ID = ?", id).First(&g)
 	return &g, HasBeenFound(result.Error)
 }
 
@@ -42,7 +42,7 @@ func (r *gameRepository) FindByTournament(id string) []*model.Game {
 		Joins("inner join tournament_tables on games.tournament_table_id == tournament_tables.id").
 		Joins("inner join tables on tournament_tables.table_id = tables.id").
 		Joins("inner join tournaments on tournaments.id == tournament_tables.tournament_id").
-		Where("tournaments.uuid = ?", id).
+		Where("tournaments.ID = ?", id).
 		Find(&games).Error; err != nil {
 		panic(err)
 	}

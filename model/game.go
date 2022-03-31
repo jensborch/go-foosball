@@ -6,23 +6,20 @@ import (
 	"math"
 	"reflect"
 	"time"
-
-	uuid "github.com/satori/go.uuid"
 )
 
 // Game played
 type Game struct {
 	Base
-	UUID              string          `gorm:"size:36;unique_index"`
-	TournamentTableID uint            `json:"-" gorm:"not null"`
+	TournamentTableID uint            `gorm:"not null"`
 	TournamentTable   TournamentTable `gorm:"not null"`
-	RightPlayerOneID  uint            `json:"-" gorm:"not null"`
+	RightPlayerOneID  uint            `gorm:"not null"`
 	RightPlayerOne    TournamentPlayer
-	RightPlayerTwoID  uint `json:"-"`
+	RightPlayerTwoID  uint
 	RightPlayerTwo    TournamentPlayer
-	LeftPlayerOneID   uint `json:"-" gorm:"not null"`
+	LeftPlayerOneID   uint `gorm:"not null"`
 	LeftPlayerOne     TournamentPlayer
-	LeftPlayerTwoID   uint `json:"-"`
+	LeftPlayerTwoID   uint
 	LeftPlayerTwo     TournamentPlayer
 	RightScore        int
 	LeftScore         int
@@ -32,8 +29,7 @@ type Game struct {
 type GameJson struct {
 	CreatedAt    time.Time `json:"created"`
 	UpdatedAt    time.Time `json:"updated"`
-	UUID         string    `json:"uuid"`
-	Table        Table     `json:"table"`
+	TableID      uint      `json:"tableId"`
 	RightPlayers []string  `json:"rightPlayers"`
 	LeftPlayers  []string  `json:"leftPlayers"`
 	RightScore   int       `json:"rightScore"`
@@ -46,8 +42,7 @@ func (g *Game) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&GameJson{
 		CreatedAt:    g.CreatedAt,
 		UpdatedAt:    g.UpdatedAt,
-		UUID:         g.UUID,
-		Table:        g.TournamentTable.Table,
+		TableID:      g.TournamentTable.ID,
 		RightPlayers: g.RightPlayerNames(),
 		LeftPlayers:  g.LeftPlayerNames(),
 		RightScore:   g.GetOrCalculateRightScore(),
@@ -197,17 +192,15 @@ func (g *Game) AddTournamentPlayer(p *TournamentPlayer) error {
 // GameRepository provides access games etc.
 type GameRepository interface {
 	Store(game *Game)
-	Find(uuid string) (*Game, Found)
-	Remove(uuid string) Found
+	Find(id string) (*Game, Found)
+	Remove(id string) Found
 	FindAll() []*Game
-	FindByTournament(uuid string) []*Game
+	FindByTournament(id string) []*Game
 }
 
 // NewGame creates a new game
 func NewGame(table *TournamentTable) *Game {
-	id := uuid.Must(uuid.NewV4(), nil).String()
 	return &Game{
-		UUID:            id,
 		TournamentTable: *table,
 	}
 }

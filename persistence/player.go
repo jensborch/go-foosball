@@ -48,7 +48,7 @@ func (r *playerRepository) FindByTournament(id string) []*model.Player {
 		"LEFT JOIN tournament_players ON tournament_players.player_id = players.id ").Joins(
 		"LEFT JOIN tournaments ON tournament_players.tournament_id = tournaments.id").Preload(
 		"TournamentPlayers").Where(
-		"tournaments.uuid = ?", id).Group("players.nickname").Find(&players)
+		"tournaments.ID = ?", id).Group("players.nickname").Find(&players)
 	return players
 }
 

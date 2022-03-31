@@ -236,23 +236,23 @@ type playerEvents struct {
 	websockets map[string]*websocket.Conn
 }
 
-func (e *playerEvents) publish(uuid string, player PlayerRepresenatation) {
+func (e *playerEvents) publish(ID string, player PlayerRepresenatation) {
 	e.Lock()
-	if e.websockets[uuid] != nil {
-		e.websockets[uuid].WriteJSON(player)
+	if e.websockets[ID] != nil {
+		e.websockets[ID].WriteJSON(player)
 	}
 	e.Unlock()
 }
 
-func (e *playerEvents) register(uuid string, conn *websocket.Conn) {
+func (e *playerEvents) register(ID string, conn *websocket.Conn) {
 	e.Lock()
-	e.websockets[uuid] = conn
+	e.websockets[ID] = conn
 	e.Unlock()
 }
 
-func (e *playerEvents) unregister(uuid string) {
+func (e *playerEvents) unregister(ID string) {
 	e.Lock()
-	delete(e.websockets, uuid)
+	delete(e.websockets, ID)
 	e.Unlock()
 }
 
