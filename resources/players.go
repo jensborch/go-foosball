@@ -63,7 +63,7 @@ type CreatePlayerRequest struct {
 // @Accept       json
 // @Produce      json
 // @Param        player   body      CreatePlayerRequest true  "Create player"
-// @Success      200      {object}  model.Player
+// @Success      201      {object}  model.Player
 // @Failure      400      {object}  ErrorResponse
 // @Failure      409      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
@@ -85,7 +85,7 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 		}
 		p := model.NewPlayer(player.Nickname, player.RealName, player.RFID)
 		r.Store(p)
-		c.JSON(http.StatusOK, p)
+		c.JSON(http.StatusCreated, p)
 	}
 }
 

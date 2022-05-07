@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -8,7 +9,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/jensborch/go-foosball/model"
 	"gorm.io/gorm"
 )
 
@@ -20,27 +20,72 @@ func startServer() (*httptest.Server, *gorm.DB) {
 	return httptest.NewServer(engine), db
 }
 
-func TestGetPlayers(t *testing.T) {
+func TestGet(t *testing.T) {
 	ts, _ := startServer()
 	defer ts.Close()
 
-	resp, err := http.Get(fmt.Sprintf("%s/players", ts.URL))
+	cases := []struct{ url string }{
+		{fmt.Sprintf("%s/players", ts.URL)},
+		{fmt.Sprintf("%s/tournaments", ts.URL)},
+		{fmt.Sprintf("%s/tables", ts.URL)},
+		{fmt.Sprintf("%s/games", ts.URL)},
+	}
+
+	for _, c := range cases {
+
+		resp, err := http.Get(c.url)
+
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+
+		if resp.StatusCode != 200 {
+			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
+		}
+
+		result := []interface{}{}
+		if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+			t.Fatalf("Expected an array of players, got %v", err)
+		}
+
+		if len(result) != 0 {
+			t.Fatalf("Expected empty array, got %d", len(result))
+		}
+	}
+}
+
+func TestPostPlayers(t *testing.T) {
+	ts, _ := startServer()
+	defer ts.Close()
+
+	user1, err := json.Marshal(map[string]string{
+		"nickname": "u1",
+		"realname": "test1",
+		"rfid":     "string",
+	})
 
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
 	}
 
-	if resp.StatusCode != 200 {
-		t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
+	user2, err := json.Marshal(map[string]string{
+		"nickname": "u2",
+		"realname": "test2",
+	})
+
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
 	}
 
-	result := []model.Player{}
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		t.Fatalf("Expected an array of players, got %v", err)
+	resp1, _ := http.Post(fmt.Sprintf("%s/players", ts.URL), "application/json", bytes.NewBuffer(user1))
+
+	if resp1.StatusCode != 201 {
+		t.Fatalf("Expected status code 201, got %v", resp1.StatusCode)
 	}
 
-	if len(result) != 0 {
-		t.Fatalf("Expected empty array, got %d", len(result))
-	}
+	resp2, _ := http.Post(fmt.Sprintf("%s/players", ts.URL), "application/json", bytes.NewBuffer(user2))
 
+	if resp2.StatusCode != 201 {
+		t.Fatalf("Expected status code 201, got %v", resp2.StatusCode)
+	}
 }
