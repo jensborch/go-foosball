@@ -9,6 +9,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/jensborch/go-foosball/resources"
 	"gorm.io/gorm"
 )
 
@@ -20,7 +21,7 @@ func startServer() (*httptest.Server, *gorm.DB) {
 	return httptest.NewServer(engine), db
 }
 
-func TestGet(t *testing.T) {
+func TestGetEmptyList(t *testing.T) {
 	ts, _ := startServer()
 	defer ts.Close()
 
@@ -45,11 +46,45 @@ func TestGet(t *testing.T) {
 
 		result := []interface{}{}
 		if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-			t.Fatalf("Expected an array of players, got %v", err)
+			t.Fatalf("Expected an array, got %v", err)
 		}
 
 		if len(result) != 0 {
 			t.Fatalf("Expected empty array, got %d", len(result))
+		}
+	}
+}
+
+func TestGetNotFound(t *testing.T) {
+	ts, _ := startServer()
+	defer ts.Close()
+
+	cases := []struct{ url string }{
+		{fmt.Sprintf("%s/players/404", ts.URL)},
+		{fmt.Sprintf("%s/tournaments/404", ts.URL)},
+		{fmt.Sprintf("%s/tables/404", ts.URL)},
+		{fmt.Sprintf("%s/games/404", ts.URL)},
+	}
+
+	for _, c := range cases {
+
+		resp, err := http.Get(c.url)
+
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+
+		if resp.StatusCode != 404 {
+			t.Fatalf("Expected status code 404, got %v", resp.StatusCode)
+		}
+
+		result := resources.ErrorResponse{}
+		if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+			t.Fatalf("Expected an error response, got %v", err)
+		}
+
+		if len(result.Error) == 0 {
+			t.Fatalf("Expected error msg, got empty string")
 		}
 	}
 }
