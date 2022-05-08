@@ -3,6 +3,7 @@ package resources
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -103,7 +104,7 @@ func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 
 // TableRepresentation JSON representation for adding table to tournament
 type TableRepresentation struct {
-	ID string `json:"ID" binding:"required"`
+	ID uint `json:"id" binding:"required"`
 }
 
 // PostTournamentTables adds a table to a tournament
@@ -113,7 +114,7 @@ type TableRepresentation struct {
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
 // @Param        table    body      TableRepresentation true "The table"
-// @Success      200      {object}  model.TournamentTable
+// @Success      201      {object}  model.TournamentTable
 // @Failure      400      {object}  ErrorResponse
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
@@ -129,9 +130,9 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewTournamentRepository(tx)
-		if table, found := persistence.NewTableRepository(tx).Find(representation.ID); found {
+		if table, found := persistence.NewTableRepository(tx).Find(strconv.FormatUint(uint64(representation.ID), 10)); found {
 			if _, found := r.AddTables(id, table); found {
-				c.JSON(http.StatusOK, table)
+				c.JSON(http.StatusCreated, table)
 				return
 			}
 		}

@@ -248,6 +248,25 @@ func postTables(ts *httptest.Server) func(t *testing.T) []model.Table {
 	}
 }
 
+func addTable2Tournament(ts *httptest.Server, id uint, table uint) func(t *testing.T) {
+	return func(t *testing.T) {
+
+		table, err := json.Marshal(map[string]interface{}{
+			"id": table,
+		})
+
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+
+		resp, _ := http.Post(fmt.Sprintf("%s/tournaments/%d/tables", ts.URL, id), "application/json", bytes.NewBuffer(table))
+
+		if resp.StatusCode != 201 {
+			t.Fatalf("Expected status code 201, got %v", resp.StatusCode)
+		}
+	}
+}
+
 func Test(t *testing.T) {
 	ts, _ := startServer()
 	defer ts.Close()
@@ -259,6 +278,10 @@ func Test(t *testing.T) {
 		addPlayer2Tournament(ts, tournament.ID, p.Nickname)(t)
 	}
 
-	postTables(ts)(t)
+	tables := postTables(ts)(t)
+
+	for _, table := range tables {
+		addTable2Tournament(ts, tournament.ID, table.ID)(t)
+	}
 
 }
