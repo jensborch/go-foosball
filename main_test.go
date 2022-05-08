@@ -9,6 +9,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/resources"
 	"gorm.io/gorm"
 )
@@ -89,11 +90,11 @@ func TestGetNotFound(t *testing.T) {
 	}
 }
 
-func postPlayers(ts *httptest.Server) func(t *testing.T) {
-	return func(t *testing.T) {
+func postPlayers(ts *httptest.Server) func(t *testing.T) []model.Player {
+	return func(t *testing.T) []model.Player {
 
-		user1, err := json.Marshal(map[string]string{
-			"nickname": "u1",
+		player1, err := json.Marshal(map[string]string{
+			"nickname": "p1",
 			"realname": "test1",
 			"rfid":     "string",
 		})
@@ -102,8 +103,8 @@ func postPlayers(ts *httptest.Server) func(t *testing.T) {
 			t.Fatalf("Expected no error, got %v", err)
 		}
 
-		user2, err := json.Marshal(map[string]string{
-			"nickname": "u2",
+		player2, err := json.Marshal(map[string]string{
+			"nickname": "p2",
 			"realname": "test2",
 		})
 
@@ -111,16 +112,88 @@ func postPlayers(ts *httptest.Server) func(t *testing.T) {
 			t.Fatalf("Expected no error, got %v", err)
 		}
 
-		resp1, _ := http.Post(fmt.Sprintf("%s/players", ts.URL), "application/json", bytes.NewBuffer(user1))
+		resp1, _ := http.Post(fmt.Sprintf("%s/players", ts.URL), "application/json", bytes.NewBuffer(player1))
 
 		if resp1.StatusCode != 201 {
 			t.Fatalf("Expected status code 201, got %v", resp1.StatusCode)
 		}
 
-		resp2, _ := http.Post(fmt.Sprintf("%s/players", ts.URL), "application/json", bytes.NewBuffer(user2))
+		resp2, _ := http.Post(fmt.Sprintf("%s/players", ts.URL), "application/json", bytes.NewBuffer(player2))
 
 		if resp2.StatusCode != 201 {
 			t.Fatalf("Expected status code 201, got %v", resp2.StatusCode)
+		}
+
+		resp, _ := http.Get(fmt.Sprintf("%s/players", ts.URL))
+
+		if resp.StatusCode != 200 {
+			t.Fatalf("Expected status code 200, got %v", resp2.StatusCode)
+		}
+
+		result := []model.Player{}
+		if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+			t.Fatalf("Expected an list of players, got %v", err)
+		}
+
+		if len(result) != 2 {
+			t.Fatalf("Expected 2 players, got %d", len(result))
+		}
+
+		return result
+	}
+}
+
+func postTournaments(ts *httptest.Server) func(t *testing.T) model.Tournament {
+	return func(t *testing.T) model.Tournament {
+
+		tournament, err := json.Marshal(map[string]interface{}{
+			"initial": 1500,
+			"name":    "test",
+			"score":   50,
+		})
+
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+
+		postResp, _ := http.Post(fmt.Sprintf("%s/tournaments", ts.URL), "application/json", bytes.NewBuffer(tournament))
+
+		if postResp.StatusCode != 201 {
+			t.Fatalf("Expected status code 201, got %v", postResp.StatusCode)
+		}
+
+		postResult := model.Tournament{}
+
+		if err := json.NewDecoder(postResp.Body).Decode(&postResult); err != nil {
+			t.Fatalf("Expected a tournament, got %v", err)
+		}
+
+		getResp, _ := http.Get(fmt.Sprintf("%s/tournaments/%d", ts.URL, postResult.ID))
+
+		if getResp.StatusCode != 200 {
+			t.Fatalf("Expected status code 200, got %v", getResp.StatusCode)
+		}
+
+		return postResult
+	}
+}
+
+func addPlayer2Tournaments(ts *httptest.Server, id uint) func(t *testing.T) {
+	return func(t *testing.T) {
+
+		player, err := json.Marshal(map[string]interface{}{
+			"nickname": "p1",
+			"ranking":  1500,
+		})
+
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+
+		resp, _ := http.Post(fmt.Sprintf("%s/tournaments/%d/players", ts.URL, id), "application/json", bytes.NewBuffer(player))
+
+		if resp.StatusCode != 201 {
+			t.Fatalf("Expected status code 201, got %v", resp.StatusCode)
 		}
 	}
 }
@@ -130,4 +203,6 @@ func Test(t *testing.T) {
 	defer ts.Close()
 
 	postPlayers(ts)(t)
+	tournament := postTournaments(ts)(t)
+	addPlayer2Tournaments(ts, tournament.ID)(t)
 }

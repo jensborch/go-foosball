@@ -105,7 +105,7 @@ type TournamentCreateRepresentation struct {
 // @Accept       json
 // @Produce      json
 // @Param        tournament  body      TournamentCreateRepresentation  true  "The tournament"
-// @Success      200         {object}  model.Tournament
+// @Success      201         {object}  model.Tournament
 // @Failure      400         {object}  ErrorResponse
 // @Failure      500         {object}  ErrorResponse
 // @Router       /tournaments [post]
@@ -123,7 +123,7 @@ func PostTournament(db *gorm.DB) func(*gin.Context) {
 		t.GameScore = tournament.GameScore
 		t.InitialRanking = tournament.InitialRanking
 		r.Store(t)
-		c.JSON(http.StatusOK, t)
+		c.JSON(http.StatusCreated, t)
 	}
 }
 
@@ -140,7 +140,7 @@ type AddPlayer2TournamentRepresenatation struct {
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
 // @Param        player   body      AddPlayer2TournamentRepresenatation  true  "The tournament"
-// @Success      200      {object}  PlayerRepresenatation
+// @Success      201      {object}  PlayerRepresenatation
 // @Failure      400      {object}  ErrorResponse
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
@@ -162,13 +162,14 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 		} else {
 			if pr.Ranking == 0 {
 				if result, found := tourRepo.AddPlayer(id, p); found {
-					c.JSON(http.StatusOK, result)
+					c.JSON(http.StatusCreated, result)
 				}
 			} else {
 				if result, found := tourRepo.AddPlayerWithRanking(id, p, pr.Ranking); found {
-					c.JSON(http.StatusOK, result)
+					c.JSON(http.StatusCreated, result)
 				}
 			}
+			c.JSON(http.StatusNotFound, fmt.Sprintf("Could not finde tournament %s", id))
 		}
 	}
 }
