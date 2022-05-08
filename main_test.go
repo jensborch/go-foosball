@@ -175,7 +175,7 @@ func postTournaments(ts *httptest.Server) func(t *testing.T) model.Tournament {
 	}
 }
 
-func addPlayer2Tournaments(ts *httptest.Server, id uint, player string) func(t *testing.T) {
+func addPlayer2Tournament(ts *httptest.Server, id uint, player string) func(t *testing.T) {
 	return func(t *testing.T) {
 
 		player, err := json.Marshal(map[string]interface{}{
@@ -195,6 +195,59 @@ func addPlayer2Tournaments(ts *httptest.Server, id uint, player string) func(t *
 	}
 }
 
+func newTable(name string, left string, right string) func(t *testing.T) []byte {
+	return func(t *testing.T) []byte {
+		table, err := json.Marshal(resources.CreateTableRepresentation{
+			Name: name,
+			Color: model.Color{
+				Left:  left,
+				Right: right,
+			},
+		})
+
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+		return table
+	}
+}
+
+func postTables(ts *httptest.Server) func(t *testing.T) []model.Table {
+	return func(t *testing.T) []model.Table {
+
+		tables := []struct{ table []byte }{
+			{newTable("t1", "black", "white")(t)},
+			{newTable("t2", "green", "blue")(t)},
+		}
+
+		for _, p := range tables {
+
+			resp, _ := http.Post(fmt.Sprintf("%s/tables", ts.URL), "application/json", bytes.NewBuffer(p.table))
+
+			if resp.StatusCode != 201 {
+				t.Fatalf("Expected status code 201, got %v", resp.StatusCode)
+			}
+		}
+
+		resp, _ := http.Get(fmt.Sprintf("%s/tables", ts.URL))
+
+		if resp.StatusCode != 200 {
+			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
+		}
+
+		result := []model.Table{}
+		if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+			t.Fatalf("Expected an list of tables, got %v", err)
+		}
+
+		if len(result) != len(tables) {
+			t.Fatalf("Expected %d tables, got %d", len(tables), len(result))
+		}
+
+		return result
+	}
+}
+
 func Test(t *testing.T) {
 	ts, _ := startServer()
 	defer ts.Close()
@@ -203,7 +256,9 @@ func Test(t *testing.T) {
 	tournament := postTournaments(ts)(t)
 
 	for _, p := range players {
-		addPlayer2Tournaments(ts, tournament.ID, p.Nickname)(t)
+		addPlayer2Tournament(ts, tournament.ID, p.Nickname)(t)
 	}
+
+	postTables(ts)(t)
 
 }

@@ -58,7 +58,7 @@ type CreateTableRepresentation struct {
 // @Accept       json
 // @Produce      json
 // @Param        table    body      CreateTableRepresentation true  "The table"
-// @Success      200      {object}  model.Table
+// @Success      201      {object}  model.Table
 // @Failure      400      {object}  ErrorResponse
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
@@ -66,7 +66,7 @@ type CreateTableRepresentation struct {
 func PostTable(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var table CreateTableRepresentation
-		if err := c.ShouldBindWith(&table, binding.JSON); err == nil {
+		if err := c.ShouldBindWith(&table, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
 		}
@@ -74,7 +74,7 @@ func PostTable(db *gorm.DB) func(*gin.Context) {
 		defer HandlePanicInTransaction(c, tx)
 		t := model.NewTable(table.Name, table.Color)
 		persistence.NewTableRepository(tx).Store(t)
-		c.JSON(http.StatusOK, t)
+		c.JSON(http.StatusCreated, t)
 	}
 }
 
