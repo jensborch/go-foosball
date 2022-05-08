@@ -90,44 +90,41 @@ func TestGetNotFound(t *testing.T) {
 	}
 }
 
+func newPlayer(nickname string, realname string) func(t *testing.T) []byte {
+	return func(t *testing.T) []byte {
+		player, err := json.Marshal(map[string]string{
+			"nickname": nickname,
+			"realname": realname,
+		})
+
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+		return player
+	}
+}
+
 func postPlayers(ts *httptest.Server) func(t *testing.T) []model.Player {
 	return func(t *testing.T) []model.Player {
 
-		player1, err := json.Marshal(map[string]string{
-			"nickname": "p1",
-			"realname": "test1",
-			"rfid":     "string",
-		})
-
-		if err != nil {
-			t.Fatalf("Expected no error, got %v", err)
+		players := []struct{ player []byte }{
+			{newPlayer("p1", "n1")(t)},
+			{newPlayer("p2", "n2")(t)},
 		}
 
-		player2, err := json.Marshal(map[string]string{
-			"nickname": "p2",
-			"realname": "test2",
-		})
+		for _, p := range players {
 
-		if err != nil {
-			t.Fatalf("Expected no error, got %v", err)
-		}
+			resp, _ := http.Post(fmt.Sprintf("%s/players", ts.URL), "application/json", bytes.NewBuffer(p.player))
 
-		resp1, _ := http.Post(fmt.Sprintf("%s/players", ts.URL), "application/json", bytes.NewBuffer(player1))
-
-		if resp1.StatusCode != 201 {
-			t.Fatalf("Expected status code 201, got %v", resp1.StatusCode)
-		}
-
-		resp2, _ := http.Post(fmt.Sprintf("%s/players", ts.URL), "application/json", bytes.NewBuffer(player2))
-
-		if resp2.StatusCode != 201 {
-			t.Fatalf("Expected status code 201, got %v", resp2.StatusCode)
+			if resp.StatusCode != 201 {
+				t.Fatalf("Expected status code 201, got %v", resp.StatusCode)
+			}
 		}
 
 		resp, _ := http.Get(fmt.Sprintf("%s/players", ts.URL))
 
 		if resp.StatusCode != 200 {
-			t.Fatalf("Expected status code 200, got %v", resp2.StatusCode)
+			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
 		}
 
 		result := []model.Player{}
@@ -135,8 +132,8 @@ func postPlayers(ts *httptest.Server) func(t *testing.T) []model.Player {
 			t.Fatalf("Expected an list of players, got %v", err)
 		}
 
-		if len(result) != 2 {
-			t.Fatalf("Expected 2 players, got %d", len(result))
+		if len(result) != len(players) {
+			t.Fatalf("Expected %d players, got %d", len(players), len(result))
 		}
 
 		return result
@@ -178,11 +175,11 @@ func postTournaments(ts *httptest.Server) func(t *testing.T) model.Tournament {
 	}
 }
 
-func addPlayer2Tournaments(ts *httptest.Server, id uint) func(t *testing.T) {
+func addPlayer2Tournaments(ts *httptest.Server, id uint, player string) func(t *testing.T) {
 	return func(t *testing.T) {
 
 		player, err := json.Marshal(map[string]interface{}{
-			"nickname": "p1",
+			"nickname": player,
 			"ranking":  1500,
 		})
 
@@ -202,7 +199,11 @@ func Test(t *testing.T) {
 	ts, _ := startServer()
 	defer ts.Close()
 
-	postPlayers(ts)(t)
+	players := postPlayers(ts)(t)
 	tournament := postTournaments(ts)(t)
-	addPlayer2Tournaments(ts, tournament.ID)(t)
+
+	for _, p := range players {
+		addPlayer2Tournaments(ts, tournament.ID, p.Nickname)(t)
+	}
+
 }
