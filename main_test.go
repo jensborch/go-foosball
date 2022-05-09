@@ -267,6 +267,40 @@ func addTable2Tournament(ts *httptest.Server, id uint, table uint) func(t *testi
 	}
 }
 
+func randomGame(ts *httptest.Server, id uint) func(t *testing.T) []model.GameJson {
+	return func(t *testing.T) []model.GameJson {
+
+		resp, _ := http.Get(fmt.Sprintf("%s/tournaments/%d/games/random", ts.URL, id))
+
+		if resp.StatusCode != 200 {
+			t.Fatalf("Expected status code 201, got %v", resp.StatusCode)
+		}
+
+		result := []model.GameJson{}
+		if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+			t.Fatalf("Expected an list of tables, got %v", err)
+		}
+
+		if result[0].LeftScore == 0 {
+			t.Fatalf("Expected left greater than 0, got %v", result[0].LeftScore)
+		}
+
+		if result[0].RightScore == 0 {
+			t.Fatalf("Expected left greater than 0, got %v", result[0].RightScore)
+		}
+
+		if result[0].TableID == 0 {
+			t.Fatalf("Expected table id not equal to 0, got %v", result[0].TableID)
+		}
+
+		if len(result[0].LeftPlayers) != 1 {
+			t.Fatalf("Expected one left player, got %v", len(result[0].LeftPlayers))
+		}
+
+		return result
+	}
+}
+
 func Test(t *testing.T) {
 	ts, _ := startServer()
 	defer ts.Close()
@@ -284,4 +318,5 @@ func Test(t *testing.T) {
 		addTable2Tournament(ts, tournament.ID, table.ID)(t)
 	}
 
+	randomGame(ts, tournament.ID)(t)
 }
