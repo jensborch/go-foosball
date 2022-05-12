@@ -27,7 +27,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "test:ci": "CI=true react-scripts test --env=jsdom --coverage",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "swagger": "dtsgen --out ./src/api/swagger.d.ts ../docs/swagger.json"
   },
   "eslintConfig": {
     "extends": [
@@ -49,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "dtsgenerator": "^3.15.1",
     "eslint-config-prettier": "^8.3.0",
     "prettier": "^2.4.0"
   }
