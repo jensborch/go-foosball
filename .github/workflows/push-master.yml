@@ -1,0 +1,11 @@
+name: Push master
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  go:
+    uses: ./.github/workflows/go.yml
+  js:
+    uses: ./.github/workflows/js.yml    
