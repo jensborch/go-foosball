@@ -37,6 +37,8 @@ definitions:
     properties:
       created:
         type: string
+      id:
+        type: integer
       nickname:
         type: string
       realname:
@@ -54,6 +56,8 @@ definitions:
         $ref: '#/definitions/model.Color'
       created:
         type: string
+      id:
+        type: integer
       name:
         type: string
       updated:
@@ -66,6 +70,8 @@ definitions:
     properties:
       created:
         type: string
+      id:
+        type: integer
       initial:
         type: integer
       name:
@@ -83,6 +89,8 @@ definitions:
     properties:
       created:
         type: string
+      id:
+        type: integer
       table:
         $ref: '#/definitions/model.Table'
       updated:
@@ -147,10 +155,10 @@ definitions:
     type: object
   resources.TableRepresentation:
     properties:
-      ID:
-        type: string
+      id:
+        type: integer
     required:
-    - ID
+    - id
     type: object
   resources.TournamentCreateRepresentation:
     properties:
@@ -244,8 +252,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/model.Player'
         "400":
@@ -346,8 +354,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/model.Table'
         "400":
@@ -422,8 +430,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/model.Tournament'
         "400":
@@ -612,8 +620,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/resources.PlayerRepresenatation'
         "400":
@@ -710,8 +718,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/model.TournamentTable'
         "400":

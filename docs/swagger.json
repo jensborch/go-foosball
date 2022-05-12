@@ -123,8 +123,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/model.Player"
                         }
@@ -280,8 +280,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/model.Table"
                         }
@@ -397,8 +397,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/model.Tournament"
                         }
@@ -688,8 +688,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/resources.PlayerRepresenatation"
                         }
@@ -837,8 +837,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/model.TournamentTable"
                         }
@@ -1037,6 +1037,9 @@
                 "created": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "integer"
+                },
                 "nickname": {
                     "type": "string"
                 },
@@ -1064,6 +1067,9 @@
                 "created": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -1082,6 +1088,9 @@
             "properties": {
                 "created": {
                     "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "initial": {
                     "type": "integer"
@@ -1102,6 +1111,9 @@
             "properties": {
                 "created": {
                     "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "table": {
                     "$ref": "#/definitions/model.Table"
@@ -1202,11 +1214,11 @@
         "resources.TableRepresentation": {
             "type": "object",
             "required": [
-                "ID"
+                "id"
             ],
             "properties": {
-                "ID": {
-                    "type": "string"
+                "id": {
+                    "type": "integer"
                 }
             }
         },

@@ -131,8 +131,8 @@ const docTemplate_swagger = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/model.Player"
                         }
@@ -288,8 +288,8 @@ const docTemplate_swagger = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/model.Table"
                         }
@@ -405,8 +405,8 @@ const docTemplate_swagger = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/model.Tournament"
                         }
@@ -696,8 +696,8 @@ const docTemplate_swagger = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/resources.PlayerRepresenatation"
                         }
@@ -845,8 +845,8 @@ const docTemplate_swagger = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/model.TournamentTable"
                         }
@@ -1045,6 +1045,9 @@ const docTemplate_swagger = `{
                 "created": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "integer"
+                },
                 "nickname": {
                     "type": "string"
                 },
@@ -1072,6 +1075,9 @@ const docTemplate_swagger = `{
                 "created": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -1090,6 +1096,9 @@ const docTemplate_swagger = `{
             "properties": {
                 "created": {
                     "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "initial": {
                     "type": "integer"
@@ -1110,6 +1119,9 @@ const docTemplate_swagger = `{
             "properties": {
                 "created": {
                     "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "table": {
                     "$ref": "#/definitions/model.Table"
@@ -1210,11 +1222,11 @@ const docTemplate_swagger = `{
         "resources.TableRepresentation": {
             "type": "object",
             "required": [
-                "ID"
+                "id"
             ],
             "properties": {
-                "ID": {
-                    "type": "string"
+                "id": {
+                    "type": "integer"
                 }
             }
         },
