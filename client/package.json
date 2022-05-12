@@ -52,6 +52,6 @@
   "devDependencies": {
     "dtsgenerator": "^3.15.1",
     "eslint-config-prettier": "^8.3.0",
-    "prettier": "^2.4.0"
+    "prettier": "^2.6.2"
   }
 }
