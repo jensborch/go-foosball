@@ -10,37 +10,25 @@ definitions:
     - left
     - right
     type: object
-  model.Game:
+  model.GameJson:
     properties:
       created:
         type: string
-      leftPlayerOne:
-        $ref: '#/definitions/model.TournamentPlayer'
-      leftPlayerOneID:
-        type: integer
-      leftPlayerTwo:
-        $ref: '#/definitions/model.TournamentPlayer'
-      leftPlayerTwoID:
-        type: integer
+      leftPlayers:
+        items:
+          type: string
+        type: array
       leftScore:
         type: integer
-      rightPlayerOne:
-        $ref: '#/definitions/model.TournamentPlayer'
-      rightPlayerOneID:
-        type: integer
-      rightPlayerTwo:
-        $ref: '#/definitions/model.TournamentPlayer'
-      rightPlayerTwoID:
-        type: integer
+      rightPlayers:
+        items:
+          type: string
+        type: array
       rightScore:
         type: integer
-      tournamentTable:
-        $ref: '#/definitions/model.TournamentTable'
-      tournamentTableID:
+      tableId:
         type: integer
       updated:
-        type: string
-      uuid:
         type: string
       winner:
         type: string
@@ -70,8 +58,6 @@ definitions:
         type: string
       updated:
         type: string
-      uuid:
-        type: string
     required:
     - color
     - name
@@ -88,36 +74,15 @@ definitions:
         type: integer
       updated:
         type: string
-      uuid:
-        type: string
     required:
     - initial
     - name
     - score
     type: object
-  model.TournamentPlayer:
-    properties:
-      active:
-        type: boolean
-      created:
-        type: string
-      player:
-        $ref: '#/definitions/model.Player'
-      ranking:
-        type: integer
-      tournament:
-        type: integer
-      updated:
-        type: string
-    type: object
   model.TournamentTable:
     properties:
       created:
         type: string
-      games:
-        items:
-          $ref: '#/definitions/model.Game'
-        type: array
       table:
         $ref: '#/definitions/model.Table'
       updated:
@@ -182,10 +147,10 @@ definitions:
     type: object
   resources.TableRepresentation:
     properties:
-      uuid:
+      ID:
         type: string
     required:
-    - uuid
+    - ID
     type: object
   resources.TournamentCreateRepresentation:
     properties:
@@ -217,7 +182,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.Game'
+              $ref: '#/definitions/model.GameJson'
             type: array
       summary: Get all gamne results
       tags:
@@ -238,7 +203,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Game'
+            $ref: '#/definitions/model.GameJson'
         "404":
           description: Not Found
           schema:
@@ -513,9 +478,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.Tournament'
-            type: array
+            $ref: '#/definitions/model.Tournament'
         "404":
           description: Not Found
           schema:
@@ -566,7 +529,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.Game'
+              $ref: '#/definitions/model.GameJson'
             type: array
       summary: Get all games in a tournament
       tags:
@@ -588,7 +551,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.Game'
+              $ref: '#/definitions/model.GameJson'
             type: array
         "404":
           description: Not Found
@@ -793,7 +756,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Game'
+            $ref: '#/definitions/model.GameJson'
         "400":
           description: Bad Request
           schema:

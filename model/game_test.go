@@ -4,28 +4,40 @@ import (
 	"testing"
 )
 
-func initSingleGame(tournament *Tournament) *Game {
-	g := NewGame(tournament.TournamentTables[0])
-	g.AddPlayer(*NewPlayer("tt", "Thomas", "rfid1"))
-	g.AddPlayer(*NewPlayer("jj", "Jens", "rfid2"))
+func initSingleGame() *Game {
+	t := NewTournament("test")
+	tt := NewTournamentTable(
+		t,
+		NewTable("test", Color{
+			Right: "green",
+			Left:  "blue",
+		}),
+	)
+	g := NewGame(tt)
+	g.AddTournamentPlayer(NewTournamentPlayer(NewPlayer("tt", "Thomas", "rfid1"), t))
+	g.AddTournamentPlayer(NewTournamentPlayer(NewPlayer("jj", "Jens", "rfid1"), t))
 	return g
 }
 
-func initDuroGame(tournament *Tournament) *Game {
-	g := NewGame(tournament.TournamentTables[0])
-	g.AddPlayer(*NewPlayer("tt", "Thomas", "rfid1"))
-	g.AddPlayer(*NewPlayer("rr", "Rikke", "rfid2"))
-	g.AddPlayer(*NewPlayer("jj", "Jens", "rfid3"))
-	g.AddPlayer(*NewPlayer("kk", "Kristine", "rfid4"))
+func initDuroGame() *Game {
+	t := NewTournament("test")
+	tt := NewTournamentTable(
+		t,
+		NewTable("test", Color{
+			Right: "white",
+			Left:  "black",
+		}),
+	)
+	g := NewGame(tt)
+	g.AddTournamentPlayer(NewTournamentPlayer(NewPlayer("t", "Thomas", "rfid1"), t))
+	g.AddTournamentPlayer(NewTournamentPlayer(NewPlayer("j", "Jens", "rfid1"), t))
+	g.AddTournamentPlayer(NewTournamentPlayer(NewPlayer("e", "Emilie", "rfid1"), t))
+	g.AddTournamentPlayer(NewTournamentPlayer(NewPlayer("k", "Kristine", "rfid1"), t))
 	return g
 }
 
 func TestCreateSingleGame(t *testing.T) {
-	g := initSingleGame(InitTournament())
-
-	if len(g.UUID) != 36 {
-		t.Errorf("Player should have UUID, got: %s", g.UUID)
-	}
+	g := initSingleGame()
 
 	if g.Right()[0].RealName != "Thomas" {
 		t.Errorf("Right player is incorrect, got: %s, want: %s.", g.Right()[0].RealName, "Thomas")
@@ -35,8 +47,8 @@ func TestCreateSingleGame(t *testing.T) {
 		t.Errorf("Left player is incorrect, got: %s, want: %s.", g.Left()[0].RealName, "Jens")
 	}
 
-	if g.TournamentTable.Table.Name != "1" {
-		t.Errorf("Table is incorrect, got: %s, want: %s.", g.TournamentTable.Table.Name, "1")
+	if g.TournamentTable.Table.Name != "test" {
+		t.Errorf("Table is incorrect, got: %s, want: %s.", g.TournamentTable.Table.Name, "test")
 	}
 
 	if g.Winner != "" {
@@ -51,27 +63,23 @@ func TestCreateSingleGame(t *testing.T) {
 }
 
 func TestCreateDuroGame(t *testing.T) {
-	g := initDuroGame(InitTournament())
+	g := initDuroGame()
 
-	if len(g.UUID) != 36 {
-		t.Errorf("Player should have UUID, got: %s", g.UUID)
-	}
-
-	if g.Right()[1].RealName != "Jens" {
-		t.Errorf("Right player is incorrect, got: %s, want: %s.", g.Right()[1].RealName, "Jens")
+	if g.Right()[1].RealName != "Emilie" {
+		t.Errorf("Right player is incorrect, got: %s, want: %s.", g.Right()[1].RealName, "Emilie")
 	}
 
 	if g.Left()[1].RealName != "Kristine" {
 		t.Errorf("Left player is incorrect, got: %s, want: %s.", g.Left()[1].RealName, "Kristine")
 	}
 
-	if g.TournamentTable.Table.Name != "1" {
-		t.Errorf("Table is incorrect, got: %s, want: %s.", g.TournamentTable.Table.Name, "1")
+	if g.TournamentTable.Table.Name != "test" {
+		t.Errorf("Table is incorrect, got: %s, want: %s.", g.TournamentTable.Table.Name, "test")
 	}
 }
 
 func TestInitialGameScore(t *testing.T) {
-	g := initSingleGame(InitTournament())
+	g := initSingleGame()
 	s1, s2 := g.GameScore()
 
 	if s1 != s2 {
@@ -85,7 +93,7 @@ func TestInitialGameScore(t *testing.T) {
 }
 
 func TestGameScore(t *testing.T) {
-	g := initSingleGame(InitTournament())
+	g := initSingleGame()
 	g.RightPlayerOne.Ranking = 1000
 	g.LeftPlayerOne.Ranking = 2000
 	s1, s2 := g.GameScore()
@@ -105,7 +113,7 @@ func TestGameScore(t *testing.T) {
 }
 
 func TestSetGameScore(t *testing.T) {
-	g := initSingleGame(InitTournament())
+	g := initSingleGame()
 	g.LeftPlayerOne.Ranking = 900
 	g.RightPlayerOne.Ranking = 2200
 	g.Winner = RIGHT

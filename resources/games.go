@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/jensborch/go-foosball/persistence"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // GetGamesInTournament find all games in tournament
@@ -18,7 +18,7 @@ import (
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
-// @Success      200      {array}   model.Game
+// @Success      200      {array}   model.GameJson
 // @Router       /tournaments/{id}/games [get]
 func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
@@ -33,21 +33,19 @@ func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
-// @Success      200      {array}   model.Game
+// @Success      200      {array}   model.GameJson
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
 // @Router       /tournaments/{id}/games/random [get]
 func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		if t, found, err := persistence.NewTournamentRepository(db).Find(id); !found {
+		r := persistence.NewTournamentRepository(db)
+		if games, found := r.RandomGames(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 			return
-		} else if err != nil {
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
-			return
 		} else {
-			c.JSON(http.StatusOK, t.RandomGames())
+			c.JSON(http.StatusOK, games)
 			return
 		}
 	}
@@ -67,45 +65,40 @@ type GameRepresentation struct {
 // @Param        id       path      string  true  "Tournament ID"
 // @Param        table    path      string  true  "Table ID"
 // @Param        game     body      GameRepresentation true  "Submit game results"
-// @Success      200      {object}  model.Game
+// @Success      200      {object}  model.GameJson
 // @Failure      400      {object}  ErrorResponse
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
 // @Router       /tournaments/{id}/tables/{table}/games [post]
 func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		tournamentID := c.Param(tournamentParam)
+		tourID := c.Param(tournamentParam)
 		tableID := c.Param(tableParam)
-		tx := db.Begin()
-		if t, found, err := persistence.NewTournamentRepository(tx).Find(tournamentID); !found {
-			tx.Rollback()
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", tournamentID)))
-			return
-		} else if err != nil {
-			tx.Rollback()
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
-			return
-		} else if table := t.Table(tableID); table != nil {
-			var g GameRepresentation
-			if err := c.ShouldBindWith(&g, binding.JSON); err == nil {
-				pRepo := persistence.NewPlayerRepository(tx)
-				game := model.NewGame(*table)
-				for _, pID := range g.Players {
-					player, _, _ := pRepo.Find(pID)
-					game.AddPlayer(*player)
-				}
-				game.Winner = g.Winner
-				persistence.NewGameRepository(tx).Store(game)
-				tx.Commit()
-				c.JSON(http.StatusOK, game)
-			} else {
-				tx.Rollback()
-				c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
-			}
+		var gr GameRepresentation
+		if err := c.ShouldBindWith(&gr, binding.JSON); err != nil {
+			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
 		}
-		tx.Rollback()
-		c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find table %s in tournament %s", tableID, tournamentID)))
+		tx := db.Begin()
+		defer HandlePanicInTransaction(c, tx)
+		tourRepo := persistence.NewTournamentRepository(tx)
+		if table, found := tourRepo.FindTable(tourID, tableID); found {
+			game := model.NewGame(table)
+			for _, nickname := range gr.Players {
+				if player, found := tourRepo.FindPlayer(tourID, nickname); found {
+					game.AddTournamentPlayer(player)
+				} else {
+					c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s in tournament %s", nickname, tourID)))
+					return
+				}
+			}
+			game.Winner = gr.Winner
+			game.UpdateScore()
+			persistence.NewGameRepository(tx).Store(game)
+			c.JSON(http.StatusOK, game)
+		} else {
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find table %s or tournament %s", tableID, tourID)))
+		}
 	}
 }
 
@@ -115,18 +108,15 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Game ID"
-// @Success      200      {object}  model.Game
+// @Success      200      {object}  model.GameJson
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
 // @Router       /games/{id} [get]
 func GetGame(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		if g, found, err := persistence.NewGameRepository(db).Find(id); !found {
+		if g, found := persistence.NewGameRepository(db).Find(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find game %s", id)))
-			return
-		} else if err != nil {
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 			return
 		} else {
 			c.JSON(http.StatusOK, g)
@@ -140,7 +130,7 @@ func GetGame(param string, db *gorm.DB) func(*gin.Context) {
 // @Tags         game
 // @Accept       json
 // @Produce      json
-// @Success      200      {array}  model.Game
+// @Success      200      {array}  model.GameJson
 // @Router       /games [get]
 func GetGames(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {

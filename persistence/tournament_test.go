@@ -4,39 +4,27 @@ import (
 	"testing"
 
 	"github.com/jensborch/go-foosball/model"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
-func TestStoreTournament(t *testing.T) {
-	table1 := model.NewTable("1", model.Color{Right: "red", Left: "green"})
-	tournament1 := model.NewTournament("Foosball tournament 1", *table1)
-
+func initTournament(t *testing.T) (model.TournamentRepository, *model.Tournament, *gorm.DB) {
+	tournament := model.NewTournament("Foosball tournament 1")
 	db := InitDB(t)
-	defer db.Close()
-
 	r := NewTournamentRepository(db)
 
-	err := r.Store(tournament1)
-	if err != nil {
-		t.Errorf("Failed to store: %s", err.Error())
-	}
+	r.Store(tournament)
+	return r, tournament, db
+}
 
-	found, _, err := r.Find(tournament1.UUID)
-	if err != nil {
-		t.Errorf("Failed to find tournament")
-	}
+func TestStoreTournament(t *testing.T) {
+	r, tournament, _ := initTournament(t)
 
-	if len(found.TournamentTables) != 1 {
-		t.Errorf("Tournament should have a table, got: %d.", len(found.TournamentTables))
-	}
+	found, _ := r.Find(tournament.IdAsString())
 
-	table2 := model.NewTable("2", model.Color{Right: "black", Left: "blue"})
-	tournament2 := model.NewTournament("Foosball tournament 2", tournament1.TournamentTables[0].Table, *table2)
+	tournament2 := model.NewTournament("Foosball tournament 2")
 
-	err = r.Store(tournament2)
-	if err != nil {
-		t.Errorf("Failed to store: %s", err.Error())
-	}
+	r.Store(tournament2)
 
 	if len(r.FindAll()) != 2 {
 		t.Errorf("FindAll should return all tournaments, got: %d, want: %d.", len(r.FindAll()), 2)
@@ -45,145 +33,188 @@ func TestStoreTournament(t *testing.T) {
 	if found.Name != "Foosball tournament 1" {
 		t.Errorf("Find should find tournament, got: %s, want: %s.", found.Name, "Foosball tournament 1")
 	}
-
-	name := found.TournamentTables[0].Table.Name
-	if name != "1" {
-		t.Errorf("Tournament should have table with name, got: %s, want: %s.", name, "1")
-	}
-
-	if len(found.TournamentPlayers) != 0 {
-		t.Errorf("Tournament should have no players, got: %d.", len(found.TournamentPlayers))
-	}
 }
 
-func TestRemoveTableInTournament(t *testing.T) {
-	table1 := model.NewTable("1", model.Color{Right: "red", Left: "green"})
-	tournament := model.NewTournament("Foosball tournament 1", *table1)
+func TestAddRemoveTournamentTable(t *testing.T) {
+	tourRepo, tournament, db := initTournament(t)
 
-	db := InitDB(t)
-	defer db.Close()
+	tableRepo := NewTableRepository(db)
 
-	r := NewTournamentRepository(db)
+	table := model.NewTable("Test", model.Color{
+		Right: "1",
+		Left:  "2",
+	})
 
-	err := r.Store(tournament)
-	if err != nil {
-		t.Errorf("Failed to store: %s", err.Error())
+	tableRepo.Store(table)
+
+	if _, found := tourRepo.AddTables(tournament.IdAsString(), table); !found {
+		t.Errorf("Failed to store, not found")
 	}
 
-	found, _, err := r.Find(tournament.UUID)
-	if err != nil {
-		t.Errorf("Failed to find tournament")
+	if tables, found := tourRepo.FindAllTables(tournament.IdAsString()); !found {
+		t.Errorf("Failed to find tables")
+		if len(tables) != 1 {
+			t.Errorf("Tournament should have one tabel, got %d", len(tables))
+		}
 	}
 
-	if len(found.TournamentTables) != 1 {
-		t.Errorf("Tournament should have a table, got: %d.", len(found.TournamentTables))
+	if _, found := tourRepo.FindTable(tournament.IdAsString(), table.IdAsString()); !found {
+		t.Errorf("Failed to find table")
 	}
 
-	err = r.RemoveTable(tournament, found.TournamentTables[0].Table.UUID)
-	if err != nil {
-		t.Errorf("Failed to remove table: %s", err.Error())
+	if found := tourRepo.RemoveTable(tournament.IdAsString(), table.IdAsString()); !found {
+		t.Errorf("Failed to find table")
 	}
 
-	found, _, err = r.Find(tournament.UUID)
-	if err != nil {
-		t.Errorf("Failed to find tournament")
-	}
-
-	if len(found.TournamentTables) != 0 {
-		t.Errorf("Tournament should have no tables after updating db, got: %d.", len(found.TournamentTables))
+	if tables, _ := tourRepo.FindAllTables(tournament.IdAsString()); len(tables) != 0 {
+		t.Errorf("Tables should not be found, got %d", len(tables))
 	}
 
 }
 
-func TestAddPlayers2Tournament(t *testing.T) {
-	table := model.NewTable("1", model.Color{Right: "red", Left: "green"})
-	tournament := model.NewTournament("Foosball tournament 1", *table)
+func TestAddRemoveTournamentPlayer(t *testing.T) {
+	tourRepo, tournament, db := initTournament(t)
 
-	db := InitDB(t)
-	defer db.Close()
+	playerRepo := NewPlayerRepository(db)
 
-	r := NewTournamentRepository(db)
-	p1 := model.NewPlayer("p1", "n2", "rfid")
-	p2 := model.NewPlayer("p2", "n2", "rfid")
+	player1 := model.NewPlayer("test1", "test", "")
+	player2 := model.NewPlayer("test2", "test", "")
 
-	tournament.AddPlayer(p1)
-	err := r.Store(tournament)
-	if err != nil {
-		t.Errorf("Failed to store: %s", err.Error())
+	playerRepo.Store(player1)
+	playerRepo.Store(player2)
+
+	tourRepo.AddPlayer(tournament.IdAsString(), player1)
+	tourRepo.AddPlayerWithRanking(tournament.IdAsString(), player2, 2000)
+
+	if players, found := tourRepo.FindAllActivePlayers(tournament.IdAsString()); !found {
+		t.Errorf("Failed to find players, got %t", found)
+		if len(players) != 2 {
+			t.Errorf("Tournament should have two player, got %d", len(players))
+		}
 	}
 
-	tournament, found, err := r.Find(tournament.UUID)
-	if !found {
-		t.Errorf("Tournament not found")
-	}
-	if err != nil {
-		t.Errorf("Failed to find: %s", err.Error())
+	if player, found := tourRepo.FindPlayer(tournament.IdAsString(), player1.Nickname); !found {
+		t.Errorf("Failed to find player 1, got %t", found)
+	} else if player.Ranking != 1500 {
+		t.Errorf("Player 1 should have rating 1500, got %d", player.Ranking)
 	}
 
-	tournament.AddPlayer(p2)
-	err = r.Update(tournament)
-	if err != nil {
-		t.Errorf("Failed to update: %s", err.Error())
+	if player, found := tourRepo.FindPlayer(tournament.IdAsString(), player2.Nickname); !found {
+		t.Errorf("Failed to find player 2, got %t", found)
+	} else if player.Ranking != 2000 {
+		t.Errorf("Player 2 should have rating 2000, got %d", player.Ranking)
 	}
+}
 
-	tournament, _, _ = r.Find(tournament.UUID)
+func TestRandomGame(t *testing.T) {
+	tourRepo, tournament, db := initTournament(t)
 
-	if l := len(tournament.TournamentPlayers); l != 2 {
-		t.Errorf("Tournament should have two players, got: %d.", l)
+	playerRepo := NewPlayerRepository(db)
+
+	player1 := model.NewPlayer("test1", "test", "")
+	player2 := model.NewPlayer("test2", "test", "")
+	player3 := model.NewPlayer("test3", "test", "")
+	player4 := model.NewPlayer("test4", "test", "")
+
+	playerRepo.Store(player1)
+	playerRepo.Store(player2)
+	playerRepo.Store(player3)
+	playerRepo.Store(player4)
+
+	tourRepo.AddPlayerWithRanking(tournament.IdAsString(), player1, 2500)
+	tourRepo.AddPlayerWithRanking(tournament.IdAsString(), player2, 2000)
+	tourRepo.AddPlayer(tournament.IdAsString(), player3)
+	tourRepo.AddPlayer(tournament.IdAsString(), player4)
+
+	tableRepo := NewTableRepository(db)
+	table := model.NewTable("Test", model.Color{
+		Right: "1",
+		Left:  "2",
+	})
+	tableRepo.Store(table)
+
+	tourRepo.AddTables(tournament.IdAsString(), table)
+
+	if games, found := tourRepo.RandomGames(tournament.IdAsString()); !found {
+		t.Errorf("Failed to generate random games, got %t", found)
+	} else if len(games) != 1 {
+		t.Errorf("Should genrate 1 random games, got %d", len(games))
 	}
+}
 
-	if id := tournament.TournamentPlayers[0].Tournament.ID; id == 0 {
-		t.Errorf("Players should have tournament with id, got: %d.", id)
-	}
+func TestSaveGame(t *testing.T) {
+	tourRepo, tournament, db := initTournament(t)
 
-	randomGames := tournament.RandomGames()
-	if len(randomGames) != 1 {
-		t.Errorf("Tournament be able to create random game, got: %d.", len(randomGames))
-	}
+	playerRepo := NewPlayerRepository(db)
 
-	players := NewPlayerRepository(db).FindByTournament(tournament.UUID)
-	if len(players) != 2 {
-		t.Errorf("Tournament should have two players, got: %d.", len(players))
-	}
+	player1 := model.NewPlayer("test1", "test", "")
+	player2 := model.NewPlayer("test2", "test", "")
 
-	if len(tournament.ActivePlayers()) != 2 {
-		t.Errorf("Tournament should have two active players, got: %d.", len(tournament.ActivePlayers()))
-	}
+	playerRepo.Store(player1)
+	playerRepo.Store(player2)
 
-	tournament.DeactivatePlayer(p1.Nickname)
-	err = r.Update(tournament)
-	if err != nil {
-		t.Errorf("Failed to update: %s", err.Error())
-	}
+	tourRepo.AddPlayer(tournament.IdAsString(), player1)
+	tourRepo.AddPlayer(tournament.IdAsString(), player2)
 
-	tournament, _, _ = r.Find(tournament.UUID)
+	tableRepo := NewTableRepository(db)
+	table := model.NewTable("Test", model.Color{
+		Right: "1",
+		Left:  "2",
+	})
+	tableRepo.Store(table)
 
-	if len(tournament.ActivePlayers()) != 1 {
-		t.Errorf("Tournament should have one active player, got: %d.", len(tournament.ActivePlayers()))
-	}
+	tourRepo.AddTables(tournament.IdAsString(), table)
+	tt, _ := tourRepo.FindTable(tournament.IdAsString(), table.IdAsString())
+
+	gameRepo := NewGameRepository(db)
+	game := model.NewGame(tt)
+	//TODO
+	//game.AddTournamentPlayer(player1)
+	gameRepo.Store(game)
 
 }
 
-func TestCalculateGameScore(t *testing.T) {
-	table := model.NewTable("1", model.Color{Right: "red", Left: "green"})
-	tournament := model.NewTournament("Foosball tournament 1", *table)
+func TestActivatePlayer(t *testing.T) {
+	tourRepo, tournament, db := initTournament(t)
 
-	db := InitDB(t)
-	defer db.Close()
+	playerRepo := NewPlayerRepository(db)
 
-	r := NewTournamentRepository(db)
-	p1 := model.NewPlayer("p1", "n2", "rfid")
-	p2 := model.NewPlayer("p2", "n2", "rfid")
+	player1 := model.NewPlayer("test1", "test", "")
+	player2 := model.NewPlayer("test2", "test", "")
 
-	tournament.AddPlayer(p1)
-	tournament.AddPlayer(p2)
+	playerRepo.Store(player1)
+	playerRepo.Store(player2)
 
-	r.Store(tournament)
-	tournament, _, _ = r.Find(tournament.UUID)
+	tourRepo.AddPlayer(tournament.IdAsString(), player1)
+	tourRepo.AddPlayer(tournament.IdAsString(), player2)
 
-	games := tournament.RandomGames()
+	if found := tourRepo.DeactivatePlayer(tournament.IdAsString(), player1.Nickname); !found {
+		t.Errorf("Failed deactivate player 1, not found")
+	}
 
-	if s := games[0].GetOrCalculateLeftScore(); s != 25 {
-		t.Errorf("Games should have score, wanted %d, got: %d.", 25, s)
+	if players, found := tourRepo.FindAllActivePlayers(tournament.IdAsString()); !found {
+		t.Errorf("Failed to find players, got %t", found)
+		if len(players) != 1 {
+			t.Errorf("Tournament should have one active player, got %d", len(players))
+		}
+	}
+
+	if player, _ := tourRepo.FindPlayer(tournament.IdAsString(), player1.Nickname); player.Active {
+		t.Errorf("Deactivated player should not be active")
+	}
+
+	if found := tourRepo.ActivatePlayer(tournament.IdAsString(), player1.Nickname); !found {
+		t.Errorf("Failed activate player 1, got %t", found)
+	}
+
+	if players, found := tourRepo.FindAllActivePlayers(tournament.IdAsString()); !found {
+		t.Errorf("Failed to find players, got %t", found)
+		if len(players) != 2 {
+			t.Errorf("Tournament should have two active players, got %d", len(players))
+		}
+	}
+
+	if player, _ := tourRepo.FindPlayer(tournament.IdAsString(), player1.Nickname); !player.Active {
+		t.Errorf("Activated player should be active")
 	}
 }

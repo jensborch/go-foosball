@@ -3,52 +3,46 @@ package model
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"math"
 	"reflect"
 	"time"
-
-	uuid "github.com/satori/go.uuid"
 )
 
 // Game played
 type Game struct {
 	Base
-	UUID              string `gorm:"size:36;unique_index"`
-	TournamentTableID uint
-	TournamentTable   TournamentTable `gorm:"association_save_reference:false;save_associations:false"`
-	RightPlayerOneID  uint
+	TournamentTableID uint            `gorm:"not null"`
+	TournamentTable   TournamentTable `gorm:"not null"`
+	RightPlayerOneID  uint            `gorm:"not null"`
+	RightPlayerOne    TournamentPlayer
 	RightPlayerTwoID  uint
-	LeftPlayerOneID   uint
+	RightPlayerTwo    TournamentPlayer
+	LeftPlayerOneID   uint `gorm:"not null"`
+	LeftPlayerOne     TournamentPlayer
 	LeftPlayerTwoID   uint
-	RightPlayerOne    TournamentPlayer `gorm:"association_save_reference:false;save_associations:false"`
-	RightPlayerTwo    TournamentPlayer `gorm:"association_save_reference:false;save_associations:false"`
-	LeftPlayerOne     TournamentPlayer `gorm:"association_save_reference:false;save_associations:false"`
-	LeftPlayerTwo     TournamentPlayer `gorm:"association_save_reference:false;save_associations:false"`
+	LeftPlayerTwo     TournamentPlayer
 	RightScore        int
 	LeftScore         int
 	Winner            Winner
 }
 
+type GameJson struct {
+	CreatedAt    time.Time `json:"created"`
+	UpdatedAt    time.Time `json:"updated"`
+	TableID      uint      `json:"tableId"`
+	RightPlayers []string  `json:"rightPlayers"`
+	LeftPlayers  []string  `json:"leftPlayers"`
+	RightScore   int       `json:"rightScore"`
+	LeftScore    int       `json:"leftScore"`
+	Winner       Winner    `json:"winner,omitempty"`
+}
+
 // MarshalJSON creates JSON game representation
 func (g *Game) MarshalJSON() ([]byte, error) {
-	return json.Marshal(&struct {
-		CreatedAt    time.Time `json:"created"`
-		UpdatedAt    time.Time `json:"updated"`
-		UUID         string    `json:"uuid"`
-		Tournament   string    `json:"tournament"`
-		Table        Table     `json:"table"`
-		RightPlayers []string  `json:"rightPlayers"`
-		LeftPlayers  []string  `json:"leftPlayers"`
-		RightScore   int       `json:"rightScore"`
-		LeftScore    int       `json:"leftScore"`
-		Winner       Winner    `json:"winner,omitempty"`
-	}{
+	return json.Marshal(&GameJson{
 		CreatedAt:    g.CreatedAt,
 		UpdatedAt:    g.UpdatedAt,
-		UUID:         g.UUID,
-		Tournament:   g.TournamentTable.Tournament.UUID,
-		Table:        g.TournamentTable.Table,
+		TableID:      g.TournamentTable.ID,
 		RightPlayers: g.RightPlayerNames(),
 		LeftPlayers:  g.LeftPlayerNames(),
 		RightScore:   g.GetOrCalculateRightScore(),
@@ -124,7 +118,7 @@ func (g *Game) UpdateScore() error {
 		g.LeftScore = int(left)
 		return nil
 	default:
-		return errors.New("No winner in this game")
+		return errors.New("no winner in this game")
 	}
 }
 
@@ -178,57 +172,35 @@ func isEmptyPlayer(p TournamentPlayer) bool {
 	return reflect.DeepEqual(p, TournamentPlayer{})
 }
 
-// AddPlayer adds a player to a game
-func (g *Game) AddPlayer(p Player) error {
-	tp, err := g.findOrCreateTournamentPlayer(p)
-	if err == nil {
-		return g.AddTournamentPlayer(*tp)
-	}
-	return err
-}
-
-func (g *Game) findOrCreateTournamentPlayer(p Player) (*TournamentPlayer, error) {
-	for _, tp := range g.TournamentTable.Tournament.TournamentPlayers {
-		if p.Nickname == tp.Player.Nickname {
-			if !tp.Active {
-				return nil, fmt.Errorf("Player %s is not active", p.Nickname)
-			}
-			return &tp, nil
-		}
-	}
-	return NewTournamentPlayer(&p, g.TournamentTable.Tournament), nil
-}
-
 //AddTournamentPlayer adds a tournament player to a game
-func (g *Game) AddTournamentPlayer(p TournamentPlayer) error {
+func (g *Game) AddTournamentPlayer(p *TournamentPlayer) error {
 	switch {
 	case isEmptyPlayer(g.RightPlayerOne):
-		g.RightPlayerOne = p
+		g.RightPlayerOne = *p
 	case isEmptyPlayer(g.LeftPlayerOne):
-		g.LeftPlayerOne = p
+		g.LeftPlayerOne = *p
 	case isEmptyPlayer(g.RightPlayerTwo):
-		g.RightPlayerTwo = p
+		g.RightPlayerTwo = *p
 	case isEmptyPlayer(g.LeftPlayerTwo):
-		g.LeftPlayerTwo = p
+		g.LeftPlayerTwo = *p
 	default:
-		return errors.New("All players have been added")
+		return errors.New("all players have been added")
 	}
 	return nil
 }
 
 // GameRepository provides access games etc.
 type GameRepository interface {
-	Store(game *Game) error
-	Find(uuid string) (*Game, Found, error)
+	Store(game *Game)
+	Find(id string) (*Game, Found)
+	Remove(id string) Found
 	FindAll() []*Game
-	FindByTournament(uuid string) []*Game
+	FindByTournament(id string) []*Game
 }
 
 // NewGame creates a new game
-func NewGame(table TournamentTable) *Game {
-	id := uuid.Must(uuid.NewV4(), nil).String()
+func NewGame(table *TournamentTable) *Game {
 	return &Game{
-		UUID:            id,
-		TournamentTable: table,
+		TournamentTable: *table,
 	}
 }

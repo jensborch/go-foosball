@@ -2,24 +2,27 @@ package persistence
 
 import (
 	"github.com/jensborch/go-foosball/model"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type tableRepository struct {
 	db *gorm.DB
 }
 
-func (r *tableRepository) Store(t *model.Table) error {
-	return r.db.Create(t).Error
+func (r *tableRepository) Store(t *model.Table) {
+	if err := r.db.Create(t).Error; err != nil {
+		panic(err)
+	}
 }
 
-func (r *tableRepository) Remove(t *model.Table) error {
-	return r.db.Where("uuid = ?", t.UUID).Delete(&model.Table{}).Error
+func (r *tableRepository) Remove(id string) model.Found {
+	return HasBeenFound(r.db.Where("ID = ?", id).Delete(&model.Table{}).Error)
 }
 
-func (r *tableRepository) Find(uuid string) (*model.Table, model.Found, error) {
+func (r *tableRepository) Find(id string) (*model.Table, model.Found) {
 	var t model.Table
-	return &t, !r.db.Where("uuid = ?", uuid).First(&t).RecordNotFound(), r.db.Error
+	rersult := r.db.Where("ID = ?", id).First(&t)
+	return &t, HasBeenFound(rersult.Error)
 }
 
 func (r *tableRepository) FindAll() []*model.Table {

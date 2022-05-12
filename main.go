@@ -17,8 +17,9 @@ import (
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/resources"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"gorm.io/driver/sqlite"
+	_ "gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 // @title           Go-foosball API
@@ -44,8 +45,7 @@ func main() {
 	flag.StringVar(&dbfile, "db", "foosball.db", "the database file")
 	flag.Parse()
 
-	engine, db := setupServer(dbfile)
-	defer db.Close()
+	engine, _ := setupServer(dbfile)
 	engine.Run(":" + strconv.FormatUint(uint64(port), 10))
 }
 
@@ -56,7 +56,7 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	corsConf.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "HEAD"}
 	router.Use(cors.New(corsConf))
 
-	db, err := gorm.Open("sqlite3", dbfile)
+	db, err := gorm.Open(sqlite.Open(dbfile), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}

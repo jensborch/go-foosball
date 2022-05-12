@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // GetTournament gets info about a tournament
@@ -29,13 +29,11 @@ func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
 		id := c.Param(param)
 		defer HandlePanic(c)
 		r := persistence.NewTournamentRepository(db)
-		if t, found, err := r.Find(id); !found {
+		if t, found := r.Find(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 			return
-		} else if err == nil {
-			c.JSON(http.StatusOK, t)
 		} else {
-			panic(err)
+			c.JSON(http.StatusOK, t)
 		}
 	}
 }
@@ -87,18 +85,10 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
 		defer HandlePanic(c)
-		if t, found, err := persistence.NewTournamentRepository(db).Find(id); !found {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
-			return
-		} else if err != nil {
-			panic(err)
-		} else {
-			players := make([]PlayerRepresenatation, len(t.TournamentPlayers))
-			for i, tp := range t.TournamentPlayers {
-				players[i] = NewPlayerRepresentation(&tp)
-			}
-
+		if players, found := persistence.NewTournamentRepository(db).FindAllActivePlayers(id); found {
 			c.JSON(http.StatusOK, players)
+		} else {
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 		}
 	}
 }
@@ -115,7 +105,7 @@ type TournamentCreateRepresentation struct {
 // @Accept       json
 // @Produce      json
 // @Param        tournament  body      TournamentCreateRepresentation  true  "The tournament"
-// @Success      200         {object}  model.Tournament
+// @Success      201         {object}  model.Tournament
 // @Failure      400         {object}  ErrorResponse
 // @Failure      500         {object}  ErrorResponse
 // @Router       /tournaments [post]
@@ -132,11 +122,8 @@ func PostTournament(db *gorm.DB) func(*gin.Context) {
 		t := model.NewTournament(tournament.Name)
 		t.GameScore = tournament.GameScore
 		t.InitialRanking = tournament.InitialRanking
-		if err := r.Store(t); err != nil {
-			panic(err)
-		} else {
-			c.JSON(http.StatusOK, t)
-		}
+		r.Store(t)
+		c.JSON(http.StatusCreated, t)
 	}
 }
 
@@ -153,7 +140,7 @@ type AddPlayer2TournamentRepresenatation struct {
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
 // @Param        player   body      AddPlayer2TournamentRepresenatation  true  "The tournament"
-// @Success      200      {object}  PlayerRepresenatation
+// @Success      201      {object}  PlayerRepresenatation
 // @Failure      400      {object}  ErrorResponse
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
@@ -161,54 +148,29 @@ type AddPlayer2TournamentRepresenatation struct {
 func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		var (
-			err   error
-			found model.Found
-			pr    AddPlayer2TournamentRepresenatation
-			t     *model.Tournament
-			p     *model.Player
-			tp    *model.TournamentPlayer
-		)
+		var pr AddPlayer2TournamentRepresenatation
 		if err := c.ShouldBindWith(&pr, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
 		}
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)
-		tournamentRepo := persistence.NewTournamentRepository(tx)
-		if t, found, err = tournamentRepo.Find(id); !found {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
-			return
-		} else if err != nil {
-			panic(err)
-		}
+		tourRepo := persistence.NewTournamentRepository(tx)
 		playerRepo := persistence.NewPlayerRepository(tx)
-		if p, found, err = playerRepo.Find(pr.Nickname); !found {
+		if p, found := playerRepo.Find(pr.Nickname); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s", pr.Nickname)))
-			return
-		} else if err != nil {
-			panic(err)
-		}
-		if tp, found = t.FindPlayerInTournament(p); found && tp.Active {
-			c.JSON(http.StatusBadRequest, NewErrorResponse(fmt.Sprintf("Player %s is already active in tournament %s", pr.Nickname, id)))
-			return
-		} else if err != nil {
-			panic(err)
-		}
-		if pr.Ranking == 0 {
-			log.Printf("Adding player %s with no ranking", pr.Nickname)
-			t.AddPlayer(p)
 		} else {
-			log.Printf("Adding player %s with ranking %d", pr.Nickname, pr.Ranking)
-			t.AddPlayerWithRanking(p, pr.Ranking)
+			if pr.Ranking == 0 {
+				if result, found := tourRepo.AddPlayer(id, p); found {
+					c.JSON(http.StatusCreated, result)
+				}
+			} else {
+				if result, found := tourRepo.AddPlayerWithRanking(id, p, pr.Ranking); found {
+					c.JSON(http.StatusCreated, result)
+				}
+			}
+			c.JSON(http.StatusNotFound, fmt.Sprintf("Could not finde tournament %s", id))
 		}
-		if err = tournamentRepo.Update(t); err != nil {
-			panic(err)
-		}
-		tp, _ = t.FindPlayerInTournament(p)
-		result := NewPlayerRepresentation(tp)
-		pEvents.publish(t.UUID, result)
-		c.JSON(http.StatusOK, result)
 	}
 }
 
@@ -228,12 +190,9 @@ func DeleteTournament(tournamentParam string, db *gorm.DB) func(*gin.Context) {
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewTournamentRepository(tx)
-		if t, found, err := r.Find(id); !found {
+		if found := r.Remove(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
-		} else if err != nil {
-			panic(err)
 		} else {
-			r.Remove(t)
 			c.Status(http.StatusNoContent)
 		}
 	}
@@ -257,26 +216,13 @@ func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewTournamentRepository(tx)
-		if t, found, err := r.Find(tID); !found {
+		if found := r.DeactivatePlayer(tID, nickname); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", tID)))
-		} else if err != nil {
-			panic(err)
 		} else {
-			log.Printf("Deactivation player %s in tournament %s", nickname, tID)
-			if found := t.DeactivatePlayer(nickname); found {
-				if err := r.Update(t); err != nil {
-					panic(err)
-				}
-				if tp, found := t.FindPlayerInTournamentByNickname(nickname); !found || err != nil {
-					panic(err)
-				} else {
-					pr := NewPlayerRepresentation(tp)
-					pEvents.publish(tID, pr)
-					c.Status(http.StatusNoContent)
-				}
-			} else {
-				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s", nickname)))
-			}
+			tp, _ := r.FindPlayer(tID, nickname)
+			pr := NewPlayerRepresentation(tp)
+			pEvents.publish(tID, pr)
+			c.Status(http.StatusNoContent)
 		}
 	}
 }
@@ -291,23 +237,23 @@ type playerEvents struct {
 	websockets map[string]*websocket.Conn
 }
 
-func (e *playerEvents) publish(uuid string, player PlayerRepresenatation) {
+func (e *playerEvents) publish(ID string, player PlayerRepresenatation) {
 	e.Lock()
-	if e.websockets[uuid] != nil {
-		e.websockets[uuid].WriteJSON(player)
+	if e.websockets[ID] != nil {
+		e.websockets[ID].WriteJSON(player)
 	}
 	e.Unlock()
 }
 
-func (e *playerEvents) register(uuid string, conn *websocket.Conn) {
+func (e *playerEvents) register(ID string, conn *websocket.Conn) {
 	e.Lock()
-	e.websockets[uuid] = conn
+	e.websockets[ID] = conn
 	e.Unlock()
 }
 
-func (e *playerEvents) unregister(uuid string) {
+func (e *playerEvents) unregister(ID string) {
 	e.Lock()
-	delete(e.websockets, uuid)
+	delete(e.websockets, ID)
 	e.Unlock()
 }
 

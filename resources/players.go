@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 // GetPlayer gets player info
@@ -24,17 +24,13 @@ import (
 // @Router       /players/{id} [get]
 func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		name := c.Param(param)
 		r := persistence.NewPlayerRepository(db)
-		defer HandlePanic(c)
-		if p, found, err := r.Find(name); err == nil {
-			if found {
-				c.JSON(http.StatusOK, p)
-			} else {
-				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", name)))
-			}
+		if p, found := r.Find(name); found {
+			c.JSON(http.StatusOK, p)
 		} else {
-			panic(err)
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", name)))
 		}
 	}
 }
@@ -48,6 +44,7 @@ func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 // @Router       /players [get]
 func GetPlayers(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		r := persistence.NewPlayerRepository(db)
 		players := r.FindAll()
 		c.JSON(http.StatusOK, players)
@@ -66,13 +63,14 @@ type CreatePlayerRequest struct {
 // @Accept       json
 // @Produce      json
 // @Param        player   body      CreatePlayerRequest true  "Create player"
-// @Success      200      {object}  model.Player
+// @Success      201      {object}  model.Player
 // @Failure      400      {object}  ErrorResponse
 // @Failure      409      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
 // @Router       /players [post]
 func PostPlayer(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		var player CreatePlayerRequest
 		if err := c.ShouldBindWith(&player, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
@@ -81,17 +79,13 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewPlayerRepository(tx)
-		if _, found, err := r.Find(player.Nickname); found && err == nil {
+		if _, found := r.Find(player.Nickname); found {
 			c.JSON(http.StatusConflict, NewErrorResponse(fmt.Sprintf("Player %s already exists", player.Nickname)))
 			return
-		} else if err != nil {
-			panic(err)
 		}
 		p := model.NewPlayer(player.Nickname, player.RealName, player.RFID)
-		if err := r.Store(p); err != nil {
-			panic(err)
-		}
-		c.JSON(http.StatusOK, p)
+		r.Store(p)
+		c.JSON(http.StatusCreated, p)
 	}
 }
 
@@ -107,16 +101,13 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 // @Router       /players/{id} [delete]
 func DeletePlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		name := c.Param(param)
 		r := persistence.NewPlayerRepository(db)
-		if found, err := r.Remove(name); err == nil {
-			if found {
-				c.Status(http.StatusNoContent)
-			} else {
-				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", name)))
-			}
+		if found := r.Remove(name); found {
+			c.Status(http.StatusNoContent)
 		} else {
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", name)))
 		}
 	}
 }

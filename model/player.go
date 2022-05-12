@@ -4,16 +4,16 @@ package model
 type Player struct {
 	Base
 	Nickname string `json:"nickname" binding:"required" gorm:"size:50;unique_index"`
-	RealName string `json:"realname" gorm:"type:varchar(100);not null"`
+	RealName string `json:"realname" gorm:"type:varchar(100)"`
 	RFID     string `json:"rfid,omitempty" gorm:"type:varchar(36)"`
 }
 
 // TournamentPlayer is a player in a tournament
 type TournamentPlayer struct {
 	Base
-	PlayerID     uint       `json:"-"`
+	PlayerID     uint       `json:"-" gorm:"index:player_tournament,unique"`
 	Player       Player     `json:"player"`
-	TournamentID uint       `json:"tournament"`
+	TournamentID uint       `json:"-" gorm:"index:player_tournament,unique"`
 	Tournament   Tournament `json:"-"`
 	Ranking      uint       `json:"ranking"`
 	Active       bool       `json:"active"`
@@ -21,10 +21,10 @@ type TournamentPlayer struct {
 
 // PlayerRepository provides access players
 type PlayerRepository interface {
-	Store(player *Player) error
-	Remove(nickname string) (Found, error)
-	Update(player *Player) error
-	Find(nickname string) (*Player, Found, error)
+	Store(player *Player)
+	Remove(nickname string) Found
+	Update(player *Player)
+	Find(nickname string) (*Player, Found)
 	FindAll() []*Player
 	FindByTournament(id string) []*Player
 }
@@ -39,12 +39,21 @@ func NewPlayer(nickname, realName string, rfid string) *Player {
 }
 
 // NewTournamentPlayer create new player in tournament
-func NewTournamentPlayer(player *Player, tournament Tournament) *TournamentPlayer {
-	tp := &TournamentPlayer{
-		Tournament: tournament,
+func NewTournamentPlayer(player *Player, tournament *Tournament) *TournamentPlayer {
+	return &TournamentPlayer{
+		Tournament: *tournament,
+		Player:     *player,
 		Ranking:    tournament.InitialRanking,
 		Active:     true,
 	}
-	tp.Player = *player
-	return tp
+}
+
+// NewTournamentPlayer create new player in tournament
+func NewTournamentPlayerWithRanking(player *Player, tournament *Tournament, ranking uint) *TournamentPlayer {
+	return &TournamentPlayer{
+		Tournament: *tournament,
+		Player:     *player,
+		Ranking:    ranking,
+		Active:     true,
+	}
 }

@@ -4,12 +4,27 @@ import (
 	"testing"
 )
 
-const TOURNAMENT = "T1"
+func TestCreateTournament(t *testing.T) {
+	tournament := NewTournament("Test")
 
-func InitTournament() *Tournament {
+	if tournament.Name != "Test" {
+		t.Errorf("Tournament name is incorrect, got: %s, want: %s.", tournament.Name, "Test")
+	}
+
+	if tournament.InitialRanking != 1500 {
+		t.Errorf("Tournament ranking is incorrect, got: %d, want: %d.", tournament.InitialRanking, 1500)
+	}
+
+	if tournament.GameScore != 50 {
+		t.Errorf("Tournament score is incorrect, got: %d, want: %d.", tournament.GameScore, 50)
+	}
+
+}
+
+/*func InitTournament() *Tournament {
 	table1 := NewTable("1", Color{Right: "red", Left: "green"})
 	table2 := NewTable("2", Color{Right: "black", Left: "blue"})
-	return NewTournament(TOURNAMENT, *table1, *table2)
+	return NewTournament(TOURNAMENT, table1, table2)
 }
 
 func TestCreateTournament(t *testing.T) {
@@ -134,3 +149,4 @@ func TestAddExistingPlayer2Tournament(t *testing.T) {
 		t.Errorf("Tournament must have player with ranking 600, got: %d.", tournament.TournamentPlayers[0].Ranking)
 	}
 }
+*/

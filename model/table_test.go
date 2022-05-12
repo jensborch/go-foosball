@@ -12,9 +12,6 @@ func TestCreateTable(t *testing.T) {
 	if table.Name != "test" {
 		t.Errorf("Table name is incorrect, got: %s, want: %s.", table.Name, "test")
 	}
-	if len(table.UUID) != 36 {
-		t.Errorf("Table must have UUID, got: %s.", table.UUID)
-	}
 	if table.Color.Left != "blue" {
 		t.Errorf("Table must have color, got: %s, wanted %s.", table.Color.Left, "blue")
 	}

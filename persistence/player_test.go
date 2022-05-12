@@ -4,27 +4,19 @@ import (
 	"testing"
 
 	"github.com/jensborch/go-foosball/model"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "gorm.io/driver/sqlite"
 )
-
-func initTournament() *model.Tournament {
-	table1 := model.NewTable("1", model.Color{Right: "red", Left: "green"})
-	table2 := model.NewTable("2", model.Color{Right: "black", Left: "blue"})
-	return model.NewTournament("test", *table1, *table2)
-}
 
 func TestRemoveNotFound(t *testing.T) {
 	db := InitDB(t)
-	defer db.Close()
 	r := NewPlayerRepository(db)
-	if f, _ := r.Remove("test"); f {
+	if f := r.Remove("test"); f {
 		t.Errorf("Player should not be found")
 	}
 }
 
 func TestStorePlayer(t *testing.T) {
 	db := InitDB(t)
-	defer db.Close()
 
 	p1 := model.NewPlayer("tt", "Thomas", "rfid1")
 	p2 := model.NewPlayer("jj", "Jens", "rfid2")
@@ -38,17 +30,14 @@ func TestStorePlayer(t *testing.T) {
 		t.Errorf("FindAll should return all playes, got: %d, want: %d.", len(r.FindAll()), 2)
 	}
 
-	found, _, err := r.Find("jj")
-	if err != nil {
-		t.Errorf("Failed to find player")
-	}
+	found, _ := r.Find("jj")
 
 	if found.Nickname != "jj" {
 		t.Errorf("Find should find player, got: %s, want: %s.", found.Nickname, "jj")
 	}
 
-	if f, err := r.Remove(p1.Nickname); !f || err != nil {
-		t.Errorf("Failed to remove or find player, found is %v, error is %v", f, err)
+	if f := r.Remove(p1.Nickname); !f {
+		t.Errorf("Failed to remove or find player, found is %v", f)
 	}
 
 	if len(r.FindAll()) != 1 {
@@ -60,7 +49,6 @@ func TestStorePlayer(t *testing.T) {
 func TestUpdatePlayer(t *testing.T) {
 	p := model.NewPlayer("tt", "Thomas", "rfid")
 	db := InitDB(t)
-	defer db.Close()
 
 	pr := NewPlayerRepository(db)
 	pr.Store(p)
@@ -68,10 +56,7 @@ func TestUpdatePlayer(t *testing.T) {
 	p.RealName = "t2"
 	pr.Update(p)
 
-	found, _, err := pr.Find("tt")
-	if err != nil {
-		t.Errorf("Failed to find player")
-	}
+	found, _ := pr.Find("tt")
 
 	if found.RealName != "t2" {
 		t.Errorf("Find should find player with updated name, got: %s, want: %s.", found.RealName, "t2")

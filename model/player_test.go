@@ -23,8 +23,8 @@ func TestCreatePlayer(t *testing.T) {
 
 func TestCreateTournamentPlayer(t *testing.T) {
 	p := NewPlayer("jj", "Jens", "rfid")
-	tournament := InitTournament()
-	tp := NewTournamentPlayer(p, *tournament)
+	tournament := NewTournament("Test")
+	tp := NewTournamentPlayer(p, tournament)
 
 	if r := tp.Ranking; r != 1500 {
 		t.Errorf("Player should have initial ranking, got %d, want: %d.", r, 1500)
