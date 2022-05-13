@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// HasBeenFound retuns false if error is a gorm.ErrRecordNotFound error
+// HasBeenFound returns false if error is a gorm.ErrRecordNotFound error
 func HasBeenFound(err error) model.Found {
 	if err == nil {
 		return true
