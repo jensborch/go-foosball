@@ -273,7 +273,7 @@ func randomGame(ts *httptest.Server, id uint) func(t *testing.T) []model.GameJso
 		resp, _ := http.Get(fmt.Sprintf("%s/tournaments/%d/games/random", ts.URL, id))
 
 		if resp.StatusCode != 200 {
-			t.Fatalf("Expected status code 201, got %v", resp.StatusCode)
+			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
 		}
 
 		result := []model.GameJson{}
@@ -301,6 +301,33 @@ func randomGame(ts *httptest.Server, id uint) func(t *testing.T) []model.GameJso
 	}
 }
 
+func postGame(ts *httptest.Server, tournamentId uint, tableId uint, players []string, winner string) func(t *testing.T) model.GameJson {
+	return func(t *testing.T) model.GameJson {
+
+		game, err := json.Marshal(map[string]interface{}{
+			"players": players,
+			"winner":  winner,
+		})
+
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+
+		resp, _ := http.Post(fmt.Sprintf("%s/tournaments/%d/tables/%d/games", ts.URL, tournamentId, tableId), "application/json", bytes.NewBuffer(game))
+
+		if resp.StatusCode != 201 {
+			t.Fatalf("Expected status code 201, got %v", resp.StatusCode)
+		}
+
+		result := model.GameJson{}
+		if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+			t.Fatalf("Expected a game, got %v", err)
+		}
+
+		return result
+	}
+}
+
 func Test(t *testing.T) {
 	ts, _ := startServer()
 	defer ts.Close()
@@ -318,5 +345,9 @@ func Test(t *testing.T) {
 		addTable2Tournament(ts, tournament.ID, table.ID)(t)
 	}
 
-	randomGame(ts, tournament.ID)(t)
+	games := randomGame(ts, tournament.ID)(t)
+
+	gamePlayers := append(games[0].LeftPlayers, games[0].RightPlayers...)
+
+	postGame(ts, tournament.ID, games[0].TableID, gamePlayers, string(model.RIGHT))(t)
 }
