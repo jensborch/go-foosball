@@ -85,7 +85,7 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 		}
 		p := model.NewPlayer(player.Nickname, player.RealName, player.RFID)
 		r.Store(p)
-		c.JSON(http.StatusCreated, p)
+		c.JSON(http.StatusOK, p)
 	}
 }
 

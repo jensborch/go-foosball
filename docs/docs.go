@@ -288,8 +288,8 @@ const docTemplate_swagger = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.Table"
                         }
@@ -405,8 +405,8 @@ const docTemplate_swagger = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.Tournament"
                         }
@@ -696,8 +696,8 @@ const docTemplate_swagger = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/resources.PlayerRepresenatation"
                         }

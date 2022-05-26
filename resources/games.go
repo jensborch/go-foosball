@@ -65,7 +65,7 @@ type GameRepresentation struct {
 // @Param        id       path      string  true  "Tournament ID"
 // @Param        table    path      string  true  "Table ID"
 // @Param        game     body      GameRepresentation true  "Submit game results"
-// @Success      201      {object}  model.GameJson
+// @Success      200      {object}  model.GameJson
 // @Failure      400      {object}  ErrorResponse
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
@@ -95,7 +95,7 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 			game.Winner = gr.Winner
 			game.UpdateScore()
 			persistence.NewGameRepository(tx).Store(game)
-			c.JSON(http.StatusCreated, game)
+			c.JSON(http.StatusOK, game)
 		} else {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find table %s or tournament %s", tableID, tourID)))
 		}
