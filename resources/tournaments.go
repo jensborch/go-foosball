@@ -31,7 +31,6 @@ func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
 		r := persistence.NewTournamentRepository(db)
 		if t, found := r.Find(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
-			return
 		} else {
 			c.JSON(http.StatusOK, t)
 		}
@@ -47,6 +46,7 @@ func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
 // @Router       /tournaments [get]
 func GetTournaments(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		r := persistence.NewTournamentRepository(db)
 		c.JSON(http.StatusOK, r.FindAll())
 	}
