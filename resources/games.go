@@ -22,6 +22,7 @@ import (
 // @Router       /tournaments/{id}/games [get]
 func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		id := c.Param(param)
 		c.JSON(http.StatusOK, persistence.NewGameRepository(db).FindByTournament(id))
 	}
@@ -39,14 +40,13 @@ func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
 // @Router       /tournaments/{id}/games/random [get]
 func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		id := c.Param(param)
 		r := persistence.NewTournamentRepository(db)
 		if games, found := r.RandomGames(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
-			return
 		} else {
 			c.JSON(http.StatusOK, games)
-			return
 		}
 	}
 }
@@ -114,13 +114,12 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 // @Router       /games/{id} [get]
 func GetGame(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		id := c.Param(param)
 		if g, found := persistence.NewGameRepository(db).Find(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find game %s", id)))
-			return
 		} else {
 			c.JSON(http.StatusOK, g)
-			return
 		}
 	}
 }
@@ -134,6 +133,7 @@ func GetGame(param string, db *gorm.DB) func(*gin.Context) {
 // @Router       /games [get]
 func GetGames(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		c.JSON(http.StatusOK, persistence.NewGameRepository(db).FindAll())
 	}
 }
