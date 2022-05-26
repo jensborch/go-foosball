@@ -137,3 +137,33 @@ func GetGames(db *gorm.DB) func(*gin.Context) {
 		c.JSON(http.StatusOK, persistence.NewGameRepository(db).FindAll())
 	}
 }
+
+var gameEventPublisher = NewEventPublisher()
+
+type GameStartEventRepresentation struct {
+	Id string `json:"id"`
+}
+
+func PostGameStart(param string, db *gorm.DB) func(*gin.Context) {
+	return func(c *gin.Context) {
+		defer HandlePanic(c)
+		id := c.Param(param)
+		if _, found := persistence.NewTournamentRepository(db).Find(id); found {
+			c.Status(http.StatusNoContent)
+			gameEventPublisher.Publish(id, &GameStartEventRepresentation{Id: id})
+		} else {
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
+		}
+	}
+}
+
+// GetGameEvents creats web socket with tournamnent game events
+// @Summary      Opens a web socket for tournamnent game start event
+// @Tags         tournament
+// @Produce      json-stream
+// @Param        id       path      string  true  "Tournament ID"
+// @Success      200      {object}  GameStartEventRepresentation
+// @Router       /tournaments/{id}/games/events [get]
+func GetGameEvents(param string) func(c *gin.Context) {
+	return gameEventPublisher.Get(param)
+}

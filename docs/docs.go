@@ -531,12 +531,6 @@ const docTemplate_swagger = `{
                         "schema": {
                             "$ref": "#/definitions/resources.PlayerRepresenatation"
                         }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "string"
-                        }
                     }
                 }
             }
@@ -570,6 +564,34 @@ const docTemplate_swagger = `{
                             "items": {
                                 "$ref": "#/definitions/model.GameJson"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "/tournaments/{id}/games/events": {
+            "get": {
+                "produces": [
+                    "application/x-json-stream"
+                ],
+                "tags": [
+                    "tournament"
+                ],
+                "summary": "Opens a web socket for tournamnent game start event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tournament ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/resources.GameStartEventRepresentation"
                         }
                     }
                 }
@@ -1195,6 +1217,14 @@ const docTemplate_swagger = `{
                     }
                 },
                 "winner": {
+                    "type": "string"
+                }
+            }
+        },
+        "resources.GameStartEventRepresentation": {
+            "type": "object",
+            "properties": {
+                "id": {
                     "type": "string"
                 }
             }

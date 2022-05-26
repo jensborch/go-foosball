@@ -2,13 +2,10 @@ package resources
 
 import (
 	"fmt"
-	"log"
 	"net/http"
-	"sync"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"github.com/gorilla/websocket"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
 	"gorm.io/gorm"
@@ -171,7 +168,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			}
 			if tp, found := addPlayer(); found {
 				c.JSON(http.StatusOK, tp)
-				pEvents.publish(id, NewPlayerRepresentation(tp))
+				playerEventPublisher.Publish(id, NewPlayerRepresentation(tp))
 			} else {
 				c.JSON(http.StatusNotFound, fmt.Sprintf("Could not finde tournament %s", id))
 			}
@@ -226,45 +223,13 @@ func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm
 		} else {
 			tp, _ := r.FindPlayer(id, nickname)
 			pr := NewPlayerRepresentation(tp)
-			pEvents.publish(id, pr)
+			playerEventPublisher.Publish(id, pr)
 			c.Status(http.StatusNoContent)
 		}
 	}
 }
 
-var wsupgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-}
-
-type playerEvents struct {
-	sync.RWMutex
-	websockets map[string]*websocket.Conn
-}
-
-func (e *playerEvents) publish(ID string, player PlayerRepresenatation) {
-	e.Lock()
-	if e.websockets[ID] != nil {
-		e.websockets[ID].WriteJSON(player)
-	}
-	e.Unlock()
-}
-
-func (e *playerEvents) register(ID string, conn *websocket.Conn) {
-	e.Lock()
-	e.websockets[ID] = conn
-	e.Unlock()
-}
-
-func (e *playerEvents) unregister(ID string) {
-	e.Lock()
-	delete(e.websockets, ID)
-	e.Unlock()
-}
-
-var pEvents = &playerEvents{
-	websockets: make(map[string]*websocket.Conn),
-}
+var playerEventPublisher = NewEventPublisher()
 
 // GetTournamentEvents creats web socket with tournamnent player events
 // @Summary      Opens a web socket for tournamnent player event
@@ -272,23 +237,7 @@ var pEvents = &playerEvents{
 // @Produce      json-stream
 // @Param        id       path      string  true  "Tournament ID"
 // @Success      200      {object}  PlayerRepresenatation
-// @Failure      400      {string}  string
 // @Router       /tournaments/{id}/events [get]
 func GetTournamentEvents(param string) func(c *gin.Context) {
-	return func(c *gin.Context) {
-		id := c.Param(param)
-		conn, err := wsupgrader.Upgrade(c.Writer, c.Request, nil)
-		if err != nil {
-			log.Printf("Failed to set websocket upgrade: %+v", err)
-			return
-		}
-		pEvents.register(id, conn)
-		for {
-			if _, _, err := conn.NextReader(); err != nil {
-				conn.Close()
-				pEvents.unregister(id)
-				break
-			}
-		}
-	}
+	return playerEventPublisher.Get(param)
 }

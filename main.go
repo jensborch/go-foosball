@@ -89,7 +89,8 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	tournaments.POST("/:id/tables/:table/games", resources.PostGame("id", "table", db))
 	tournaments.GET("/:id/events", resources.GetTournamentEvents("id"))
 	tournaments.GET("/:id/games", resources.GetGamesInTournament("id", db))
-	//tournaments.POST("/:id/games", resources.PostGameStart())
+	tournaments.POST("/:id/games", resources.PostGameStart("id", db))
+	tournaments.POST("/:id/games/events", resources.GetGameEvents("id"))
 	tournaments.GET("/:id/games/random", resources.GetRandomGames("id", db))
 
 	games := router.Group("/games/")
