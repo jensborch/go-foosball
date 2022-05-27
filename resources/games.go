@@ -30,7 +30,7 @@ func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
 
 // GetRandomGames for a tournament
 // @Summary      Get random game for a tournament
-// @Tags         tournament
+// @Tags         actions
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
@@ -146,14 +146,14 @@ type GameStartEventRepresentation struct {
 
 // PostGame publishes a game start event using web socket
 // @Summary      Publishes a game start event
-// @Tags         tournament
+// @Tags         actions
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
 // @Success      204
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
-// @Router       /tournaments/{id}/games [post]
+// @Router       /tournaments/{id}/games/start [get]
 func PostGameStart(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -168,12 +168,12 @@ func PostGameStart(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 // GetGameEvents creats web socket with tournamnent game events
-// @Summary      Opens a web socket for tournamnent game start event
-// @Tags         tournament
+// @Summary      Opens a web socket for tournamnent game start events
+// @Tags         events
 // @Produce      json-stream
 // @Param        id       path      string  true  "Tournament ID"
 // @Success      200      {object}  GameStartEventRepresentation
-// @Router       /tournaments/{id}/games/events [get]
+// @Router       /tournaments/{id}/events/game [get]
 func GetGameEvents(param string) func(c *gin.Context) {
 	return gameEventPublisher.Get(param)
 }

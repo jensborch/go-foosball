@@ -503,7 +503,25 @@ paths:
       summary: Get tournament
       tags:
       - tournament
-  /tournaments/{id}/events:
+  /tournaments/{id}/events/game:
+    get:
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/x-json-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/resources.GameStartEventRepresentation'
+      summary: Opens a web socket for tournamnent game start event
+      tags:
+      - events
+  /tournaments/{id}/events/player:
     get:
       parameters:
       - description: Tournament ID
@@ -520,7 +538,7 @@ paths:
             $ref: '#/definitions/resources.PlayerRepresenatation'
       summary: Opens a web socket for tournamnent player event
       tags:
-      - tournament
+      - events
   /tournaments/{id}/games:
     get:
       consumes:
@@ -541,49 +559,6 @@ paths:
               $ref: '#/definitions/model.GameJson'
             type: array
       summary: Get all games in a tournament
-      tags:
-      - tournament
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Tournament ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: ""
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/resources.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/resources.ErrorResponse'
-      summary: Publishes a game start event
-      tags:
-      - tournament
-  /tournaments/{id}/games/events:
-    get:
-      parameters:
-      - description: Tournament ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/x-json-stream
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/resources.GameStartEventRepresentation'
-      summary: Opens a web socket for tournamnent game start event
       tags:
       - tournament
   /tournaments/{id}/games/random:
@@ -615,7 +590,33 @@ paths:
             $ref: '#/definitions/resources.ErrorResponse'
       summary: Get random game for a tournament
       tags:
-      - tournament
+      - actions
+  /tournaments/{id}/games/start:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resources.ErrorResponse'
+      summary: Publishes a game start event
+      tags:
+      - actions
   /tournaments/{id}/players:
     get:
       consumes:

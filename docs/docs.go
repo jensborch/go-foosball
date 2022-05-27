@@ -507,13 +507,41 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "/tournaments/{id}/events": {
+        "/tournaments/{id}/events/game": {
             "get": {
                 "produces": [
                     "application/x-json-stream"
                 ],
                 "tags": [
-                    "tournament"
+                    "events"
+                ],
+                "summary": "Opens a web socket for tournamnent game start event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tournament ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/resources.GameStartEventRepresentation"
+                        }
+                    }
+                }
+            }
+        },
+        "/tournaments/{id}/events/player": {
+            "get": {
+                "produces": [
+                    "application/x-json-stream"
+                ],
+                "tags": [
+                    "events"
                 ],
                 "summary": "Opens a web socket for tournamnent player event",
                 "parameters": [
@@ -567,72 +595,6 @@ const docTemplate_swagger = `{
                         }
                     }
                 }
-            },
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tournament"
-                ],
-                "summary": "Publishes a game start event",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Tournament ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": ""
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/tournaments/{id}/games/events": {
-            "get": {
-                "produces": [
-                    "application/x-json-stream"
-                ],
-                "tags": [
-                    "tournament"
-                ],
-                "summary": "Opens a web socket for tournamnent game start event",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Tournament ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/resources.GameStartEventRepresentation"
-                        }
-                    }
-                }
             }
         },
         "/tournaments/{id}/games/random": {
@@ -644,7 +606,7 @@ const docTemplate_swagger = `{
                     "application/json"
                 ],
                 "tags": [
-                    "tournament"
+                    "actions"
                 ],
                 "summary": "Get random game for a tournament",
                 "parameters": [
@@ -665,6 +627,46 @@ const docTemplate_swagger = `{
                                 "$ref": "#/definitions/model.GameJson"
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/resources.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/resources.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tournaments/{id}/games/start": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "actions"
+                ],
+                "summary": "Publishes a game start event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tournament ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": ""
                     },
                     "404": {
                         "description": "Not Found",

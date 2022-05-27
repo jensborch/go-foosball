@@ -231,13 +231,13 @@ func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm
 
 var playerEventPublisher = NewEventPublisher()
 
-// GetTournamentEvents creats web socket with tournamnent player events
-// @Summary      Opens a web socket for tournamnent player event
-// @Tags         tournament
+// GetPlayerEvents creats web socket with tournamnent player events
+// @Summary      Opens a web socket for tournamnent player events
+// @Tags         events
 // @Produce      json-stream
 // @Param        id       path      string  true  "Tournament ID"
 // @Success      200      {object}  PlayerRepresenatation
-// @Router       /tournaments/{id}/events [get]
-func GetTournamentEvents(param string) func(c *gin.Context) {
+// @Router       /tournaments/{id}/events/player [get]
+func GetPlayerEvents(param string) func(c *gin.Context) {
 	return playerEventPublisher.Get(param)
 }
