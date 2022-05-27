@@ -16,6 +16,7 @@
     "@types/react-router-dom": "^5.1.8",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-query": "^3.39.0",
     "react-router-dom": "^5.3.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.1.2",
@@ -28,7 +29,7 @@
     "eject": "react-scripts eject",
     "test:ci": "CI=true react-scripts test --env=jsdom --coverage",
     "prettier": "prettier --write .",
-    "swagger": "dtsgen --out ./src/api/swagger.d.ts ../docs/swagger.json"
+    "swagger": "swagger-typescript-api -p ../docs/swagger.json -o ./src/api -n Api.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -50,8 +51,8 @@
     ]
   },
   "devDependencies": {
-    "dtsgenerator": "^3.15.1",
     "eslint-config-prettier": "^8.5.0",
-    "prettier": "^2.6.2"
+    "prettier": "^2.6.2",
+    "swagger-typescript-api": "^9.3.1"
   }
 }
