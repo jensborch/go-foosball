@@ -91,7 +91,7 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 
 	//Actions
 	tournaments.GET("/:id/games/random", resources.GetRandomGames("id", db))
-	tournaments.GET("/:id/games/start", resources.PostGameStart("id", db))
+	tournaments.GET("/:id/games/start", resources.GetGameStart("id", db))
 
 	//Events
 	tournaments.GET("/:id/events/player", resources.GetPlayerEvents("id"))

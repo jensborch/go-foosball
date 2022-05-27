@@ -144,7 +144,7 @@ type GameStartEventRepresentation struct {
 	Id string `json:"id"`
 }
 
-// PostGame publishes a game start event using web socket
+// GetGameStart publishes a game start event using web socket
 // @Summary      Publishes a game start event
 // @Tags         actions
 // @Accept       json
@@ -154,7 +154,7 @@ type GameStartEventRepresentation struct {
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
 // @Router       /tournaments/{id}/games/start [get]
-func PostGameStart(param string, db *gorm.DB) func(*gin.Context) {
+func GetGameStart(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
 		id := c.Param(param)

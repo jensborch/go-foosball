@@ -1,31 +1,41 @@
 <html>
-<body>
+  <body>
     <h1>Go Foosball</h1>
 
-    <h2>Tournament events</h2>
-    <input name="Tournament id" id="tournament">
-    <input type="button" value="Get events" onclick="ws()">
-    <pre id="output"></pre>
+    <h2>Game events</h2>
+    <input name="Tournament id" id="gameEventsId" />
+    <input
+      type="button"
+      value="Get events"
+      onclick="ws('gameEventsId', 'gameEventsOutput', (id) => `ws://localhost:8080/tournaments/${id}/events/game`)"
+    />
+    <pre id="gameEventsOutput"></pre>
+
+    <h2>Player events</h2>
+    <input name="Tournament id" id="playerEventsId" />
+    <input
+      type="button"
+      value="Get events"
+      onclick="ws('playerEventsId', 'playerEventsOutput', (id) => `ws://localhost:8080/tournaments/${id}/events/player`)"
+    />
+    <pre id="playerEventsOutput"></pre>
 
     <script>
-        function ws() {
-            let id = document.getElementById("tournament").value
-            let url = `ws://localhost:8080/tournaments/${id}/events`;
-            let c = new WebSocket(url);
-            element = document.getElementById("output");
-            element.innerHTML = "";
+      function ws(element, output, url) {
+        let id = document.getElementById(element).value;
+        let c = new WebSocket(url instanceof Function ? url(id) : url);
+        element = document.getElementById(output);
+        element.innerHTML = '';
 
-            c.onmessage = function (msg) {                
-                element.innerHTML += new Date() + " <== " + msg.data
-                console.log(msg)
-            }
+        c.onmessage = function (msg) {
+          element.innerHTML += new Date() + ' <== ' + msg.data;
+          console.log(msg);
+        };
 
-            c.onerror = function (error) {
-                console.error('WebSocket Error ' + error);
-            };
-        }
+        c.onerror = function (error) {
+          console.error('WebSocket Error ' + error);
+        };
+      }
     </script>
-
-</body>
-
+  </body>
 </html>
