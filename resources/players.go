@@ -55,7 +55,7 @@ type CreatePlayerRequest struct {
 	Nickname string `json:"nickname" binding:"required"`
 	RealName string `json:"realname"`
 	RFID     string `json:"rfid"`
-}
+} //@name CreatePlayer
 
 // PostPlayer creates a new player
 // @Summary      Create a new player

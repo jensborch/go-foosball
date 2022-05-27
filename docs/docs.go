@@ -34,7 +34,7 @@ const docTemplate_swagger = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.GameJson"
+                                "$ref": "#/definitions/Game"
                             }
                         }
                     }
@@ -66,19 +66,19 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.GameJson"
+                            "$ref": "#/definitions/Game"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -102,7 +102,7 @@ const docTemplate_swagger = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Player"
+                                "$ref": "#/definitions/Player"
                             }
                         }
                     }
@@ -126,7 +126,7 @@ const docTemplate_swagger = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/resources.CreatePlayerRequest"
+                            "$ref": "#/definitions/CreatePlayer"
                         }
                     }
                 ],
@@ -134,25 +134,25 @@ const docTemplate_swagger = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/model.Player"
+                            "$ref": "#/definitions/Player"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -183,19 +183,19 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Player"
+                            "$ref": "#/definitions/Player"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -227,13 +227,13 @@ const docTemplate_swagger = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -257,7 +257,7 @@ const docTemplate_swagger = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Table"
+                                "$ref": "#/definitions/Table"
                             }
                         }
                     }
@@ -283,7 +283,7 @@ const docTemplate_swagger = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/resources.CreateTableRepresentation"
+                            "$ref": "#/definitions/CreateTable"
                         }
                     }
                 ],
@@ -291,25 +291,25 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Table"
+                            "$ref": "#/definitions/Table"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -340,19 +340,19 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Table"
+                            "$ref": "#/definitions/Table"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -376,7 +376,7 @@ const docTemplate_swagger = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Tournament"
+                                "$ref": "#/definitions/Tournament"
                             }
                         }
                     }
@@ -400,7 +400,7 @@ const docTemplate_swagger = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/resources.TournamentCreateRepresentation"
+                            "$ref": "#/definitions/CreateTournament"
                         }
                     }
                 ],
@@ -408,19 +408,19 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Tournament"
+                            "$ref": "#/definitions/Tournament"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -451,19 +451,19 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Tournament"
+                            "$ref": "#/definitions/Tournament"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -495,13 +495,13 @@ const docTemplate_swagger = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -515,7 +515,7 @@ const docTemplate_swagger = `{
                 "tags": [
                     "events"
                 ],
-                "summary": "Opens a web socket for tournamnent game start event",
+                "summary": "Opens a web socket for tournamnent game start events",
                 "parameters": [
                     {
                         "type": "string",
@@ -529,7 +529,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/resources.GameStartEventRepresentation"
+                            "$ref": "#/definitions/GameStartEvent"
                         }
                     }
                 }
@@ -543,7 +543,7 @@ const docTemplate_swagger = `{
                 "tags": [
                     "events"
                 ],
-                "summary": "Opens a web socket for tournamnent player event",
+                "summary": "Opens a web socket for tournamnent player events",
                 "parameters": [
                     {
                         "type": "string",
@@ -557,7 +557,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/resources.PlayerRepresenatation"
+                            "$ref": "#/definitions/TournamentPlayer"
                         }
                     }
                 }
@@ -590,7 +590,7 @@ const docTemplate_swagger = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.GameJson"
+                                "$ref": "#/definitions/Game"
                             }
                         }
                     }
@@ -624,20 +624,20 @@ const docTemplate_swagger = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.GameJson"
+                                "$ref": "#/definitions/Game"
                             }
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -671,13 +671,13 @@ const docTemplate_swagger = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -710,20 +710,20 @@ const docTemplate_swagger = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/resources.PlayerRepresenatation"
+                                "$ref": "#/definitions/TournamentPlayer"
                             }
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -753,7 +753,7 @@ const docTemplate_swagger = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/resources.AddPlayer2TournamentRepresenatation"
+                            "$ref": "#/definitions/AddPlayer"
                         }
                     }
                 ],
@@ -761,25 +761,25 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/resources.PlayerRepresenatation"
+                            "$ref": "#/definitions/TournamentPlayer"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -820,13 +820,13 @@ const docTemplate_swagger = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -859,20 +859,20 @@ const docTemplate_swagger = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.TournamentTable"
+                                "$ref": "#/definitions/TournamentTable"
                             }
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -902,7 +902,7 @@ const docTemplate_swagger = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/resources.TableRepresentation"
+                            "$ref": "#/definitions/AddTable"
                         }
                     }
                 ],
@@ -910,25 +910,25 @@ const docTemplate_swagger = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/model.TournamentTable"
+                            "$ref": "#/definitions/TournamentTable"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -969,13 +969,13 @@ const docTemplate_swagger = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -1014,7 +1014,7 @@ const docTemplate_swagger = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/resources.GameRepresentation"
+                            "$ref": "#/definitions/GameResult"
                         }
                     }
                 ],
@@ -1022,25 +1022,25 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.GameJson"
+                            "$ref": "#/definitions/Game"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/resources.ErrorResponse"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -1048,7 +1048,32 @@ const docTemplate_swagger = `{
         }
     },
     "definitions": {
-        "model.Color": {
+        "AddPlayer": {
+            "type": "object",
+            "required": [
+                "nickname"
+            ],
+            "properties": {
+                "nickname": {
+                    "type": "string"
+                },
+                "ranking": {
+                    "type": "integer"
+                }
+            }
+        },
+        "AddTable": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "Color": {
             "type": "object",
             "required": [
                 "left",
@@ -1063,7 +1088,62 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "model.GameJson": {
+        "CreatePlayer": {
+            "type": "object",
+            "required": [
+                "nickname"
+            ],
+            "properties": {
+                "nickname": {
+                    "type": "string"
+                },
+                "realname": {
+                    "type": "string"
+                },
+                "rfid": {
+                    "type": "string"
+                }
+            }
+        },
+        "CreateTable": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/Color"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "CreateTournament": {
+            "type": "object",
+            "required": [
+                "initial",
+                "name",
+                "score"
+            ],
+            "properties": {
+                "initial": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "score": {
+                    "type": "integer"
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "Game": {
             "type": "object",
             "properties": {
                 "created": {
@@ -1098,7 +1178,33 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "model.Player": {
+        "GameResult": {
+            "type": "object",
+            "required": [
+                "players",
+                "winner"
+            ],
+            "properties": {
+                "players": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "winner": {
+                    "type": "string"
+                }
+            }
+        },
+        "GameStartEvent": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "Player": {
             "type": "object",
             "required": [
                 "nickname"
@@ -1106,9 +1212,6 @@ const docTemplate_swagger = `{
             "properties": {
                 "created": {
                     "type": "string"
-                },
-                "id": {
-                    "type": "integer"
                 },
                 "nickname": {
                     "type": "string"
@@ -1124,7 +1227,7 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "model.Table": {
+        "Table": {
             "type": "object",
             "required": [
                 "color",
@@ -1132,7 +1235,7 @@ const docTemplate_swagger = `{
             ],
             "properties": {
                 "color": {
-                    "$ref": "#/definitions/model.Color"
+                    "$ref": "#/definitions/Color"
                 },
                 "created": {
                     "type": "string"
@@ -1148,7 +1251,7 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "model.Tournament": {
+        "Tournament": {
             "type": "object",
             "required": [
                 "initial",
@@ -1176,100 +1279,7 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "model.TournamentTable": {
-            "type": "object",
-            "properties": {
-                "created": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "table": {
-                    "$ref": "#/definitions/model.Table"
-                },
-                "updated": {
-                    "type": "string"
-                }
-            }
-        },
-        "resources.AddPlayer2TournamentRepresenatation": {
-            "type": "object",
-            "required": [
-                "nickname"
-            ],
-            "properties": {
-                "nickname": {
-                    "type": "string"
-                },
-                "ranking": {
-                    "type": "integer"
-                }
-            }
-        },
-        "resources.CreatePlayerRequest": {
-            "type": "object",
-            "required": [
-                "nickname"
-            ],
-            "properties": {
-                "nickname": {
-                    "type": "string"
-                },
-                "realname": {
-                    "type": "string"
-                },
-                "rfid": {
-                    "type": "string"
-                }
-            }
-        },
-        "resources.CreateTableRepresentation": {
-            "type": "object",
-            "properties": {
-                "color": {
-                    "$ref": "#/definitions/model.Color"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "resources.ErrorResponse": {
-            "type": "object",
-            "properties": {
-                "error": {
-                    "type": "string"
-                }
-            }
-        },
-        "resources.GameRepresentation": {
-            "type": "object",
-            "required": [
-                "players",
-                "winner"
-            ],
-            "properties": {
-                "players": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "winner": {
-                    "type": "string"
-                }
-            }
-        },
-        "resources.GameStartEventRepresentation": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                }
-            }
-        },
-        "resources.PlayerRepresenatation": {
+        "TournamentPlayer": {
             "type": "object",
             "properties": {
                 "active": {
@@ -1289,33 +1299,20 @@ const docTemplate_swagger = `{
                 }
             }
         },
-        "resources.TableRepresentation": {
+        "TournamentTable": {
             "type": "object",
-            "required": [
-                "id"
-            ],
             "properties": {
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "resources.TournamentCreateRepresentation": {
-            "type": "object",
-            "required": [
-                "initial",
-                "name",
-                "score"
-            ],
-            "properties": {
-                "initial": {
-                    "type": "integer"
-                },
-                "name": {
+                "created": {
                     "type": "string"
                 },
-                "score": {
+                "id": {
                     "type": "integer"
+                },
+                "table": {
+                    "$ref": "#/definitions/Table"
+                },
+                "updated": {
+                    "type": "string"
                 }
             }
         }

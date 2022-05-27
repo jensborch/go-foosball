@@ -6,14 +6,14 @@ type Tournament struct {
 	Name           string `json:"name" binding:"required" gorm:"type:varchar(100)"`
 	GameScore      uint   `json:"score" binding:"required"`
 	InitialRanking uint   `json:"initial" binding:"required"`
-}
+} //@name Tournament
 type TournamentTable struct {
 	Base
 	TableID      uint       `json:"-"`
 	Table        Table      `json:"table"`
 	TournamentId uint       `json:"-"`
 	Tournament   Tournament `json:"-"`
-}
+} //@name TournamentTable
 
 // TournamentRepository provides access games etc.
 type TournamentRepository interface {

@@ -1,9 +1,33 @@
 declare namespace Definitions {
-    export interface ModelColor {
+    export interface AddPlayer {
+        nickname: string;
+        ranking?: number;
+    }
+    export interface AddTable {
+        id: number;
+    }
+    export interface Color {
         left: string;
         right: string;
     }
-    export interface ModelGameJson {
+    export interface CreatePlayer {
+        nickname: string;
+        realname?: string;
+        rfid?: string;
+    }
+    export interface CreateTable {
+        color?: Color;
+        name?: string;
+    }
+    export interface CreateTournament {
+        initial: number;
+        name: string;
+        score: number;
+    }
+    export interface Error {
+        error?: string;
+    }
+    export interface Game {
         created?: string;
         leftPlayers?: string[];
         leftScore?: number;
@@ -13,22 +37,28 @@ declare namespace Definitions {
         updated?: string;
         winner?: string;
     }
-    export interface ModelPlayer {
+    export interface GameResult {
+        players: string[];
+        winner: string;
+    }
+    export interface GameStartEvent {
+        id?: string;
+    }
+    export interface Player {
         created?: string;
-        id?: number;
         nickname: string;
         realname?: string;
         rfid?: string;
         updated?: string;
     }
-    export interface ModelTable {
-        color: ModelColor;
+    export interface Table {
+        color: Color;
         created?: string;
         id?: number;
         name: string;
         updated?: string;
     }
-    export interface ModelTournament {
+    export interface Tournament {
         created?: string;
         id?: number;
         initial: number;
@@ -36,53 +66,25 @@ declare namespace Definitions {
         score: number;
         updated?: string;
     }
-    export interface ModelTournamentTable {
-        created?: string;
-        id?: number;
-        table?: ModelTable;
-        updated?: string;
-    }
-    export interface ResourcesAddPlayer2TournamentRepresenatation {
-        nickname: string;
-        ranking?: number;
-    }
-    export interface ResourcesCreatePlayerRequest {
-        nickname: string;
-        realname?: string;
-        rfid?: string;
-    }
-    export interface ResourcesCreateTableRepresentation {
-        color?: ModelColor;
-        name?: string;
-    }
-    export interface ResourcesErrorResponse {
-        error?: string;
-    }
-    export interface ResourcesGameRepresentation {
-        players: string[];
-        winner: string;
-    }
-    export interface ResourcesPlayerRepresenatation {
+    export interface TournamentPlayer {
         active?: boolean;
         nickname?: string;
         ranking?: number;
         realname?: string;
         rfid?: string;
     }
-    export interface ResourcesTableRepresentation {
-        id: number;
-    }
-    export interface ResourcesTournamentCreateRepresentation {
-        initial: number;
-        name: string;
-        score: number;
+    export interface TournamentTable {
+        created?: string;
+        id?: number;
+        table?: Table;
+        updated?: string;
     }
 }
 declare namespace Paths {
     namespace Games {
         namespace Get {
             namespace Responses {
-                export type $200 = Definitions.ModelGameJson[];
+                export type $200 = Definitions.Game[];
             }
         }
     }
@@ -98,16 +100,16 @@ declare namespace Paths {
                 id: /* Game ID */ Parameters.Id;
             }
             namespace Responses {
-                export type $200 = Definitions.ModelGameJson;
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $200 = Definitions.Game;
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
     }
     namespace Players {
         namespace Get {
             namespace Responses {
-                export type $200 = Definitions.ModelPlayer[];
+                export type $200 = Definitions.Player[];
             }
         }
         namespace Post {
@@ -115,13 +117,13 @@ declare namespace Paths {
                 player: Parameters.Player;
             }
             namespace Parameters {
-                export type Player = Definitions.ResourcesCreatePlayerRequest;
+                export type Player = Definitions.CreatePlayer;
             }
             namespace Responses {
-                export type $201 = Definitions.ModelPlayer;
-                export type $400 = Definitions.ResourcesErrorResponse;
-                export type $409 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $201 = Definitions.Player;
+                export type $400 = Definitions.Error;
+                export type $409 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
     }
@@ -137,8 +139,8 @@ declare namespace Paths {
                 id: /* Player ID */ Parameters.Id;
             }
             namespace Responses {
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
         namespace Get {
@@ -152,16 +154,16 @@ declare namespace Paths {
                 id: /* Player ID */ Parameters.Id;
             }
             namespace Responses {
-                export type $200 = Definitions.ModelPlayer;
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $200 = Definitions.Player;
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
     }
     namespace Tables {
         namespace Get {
             namespace Responses {
-                export type $200 = Definitions.ModelTable[];
+                export type $200 = Definitions.Table[];
             }
         }
         namespace Post {
@@ -169,13 +171,13 @@ declare namespace Paths {
                 table: Parameters.Table;
             }
             namespace Parameters {
-                export type Table = Definitions.ResourcesCreateTableRepresentation;
+                export type Table = Definitions.CreateTable;
             }
             namespace Responses {
-                export type $201 = Definitions.ModelTable;
-                export type $400 = Definitions.ResourcesErrorResponse;
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $200 = Definitions.Table;
+                export type $400 = Definitions.Error;
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
     }
@@ -191,16 +193,16 @@ declare namespace Paths {
                 id: /* Table ID */ Parameters.Id;
             }
             namespace Responses {
-                export type $200 = Definitions.ModelTable;
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $200 = Definitions.Table;
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
     }
     namespace Tournaments {
         namespace Get {
             namespace Responses {
-                export type $200 = Definitions.ModelTournament[];
+                export type $200 = Definitions.Tournament[];
             }
         }
         namespace Post {
@@ -208,12 +210,12 @@ declare namespace Paths {
                 tournament: Parameters.Tournament;
             }
             namespace Parameters {
-                export type Tournament = Definitions.ResourcesTournamentCreateRepresentation;
+                export type Tournament = Definitions.CreateTournament;
             }
             namespace Responses {
-                export type $201 = Definitions.ModelTournament;
-                export type $400 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $200 = Definitions.Tournament;
+                export type $400 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
     }
@@ -229,8 +231,8 @@ declare namespace Paths {
                 id: /* Tournament ID */ Parameters.Id;
             }
             namespace Responses {
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
         namespace Get {
@@ -244,13 +246,13 @@ declare namespace Paths {
                 id: /* Tournament ID */ Parameters.Id;
             }
             namespace Responses {
-                export type $200 = Definitions.ModelTournament;
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $200 = Definitions.Tournament;
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
     }
-    namespace Tournaments$IdEvents {
+    namespace Tournaments$IdEventsGame {
         namespace Get {
             namespace Parameters {
                 /**
@@ -262,8 +264,23 @@ declare namespace Paths {
                 id: /* Tournament ID */ Parameters.Id;
             }
             namespace Responses {
-                export type $200 = Definitions.ResourcesPlayerRepresenatation;
-                export type $400 = string;
+                export type $200 = Definitions.GameStartEvent;
+            }
+        }
+    }
+    namespace Tournaments$IdEventsPlayer {
+        namespace Get {
+            namespace Parameters {
+                /**
+                 * Tournament ID
+                 */
+                export type Id = string;
+            }
+            export interface PathParameters {
+                id: /* Tournament ID */ Parameters.Id;
+            }
+            namespace Responses {
+                export type $200 = Definitions.TournamentPlayer;
             }
         }
     }
@@ -279,7 +296,7 @@ declare namespace Paths {
                 id: /* Tournament ID */ Parameters.Id;
             }
             namespace Responses {
-                export type $200 = Definitions.ModelGameJson[];
+                export type $200 = Definitions.Game[];
             }
         }
     }
@@ -295,9 +312,26 @@ declare namespace Paths {
                 id: /* Tournament ID */ Parameters.Id;
             }
             namespace Responses {
-                export type $200 = Definitions.ModelGameJson[];
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $200 = Definitions.Game[];
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
+            }
+        }
+    }
+    namespace Tournaments$IdGamesStart {
+        namespace Get {
+            namespace Parameters {
+                /**
+                 * Tournament ID
+                 */
+                export type Id = string;
+            }
+            export interface PathParameters {
+                id: /* Tournament ID */ Parameters.Id;
+            }
+            namespace Responses {
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
     }
@@ -313,9 +347,9 @@ declare namespace Paths {
                 id: /* Tournament ID */ Parameters.Id;
             }
             namespace Responses {
-                export type $200 = Definitions.ResourcesPlayerRepresenatation[];
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $200 = Definitions.TournamentPlayer[];
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
         namespace Post {
@@ -327,16 +361,16 @@ declare namespace Paths {
                  * Tournament ID
                  */
                 export type Id = string;
-                export type Player = Definitions.ResourcesAddPlayer2TournamentRepresenatation;
+                export type Player = Definitions.AddPlayer;
             }
             export interface PathParameters {
                 id: /* Tournament ID */ Parameters.Id;
             }
             namespace Responses {
-                export type $201 = Definitions.ResourcesPlayerRepresenatation;
-                export type $400 = Definitions.ResourcesErrorResponse;
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $200 = Definitions.TournamentPlayer;
+                export type $400 = Definitions.Error;
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
     }
@@ -357,8 +391,8 @@ declare namespace Paths {
                 player: /* Player ID */ Parameters.Player;
             }
             namespace Responses {
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
     }
@@ -374,9 +408,9 @@ declare namespace Paths {
                 id: /* Tournament ID */ Parameters.Id;
             }
             namespace Responses {
-                export type $200 = Definitions.ModelTournamentTable[];
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $200 = Definitions.TournamentTable[];
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
         namespace Post {
@@ -388,16 +422,16 @@ declare namespace Paths {
                  * Tournament ID
                  */
                 export type Id = string;
-                export type Table = Definitions.ResourcesTableRepresentation;
+                export type Table = Definitions.AddTable;
             }
             export interface PathParameters {
                 id: /* Tournament ID */ Parameters.Id;
             }
             namespace Responses {
-                export type $201 = Definitions.ModelTournamentTable;
-                export type $400 = Definitions.ResourcesErrorResponse;
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $201 = Definitions.TournamentTable;
+                export type $400 = Definitions.Error;
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
     }
@@ -407,7 +441,7 @@ declare namespace Paths {
                 game: Parameters.Game;
             }
             namespace Parameters {
-                export type Game = Definitions.ResourcesGameRepresentation;
+                export type Game = Definitions.GameResult;
                 /**
                  * Tournament ID
                  */
@@ -422,10 +456,10 @@ declare namespace Paths {
                 table: /* Table ID */ Parameters.Table;
             }
             namespace Responses {
-                export type $200 = Definitions.ModelGameJson;
-                export type $400 = Definitions.ResourcesErrorResponse;
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $200 = Definitions.Game;
+                export type $400 = Definitions.Error;
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
     }
@@ -446,8 +480,8 @@ declare namespace Paths {
                 tableId: /* Table ID */ Parameters.TableId;
             }
             namespace Responses {
-                export type $404 = Definitions.ResourcesErrorResponse;
-                export type $500 = Definitions.ResourcesErrorResponse;
+                export type $404 = Definitions.Error;
+                export type $500 = Definitions.Error;
             }
         }
     }

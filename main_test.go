@@ -197,7 +197,7 @@ func addPlayer2Tournament(ts *httptest.Server, id uint, player string) func(t *t
 
 func newTable(name string, left string, right string) func(t *testing.T) []byte {
 	return func(t *testing.T) []byte {
-		table, err := json.Marshal(resources.CreateTableRepresentation{
+		table, err := json.Marshal(resources.CreateTableRequest{
 			Name: name,
 			Color: model.Color{
 				Left:  left,

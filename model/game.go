@@ -35,7 +35,7 @@ type GameJson struct {
 	RightScore   int       `json:"rightScore"`
 	LeftScore    int       `json:"leftScore"`
 	Winner       Winner    `json:"winner,omitempty"`
-}
+} //@name Game
 
 // MarshalJSON creates JSON game representation
 func (g *Game) MarshalJSON() ([]byte, error) {

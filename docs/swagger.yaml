@@ -1,6 +1,22 @@
 basePath: /
 definitions:
-  model.Color:
+  AddPlayer:
+    properties:
+      nickname:
+        type: string
+      ranking:
+        type: integer
+    required:
+    - nickname
+    type: object
+  AddTable:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  Color:
     properties:
       left:
         type: string
@@ -10,7 +26,43 @@ definitions:
     - left
     - right
     type: object
-  model.GameJson:
+  CreatePlayer:
+    properties:
+      nickname:
+        type: string
+      realname:
+        type: string
+      rfid:
+        type: string
+    required:
+    - nickname
+    type: object
+  CreateTable:
+    properties:
+      color:
+        $ref: '#/definitions/Color'
+      name:
+        type: string
+    type: object
+  CreateTournament:
+    properties:
+      initial:
+        type: integer
+      name:
+        type: string
+      score:
+        type: integer
+    required:
+    - initial
+    - name
+    - score
+    type: object
+  Error:
+    properties:
+      error:
+        type: string
+    type: object
+  Game:
     properties:
       created:
         type: string
@@ -33,12 +85,27 @@ definitions:
       winner:
         type: string
     type: object
-  model.Player:
+  GameResult:
+    properties:
+      players:
+        items:
+          type: string
+        type: array
+      winner:
+        type: string
+    required:
+    - players
+    - winner
+    type: object
+  GameStartEvent:
+    properties:
+      id:
+        type: string
+    type: object
+  Player:
     properties:
       created:
         type: string
-      id:
-        type: integer
       nickname:
         type: string
       realname:
@@ -50,10 +117,10 @@ definitions:
     required:
     - nickname
     type: object
-  model.Table:
+  Table:
     properties:
       color:
-        $ref: '#/definitions/model.Color'
+        $ref: '#/definitions/Color'
       created:
         type: string
       id:
@@ -66,7 +133,7 @@ definitions:
     - color
     - name
     type: object
-  model.Tournament:
+  Tournament:
     properties:
       created:
         type: string
@@ -85,67 +152,7 @@ definitions:
     - name
     - score
     type: object
-  model.TournamentTable:
-    properties:
-      created:
-        type: string
-      id:
-        type: integer
-      table:
-        $ref: '#/definitions/model.Table'
-      updated:
-        type: string
-    type: object
-  resources.AddPlayer2TournamentRepresenatation:
-    properties:
-      nickname:
-        type: string
-      ranking:
-        type: integer
-    required:
-    - nickname
-    type: object
-  resources.CreatePlayerRequest:
-    properties:
-      nickname:
-        type: string
-      realname:
-        type: string
-      rfid:
-        type: string
-    required:
-    - nickname
-    type: object
-  resources.CreateTableRepresentation:
-    properties:
-      color:
-        $ref: '#/definitions/model.Color'
-      name:
-        type: string
-    type: object
-  resources.ErrorResponse:
-    properties:
-      error:
-        type: string
-    type: object
-  resources.GameRepresentation:
-    properties:
-      players:
-        items:
-          type: string
-        type: array
-      winner:
-        type: string
-    required:
-    - players
-    - winner
-    type: object
-  resources.GameStartEventRepresentation:
-    properties:
-      id:
-        type: string
-    type: object
-  resources.PlayerRepresenatation:
+  TournamentPlayer:
     properties:
       active:
         type: boolean
@@ -158,25 +165,16 @@ definitions:
       rfid:
         type: string
     type: object
-  resources.TableRepresentation:
+  TournamentTable:
     properties:
+      created:
+        type: string
       id:
         type: integer
-    required:
-    - id
-    type: object
-  resources.TournamentCreateRepresentation:
-    properties:
-      initial:
-        type: integer
-      name:
+      table:
+        $ref: '#/definitions/Table'
+      updated:
         type: string
-      score:
-        type: integer
-    required:
-    - initial
-    - name
-    - score
     type: object
 info:
   contact: {}
@@ -195,7 +193,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.GameJson'
+              $ref: '#/definitions/Game'
             type: array
       summary: Get all gamne results
       tags:
@@ -216,15 +214,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.GameJson'
+            $ref: '#/definitions/Game'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Get gamne results
       tags:
       - game
@@ -239,7 +237,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.Player'
+              $ref: '#/definitions/Player'
             type: array
       summary: List players
       tags:
@@ -253,26 +251,26 @@ paths:
         name: player
         required: true
         schema:
-          $ref: '#/definitions/resources.CreatePlayerRequest'
+          $ref: '#/definitions/CreatePlayer'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/model.Player'
+            $ref: '#/definitions/Player'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Create a new player
       tags:
       - player
@@ -294,11 +292,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Delete player
       tags:
       - player
@@ -317,15 +315,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Player'
+            $ref: '#/definitions/Player'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Get player
       tags:
       - player
@@ -340,7 +338,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.Table'
+              $ref: '#/definitions/Table'
             type: array
       summary: Get all tables
       tags:
@@ -355,26 +353,26 @@ paths:
         name: table
         required: true
         schema:
-          $ref: '#/definitions/resources.CreateTableRepresentation'
+          $ref: '#/definitions/CreateTable'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Table'
+            $ref: '#/definitions/Table'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Create table
       tags:
       - table
@@ -394,15 +392,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Table'
+            $ref: '#/definitions/Table'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Get table
       tags:
       - table
@@ -417,7 +415,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.Tournament'
+              $ref: '#/definitions/Tournament'
             type: array
       summary: Get all tournaments
       tags:
@@ -431,22 +429,22 @@ paths:
         name: tournament
         required: true
         schema:
-          $ref: '#/definitions/resources.TournamentCreateRepresentation'
+          $ref: '#/definitions/CreateTournament'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Tournament'
+            $ref: '#/definitions/Tournament'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Create tournament
       tags:
       - tournament
@@ -468,11 +466,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Remove tournament
       tags:
       - tournament
@@ -491,15 +489,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Tournament'
+            $ref: '#/definitions/Tournament'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Get tournament
       tags:
       - tournament
@@ -517,8 +515,8 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/resources.GameStartEventRepresentation'
-      summary: Opens a web socket for tournamnent game start event
+            $ref: '#/definitions/GameStartEvent'
+      summary: Opens a web socket for tournamnent game start events
       tags:
       - events
   /tournaments/{id}/events/player:
@@ -535,8 +533,8 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/resources.PlayerRepresenatation'
-      summary: Opens a web socket for tournamnent player event
+            $ref: '#/definitions/TournamentPlayer'
+      summary: Opens a web socket for tournamnent player events
       tags:
       - events
   /tournaments/{id}/games:
@@ -556,7 +554,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.GameJson'
+              $ref: '#/definitions/Game'
             type: array
       summary: Get all games in a tournament
       tags:
@@ -578,16 +576,16 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.GameJson'
+              $ref: '#/definitions/Game'
             type: array
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Get random game for a tournament
       tags:
       - actions
@@ -609,11 +607,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Publishes a game start event
       tags:
       - actions
@@ -634,16 +632,16 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/resources.PlayerRepresenatation'
+              $ref: '#/definitions/TournamentPlayer'
             type: array
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Get players in tournament
       tags:
       - tournament
@@ -661,26 +659,26 @@ paths:
         name: player
         required: true
         schema:
-          $ref: '#/definitions/resources.AddPlayer2TournamentRepresenatation'
+          $ref: '#/definitions/AddPlayer'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/resources.PlayerRepresenatation'
+            $ref: '#/definitions/TournamentPlayer'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Add player to tournament
       tags:
       - tournament
@@ -707,11 +705,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Remove player from tournament
       tags:
       - tournament
@@ -732,16 +730,16 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.TournamentTable'
+              $ref: '#/definitions/TournamentTable'
             type: array
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Get tables in a tournament
       tags:
       - tournament
@@ -759,26 +757,26 @@ paths:
         name: table
         required: true
         schema:
-          $ref: '#/definitions/resources.TableRepresentation'
+          $ref: '#/definitions/AddTable'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/model.TournamentTable'
+            $ref: '#/definitions/TournamentTable'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Add table to tournament
       tags:
       - tournament
@@ -802,26 +800,26 @@ paths:
         name: game
         required: true
         schema:
-          $ref: '#/definitions/resources.GameRepresentation'
+          $ref: '#/definitions/GameResult'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.GameJson'
+            $ref: '#/definitions/Game'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Submit gamne results
       tags:
       - tournament
@@ -848,11 +846,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/resources.ErrorResponse'
+            $ref: '#/definitions/Error'
       summary: Remove table from tournament
       tags:
       - tournament

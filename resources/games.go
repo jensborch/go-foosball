@@ -51,11 +51,11 @@ func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-// GameRepresentation represents a played game
-type GameRepresentation struct {
+// GameResultRequest represents a played game
+type GameResultRequest struct {
 	Players []string     `json:"players" binding:"required"`
 	Winner  model.Winner `json:"winner,omitempty" binding:"required"`
-}
+} //@name GameResult
 
 // PostGame saves a played game
 // @Summary      Submit gamne results
@@ -64,7 +64,7 @@ type GameRepresentation struct {
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
 // @Param        table    path      string  true  "Table ID"
-// @Param        game     body      GameRepresentation true  "Submit game results"
+// @Param        game     body      GameResultRequest true  "Submit game results"
 // @Success      200      {object}  model.GameJson
 // @Failure      400      {object}  ErrorResponse
 // @Failure      404      {object}  ErrorResponse
@@ -74,7 +74,7 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 	return func(c *gin.Context) {
 		tourId := c.Param(tournamentParam)
 		tableId := c.Param(tableParam)
-		var gr GameRepresentation
+		var gr GameResultRequest
 		if err := c.ShouldBindWith(&gr, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
@@ -142,7 +142,7 @@ var gameEventPublisher = NewEventPublisher()
 
 type GameStartEventRepresentation struct {
 	Id string `json:"id"`
-}
+} //@name GameStartEvent
 
 // GetGameStart publishes a game start event using web socket
 // @Summary      Publishes a game start event

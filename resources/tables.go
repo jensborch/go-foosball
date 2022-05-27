@@ -48,17 +48,17 @@ func GetTables(db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-type CreateTableRepresentation struct {
+type CreateTableRequest struct {
 	Name  string      `json:"name"`
 	Color model.Color `json:"color"`
-}
+} //@name CreateTable
 
 // PostTable creats new table
 // @Summary      Create table
 // @Tags         table
 // @Accept       json
 // @Produce      json
-// @Param        table    body      CreateTableRepresentation true  "The table"
+// @Param        table    body      CreateTableRequest true  "The table"
 // @Success      200      {object}  model.Table
 // @Failure      400      {object}  ErrorResponse
 // @Failure      404      {object}  ErrorResponse
@@ -66,7 +66,7 @@ type CreateTableRepresentation struct {
 // @Router       /tables/ [post]
 func PostTable(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		var table CreateTableRepresentation
+		var table CreateTableRequest
 		if err := c.ShouldBindWith(&table, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
@@ -102,10 +102,9 @@ func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-// TableRepresentation JSON representation for adding table to tournament
-type TableRepresentation struct {
+type AddTableRequest struct {
 	ID uint `json:"id" binding:"required"`
-}
+} //@name AddTable
 
 // PostTournamentTables adds a table to a tournament
 // @Summary      Add table to tournament
@@ -113,7 +112,7 @@ type TableRepresentation struct {
 // @Accept       json
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
-// @Param        table    body      TableRepresentation true "The table"
+// @Param        table    body      AddTableRequest true "The table"
 // @Success      201      {object}  model.TournamentTable
 // @Failure      400      {object}  ErrorResponse
 // @Failure      404      {object}  ErrorResponse
@@ -122,7 +121,7 @@ type TableRepresentation struct {
 func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		var representation TableRepresentation
+		var representation AddTableRequest
 		if err := c.ShouldBindWith(&representation, binding.JSON); err != nil {
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return

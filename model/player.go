@@ -15,7 +15,7 @@ type Player struct {
 	Nickname  string         `json:"nickname" binding:"required" gorm:"size:50;unique_index"`
 	RealName  string         `json:"realname" gorm:"type:varchar(100)"`
 	RFID      string         `json:"rfid,omitempty" gorm:"type:varchar(36)"`
-}
+} //@name Player
 
 // TournamentPlayer is a player in a tournament
 type TournamentPlayer struct {
@@ -26,7 +26,7 @@ type TournamentPlayer struct {
 	Tournament   Tournament `json:"-"`
 	Ranking      uint       `json:"ranking"`
 	Active       bool       `json:"active"`
-}
+} //@name TournamentPlayer
 
 // PlayerRepository provides access players
 type PlayerRepository interface {
