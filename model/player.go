@@ -1,11 +1,20 @@
 package model
 
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
+
 // Player playing foosball games
 type Player struct {
-	Base
-	Nickname string `json:"nickname" binding:"required" gorm:"size:50;unique_index"`
-	RealName string `json:"realname" gorm:"type:varchar(100)"`
-	RFID     string `json:"rfid,omitempty" gorm:"type:varchar(36)"`
+	ID        uint           `json:"-" gorm:"primary_key"`
+	CreatedAt time.Time      `json:"created"`
+	UpdatedAt time.Time      `json:"updated"`
+	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
+	Nickname  string         `json:"nickname" binding:"required" gorm:"size:50;unique_index"`
+	RealName  string         `json:"realname" gorm:"type:varchar(100)"`
+	RFID      string         `json:"rfid,omitempty" gorm:"type:varchar(36)"`
 }
 
 // TournamentPlayer is a player in a tournament

@@ -23,13 +23,23 @@ func (r *gameRepository) Remove(id string) model.Found {
 
 func (r *gameRepository) Find(id string) (*model.Game, model.Found) {
 	var g model.Game
-	result := r.db.Preload(clause.Associations).Where("ID = ?", id).First(&g)
+	result := r.db.
+		Preload("RightPlayerOne.Player").
+		Preload("RightPlayerTwo.Player").
+		Preload("LeftPlayerOne.Player").
+		Preload("LeftPlayerTwo.Player").
+		Preload(clause.Associations).Where("ID = ?", id).First(&g)
 	return &g, HasBeenFound(result.Error)
 }
 
 func (r *gameRepository) FindAll() []*model.Game {
 	var games []*model.Game
-	if err := r.db.Preload(clause.Associations).Find(&games).Error; err != nil {
+	if err := r.db.
+		Preload("RightPlayerOne.Player").
+		Preload("RightPlayerTwo.Player").
+		Preload("LeftPlayerOne.Player").
+		Preload("LeftPlayerTwo.Player").
+		Preload(clause.Associations).Find(&games).Error; err != nil {
 		panic(err)
 	}
 	return games
@@ -38,6 +48,10 @@ func (r *gameRepository) FindAll() []*model.Game {
 func (r *gameRepository) FindByTournament(id string) []*model.Game {
 	var games []*model.Game
 	if err := r.db.Model(&model.Game{}).
+		Preload("RightPlayerOne.Player").
+		Preload("RightPlayerTwo.Player").
+		Preload("LeftPlayerOne.Player").
+		Preload("LeftPlayerTwo.Player").
 		Preload(clause.Associations).
 		Joins("inner join tournament_tables on games.tournament_table_id == tournament_tables.id").
 		Joins("inner join tables on tournament_tables.table_id = tables.id").
