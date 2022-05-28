@@ -18,7 +18,6 @@ import (
 	"github.com/jensborch/go-foosball/resources"
 
 	"gorm.io/driver/sqlite"
-	_ "gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -112,6 +111,10 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	})
 
 	return router, db
+}
+
+func StaticFS(client embed.FS, s string) {
+	panic("unimplemented")
 }
 
 func serveStatic(c *gin.Context, f fs.FS, prefix string, dir string) {

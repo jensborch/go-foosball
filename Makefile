@@ -37,6 +37,7 @@ vet:
 	
 clean:
 	go clean
+	go mod tidy
 
 $(shell if [ ! -d "./client/build" ]; then mkdir -p  ./client/build; fi)
 $(shell if [ ! -f "./client/build/test.html" ]; then touch  ./client/build/test.html; fi)
