@@ -1,0 +1,10 @@
+.card {
+  min-width: 275px;
+}
+
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+  justify-content: space-between;
+}

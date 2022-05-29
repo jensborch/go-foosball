@@ -1,37 +1,24 @@
-import Avatar from '@material-ui/core/Avatar';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import Typography from '@material-ui/core/Typography';
-import { CircularProgress, makeStyles } from '@material-ui/core';
 import * as Api from '../api/Api';
 import { api, handleErrors, toLocaleDateString } from '../api/Util';
 import { useQuery } from 'react-query';
 import { Error } from './Error';
-
-const useStyles = makeStyles((theme) => ({
-  card: {
-    minWidth: 275,
-  },
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    padding: 20,
-    justifyContent: 'space-between',
-  },
-  avatar: {
-    backgroundColor: theme.palette.secondary.main,
-  },
-}));
+import {
+  Avatar,
+  Card,
+  CardContent,
+  CardHeader,
+  CircularProgress,
+  Typography,
+} from '@mui/material';
+import styles from './Tournaments.module.css';
 
 const Tournament = (props: Api.Tournament) => {
-  const classes = useStyles();
   const { created, name, score, initial } = props;
   return (
-    <Card className={classes.card} elevation={4}>
+    <Card className={styles.card} elevation={4}>
       <CardHeader
         avatar={
-          <Avatar className={classes.avatar}>{name.substring(0, 1)}</Avatar>
+          <Avatar className={styles.avatar}>{name.substring(0, 1)}</Avatar>
         }
         title={name}
         subheader={toLocaleDateString(created)}
@@ -52,27 +39,26 @@ async function getTournaments(): Promise<Api.Tournament[]> {
 }
 
 const Tournaments = () => {
-  const classes = useStyles();
   const { status, error, data } = useQuery<Api.Tournament[], Error>(
     'tournaments',
     getTournaments
   );
   if (status === 'loading') {
     return (
-      <div className={classes.root}>
+      <div className={styles.root}>
         <CircularProgress />
       </div>
     );
   }
   if (status === 'error') {
     return (
-      <div className={classes.root}>
+      <div className={styles.root}>
         <Error msg={error?.message}></Error>
       </div>
     );
   }
   return (
-    <div className={classes.root}>
+    <div className={styles.root}>
       {data?.map((tournament) => (
         <Tournament key={tournament.id} {...tournament} />
       ))}
