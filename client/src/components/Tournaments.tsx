@@ -22,9 +22,7 @@ const Tournament = (props: Api.Tournament) => {
   return (
     <Card className={styles.card} elevation={4}>
       <CardHeader
-        avatar={
-          <DarkAvatar>{name.substring(0, 1)}</DarkAvatar>
-        }
+        avatar={<DarkAvatar>{name.substring(0, 1)}</DarkAvatar>}
         title={name}
         subheader={toLocaleDateString(created)}
       />

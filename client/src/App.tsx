@@ -1,16 +1,16 @@
-import "./App.css";
-import Theming from "./components/Theming";
-import { QueryClient, QueryClientProvider } from "react-query";
-import Tournaments from "./components/Tournaments";
+import './App.css';
+import Theming from './components/Theming';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import Tournaments from './components/Tournaments';
 
 const queryClient = new QueryClient();
 function App() {
   return (
-    <Theming>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <Theming>
         <Tournaments></Tournaments>
-      </QueryClientProvider>
-    </Theming>
+      </Theming>
+    </QueryClientProvider>
   );
 }
 
