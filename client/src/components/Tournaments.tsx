@@ -8,9 +8,14 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
+  styled,
   Typography,
 } from '@mui/material';
 import styles from './Tournaments.module.css';
+
+const DarkAvatar = styled(Avatar)(
+  ({ theme }) => `background-color: ${theme.palette.secondary.main}`
+);
 
 const Tournament = (props: Api.Tournament) => {
   const { created, name, score, initial } = props;
@@ -18,7 +23,7 @@ const Tournament = (props: Api.Tournament) => {
     <Card className={styles.card} elevation={4}>
       <CardHeader
         avatar={
-          <Avatar className={styles.avatar}>{name.substring(0, 1)}</Avatar>
+          <DarkAvatar>{name.substring(0, 1)}</DarkAvatar>
         }
         title={name}
         subheader={toLocaleDateString(created)}
