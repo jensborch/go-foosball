@@ -15,6 +15,8 @@ else
 	BINARY = go-foosball
 endif
 
+.PHONY: client clean
+
 all: test vet build
 
 swagger: 
@@ -34,6 +36,9 @@ test:
 
 vet:
 	go vet ./...
+
+client:
+	cd client; yarn build
 	
 clean:
 	go clean

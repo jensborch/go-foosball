@@ -5,8 +5,9 @@ import CardHeader from '@material-ui/core/CardHeader';
 import Typography from '@material-ui/core/Typography';
 import { CircularProgress, makeStyles } from '@material-ui/core';
 import * as Api from '../api/Api';
-import { api, toLocaleDateString } from '../api/Util';
+import { api, handleErrors, toLocaleDateString } from '../api/Util';
 import { useQuery } from 'react-query';
+import { Error } from './Error';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -41,11 +42,13 @@ const Tournament = (props: Api.Tournament) => {
       </CardContent>
     </Card>
   );
-}; 
+};
 
 async function getTournaments(): Promise<Api.Tournament[]> {
-  let result = await api.tournaments.tournamentsList();
-  return result.data;
+  return api.tournaments
+    .tournamentsList()
+    .then(handleErrors)
+    .then((r) => r.data);
 }
 
 const Tournaments = () => {
@@ -54,11 +57,19 @@ const Tournaments = () => {
     'tournaments',
     getTournaments
   );
-  if (status === "loading") {
-    return <CircularProgress />;
+  if (status === 'loading') {
+    return (
+      <div className={classes.root}>
+        <CircularProgress />
+      </div>
+    );
   }
-  if (status === "error") {
-    return <div>{error?.message}</div>;
+  if (status === 'error') {
+    return (
+      <div className={classes.root}>
+        <Error msg={error?.message}></Error>
+      </div>
+    );
   }
   return (
     <div className={classes.root}>
