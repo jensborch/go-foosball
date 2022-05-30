@@ -8,21 +8,31 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
-  styled,
   Typography,
 } from '@mui/material';
-import styles from './Tournaments.module.css';
+import { Box } from '@mui/system';
 
-const DarkAvatar = styled(Avatar)(
-  ({ theme }) => `background-color: ${theme.palette.secondary.main}`
-);
+const rootStyle = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  padding: '20px',
+  justifyContent: 'space-between',
+}
 
 const Tournament = (props: Api.Tournament) => {
   const { created, name, score, initial } = props;
   return (
-    <Card className={styles.card} elevation={4}>
+    <Card sx={{ minWidth: '275px' }} elevation={4}>
       <CardHeader
-        avatar={<DarkAvatar>{name.substring(0, 1)}</DarkAvatar>}
+        avatar={
+          <Avatar
+            sx={{
+              backgroundColor: (theme) => theme.palette.secondary.main,
+            }}
+          >
+            {name.substring(0, 1)}
+          </Avatar>
+        }
         title={name}
         subheader={toLocaleDateString(created)}
       />
@@ -48,24 +58,31 @@ const Tournaments = () => {
   );
   if (status === 'loading') {
     return (
-      <div className={styles.root}>
+      <Box sx={rootStyle}>
         <CircularProgress />
-      </div>
+      </Box>
     );
   }
   if (status === 'error') {
     return (
-      <div className={styles.root}>
+      <Box sx={rootStyle}>
         <Error msg={error?.message}></Error>
-      </div>
+      </Box>
     );
   }
   return (
-    <div className={styles.root}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        padding: '20px',
+        justifyContent: 'space-between',
+      }}
+    >
       {data?.map((tournament) => (
         <Tournament key={tournament.id} {...tournament} />
       ))}
-    </div>
+    </Box>
   );
 };
 
