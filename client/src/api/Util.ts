@@ -13,7 +13,7 @@ export function handleErrors<R extends Response>(response: R) {
   
 
 const conf:  ApiConfig = {
-    baseUrl:  "http://localhost:8080"   
+    baseUrl:  "http://localhost:8080"
 }
 
 export const api = new Api(conf);

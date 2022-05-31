@@ -54,7 +54,7 @@ func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 // GameResultRequest represents a played game
 type GameResultRequest struct {
 	Players []string     `json:"players" binding:"required"`
-	Winner  model.Winner `json:"winner,omitempty" binding:"required"`
+	Winner  model.Winner `json:"winner,omitempty" binding:"required" validate:"gte=2"`
 } //@name GameResult
 
 // PostGame saves a played game

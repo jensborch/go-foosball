@@ -48,12 +48,15 @@ func main() {
 	engine.Run(":" + strconv.FormatUint(uint64(port), 10))
 }
 
+func corsHandler() gin.HandlerFunc {
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	return cors.New(config)
+}
+
 func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	router := gin.Default()
-	corsConf := cors.DefaultConfig()
-	corsConf.AllowAllOrigins = true
-	corsConf.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "HEAD"}
-	router.Use(cors.New(corsConf))
+	router.Use(corsHandler())
 
 	db, err := gorm.Open(sqlite.Open(dbfile), &gorm.Config{})
 	if err != nil {
@@ -62,21 +65,21 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 
 	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{}, &model.Player{}, &model.TournamentPlayer{}, &model.Game{})
 
-	players := router.Group("/players/")
-	players.POST("/", resources.PostPlayer(db))
+	players := router.Group("/players")
+	players.GET("", resources.GetPlayers(db))
+	players.POST("", resources.PostPlayer(db))
 	players.GET("/:name", resources.GetPlayer("name", db))
 	players.DELETE("/:name", resources.DeletePlayer("name", db))
-	players.GET("/", resources.GetPlayers(db))
 
-	tables := router.Group("/tables/")
-	tables.POST("/", resources.PostTable(db))
+	tables := router.Group("/tables")
+	tables.GET("", resources.GetTables(db))
+	tables.POST("", resources.PostTable(db))
 	tables.GET("/:id", resources.GetTable("id", db))
 	//tables.DELETE("/:id", resources.DeleteTable("id", db))
-	tables.GET("/", resources.GetTables(db))
 
-	tournaments := router.Group("/tournaments/")
-	tournaments.POST("/", resources.PostTournament(db))
-	tournaments.GET("/", resources.GetTournaments(db))
+	tournaments := router.Group("/tournaments")
+	tournaments.GET("", resources.GetTournaments(db))
+	tournaments.POST("", resources.PostTournament(db))
 	tournaments.GET("/:id", resources.GetTournament("id", db))
 	tournaments.DELETE("/:id", resources.DeleteTournament("id", db))
 	tournaments.GET("/:id/players", resources.GetTournamentPlayes("id", db))
@@ -96,8 +99,8 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	tournaments.GET("/:id/events/player", resources.GetPlayerEvents("id"))
 	tournaments.GET("/:id/events/game", resources.GetGameEvents("id"))
 
-	games := router.Group("/games/")
-	games.GET("/", resources.GetGames(db))
+	games := router.Group("/games")
+	games.GET("", resources.GetGames(db))
 	games.GET("/:id", resources.GetGame("id", db))
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
@@ -111,10 +114,6 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	})
 
 	return router, db
-}
-
-func StaticFS(client embed.FS, s string) {
-	panic("unimplemented")
 }
 
 func serveStatic(c *gin.Context, f fs.FS, prefix string, dir string) {
