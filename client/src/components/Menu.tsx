@@ -17,7 +17,7 @@ const Menu = ({ title, children }: MenuProps) => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <IconButton
+      <IconButton
           to="/"
           component={(props) => <Link {...props} />}
           sx={{
