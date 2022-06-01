@@ -1,9 +1,7 @@
 import './App.css';
 import Theming from './components/Theming';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import Tournaments from './components/Tournaments';
-import Menu from './components/Menu';
-import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Index from './pages/Index';
 import React from 'react';
 import Tournament from './pages/Tournament';

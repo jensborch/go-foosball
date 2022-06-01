@@ -18,8 +18,8 @@ const Menu = ({ title, children }: MenuProps) => {
     <AppBar position="static">
       <Toolbar>
       <IconButton
-          to="/"
-          component={(props) => <Link {...props} />}
+          href="/"
+          component={Link}
           sx={{
             marginLeft: (theme) => theme.spacing(-1),
             marginRight: (theme) => theme.spacing(2),
