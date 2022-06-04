@@ -1,7 +1,7 @@
-import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
-import { useState } from 'react';
-import PersonIcon from '@mui/icons-material/Person';
-import AddIcon from '@mui/icons-material/Add';
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
+import { useState } from "react";
+import PersonIcon from "@mui/icons-material/Person";
+import AddIcon from "@mui/icons-material/Add";
 
 type AddSpeedDialProps = {
   tournament?: string;
@@ -36,13 +36,16 @@ const AddSpeedDial = ({ tournament }: AddSpeedDialProps) => {
     <SpeedDial
       sx={{
         margin: (theme) => theme.spacing(),
+        position: "absolute",
+        bottom: "20px",
+        right: "20px",
       }}
       ariaLabel="Add"
       color="green"
       icon={<SpeedDialIcon />}
       onOpen={open}
       onClose={close}
-      direction="down"
+      direction="up"
       open={state.open}
     >
       <SpeedDialAction
