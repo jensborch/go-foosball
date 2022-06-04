@@ -1095,10 +1095,12 @@ const docTemplate_swagger = `{
             ],
             "properties": {
                 "nickname": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 2
                 },
                 "realname": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 2
                 },
                 "rfid": {
                     "type": "string"
@@ -1145,6 +1147,15 @@ const docTemplate_swagger = `{
         },
         "Game": {
             "type": "object",
+            "required": [
+                "created",
+                "leftPlayers",
+                "leftScore",
+                "rightPlayers",
+                "rightScore",
+                "tableId",
+                "updated"
+            ],
             "properties": {
                 "created": {
                     "type": "string"
@@ -1192,7 +1203,8 @@ const docTemplate_swagger = `{
                     }
                 },
                 "winner": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 2
                 }
             }
         },
@@ -1207,7 +1219,9 @@ const docTemplate_swagger = `{
         "Player": {
             "type": "object",
             "required": [
-                "nickname"
+                "created",
+                "nickname",
+                "updated"
             ],
             "properties": {
                 "created": {
@@ -1231,7 +1245,10 @@ const docTemplate_swagger = `{
             "type": "object",
             "required": [
                 "color",
-                "name"
+                "created",
+                "id",
+                "name",
+                "updated"
             ],
             "properties": {
                 "color": {
@@ -1254,9 +1271,12 @@ const docTemplate_swagger = `{
         "Tournament": {
             "type": "object",
             "required": [
+                "created",
+                "id",
                 "initial",
                 "name",
-                "score"
+                "score",
+                "updated"
             ],
             "properties": {
                 "created": {
@@ -1301,6 +1321,12 @@ const docTemplate_swagger = `{
         },
         "TournamentTable": {
             "type": "object",
+            "required": [
+                "created",
+                "id",
+                "table",
+                "updated"
+            ],
             "properties": {
                 "created": {
                     "type": "string"

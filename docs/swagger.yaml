@@ -29,8 +29,10 @@ definitions:
   CreatePlayer:
     properties:
       nickname:
+        minLength: 2
         type: string
       realname:
+        minLength: 2
         type: string
       rfid:
         type: string
@@ -84,6 +86,14 @@ definitions:
         type: string
       winner:
         type: string
+    required:
+    - created
+    - leftPlayers
+    - leftScore
+    - rightPlayers
+    - rightScore
+    - tableId
+    - updated
     type: object
   GameResult:
     properties:
@@ -92,6 +102,7 @@ definitions:
           type: string
         type: array
       winner:
+        minLength: 2
         type: string
     required:
     - players
@@ -115,7 +126,9 @@ definitions:
       updated:
         type: string
     required:
+    - created
     - nickname
+    - updated
     type: object
   Table:
     properties:
@@ -131,7 +144,10 @@ definitions:
         type: string
     required:
     - color
+    - created
+    - id
     - name
+    - updated
     type: object
   Tournament:
     properties:
@@ -148,9 +164,12 @@ definitions:
       updated:
         type: string
     required:
+    - created
+    - id
     - initial
     - name
     - score
+    - updated
     type: object
   TournamentPlayer:
     properties:
@@ -175,6 +194,11 @@ definitions:
         $ref: '#/definitions/Table'
       updated:
         type: string
+    required:
+    - created
+    - id
+    - table
+    - updated
     type: object
 info:
   contact: {}

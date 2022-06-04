@@ -45,13 +45,13 @@ export interface Error {
 }
 
 export interface Game {
-  created?: string;
-  leftPlayers?: string[];
-  leftScore?: number;
-  rightPlayers?: string[];
-  rightScore?: number;
-  tableId?: number;
-  updated?: string;
+  created: string;
+  leftPlayers: string[];
+  leftScore: number;
+  rightPlayers: string[];
+  rightScore: number;
+  tableId: number;
+  updated: string;
   winner?: string;
 }
 
@@ -65,28 +65,28 @@ export interface GameStartEvent {
 }
 
 export interface Player {
-  created?: string;
+  created: string;
   nickname: string;
   realname?: string;
   rfid?: string;
-  updated?: string;
+  updated: string;
 }
 
 export interface Table {
   color: Color;
-  created?: string;
-  id?: number;
+  created: string;
+  id: number;
   name: string;
-  updated?: string;
+  updated: string;
 }
 
 export interface Tournament {
-  created?: string;
-  id?: number;
+  created: string;
+  id: number;
   initial: number;
   name: string;
   score: number;
-  updated?: string;
+  updated: string;
 }
 
 export interface TournamentPlayer {
@@ -98,10 +98,10 @@ export interface TournamentPlayer {
 }
 
 export interface TournamentTable {
-  created?: string;
-  id?: number;
-  table?: Table;
-  updated?: string;
+  created: string;
+  id: number;
+  table: Table;
+  updated: string;
 }
 
 export type QueryParamsType = Record<string | number, any>;

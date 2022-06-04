@@ -8,27 +8,16 @@ import (
 
 // Player playing foosball games
 type Player struct {
-	ID        uint           `json:"-" gorm:"primary_key"`
-	CreatedAt time.Time      `json:"created"`
-	UpdatedAt time.Time      `json:"updated"`
+	ID        uint           `json:"-" validate:"required" gorm:"primary_key"`
+	CreatedAt time.Time      `json:"created" validate:"required" gorm:"not null"`
+	UpdatedAt time.Time      `json:"updated" validate:"required" gorm:"not null"`
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
-	Nickname  string         `json:"nickname" binding:"required" gorm:"size:50;unique_index"`
+	Nickname  string         `json:"nickname" validate:"required" gorm:"size:50;unique_index,not null"`
 	RealName  string         `json:"realname" gorm:"type:varchar(100)"`
 	RFID      string         `json:"rfid,omitempty" gorm:"type:varchar(36)"`
 } //@name Player
 
-// TournamentPlayer is a player in a tournament
-type TournamentPlayer struct {
-	Base
-	PlayerID     uint       `json:"-" gorm:"index:player_tournament,unique"`
-	Player       Player     `json:"player"`
-	TournamentID uint       `json:"-" gorm:"index:player_tournament,unique"`
-	Tournament   Tournament `json:"-"`
-	Ranking      uint       `json:"ranking"`
-	Active       bool       `json:"active"`
-} //@name TournamentPlayer
-
-// PlayerRepository provides access players
+// PlayerRepository provides access to players
 type PlayerRepository interface {
 	Store(player *Player)
 	Remove(nickname string) Found
@@ -38,7 +27,7 @@ type PlayerRepository interface {
 	FindByTournament(id string) []*Player
 }
 
-// NewPlayer create new player
+// NewPlayer creates new player
 func NewPlayer(nickname, realName string, rfid string) *Player {
 	return &Player{
 		Nickname: nickname,
@@ -47,17 +36,7 @@ func NewPlayer(nickname, realName string, rfid string) *Player {
 	}
 }
 
-// NewTournamentPlayer create new player in tournament
-func NewTournamentPlayer(player *Player, tournament *Tournament) *TournamentPlayer {
-	return &TournamentPlayer{
-		Tournament: *tournament,
-		Player:     *player,
-		Ranking:    tournament.InitialRanking,
-		Active:     true,
-	}
-}
-
-// NewTournamentPlayer create new player in tournament
+// NewTournamentPlayer creates new player in tournament
 func NewTournamentPlayerWithRanking(player *Player, tournament *Tournament, ranking uint) *TournamentPlayer {
 	return &TournamentPlayer{
 		Tournament: *tournament,
