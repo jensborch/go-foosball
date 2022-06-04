@@ -1,7 +1,6 @@
-import * as Api from '../api/Api';
-import { api, handleErrors, toLocaleDateString } from '../api/Util';
-import { useQuery } from 'react-query';
-import { Error } from './Error';
+import * as Api from "../api/Api";
+import { toLocaleDateString } from "../api/Util";
+import { Error } from "./Error";
 import {
   Avatar,
   Card,
@@ -9,20 +8,28 @@ import {
   CardHeader,
   CircularProgress,
   Typography,
-} from '@mui/material';
-import { Box } from '@mui/system';
+} from "@mui/material";
+import { Box } from "@mui/system";
+import { useNavigate } from "react-router-dom";
+import { useTournaments } from "../api/hooks";
 
 const rootStyle = {
-  display: 'flex',
-  flexWrap: 'wrap',
-  padding: '20px',
-  justifyContent: 'space-between',
-}
+  display: "flex",
+  flexWrap: "wrap",
+  padding: "20px",
+  justifyContent: "space-between",
+};
 
 const Tournament = (props: Api.Tournament) => {
-  const { created, name, score, initial } = props;
+  const { created, name, score, initial, id } = props;
+  const navigate = useNavigate();
+
   return (
-    <Card sx={{ minWidth: '275px' }} elevation={4}>
+    <Card
+      sx={{ minWidth: "275px", cursor: "pointer" }}
+      elevation={4}
+      onClick={() => navigate(`./tournament/${id}`)}
+    >
       <CardHeader
         avatar={
           <Avatar
@@ -44,26 +51,16 @@ const Tournament = (props: Api.Tournament) => {
   );
 };
 
-async function getTournaments(): Promise<Api.Tournament[]> {
-  return api.tournaments
-    .tournamentsList()
-    .then(handleErrors)
-    .then((r) => r.data);
-}
-
 const Tournaments = () => {
-  const { status, error, data } = useQuery<Api.Tournament[], Error>(
-    'tournaments',
-    getTournaments
-  );
-  if (status === 'loading') {
+  const { status, error, data } = useTournaments();
+  if (status === "loading") {
     return (
       <Box sx={rootStyle}>
         <CircularProgress />
       </Box>
     );
   }
-  if (status === 'error') {
+  if (status === "error") {
     return (
       <Box sx={rootStyle}>
         <Error msg={error?.message}></Error>
@@ -73,10 +70,10 @@ const Tournaments = () => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        padding: '20px',
-        justifyContent: 'space-between',
+        display: "flex",
+        flexWrap: "wrap",
+        padding: "20px",
+        justifyContent: "space-between",
       }}
     >
       {data?.map((tournament) => (
