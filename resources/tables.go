@@ -49,8 +49,8 @@ func GetTables(db *gorm.DB) func(*gin.Context) {
 }
 
 type CreateTableRequest struct {
-	Name  string      `json:"name"`
-	Color model.Color `json:"color"`
+	Name  string      `json:"name" validate:"required"`
+	Color model.Color `json:"color" validate:"required"`
 } //@name CreateTable
 
 // PostTable creats new table
@@ -103,7 +103,7 @@ func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 type AddTableRequest struct {
-	ID uint `json:"id" binding:"required"`
+	ID uint `json:"id" validate:"required"`
 } //@name AddTable
 
 // PostTournamentTables adds a table to a tournament

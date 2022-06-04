@@ -30,18 +30,18 @@ export interface CreatePlayer {
 }
 
 export interface CreateTable {
-  color?: Color;
-  name?: string;
+  color: Color;
+  name: string;
 }
 
 export interface CreateTournament {
-  initial: number;
+  initial?: number;
   name: string;
-  score: number;
+  score?: number;
 }
 
 export interface Error {
-  error?: string;
+  error: string;
 }
 
 export interface Game {
@@ -61,7 +61,7 @@ export interface GameResult {
 }
 
 export interface GameStartEvent {
-  id?: string;
+  id: string;
 }
 
 export interface Player {
@@ -90,8 +90,8 @@ export interface Tournament {
 }
 
 export interface TournamentPlayer {
-  active?: boolean;
-  nickname?: string;
+  active: boolean;
+  nickname: string;
   ranking?: number;
   realname?: string;
   rfid?: string;

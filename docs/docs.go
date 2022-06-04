@@ -1109,6 +1109,10 @@ const docTemplate_swagger = `{
         },
         "CreateTable": {
             "type": "object",
+            "required": [
+                "color",
+                "name"
+            ],
             "properties": {
                 "color": {
                     "$ref": "#/definitions/Color"
@@ -1121,9 +1125,7 @@ const docTemplate_swagger = `{
         "CreateTournament": {
             "type": "object",
             "required": [
-                "initial",
-                "name",
-                "score"
+                "name"
             ],
             "properties": {
                 "initial": {
@@ -1139,6 +1141,9 @@ const docTemplate_swagger = `{
         },
         "Error": {
             "type": "object",
+            "required": [
+                "error"
+            ],
             "properties": {
                 "error": {
                     "type": "string"
@@ -1210,6 +1215,9 @@ const docTemplate_swagger = `{
         },
         "GameStartEvent": {
             "type": "object",
+            "required": [
+                "id"
+            ],
             "properties": {
                 "id": {
                     "type": "string"
@@ -1301,6 +1309,10 @@ const docTemplate_swagger = `{
         },
         "TournamentPlayer": {
             "type": "object",
+            "required": [
+                "active",
+                "nickname"
+            ],
             "properties": {
                 "active": {
                     "type": "boolean"

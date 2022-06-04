@@ -51,10 +51,10 @@ func GetTournaments(db *gorm.DB) func(*gin.Context) {
 
 //TournamentPlayerRepresenatation represents a player in a tournament
 type TournamentPlayerRepresenatation struct {
-	Nickname string `json:"nickname"`
+	Nickname string `json:"nickname" validate:"required"`
 	RealName string `json:"realname"`
 	RFID     string `json:"rfid,omitempty"`
-	Active   bool   `json:"active"`
+	Active   bool   `json:"active" validate:"required"`
 	Ranking  uint   `json:"ranking,omitempty"`
 } //@name TournamentPlayer
 
@@ -91,9 +91,9 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 type CreateTournamentRequest struct {
-	Name           string `json:"name" binding:"required" gorm:"type:varchar(100)"`
-	GameScore      uint   `json:"score" binding:"required"`
-	InitialRanking uint   `json:"initial" binding:"required"`
+	Name           string `json:"name" validate:"required"`
+	GameScore      uint   `json:"score"`
+	InitialRanking uint   `json:"initial"`
 } //@name CreateTournament
 
 // PostTournament creats tournament
@@ -125,7 +125,7 @@ func PostTournament(db *gorm.DB) func(*gin.Context) {
 }
 
 type AddPlayerRequest struct {
-	Nickname string `json:"nickname" binding:"required"`
+	Nickname string `json:"nickname" validate:"required"`
 	Ranking  uint   `json:"ranking"`
 } //@name AddPlayer
 

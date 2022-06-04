@@ -45,6 +45,9 @@ definitions:
         $ref: '#/definitions/Color'
       name:
         type: string
+    required:
+    - color
+    - name
     type: object
   CreateTournament:
     properties:
@@ -55,14 +58,14 @@ definitions:
       score:
         type: integer
     required:
-    - initial
     - name
-    - score
     type: object
   Error:
     properties:
       error:
         type: string
+    required:
+    - error
     type: object
   Game:
     properties:
@@ -112,6 +115,8 @@ definitions:
     properties:
       id:
         type: string
+    required:
+    - id
     type: object
   Player:
     properties:
@@ -183,6 +188,9 @@ definitions:
         type: string
       rfid:
         type: string
+    required:
+    - active
+    - nickname
     type: object
   TournamentTable:
     properties:

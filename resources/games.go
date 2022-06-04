@@ -53,8 +53,8 @@ func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 
 // GameResultRequest represents a played game
 type GameResultRequest struct {
-	Players []string     `json:"players" binding:"required"`
-	Winner  model.Winner `json:"winner,omitempty" binding:"required" validate:"gte=2"`
+	Players []string     `json:"players" validate:"required"`
+	Winner  model.Winner `json:"winner,omitempty" validate:"required,gte=2"`
 } //@name GameResult
 
 // PostGame saves a played game
@@ -141,7 +141,7 @@ func GetGames(db *gorm.DB) func(*gin.Context) {
 var gameEventPublisher = NewEventPublisher()
 
 type GameStartEventRepresentation struct {
-	Id string `json:"id"`
+	Id string `json:"id" validate:"required"`
 } //@name GameStartEvent
 
 // GetGameStart publishes a game start event using web socket

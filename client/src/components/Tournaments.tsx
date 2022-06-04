@@ -14,16 +14,14 @@ import { useNavigate } from "react-router-dom";
 import { useTournaments } from "../api/hooks";
 
 const rootStyle = {
-  display: "flex",
-  flexWrap: "wrap",
-  padding: "20px",
-  justifyContent: "space-between",
-};
+  display: 'flex',
+  flexWrap: 'wrap',
+  padding: '20px',
+  justifyContent: 'space-between',
+} as const;
 
-const Tournament = (props: Api.Tournament) => {
-  const { created, name, score, initial, id } = props;
+const Tournament = ({ created, name, score, initial, id }: Api.Tournament) => {
   const navigate = useNavigate();
-
   return (
     <Card
       sx={{ minWidth: "275px", cursor: "pointer" }}
@@ -68,14 +66,7 @@ const Tournaments = () => {
     );
   }
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexWrap: "wrap",
-        padding: "20px",
-        justifyContent: "space-between",
-      }}
-    >
+    <Box sx={rootStyle}>
       {data?.map((tournament) => (
         <Tournament key={tournament.id} {...tournament} />
       ))}

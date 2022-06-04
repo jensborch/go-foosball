@@ -1101,6 +1101,10 @@
         },
         "CreateTable": {
             "type": "object",
+            "required": [
+                "color",
+                "name"
+            ],
             "properties": {
                 "color": {
                     "$ref": "#/definitions/Color"
@@ -1113,9 +1117,7 @@
         "CreateTournament": {
             "type": "object",
             "required": [
-                "initial",
-                "name",
-                "score"
+                "name"
             ],
             "properties": {
                 "initial": {
@@ -1131,6 +1133,9 @@
         },
         "Error": {
             "type": "object",
+            "required": [
+                "error"
+            ],
             "properties": {
                 "error": {
                     "type": "string"
@@ -1202,6 +1207,9 @@
         },
         "GameStartEvent": {
             "type": "object",
+            "required": [
+                "id"
+            ],
             "properties": {
                 "id": {
                     "type": "string"
@@ -1293,6 +1301,10 @@
         },
         "TournamentPlayer": {
             "type": "object",
+            "required": [
+                "active",
+                "nickname"
+            ],
             "properties": {
                 "active": {
                     "type": "boolean"
