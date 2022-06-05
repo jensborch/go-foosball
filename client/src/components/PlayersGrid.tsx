@@ -11,37 +11,12 @@ import {
   Box,
   CircularProgress,
 } from '@mui/material';
-import { api, handleErrors } from '../api/Util';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { Error } from './Error';
-
-function useTournamentPlayerMutation(id: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation(
-    (player: Api.AddPlayer) => api.tournaments.playersCreate(id, player),
-    {
-      onSuccess: () => queryClient.invalidateQueries('players'),
-      onError: (error) => {
-        handleErrors(error as Response);
-      },
-    }
-  );
-}
-
-function usePlayerMutation() {
-  const queryClient = useQueryClient();
-
-  return useMutation(
-    (player: Api.CreatePlayer) => api.players.playersCreate(player),
-    {
-      onSuccess: () => queryClient.invalidateQueries('players'),
-      onError: (error) => {
-        handleErrors(error as Response);
-      },
-    }
-  );
-}
+import {
+  usePlayerMutation,
+  useTournamentPlayerMutation,
+  useTournamentPlayers,
+} from '../api/hooks';
 
 type PlayerProps = {
   tournament: string;
@@ -86,7 +61,7 @@ const Player = (props: PlayerProps) => {
             onChange={(e) =>
               setPlayer({
                 ...player,
-                ranking: parseInt(e.target.value)
+                ranking: parseInt(e.target.value),
               })
             }
             helperText="Ranking"
@@ -111,12 +86,12 @@ const Player = (props: PlayerProps) => {
 const NewPlayer = () => {
   const [nickname, setNickname] = useState('');
   const [realname, setRealname] = useState('');
-  const {mutate} = usePlayerMutation();
+  const { mutate } = usePlayerMutation();
 
   const onCreatePlayer = () => {
     mutate({
       nickname,
-      realname
+      realname,
     });
   };
   return (
@@ -156,22 +131,12 @@ const NewPlayer = () => {
   );
 };
 
-async function getPlayers(id: string): Promise<Api.TournamentPlayer[]> {
-  return api.tournaments
-    .playersDetail(id)
-    .then(handleErrors)
-    .then((r) => r.data);
-}
-
 type PlayersGridProps = {
   tournament: string;
 };
 
 const PlayersGrid = ({ tournament }: PlayersGridProps) => {
-  const { status, error, data } = useQuery<Api.TournamentPlayer[], Error>(
-    ['players', tournament],
-    () => getPlayers(tournament)
-  );
+  const { status, error, data } = useTournamentPlayers(tournament);
   if (status === 'loading') {
     return <CircularProgress />;
   }
@@ -186,7 +151,7 @@ const PlayersGrid = ({ tournament }: PlayersGridProps) => {
         </Grid>
       ))}
       <Grid item>
-        <NewPlayer/>
+        <NewPlayer />
       </Grid>
     </Grid>
   );
