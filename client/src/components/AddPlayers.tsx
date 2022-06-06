@@ -1,13 +1,13 @@
 import { Button, Grid, Modal, Paper } from '@mui/material';
-import { useState } from 'react';
 import PlayersGrid from './PlayersGrid';
 
 type AddPlayersProps = {
   tournament: string
+  open: boolean
+  setOpen: (open: boolean) => void
 }
 
-const AddPlayers = ({tournament}: AddPlayersProps) => {
-  const [open, setOpen] = useState(false)
+const AddPlayers = ({tournament, open, setOpen}: AddPlayersProps) => {
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
       <Paper>

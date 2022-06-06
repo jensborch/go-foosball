@@ -31,14 +31,20 @@ const AddSpeedDial = ({ tournament }: AddSpeedDialProps) => {
       <SpeedDialAction
         tooltipTitle="Add player"
         icon={<PersonIcon />}
-        onClick={() => setPlayersOpen(true)}
+        onClick={() => {
+          setOpen(false)
+          setPlayersOpen(true)
+        }}
       />
       <SpeedDialAction
         tooltipTitle="Add table"
         icon={<AddIcon />}
-        onClick={() => setTablesOpen(true)}
+        onClick={() => {
+          setOpen(false)
+          setTablesOpen(true);
+        }}
       />
-      <AddPlayers tournament={tournament} />
+      {playersOpen && <AddPlayers open={playersOpen} setOpen={setPlayersOpen} tournament={tournament} />}
     </SpeedDial>
   );
 };
