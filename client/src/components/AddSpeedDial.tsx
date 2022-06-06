@@ -1,63 +1,44 @@
-import { SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
-import { useState } from "react";
-import PersonIcon from "@mui/icons-material/Person";
-import AddIcon from "@mui/icons-material/Add";
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
+import { useState } from 'react';
+import PersonIcon from '@mui/icons-material/Person';
+import AddIcon from '@mui/icons-material/Add';
+import AddPlayers from './AddPlayers';
 
 type AddSpeedDialProps = {
-  tournament?: string;
+  tournament: string;
 };
 
 const AddSpeedDial = ({ tournament }: AddSpeedDialProps) => {
-  const [state, setState] = useState({
-    open: false,
-    playersOpen: false,
-    tablesOpen: false,
-  });
-  const open = () => {
-    setState((s) => ({ ...s, open: true }));
-  };
-  const close = () => {
-    setState((s) => ({ ...s, open: false }));
-  };
-  const openPlayer = () => {
-    setState((s) => ({ ...s, playerOpen: true }));
-  };
-  const closePlayer = () => {
-    setState((s) => ({ ...s, playerOpen: false }));
-  };
-  const openTable = () => {
-    setState((s) => ({ ...s, tableOpen: true }));
-  };
-  const closeTable = () => {
-    setState((s) => ({ ...s, tableOpen: false }));
-  };
-
+  const [open, setOpen] = useState(false);
+  const [playersOpen, setPlayersOpen] = useState(false);
+  const [tablesOpen, setTablesOpen] = useState(false);
   return (
     <SpeedDial
       sx={{
         margin: (theme) => theme.spacing(),
-        position: "absolute",
-        bottom: "20px",
-        right: "20px",
+        position: 'absolute',
+        bottom: '20px',
+        right: '20px',
       }}
       ariaLabel="Add"
       color="green"
       icon={<SpeedDialIcon />}
-      onOpen={open}
-      onClose={close}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
       direction="up"
-      open={state.open}
+      open={open}
     >
       <SpeedDialAction
         tooltipTitle="Add player"
         icon={<PersonIcon />}
-        onClick={openPlayer}
+        onClick={() => setPlayersOpen(true)}
       />
       <SpeedDialAction
         tooltipTitle="Add table"
         icon={<AddIcon />}
-        onClick={openTable}
+        onClick={() => setTablesOpen(true)}
       />
+      <AddPlayers tournament={tournament} />
     </SpeedDial>
   );
 };
