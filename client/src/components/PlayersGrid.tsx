@@ -38,7 +38,8 @@ const Player = (props: PlayerProps) => {
     <Card
       sx={{
         height: '250px',
-        margin: (theme) => theme.spacing(3),
+        //margin: (theme) => theme.spacing(3),
+        //padding: (theme) => theme.spacing(5),
       }}
       key={player.nickname}
     >
@@ -144,10 +145,22 @@ const PlayersGrid = ({ tournament }: PlayersGridProps) => {
     return <Error msg={error?.message}></Error>;
   }
   return (
-    <Grid container spacing={16} direction="row">
+    <Grid
+      sx={{
+        margin: (theme) => theme.spacing(),
+      }}
+      item
+      container
+      spacing={2}
+      direction="row"
+    >
       {data?.map((player, _) => (
-        <Grid item key={player.nickname}>
-          <Player player={player} tournament={tournament} />
+        <Grid item>
+          <Player
+            key={player.nickname}
+            player={player}
+            tournament={tournament}
+          />
         </Grid>
       ))}
       <Grid item>

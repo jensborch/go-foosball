@@ -13,20 +13,13 @@ const AddPlayers = ({ tournament, open, setOpen }: AddPlayersProps) => {
       open={open}
       onClose={() => setOpen(false)}
       sx={{
-        //position: 'absolute' as 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
       }}
     >
       <Paper>
-        <Grid
-          //sx={{ overflow: 'auto', margin: (theme) => theme.spacing(2) }}
-          //spacing={10}
-          spacing={2}
-          container
-          direction="column"
-        >
+        <Grid spacing={2} container direction="column">
           <Grid item>
             <PlayersGrid tournament={tournament} />
           </Grid>

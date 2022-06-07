@@ -13,39 +13,44 @@ const AddSpeedDial = ({ tournament }: AddSpeedDialProps) => {
   const [playersOpen, setPlayersOpen] = useState(false);
   const [tablesOpen, setTablesOpen] = useState(false);
   return (
-    <SpeedDial
-      sx={{
-        margin: (theme) => theme.spacing(),
-        position: 'absolute',
-        bottom: '20px',
-        right: '20px',
-      }}
-      ariaLabel="Add"
-      color="green"
-      icon={<SpeedDialIcon />}
-      onOpen={() => setOpen(true)}
-      onClose={() => setOpen(false)}
-      direction="up"
-      open={open}
-    >
-      <SpeedDialAction
-        tooltipTitle="Add player"
-        icon={<PersonIcon />}
-        onClick={() => {
-          setOpen(false)
-          setPlayersOpen(true)
+    <>
+      <SpeedDial
+        sx={{
+          margin: (theme) => theme.spacing(),
+          position: 'absolute',
+          bottom: '20px',
+          right: '20px',
         }}
+        ariaLabel="Add"
+        icon={<SpeedDialIcon />}
+        onOpen={() => setOpen(true)}
+        onClose={() => setOpen(false)}
+        direction="up"
+        open={open}
+      >
+        <SpeedDialAction
+          tooltipTitle="Add player"
+          icon={<PersonIcon />}
+          onClick={() => {
+            setOpen(false);
+            setPlayersOpen(true);
+          }}
+        />
+        <SpeedDialAction
+          tooltipTitle="Add table"
+          icon={<AddIcon />}
+          onClick={() => {
+            setOpen(false);
+            setTablesOpen(true);
+          }}
+        />
+      </SpeedDial>
+      <AddPlayers
+        open={playersOpen}
+        setOpen={setPlayersOpen}
+        tournament={tournament}
       />
-      <SpeedDialAction
-        tooltipTitle="Add table"
-        icon={<AddIcon />}
-        onClick={() => {
-          setOpen(false)
-          setTablesOpen(true);
-        }}
-      />
-      {playersOpen && <AddPlayers open={playersOpen} setOpen={setPlayersOpen} tournament={tournament} />}
-    </SpeedDial>
+    </>
   );
 };
 
