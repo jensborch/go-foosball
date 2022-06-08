@@ -8,47 +8,33 @@ import {
   Button,
   TextField,
   CardActions,
-  Box,
   CircularProgress,
 } from '@mui/material';
 import { Error } from './Error';
 import {
   usePlayerMutation,
+  usePlayers,
   useTournamentPlayerMutation,
-  useTournamentPlayers,
 } from '../api/hooks';
 
 type PlayerProps = {
   tournament: string;
-  player: Api.TournamentPlayer;
+  player: Api.Player;
 };
 
-const Player = (props: PlayerProps) => {
-  const [player, setPlayer] = useState(props.player);
-  const { mutate } = useTournamentPlayerMutation(props.tournament);
+const Player = ({tournament, player}: PlayerProps) => {
+  const [ranking, setRanking] = useState(NaN);
+  const { mutate } = useTournamentPlayerMutation(tournament);
 
   const onAddPlayer = () => {
     mutate({
       nickname: player.nickname,
-      ranking: player.ranking,
+      ranking: ranking,
     });
   };
 
   return (
-    <Card
-      sx={{
-        height: '250px',
-        //margin: (theme) => theme.spacing(3),
-        //padding: (theme) => theme.spacing(5),
-      }}
-      key={player.nickname}
-    >
-      <Box
-        sx={{
-          height: '100px',
-          backgroundColor: (theme) => theme.palette.grey[300],
-        }}
-      />
+    <Card key={player.nickname}>
       <CardContent>
         <Typography gutterBottom variant="h5" component="h3">
           {player.nickname} - {player.realname}
@@ -58,13 +44,8 @@ const Player = (props: PlayerProps) => {
         <div>
           <TextField
             type="number"
-            value={player.ranking}
-            onChange={(e) =>
-              setPlayer({
-                ...player,
-                ranking: parseInt(e.target.value),
-              })
-            }
+            value={ranking}
+            onChange={(e) => setRanking(parseInt(e.target.value))}
             helperText="Ranking"
             label="Ranking"
             margin="dense"
@@ -137,7 +118,7 @@ type PlayersGridProps = {
 };
 
 const PlayersGrid = ({ tournament }: PlayersGridProps) => {
-  const { status, error, data } = useTournamentPlayers(tournament);
+  const { status, error, data } = usePlayers();
   if (status === 'loading') {
     return <CircularProgress />;
   }
