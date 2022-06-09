@@ -1,30 +1,24 @@
-import * as Api from "../api/Api";
-import { toLocaleDateString } from "../api/Util";
-import { Error } from "./Error";
+import * as Api from '../api/Api';
+import { toLocaleDateString } from '../api/Util';
+import { Error } from './Error';
 import {
   Avatar,
   Card,
   CardContent,
   CardHeader,
   CircularProgress,
+  Grid,
   Typography,
-} from "@mui/material";
-import { Box } from "@mui/system";
-import { useNavigate } from "react-router-dom";
-import { useTournaments } from "../api/hooks";
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useTournaments } from '../api/hooks';
 
-const rootStyle = {
-  display: 'flex',
-  flexWrap: 'wrap',
-  padding: '20px',
-  justifyContent: 'space-between',
-} as const;
 
 const Tournament = ({ created, name, score, initial, id }: Api.Tournament) => {
   const navigate = useNavigate();
   return (
     <Card
-      sx={{ minWidth: "275px", cursor: "pointer" }}
+      sx={{ minWidth: '275px', cursor: 'pointer' }}
       elevation={4}
       onClick={() => navigate(`./tournament/${id}`)}
     >
@@ -51,26 +45,20 @@ const Tournament = ({ created, name, score, initial, id }: Api.Tournament) => {
 
 const Tournaments = () => {
   const { status, error, data } = useTournaments();
-  if (status === "loading") {
-    return (
-      <Box sx={rootStyle}>
-        <CircularProgress />
-      </Box>
-    );
+  if (status === 'loading') {
+    return <CircularProgress />;
   }
-  if (status === "error") {
-    return (
-      <Box sx={rootStyle}>
-        <Error msg={error?.message}></Error>
-      </Box>
-    );
+  if (status === 'error') {
+    return <Error msg={error?.message}></Error>;
   }
   return (
-    <Box sx={rootStyle}>
+    <Grid container spacing={2} direction="row">
       {data?.map((tournament) => (
-        <Tournament key={tournament.id} {...tournament} />
+        <Grid item>
+          <Tournament key={tournament.id} {...tournament} />
+        </Grid>
       ))}
-    </Box>
+    </Grid>
   );
 };
 

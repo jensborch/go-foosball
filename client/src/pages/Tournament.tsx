@@ -1,29 +1,26 @@
-import { Box } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { useTables } from '../api/hooks';
 import AddSpeedDial from '../components/AddSpeedDial';
 import Menu from '../components/Menu';
-import { Table } from '../components/Table';
+import Tables from '../components/Tables';
+import { Error } from '../components/Error';
+import { Box } from '@mui/system';
 
 function Tournament() {
   const { id } = useParams();
 
-  const { data: tables } = useTables();
-
+  if (!id) {
+    return <Error msg="Tournament ID is not defined"></Error>;
+  }
   return (
     <>
-      <Menu title="Foosball" children={undefined}/>
+      <Menu title="Foosball" children={undefined} />
       <Box
         sx={{
-          display: 'flex',
-          padding: '20px',
+          margin: (theme) => theme.spacing(4),
         }}
-      >
-        {tables?.map((table) => (
-          <Table key={table.id} {...table} />
-        ))}
-      </Box>
-      {id && <AddSpeedDial tournament={id}/>}
+      ></Box>
+      <Tables tournament={id} />
+      <AddSpeedDial tournament={id} />
     </>
   );
 }

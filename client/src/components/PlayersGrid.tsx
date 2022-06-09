@@ -22,7 +22,7 @@ type PlayerProps = {
   player: Api.Player;
 };
 
-const Player = ({tournament, player}: PlayerProps) => {
+const Player = ({ tournament, player }: PlayerProps) => {
   const [ranking, setRanking] = useState(NaN);
   const { mutate } = useTournamentPlayerMutation(tournament);
 
@@ -39,27 +39,19 @@ const Player = ({tournament, player}: PlayerProps) => {
         <Typography gutterBottom variant="h5" component="h3">
           {player.nickname} - {player.realname}
         </Typography>
+        <TextField
+          type="number"
+          value={ranking}
+          onChange={(e) => setRanking(parseInt(e.target.value))}
+          helperText="Ranking"
+          label="Ranking"
+          margin="dense"
+        />
       </CardContent>
       <CardActions>
-        <div>
-          <TextField
-            type="number"
-            value={ranking}
-            onChange={(e) => setRanking(parseInt(e.target.value))}
-            helperText="Ranking"
-            label="Ranking"
-            margin="dense"
-          />
-          <Button
-            sx={{
-              margin: (theme) => theme.spacing(),
-            }}
-            variant="outlined"
-            onClick={onAddPlayer}
-          >
-            Add
-          </Button>
-        </div>
+        <Button variant="outlined" onClick={onAddPlayer}>
+          Add
+        </Button>
       </CardActions>
     </Card>
   );
@@ -99,13 +91,7 @@ const NewPlayer = () => {
         </Grid>
       </CardContent>
       <CardActions>
-        <Button
-          sx={{
-            margin: (theme) => theme.spacing(),
-          }}
-          variant="outlined"
-          onClick={onCreatePlayer}
-        >
+        <Button variant="outlined" onClick={onCreatePlayer}>
           Create
         </Button>
       </CardActions>
@@ -135,17 +121,21 @@ const PlayersGrid = ({ tournament }: PlayersGridProps) => {
       spacing={2}
       direction="row"
     >
-      {data?.map((player, _) => (
+      <Grid spacing={2} item container direction="row">
+        {data?.map((player, _) => (
+          <Grid item>
+            <Player
+              key={player.nickname}
+              player={player}
+              tournament={tournament}
+            />
+          </Grid>
+        ))}
+      </Grid>
+      <Grid item container direction="row">
         <Grid item>
-          <Player
-            key={player.nickname}
-            player={player}
-            tournament={tournament}
-          />
+          <NewPlayer />
         </Grid>
-      ))}
-      <Grid item>
-        <NewPlayer />
       </Grid>
     </Grid>
   );

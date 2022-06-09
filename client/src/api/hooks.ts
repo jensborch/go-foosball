@@ -38,6 +38,18 @@ export const useTables = () => {
   );
 };
 
+export const useTournamentTables = (tournament: string) => {
+  return useQuery<Api.TournamentTable[], Error>(
+    'tables',
+    async (): Promise<Api.TournamentTable[]> => {
+      return api.tournaments
+        .tablesDetail(tournament)
+        .then(handleErrors)
+        .then((r) => r.data);
+    }
+  );
+};
+
 export const useTournaments = () => {
   return useQuery<Api.Tournament[], Error>(
     'tournaments',

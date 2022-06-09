@@ -13,9 +13,10 @@ const AddPlayers = ({ tournament, open, setOpen }: AddPlayersProps) => {
       open={open}
       onClose={() => setOpen(false)}
       sx={{
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
+        top: '10%',
+        left: '10%',
+        right: '10%',
+        //transform: 'translate(-50%, -50%)',
       }}
     >
       <Paper>
