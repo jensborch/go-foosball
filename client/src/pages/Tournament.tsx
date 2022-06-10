@@ -18,8 +18,9 @@ function Tournament() {
         sx={{
           margin: (theme) => theme.spacing(4),
         }}
-      ></Box>
+      >
       <TournamentTables tournament={id} />
+      </Box>
       <AddSpeedDial tournament={id} />
     </>
   );

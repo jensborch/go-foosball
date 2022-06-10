@@ -16,7 +16,7 @@ const AddPlayers = ({ tournament, open, setOpen }: AddPlayersProps) => {
         top: '10%',
         left: '10%',
         right: '10%',
-        //transform: 'translate(-50%, -50%)',
+        overflow: "scroll"
       }}
     >
       <Paper>
