@@ -13,9 +13,6 @@ import { green } from '@mui/material/colors';
 
 export const TournamentTable = ({ color, name }: Api.Table) => {
   const { data: players } = usePlayers();
-
-  console.log(players);
-
   return (
     <Card sx={{ minWidth: '300px', margin: (theme) => theme.spacing(4) }}>
       <CardHeader
@@ -34,8 +31,8 @@ export const TournamentTable = ({ color, name }: Api.Table) => {
       <CardContent>
         <Grid container spacing={2} direction="column">
           {players?.map((player) => (
-            <Grid item>
-              <Player key={player.nickname} {...player} />
+            <Grid item key={player.nickname}>
+              <Player {...player} />
             </Grid>
           ))}
         </Grid>
@@ -82,8 +79,8 @@ const TournamentTables = ({ tournament }: TableProps) => {
       {data
         ?.map((tt) => tt.table)
         .map((table) => (
-          <Grid item>
-            <TournamentTable key={table.id} {...table} />
+          <Grid item key={table.id}>
+            <TournamentTable {...table} />
           </Grid>
         ))}
     </Grid>

@@ -123,9 +123,8 @@ const PlayersGrid = ({ tournament }: PlayersGridProps) => {
     >
       <Grid spacing={2} item container direction="row">
         {data?.map((player, _) => (
-          <Grid item>
+          <Grid item key={player.nickname}>
             <Player
-              key={player.nickname}
               player={player}
               tournament={tournament}
             />

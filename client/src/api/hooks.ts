@@ -40,7 +40,7 @@ export const useTables = () => {
 
 export const useTournamentTables = (tournament: string) => {
   return useQuery<Api.TournamentTable[], Error>(
-    'tables',
+    'tournamentTables',
     async (): Promise<Api.TournamentTable[]> => {
       return api.tournaments
         .tablesDetail(tournament)

@@ -51,8 +51,8 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
         <List>
           {data?.map((table) => (
             <ListItem
+              key={table.id}
               button
-              key={table.name}
               onClick={() => handleSelect(table.id)}
             >
               <ListItemText primary={table.name} />

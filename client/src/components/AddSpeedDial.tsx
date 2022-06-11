@@ -3,6 +3,7 @@ import { useState } from 'react';
 import PersonIcon from '@mui/icons-material/Person';
 import AddIcon from '@mui/icons-material/Add';
 import AddPlayers from './AddPlayers';
+import AddTableDialog from './AddTableDialog';
 
 type AddSpeedDialProps = {
   tournament: string;
@@ -48,6 +49,11 @@ const AddSpeedDial = ({ tournament }: AddSpeedDialProps) => {
       <AddPlayers
         open={playersOpen}
         setOpen={setPlayersOpen}
+        tournament={tournament}
+      />
+      <AddTableDialog
+        open={tablesOpen}
+        setOpen={setTablesOpen}
         tournament={tournament}
       />
     </>
