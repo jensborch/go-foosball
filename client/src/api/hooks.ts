@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import * as Api from '../api/Api';
-import { api, handleErrors } from '../api/Util';
+import { api, handleErrors } from './util';
 
 export const usePlayers = () => {
   return useQuery<Api.Player[], Error>(
@@ -8,6 +8,27 @@ export const usePlayers = () => {
     async (): Promise<Api.Player[]> => {
       return api.players
         .playersList()
+        .then(handleErrors)
+        .then((r) => r.data);
+    }
+  );
+};
+
+export const useGames = (tournament: string) => {
+  return useQuery<Api.Game[], Error>('games', async (): Promise<Api.Game[]> => {
+    return api.tournaments
+      .gamesDetail(tournament)
+      .then(handleErrors)
+      .then((r) => r.data);
+  });
+};
+
+export const useRandomGames = (tournament: string) => {
+  return useQuery<Api.Game[], Error>(
+    'randomGames',
+    async (): Promise<Api.Game[]> => {
+      return api.tournaments
+        .gamesRandomDetail(tournament)
         .then(handleErrors)
         .then((r) => r.data);
     }

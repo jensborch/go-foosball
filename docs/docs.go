@@ -1158,7 +1158,7 @@ const docTemplate_swagger = `{
                 "leftScore",
                 "rightPlayers",
                 "rightScore",
-                "tableId",
+                "table",
                 "updated"
             ],
             "properties": {
@@ -1183,8 +1183,8 @@ const docTemplate_swagger = `{
                 "rightScore": {
                     "type": "integer"
                 },
-                "tableId": {
-                    "type": "integer"
+                "table": {
+                    "$ref": "#/definitions/Table"
                 },
                 "updated": {
                     "type": "string"

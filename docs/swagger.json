@@ -1150,7 +1150,7 @@
                 "leftScore",
                 "rightPlayers",
                 "rightScore",
-                "tableId",
+                "table",
                 "updated"
             ],
             "properties": {
@@ -1175,8 +1175,8 @@
                 "rightScore": {
                     "type": "integer"
                 },
-                "tableId": {
-                    "type": "integer"
+                "table": {
+                    "$ref": "#/definitions/Table"
                 },
                 "updated": {
                     "type": "string"

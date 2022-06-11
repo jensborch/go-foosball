@@ -83,8 +83,8 @@ definitions:
         type: array
       rightScore:
         type: integer
-      tableId:
-        type: integer
+      table:
+        $ref: '#/definitions/Table'
       updated:
         type: string
       winner:
@@ -95,7 +95,7 @@ definitions:
     - leftScore
     - rightPlayers
     - rightScore
-    - tableId
+    - table
     - updated
     type: object
   GameResult:

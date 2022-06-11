@@ -1,5 +1,5 @@
 import * as Api from '../api/Api';
-import { toLocaleDateString } from '../api/Util';
+import { toLocaleDateString } from '../api/util';
 import { Error } from './Error';
 import {
   Avatar,
@@ -54,8 +54,8 @@ const Tournaments = () => {
   return (
     <Grid container spacing={2} direction="row">
       {data?.map((tournament) => (
-        <Grid item>
-          <Tournament key={tournament.id} {...tournament} />
+        <Grid item key={tournament.id}>
+          <Tournament {...tournament} />
         </Grid>
       ))}
     </Grid>

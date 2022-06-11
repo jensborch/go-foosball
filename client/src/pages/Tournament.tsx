@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import AddSpeedDial from '../components/AddSpeedDial';
 import Menu from '../components/Menu';
-import TournamentTables from '../components/TournamentTables';
+import Games from '../components/Games';
 import { Error } from '../components/Error';
 import { Box } from '@mui/system';
 
@@ -19,7 +19,7 @@ function Tournament() {
           margin: (theme) => theme.spacing(4),
         }}
       >
-      <TournamentTables tournament={id} />
+      <Games tournament={id} />
       </Box>
       <AddSpeedDial tournament={id} />
     </>

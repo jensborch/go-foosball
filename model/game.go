@@ -29,7 +29,7 @@ type Game struct {
 type GameJson struct {
 	CreatedAt    time.Time `json:"created" validate:"required"`
 	UpdatedAt    time.Time `json:"updated" validate:"required"`
-	TableID      uint      `json:"tableId" validate:"required"`
+	Table        Table     `json:"table" validate:"required"`
 	RightPlayers []string  `json:"rightPlayers" validate:"required"`
 	LeftPlayers  []string  `json:"leftPlayers" validate:"required"`
 	RightScore   int       `json:"rightScore" validate:"required"`
@@ -42,7 +42,7 @@ func (g *Game) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&GameJson{
 		CreatedAt:    g.CreatedAt,
 		UpdatedAt:    g.UpdatedAt,
-		TableID:      g.TournamentTable.ID,
+		Table:        g.TournamentTable.Table,
 		RightPlayers: g.RightPlayerNames(),
 		LeftPlayers:  g.LeftPlayerNames(),
 		RightScore:   g.GetOrCalculateRightScore(),

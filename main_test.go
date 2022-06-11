@@ -289,8 +289,8 @@ func randomGame(ts *httptest.Server, id uint) func(t *testing.T) []model.GameJso
 			t.Fatalf("Expected left greater than 0, got %v", result[0].RightScore)
 		}
 
-		if result[0].TableID == 0 {
-			t.Fatalf("Expected table id not equal to 0, got %v", result[0].TableID)
+		if result[0].Table.ID == 0 {
+			t.Fatalf("Expected table id not equal to 0, got %v", result[0].Table.ID)
 		}
 
 		if len(result[0].LeftPlayers) != 1 {
@@ -367,7 +367,7 @@ func Test(t *testing.T) {
 
 	gamePlayers := append(random[0].LeftPlayers, random[0].RightPlayers...)
 
-	postGame(ts, tournament.ID, random[0].TableID, gamePlayers, string(model.RIGHT))(t)
+	postGame(ts, tournament.ID, random[0].Table.ID, gamePlayers, string(model.RIGHT))(t)
 
 	games := getGame(ts, tournament.ID)(t)
 
@@ -379,7 +379,7 @@ func Test(t *testing.T) {
 		t.Fatalf("Expected a score, got left score %v and rigth score %d", games[0].LeftScore, games[0].RightScore)
 	}
 
-	postGame(ts, tournament.ID, random[0].TableID, gamePlayers, string(model.RIGHT))(t)
+	postGame(ts, tournament.ID, random[0].Table.ID, gamePlayers, string(model.RIGHT))(t)
 
 	games = getGame(ts, tournament.ID)(t)
 

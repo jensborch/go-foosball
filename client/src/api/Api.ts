@@ -50,7 +50,7 @@ export interface Game {
   leftScore: number;
   rightPlayers: string[];
   rightScore: number;
-  tableId: number;
+  table: Table;
   updated: string;
   winner?: string;
 }
