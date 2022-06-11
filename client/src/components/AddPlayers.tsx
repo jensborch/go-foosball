@@ -1,4 +1,5 @@
-import { Button, Grid, Modal, Paper } from '@mui/material';
+import { Button, Grid } from '@mui/material';
+import FullScreenDialog from './FullScreenDialog';
 import PlayersGrid from './PlayersGrid';
 
 type AddPlayersProps = {
@@ -9,17 +10,10 @@ type AddPlayersProps = {
 
 const AddPlayers = ({ tournament, open, setOpen }: AddPlayersProps) => {
   return (
-    <Modal
+    <FullScreenDialog
       open={open}
-      onClose={() => setOpen(false)}
-      sx={{
-        top: '10%',
-        left: '10%',
-        right: '10%',
-        overflow: "scroll"
-      }}
+      setOpen={setOpen}
     >
-      <Paper>
         <Grid spacing={2} container direction="column">
           <Grid item>
             <PlayersGrid tournament={tournament} />
@@ -35,8 +29,7 @@ const AddPlayers = ({ tournament, open, setOpen }: AddPlayersProps) => {
             </Button>
           </Grid>
         </Grid>
-      </Paper>
-    </Modal>
+    </FullScreenDialog>
   );
 };
 

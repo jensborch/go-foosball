@@ -24,12 +24,12 @@ type FullScreenDialogProps = {
   setOpen: (open: boolean) => void;
 };
 
-export default function FullScreenDialog({
+const FullScreenDialog = ({
   title,
   children,
   open,
   setOpen,
-}: FullScreenDialogProps) {
+}: FullScreenDialogProps) => {
   const handleClose = () => {
     setOpen(false);
   };
@@ -60,4 +60,6 @@ export default function FullScreenDialog({
       </Dialog>
     </>
   );
-}
+};
+
+export default FullScreenDialog;

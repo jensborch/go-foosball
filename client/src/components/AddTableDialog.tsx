@@ -1,16 +1,12 @@
 import {
-  Button,
   CircularProgress,
   Dialog,
   Divider,
-  Grid,
   List,
   ListItem,
   ListItemIcon,
-  ListItemText,
-  TextField,
+  ListItemText
 } from '@mui/material';
-import { useState } from 'react';
 import { useTables } from '../api/hooks';
 import { Error } from './Error';
 import AddIcon from '@mui/icons-material/Add';
@@ -24,12 +20,8 @@ type AddTableProps = {
 
 const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
   const { status, error, data } = useTables();
-  const [name, setName] = useState('');
-  const [leftColor, setLeftColor] = useState('');
-  const [rightColor, setRightColor] = useState('');
   function handleSelect(id: number): void {}
   function handleAdd(): void {}
-  function create(): void {}
   if (status === 'loading') {
     return (
       <Dialog onClose={() => setOpen(false)} open={open}>
@@ -46,54 +38,24 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
   }
   return (
     <FullScreenDialog setOpen={setOpen} open={open} title="Add table">
-      <div>
-        <List>
-          {data?.map((table) => (
-            <ListItem
-              key={table.id}
-              button
-              onClick={() => handleSelect(table.id)}
-            >
-              <ListItemText primary={table.name} />
-            </ListItem>
-          ))}
-          {(data ? data.length > 0 : false) && <Divider />}
-          <ListItem button onClick={() => handleAdd()}>
-            <ListItemIcon>
-              <AddIcon />
-            </ListItemIcon>
-            <ListItemText primary="New table" />
+      <List>
+        {data?.map((table) => (
+          <ListItem
+            key={table.id}
+            button
+            onClick={() => handleSelect(table.id)}
+          >
+            <ListItemText primary={table.name} />
           </ListItem>
-        </List>
-        <Grid container direction="column">
-          <Grid item>
-            <TextField
-              helperText="Name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              helperText="Right Color"
-              value={rightColor}
-              onChange={(event) => setRightColor(event.target.value)}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              helperText="Left Color"
-              value={leftColor}
-              onChange={(event) => setLeftColor(event.target.value)}
-            />
-          </Grid>
-          <Grid item>
-            <Button variant="outlined" onClick={create}>
-              Create
-            </Button>
-          </Grid>
-        </Grid>
-      </div>
+        ))}
+        {(data ? data.length > 0 : false) && <Divider />}
+        <ListItem button onClick={() => handleAdd()}>
+          <ListItemIcon>
+            <AddIcon />
+          </ListItemIcon>
+          <ListItemText primary="New table" />
+        </ListItem>
+      </List>
     </FullScreenDialog>
   );
 };
