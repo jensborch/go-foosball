@@ -2,7 +2,6 @@ import {
   Button,
   CircularProgress,
   Dialog,
-  DialogTitle,
   Divider,
   Grid,
   List,
@@ -15,6 +14,7 @@ import { useState } from 'react';
 import { useTables } from '../api/hooks';
 import { Error } from './Error';
 import AddIcon from '@mui/icons-material/Add';
+import FullScreenDialog from './FullScreenDialog';
 
 type AddTableProps = {
   tournament: string;
@@ -24,9 +24,9 @@ type AddTableProps = {
 
 const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
   const { status, error, data } = useTables();
-  const [name, setName] = useState("");
-  const [leftColor, setLeftColor] = useState("");
-  const [rightColor, setRightColor] = useState("");
+  const [name, setName] = useState('');
+  const [leftColor, setLeftColor] = useState('');
+  const [rightColor, setRightColor] = useState('');
   function handleSelect(id: number): void {}
   function handleAdd(): void {}
   function create(): void {}
@@ -45,8 +45,7 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
     );
   }
   return (
-    <Dialog onClose={() => setOpen(false)} open={open}>
-      <DialogTitle>Add table</DialogTitle>
+    <FullScreenDialog setOpen={setOpen} open={open} title="Add table">
       <div>
         <List>
           {data?.map((table) => (
@@ -78,18 +77,14 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
             <TextField
               helperText="Right Color"
               value={rightColor}
-              onChange={(event) =>
-                setRightColor(event.target.value)
-              }
+              onChange={(event) => setRightColor(event.target.value)}
             />
           </Grid>
           <Grid item>
             <TextField
               helperText="Left Color"
               value={leftColor}
-              onChange={(event) =>
-                setLeftColor(event.target.value)
-              }
+              onChange={(event) => setLeftColor(event.target.value)}
             />
           </Grid>
           <Grid item>
@@ -99,7 +94,7 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
           </Grid>
         </Grid>
       </div>
-    </Dialog>
+    </FullScreenDialog>
   );
 };
 
