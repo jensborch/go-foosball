@@ -1,6 +1,7 @@
 import * as Api from '../api/Api';
 import {
   Avatar,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -19,6 +20,8 @@ export const Game = ({
   rightScore,
   table,
 }: Api.Game) => {
+  function rigthWins() {};
+  function leftWins() {};  
   return (
     <Card sx={{ minWidth: '300px', margin: (theme) => theme.spacing(4) }}>
       <CardHeader
@@ -49,6 +52,13 @@ export const Game = ({
               </Grid>
             ))}
           </Grid>
+          <Grid container item columns={1} direction="column">
+            <Button
+              onClick={rigthWins}
+            >
+              {table.color.right} wins {rightScore} points
+            </Button>
+          </Grid>
           <Grid container item columns={2} direction="column">
             {leftPlayers?.map((player) => (
               <Grid item key={player}>
@@ -56,6 +66,13 @@ export const Game = ({
               </Grid>
             ))}
           </Grid>
+          <Grid container item columns={1} direction="column">
+            <Button
+              onClick={leftWins}
+            >
+              {table.color.left} wins {leftScore} points
+            </Button>
+          </Grid>          
         </Grid>
       </CardContent>
     </Card>
