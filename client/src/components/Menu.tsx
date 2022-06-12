@@ -10,7 +10,7 @@ import HomeIcon from '@mui/icons-material/Home';
 
 type MenuProps = {
   title: string;
-  children?: JSX.Element;
+  children?: JSX.Element | JSX.Element[];
 };
 
 const Menu = ({ title, children }: MenuProps) => {
