@@ -16,7 +16,6 @@ type MenuProps = {
 
 const Menu = ({ title, children }: MenuProps) => {
   const arrayChildren = Children.toArray(children);
-  console.log(arrayChildren.length);
   return (
     <AppBar position="static">
       <Toolbar>

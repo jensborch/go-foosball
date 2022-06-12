@@ -1,6 +1,12 @@
-import { Button, Modal, Typography } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
-
 
 const styles = {
   paper: {
@@ -23,24 +29,25 @@ const styles = {
     align: 'center',
     padding: (theme: any) => theme.spacing.unit * 3,
   },
-}
+};
 
 type TimerProps = {
-  timeout: number
-  open: boolean
-  setOpen: (open: boolean) => void 
-}
+  timeout: number;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
 
-const Timer = ({timeout, open, setOpen}: TimerProps) => {
-  const [countdown ,setCountdown] = useState(timeout);
+const Timer = ({ timeout, open, setOpen }: TimerProps) => {
+  const [countdown, setCountdown] = useState(timeout);
 
   useEffect(() => {
-    setInterval(timer, 1000);
+    const t = setInterval(timer, 1000);
+    return () => clearInterval(t)
   });
 
   function timer() {
-    if (timeout >= 0) {
-    setCountdown(--timeout);
+    if (countdown >= 0) {
+      setCountdown(countdown - 1);
     }
   }
 
@@ -49,11 +56,7 @@ const Timer = ({timeout, open, setOpen}: TimerProps) => {
   }
 
   function printCountDown(time: number) {
-    return (
-      format(minutes(time)) +
-      ':' +
-      format(seconds(time))
-    );
+    return format(minutes(time)) + ':' + format(seconds(time));
   }
 
   function minutes(time: number) {
@@ -64,28 +67,25 @@ const Timer = ({timeout, open, setOpen}: TimerProps) => {
     return time % 60;
   }
 
-    return (
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <div>
-          <div>
-            <Typography noWrap={true} variant="h2">
-              Timer
-            </Typography>
-            <Typography noWrap={true} variant="h1">
-              {printCountDown(countdown)}
-            </Typography>
-          </div>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => setOpen(false)}
-          >
-            Cancel
-          </Button>
-        </div>
-      </Modal>
-    );
-  }
-
+  return (
+    <Dialog open={open} onClose={() => setOpen(false)}>
+      <DialogTitle>Timer</DialogTitle>
+      <DialogContent>
+        <Typography noWrap={true} variant="h1">
+          {printCountDown(countdown)}
+        </Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => setOpen(false)}
+        >
+          Cancel
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 export default Timer;
