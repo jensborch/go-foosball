@@ -97,6 +97,20 @@ export const useTournamentPlayerMutation = (id: string) => {
   );
 };
 
+export const useTournamentPlayerDeleteMutation = (
+  tournament: string,
+  nickname: string
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation(() => api.tournaments.playersDelete(tournament, nickname), {
+    onSuccess: () => queryClient.invalidateQueries('tournamentPlayers'),
+    onError: (error) => {
+      handleErrors(error as Response);
+    },
+  });
+};
+
 export const usePlayerMutation = () => {
   const queryClient = useQueryClient();
 
