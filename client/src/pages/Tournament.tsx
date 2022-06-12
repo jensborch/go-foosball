@@ -5,7 +5,7 @@ import Games from '../components/Games';
 import { Error } from '../components/Error';
 import { Box } from '@mui/system';
 import RefreshRandomGames from '../components/RefreshRandomGames';
-import { Start } from '@mui/icons-material';
+import Start  from '../components/Start';
 
 function Tournament() {
   const { id } = useParams();
@@ -27,7 +27,7 @@ function Tournament() {
       >
       <Games tournament={id} />
       </Box>
-      <AddSpeedDial tournament={id} />
+      
     </>
   );
 }

@@ -16,17 +16,11 @@ const AddSpeedDial = ({ tournament }: AddSpeedDialProps) => {
   return (
     <>
       <SpeedDial
-        sx={{
-          margin: (theme) => theme.spacing(),
-          position: 'absolute',
-          bottom: '20px',
-          right: '20px',
-        }}
         ariaLabel="Add"
         icon={<SpeedDialIcon />}
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
-        direction="up"
+        direction="down"
         open={open}
       >
         <SpeedDialAction

@@ -1,21 +1,17 @@
 import { Fab } from '@mui/material';
 import { useState } from 'react';
-import LaunchIcon from '@mui/icons-material/Launch';
 import Timer from './Timer';
+import TimerIcon from '@mui/icons-material/Timer';
 
 const Start = () => {
   const [open, setOpen] = useState(false);
   return (
-    <div>
-      <Fab color="default" aria-label="add" onClick={() => setOpen(true)}>
-        <LaunchIcon />
+    <>
+      <Fab onClick={() => setOpen(true)} color="default" aria-label="add">
+        <TimerIcon />
       </Fab>
-      <Timer
-        timeout={2 * 60}
-        open={open}
-        setOpen={setOpen}
-      />
-    </div>
+      <Timer timeout={2 * 60} open={open} setOpen={setOpen} />
+    </>
   );
 };
 

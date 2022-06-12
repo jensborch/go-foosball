@@ -1,12 +1,13 @@
 import {
   AppBar,
-  Box,
+  Grid,
   IconButton,
   Link,
   Toolbar,
   Typography,
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
+import { Children } from 'react';
 
 type MenuProps = {
   title: string;
@@ -14,10 +15,12 @@ type MenuProps = {
 };
 
 const Menu = ({ title, children }: MenuProps) => {
+  const arrayChildren = Children.toArray(children);
+  console.log(arrayChildren.length);
   return (
     <AppBar position="static">
       <Toolbar>
-      <IconButton
+        <IconButton
           href="/"
           component={Link}
           sx={{
@@ -32,16 +35,24 @@ const Menu = ({ title, children }: MenuProps) => {
         <Typography variant="h6" color="inherit" sx={{ display: 'flex' }}>
           {title}
         </Typography>
-        <Box
+        <Grid
+          spacing={2}
+          container
+          direction="row-reverse"
           sx={{
             position: 'absolute',
-            display: 'flex',
             top: (theme) => theme.spacing(3.5),
             right: (theme) => theme.spacing(5),
           }}
         >
-          {children}
-        </Box>
+          {Children.map(arrayChildren, (child, index) => {
+            return (
+              <Grid item key={index}>
+                {child}
+              </Grid>
+            );
+          })}
+        </Grid>
       </Toolbar>
     </AppBar>
   );
