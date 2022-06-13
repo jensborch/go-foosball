@@ -7756,6 +7756,11 @@ react-transition-group@^4.4.2:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-use-precision-timer@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/react-use-precision-timer/-/react-use-precision-timer-1.0.8.tgz#313fc5d8afef38169db3b0d9240642a018b1ccbf"
+  integrity sha512-XsfRN14A5DvarZIzPUdWKoiYfXG4t8GzDEbyMYtxe8xVmvyF9E3ho9ol/ublv6rL8NeuQAYvM7d2XdzWiZt1mQ==
+
 react@^17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
