@@ -1,6 +1,7 @@
 import * as Api from '../api/Api';
 import {
   Avatar,
+  Box,
   Button,
   Card,
   CardContent,
@@ -12,6 +13,9 @@ import {
 import { useRandomGames } from '../api/hooks';
 import { Error } from './Error';
 import { green } from '@mui/material/colors';
+import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 
 export const Game = ({
   leftPlayers,
@@ -20,21 +24,18 @@ export const Game = ({
   rightScore,
   table,
 }: Api.Game) => {
-  function rigthWins() {};
-  function leftWins() {};  
+  function rigthWins() {}
+  function leftWins() {}
   return (
     <Card sx={{ minWidth: '300px', margin: (theme) => theme.spacing(4) }}>
       <CardHeader
         avatar={
-          <Avatar
-            sx={{
-              backgroundColor: green[500],
-            }}
-          >
-            T
+          <Avatar>
+            <TableRestaurantIcon />
           </Avatar>
         }
-        title={`${table.name}`}
+        title="Table"
+        subheader={`${table.name}`}
       />
       <CardContent>
         <Grid container spacing={2} columns={3} direction="column">
@@ -54,7 +55,13 @@ export const Game = ({
           </Grid>
           <Grid container item columns={1} direction="column">
             <Button
+              variant="outlined"
               onClick={rigthWins}
+              startIcon={
+                <EmojiEventsOutlinedIcon
+                  sx={{ color: `${table.color.right}` }}
+                />
+              }
             >
               {table.color.right} wins {rightScore} points
             </Button>
@@ -68,11 +75,17 @@ export const Game = ({
           </Grid>
           <Grid container item columns={1} direction="column">
             <Button
+              variant="outlined"
               onClick={leftWins}
+              startIcon={
+                <EmojiEventsOutlinedIcon
+                  sx={{ color: `${table.color.left}` }}
+                />
+              }
             >
               {table.color.left} wins {leftScore} points
             </Button>
-          </Grid>          
+          </Grid>
         </Grid>
       </CardContent>
     </Card>
