@@ -1,7 +1,6 @@
 import * as Api from '../api/Api';
 import {
   Avatar,
-  Box,
   Button,
   Card,
   CardContent,
@@ -12,9 +11,7 @@ import {
 } from '@mui/material';
 import { useRandomGames } from '../api/hooks';
 import { Error } from './Error';
-import { green } from '@mui/material/colors';
 import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 
 export const Game = ({
