@@ -103,14 +103,18 @@ func (r *tournamentRepository) FindAllActivePlayers(tournamentId string) ([]*mod
 }
 
 func (r *tournamentRepository) FindPlayer(tournamentId string, nickname string) (*model.TournamentPlayer, model.Found) {
-	var players model.TournamentPlayer
-	err := r.db.Model(&model.TournamentPlayer{}).
+	var player model.TournamentPlayer
+	results := r.db.Model(&model.TournamentPlayer{}).
 		Preload(clause.Associations).
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Joins("inner join players on tournament_players.player_id = players.id").
 		Where("players.nickname = ?", nickname).
-		Where("tournaments.ID = ?", tournamentId).Find(&players).Error
-	return &players, HasBeenFound(err)
+		Where("tournaments.ID = ?", tournamentId).Scan(&player)
+	if results.RowsAffected > 0 {
+		return &player, true
+	} else {
+		return nil, false
+	}
 }
 
 func (r *tournamentRepository) ActivePlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {
@@ -124,26 +128,26 @@ func (r *tournamentRepository) ActivePlayers(tournamentId string) ([]*model.Tour
 	return players, HasBeenFound(err)
 }
 
-func (r *tournamentRepository) DeactivatePlayer(tournamentId string, nickname string) model.Found {
+func (r *tournamentRepository) DeactivatePlayer(tournamentId string, nickname string) (*model.TournamentPlayer, model.Found) {
 	if player, found := r.FindPlayer(tournamentId, nickname); found {
 		player.Active = false
 		if err := r.db.Save(player).Error; err != nil {
 			panic(err)
 		}
-		return true
+		return player, true
 	}
-	return false
+	return nil, false
 }
 
-func (r *tournamentRepository) ActivatePlayer(tournamentId string, nickname string) model.Found {
+func (r *tournamentRepository) ActivatePlayer(tournamentId string, nickname string) (*model.TournamentPlayer, model.Found) {
 	if player, found := r.FindPlayer(tournamentId, nickname); found {
 		player.Active = true
 		if err := r.db.Save(player).Error; err != nil {
 			panic(err)
 		}
-		return true
+		return player, true
 	}
-	return false
+	return nil, false
 }
 
 func (r *tournamentRepository) ShuffleActivePlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {

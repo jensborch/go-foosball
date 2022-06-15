@@ -72,6 +72,14 @@ func TestAddRemoveTournamentTable(t *testing.T) {
 
 }
 
+func TestTournamentPlayerNotFound(t *testing.T) {
+	tourRepo, _, _ := initTournament(t)
+	if _, found := tourRepo.FindPlayer("42", "test"); found {
+		t.Errorf("No player should be found, got %t", found)
+	}
+
+}
+
 func TestAddRemoveTournamentPlayer(t *testing.T) {
 	tourRepo, tournament, db := initTournament(t)
 
@@ -188,7 +196,7 @@ func TestActivatePlayer(t *testing.T) {
 	tourRepo.AddPlayer(tournament.IdAsString(), player1)
 	tourRepo.AddPlayer(tournament.IdAsString(), player2)
 
-	if found := tourRepo.DeactivatePlayer(tournament.IdAsString(), player1.Nickname); !found {
+	if _, found := tourRepo.DeactivatePlayer(tournament.IdAsString(), player1.Nickname); !found {
 		t.Errorf("Failed deactivate player 1, not found")
 	}
 
@@ -203,7 +211,7 @@ func TestActivatePlayer(t *testing.T) {
 		t.Errorf("Deactivated player should not be active")
 	}
 
-	if found := tourRepo.ActivatePlayer(tournament.IdAsString(), player1.Nickname); !found {
+	if _, found := tourRepo.ActivatePlayer(tournament.IdAsString(), player1.Nickname); !found {
 		t.Errorf("Failed activate player 1, got %t", found)
 	}
 

@@ -5,7 +5,9 @@ import Games from '../components/Games';
 import { Error } from '../components/Error';
 import { Box } from '@mui/system';
 import RefreshRandomGames from '../components/RefreshRandomGames';
-import Start  from '../components/Start';
+import Start from '../components/Start';
+import TournamentPlayers from '../components/TournamentPlayers';
+import { Grid } from '@mui/material';
 
 function Tournament() {
   const { id } = useParams();
@@ -25,9 +27,15 @@ function Tournament() {
           margin: (theme) => theme.spacing(4),
         }}
       >
-      <Games tournament={id} />
+        <Grid container direction="row">
+          <Grid item>
+            <TournamentPlayers tournament={id} />
+          </Grid>
+          <Grid item>
+            <Games tournament={id} />
+          </Grid>
+        </Grid>
       </Box>
-      
     </>
   );
 }

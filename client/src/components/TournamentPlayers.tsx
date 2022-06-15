@@ -1,11 +1,15 @@
 import * as Api from '../api/Api';
 import {
   Avatar,
+  Card,
+  CardContent,
+  CardHeader,
   Chip,
   CircularProgress,
   Divider,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
 } from '@mui/material';
@@ -16,6 +20,7 @@ import {
 } from '../api/hooks';
 import { Error } from './Error';
 import CheckIcon from '@mui/icons-material/Check';
+import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
 
 type PlayerProps = {
   tournament: string;
@@ -38,13 +43,15 @@ const Player = ({ tournament, player }: PlayerProps) => {
   }
   return (
     <ListItem>
-      {player.active ? (
-        <Avatar onClick={deselect}>
-          <CheckIcon />
-        </Avatar>
-      ) : (
-        <Avatar onClick={select}>{player.nickname.substring(0, 2)}</Avatar>
-      )}
+      <ListItemAvatar>
+        {player.active ? (
+          <Avatar onClick={deselect}>
+            <CheckIcon />
+          </Avatar>
+        ) : (
+          <Avatar onClick={select}>{player.nickname.substring(0, 2)}</Avatar>
+        )}
+      </ListItemAvatar>
       <ListItemText primary={player.nickname} secondary={player.realname} />
       <ListItemSecondaryAction>
         <Chip label={player.ranking} />
@@ -57,7 +64,7 @@ type PlayersProps = {
   tournament: string;
 };
 
-const Players = ({ tournament }: PlayersProps) => {
+const TournamentPlayers = ({ tournament }: PlayersProps) => {
   const { status, error, data } = useTournamentPlayers(tournament);
   if (status === 'loading') {
     return <CircularProgress />;
@@ -66,19 +73,27 @@ const Players = ({ tournament }: PlayersProps) => {
     return <Error msg={error?.message}></Error>;
   }
   return (
-    <List>
-      {data?.map((p, i) => (
-        <div key={p.nickname}>
-          <Player player={p} tournament={tournament} />
-          {i !== data.length - 1 ? (
-            <li>
-              <Divider variant="inset" />
-            </li>
-          ) : null}
-        </div>
-      ))}
-    </List>
+    <Card sx={{ minWidth: '200px' }}>
+      <CardHeader
+        avatar={
+          <Avatar>
+            <EmojiPeopleOutlinedIcon />
+          </Avatar>
+        }
+        title="Players"
+      />
+      <CardContent>
+        <List>
+          {data?.map((p, i) => (
+            <div key={p.nickname}>
+              <Player player={p} tournament={tournament} />
+              {i !== data.length - 1 ? <Divider variant="inset" /> : null}
+            </div>
+          ))}
+        </List>
+      </CardContent>
+    </Card>
   );
 };
 
-export default Players;
+export default TournamentPlayers;

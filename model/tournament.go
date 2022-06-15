@@ -41,8 +41,8 @@ type TournamentRepository interface {
 	AddPlayerWithRanking(id string, p *Player, ranking uint) (*TournamentPlayer, Found)
 	FindAllActivePlayers(tournamentId string) ([]*TournamentPlayer, Found)
 	FindPlayer(tournamentId string, nickname string) (*TournamentPlayer, Found)
-	DeactivatePlayer(tournamentId string, nickname string) Found
-	ActivatePlayer(tournamentId string, nickname string) Found
+	DeactivatePlayer(tournamentId string, nickname string) (*TournamentPlayer, Found)
+	ActivatePlayer(tournamentId string, nickname string) (*TournamentPlayer, Found)
 	RandomGames(id string) ([]*Game, Found)
 }
 
