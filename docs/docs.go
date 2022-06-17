@@ -1209,7 +1209,11 @@ const docTemplate_swagger = `{
                 },
                 "winner": {
                     "type": "string",
-                    "minLength": 2
+                    "enum": [
+                        "rigth",
+                        "left",
+                        "draw"
+                    ]
                 }
             }
         },

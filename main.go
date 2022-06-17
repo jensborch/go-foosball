@@ -9,6 +9,8 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator"
 
 	_ "github.com/jensborch/go-foosball/docs"
 	swaggerfiles "github.com/swaggo/files"
@@ -57,6 +59,10 @@ func corsHandler() gin.HandlerFunc {
 func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	router := gin.Default()
 	router.Use(corsHandler())
+
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("gamewinner", resources.GameWinnerValidator)
+	}
 
 	db, err := gorm.Open(sqlite.Open(dbfile), &gorm.Config{})
 	if err != nil {

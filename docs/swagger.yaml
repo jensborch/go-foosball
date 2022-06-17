@@ -105,7 +105,10 @@ definitions:
           type: string
         type: array
       winner:
-        minLength: 2
+        enum:
+        - rigth
+        - left
+        - draw
         type: string
     required:
     - players

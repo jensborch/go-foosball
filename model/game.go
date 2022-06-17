@@ -60,6 +60,9 @@ const (
 
 	//LEFT is winner
 	LEFT = "left"
+
+	//DRAW no winner
+	DRAW = "draw"
 )
 
 // GetOrCalculateRightScore returns game score for saven games or calcukates new score
@@ -116,6 +119,11 @@ func (g *Game) UpdateScore() error {
 		_, left := g.GameScore()
 		g.RightScore = -int(left)
 		g.LeftScore = int(left)
+		return nil
+	case DRAW:
+		score := g.TournamentTable.Tournament.GameScore / 2
+		g.RightScore = int(score)
+		g.LeftScore = int(score)
 		return nil
 	default:
 		return errors.New("no winner in this game")

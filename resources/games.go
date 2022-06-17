@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/go-playground/validator"
 	"github.com/jensborch/go-foosball/model"
 
 	"github.com/gin-gonic/gin"
@@ -54,8 +55,25 @@ func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 // GameResultRequest represents a played game
 type GameResultRequest struct {
 	Players []string     `json:"players" validate:"required"`
-	Winner  model.Winner `json:"winner,omitempty" validate:"required,gte=2"`
+	Winner  model.Winner `json:"winner,omitempty" enums:"rigth,left,draw" validate:"required,gamewinner"`
 } //@name GameResult
+
+var GameWinnerValidator validator.Func = func(fl validator.FieldLevel) bool {
+	winner, ok := fl.Field().Interface().(model.Winner)
+	if ok {
+		switch winner {
+		case model.RIGHT:
+			return true
+		case model.LEFT:
+			return true
+		case model.DRAW:
+			return true
+		default:
+			return false
+		}
+	}
+	return true
+}
 
 // PostGame saves a played game
 // @Summary      Submit gamne results

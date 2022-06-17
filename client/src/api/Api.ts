@@ -57,7 +57,7 @@ export interface Game {
 
 export interface GameResult {
   players: string[];
-  winner: string;
+  winner: "rigth" | "left" | "draw";
 }
 
 export interface GameStartEvent {

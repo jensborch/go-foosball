@@ -1201,7 +1201,11 @@
                 },
                 "winner": {
                     "type": "string",
-                    "minLength": 2
+                    "enum": [
+                        "rigth",
+                        "left",
+                        "draw"
+                    ]
                 }
             }
         },
