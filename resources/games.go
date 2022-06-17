@@ -62,11 +62,7 @@ var GameWinnerValidator validator.Func = func(fl validator.FieldLevel) bool {
 	winner, ok := fl.Field().Interface().(model.Winner)
 	if ok {
 		switch winner {
-		case model.RIGHT:
-			return true
-		case model.LEFT:
-			return true
-		case model.DRAW:
+		case model.RIGHT, model.LEFT, model.DRAW:
 			return true
 		default:
 			return false
