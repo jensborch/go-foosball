@@ -25,7 +25,7 @@ export const Game = ({
   function rigthWins() {}
   function leftWins() {}
   return (
-    <Card sx={{ minWidth: '300px', margin: (theme) => theme.spacing(4) }}>
+    <Card sx={{ minWidth: '300px', margin: (theme) => theme.spacing(2) }}>
       <StyledCardHeader
         avatar={
           <Avatar>
@@ -37,19 +37,19 @@ export const Game = ({
       />
       <CardContent>
         <Grid container spacing={2} columns={3} direction="column">
-          <Grid item>
-            <LinearProgress
-              color="secondary"
-              variant="determinate"
-              value={(leftScore / (rightScore + leftScore)) * 100}
-            />
-          </Grid>
           <Grid container item columns={2} direction="column">
             {rightPlayers?.map((player) => (
               <Grid item key={player}>
                 <Player nickname={player} />
               </Grid>
             ))}
+          </Grid>
+          <Grid item>
+            <LinearProgress
+              color="secondary"
+              variant="determinate"
+              value={(leftScore / (rightScore + leftScore)) * 100}
+            />
           </Grid>
           <Grid container item columns={1} direction="column">
             <Button
@@ -64,13 +64,13 @@ export const Game = ({
               {table.color.right} wins {rightScore} points
             </Button>
           </Grid>
-          <Grid container item columns={2} direction="column">
-            {leftPlayers?.map((player) => (
-              <Grid item key={player}>
-                <Player nickname={player} />
-              </Grid>
-            ))}
-          </Grid>
+          <Grid container item columns={1} direction="column">
+            <Button
+              variant="outlined"
+            >
+              Draw
+            </Button>
+          </Grid>          
           <Grid container item columns={1} direction="column">
             <Button
               variant="outlined"
@@ -83,6 +83,20 @@ export const Game = ({
             >
               {table.color.left} wins {leftScore} points
             </Button>
+          </Grid>
+          <Grid item>
+            <LinearProgress
+              color="secondary"
+              variant="determinate"
+              value={(rightScore / (leftScore + rightScore)) * 100}
+            />
+          </Grid>          
+          <Grid container item columns={2} direction="column">
+            {leftPlayers?.map((player) => (
+              <Grid item key={player}>
+                <Player nickname={player} />
+              </Grid>
+            ))}
           </Grid>
         </Grid>
       </CardContent>
