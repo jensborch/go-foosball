@@ -3,7 +3,6 @@ import {
   Avatar,
   Card,
   CardContent,
-  CardHeader,
   Chip,
   CircularProgress,
   Divider,
@@ -21,6 +20,7 @@ import {
 import { Error } from './Error';
 import CheckIcon from '@mui/icons-material/Check';
 import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
+import { StyledCardHeader } from './Styled';
 
 type PlayerProps = {
   tournament: string;
@@ -42,7 +42,7 @@ const Player = ({ tournament, player }: PlayerProps) => {
     del();
   }
   return (
-    <ListItem>
+    <ListItem disableGutters>
       <ListItemAvatar>
         {player.active ? (
           <Avatar onClick={deselect}>
@@ -74,7 +74,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
   }
   return (
     <Card sx={{ minWidth: '200px' }}>
-      <CardHeader
+      <StyledCardHeader
         avatar={
           <Avatar>
             <EmojiPeopleOutlinedIcon />
@@ -87,7 +87,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
           {data?.map((p, i) => (
             <div key={p.nickname}>
               <Player player={p} tournament={tournament} />
-              {i !== data.length - 1 ? <Divider variant="inset" /> : null}
+              {i !== data.length - 1 ? <Divider /> : null}
             </div>
           ))}
         </List>

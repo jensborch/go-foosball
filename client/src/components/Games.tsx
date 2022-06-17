@@ -13,6 +13,7 @@ import { useRandomGames } from '../api/hooks';
 import { Error } from './Error';
 import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
+import { StyledCardHeader } from './Styled';
 
 export const Game = ({
   leftPlayers,
@@ -25,7 +26,7 @@ export const Game = ({
   function leftWins() {}
   return (
     <Card sx={{ minWidth: '300px', margin: (theme) => theme.spacing(4) }}>
-      <CardHeader
+      <StyledCardHeader
         avatar={
           <Avatar>
             <TableRestaurantIcon />
