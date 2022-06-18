@@ -100,9 +100,15 @@ definitions:
     type: object
   GameResult:
     properties:
-      players:
+      leftPlayers:
         items:
           type: string
+        minItems: 1
+        type: array
+      rightPlayers:
+        items:
+          type: string
+        minItems: 1
         type: array
       winner:
         enum:
@@ -111,7 +117,8 @@ definitions:
         - draw
         type: string
     required:
-    - players
+    - leftPlayers
+    - rightPlayers
     - winner
     type: object
   GameStartEvent:

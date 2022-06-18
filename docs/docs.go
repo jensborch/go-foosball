@@ -1197,12 +1197,21 @@ const docTemplate_swagger = `{
         "GameResult": {
             "type": "object",
             "required": [
-                "players",
+                "leftPlayers",
+                "rightPlayers",
                 "winner"
             ],
             "properties": {
-                "players": {
+                "leftPlayers": {
                     "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "rightPlayers": {
+                    "type": "array",
+                    "minItems": 1,
                     "items": {
                         "type": "string"
                     }

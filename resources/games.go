@@ -54,8 +54,9 @@ func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 
 // GameResultRequest represents a played game
 type GameResultRequest struct {
-	Players []string     `json:"players" validate:"required"`
-	Winner  model.Winner `json:"winner,omitempty" enums:"rigth,left,draw" validate:"required,gamewinner"`
+	RightPlayers []string     `json:"rightPlayers" validate:"required,gte=1"`
+	LeftPlayers  []string     `json:"leftPlayers" validate:"required,gte=1"`
+	Winner       model.Winner `json:"winner,omitempty" enums:"rigth,left,draw" validate:"required,gamewinner"`
 } //@name GameResult
 
 var GameWinnerValidator validator.Func = func(fl validator.FieldLevel) bool {
@@ -69,6 +70,16 @@ var GameWinnerValidator validator.Func = func(fl validator.FieldLevel) bool {
 		}
 	}
 	return true
+}
+
+type addFunc func(*model.TournamentPlayer) error
+
+func addPlayers(tourId string, players []string, repo model.TournamentRepository, add addFunc) {
+	for _, nickname := range players {
+		if player, found := repo.FindPlayer(tourId, nickname); found {
+			add(player)
+		}
+	}
 }
 
 // PostGame saves a played game
@@ -98,14 +109,8 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 		tourRepo := persistence.NewTournamentRepository(tx)
 		if table, found := tourRepo.FindTable(tourId, tableId); found {
 			game := model.NewGame(table)
-			for _, nickname := range gr.Players {
-				if player, found := tourRepo.FindPlayer(tourId, nickname); found {
-					game.AddTournamentPlayer(player)
-				} else {
-					c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find player %s in tournament %s", nickname, tourId)))
-					return
-				}
-			}
+			addPlayers(tourId, gr.LeftPlayers, tourRepo, game.AddLeftTournamentPlayer)
+			addPlayers(tourId, gr.RightPlayers, tourRepo, game.AddRightTournamentPlayer)
 			game.Winner = gr.Winner
 			game.UpdateScore()
 			persistence.NewGameRepository(tx).Store(game)

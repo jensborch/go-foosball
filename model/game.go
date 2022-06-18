@@ -197,6 +197,32 @@ func (g *Game) AddTournamentPlayer(p *TournamentPlayer) error {
 	return nil
 }
 
+//AddRightTournamentPlayer adds a tournament player to a game
+func (g *Game) AddRightTournamentPlayer(p *TournamentPlayer) error {
+	switch {
+	case isEmptyPlayer(g.RightPlayerOne):
+		g.RightPlayerOne = *p
+	case isEmptyPlayer(g.RightPlayerTwo):
+		g.RightPlayerTwo = *p
+	default:
+		return errors.New("all players have been added")
+	}
+	return nil
+}
+
+//AddLeftTournamentPlayer adds a tournament player to a game
+func (g *Game) AddLeftTournamentPlayer(p *TournamentPlayer) error {
+	switch {
+	case isEmptyPlayer(g.LeftPlayerOne):
+		g.LeftPlayerOne = *p
+	case isEmptyPlayer(g.LeftPlayerTwo):
+		g.LeftPlayerTwo = *p
+	default:
+		return errors.New("all players have been added")
+	}
+	return nil
+}
+
 // GameRepository provides access games etc.
 type GameRepository interface {
 	Store(game *Game)
