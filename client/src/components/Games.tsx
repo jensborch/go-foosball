@@ -9,21 +9,32 @@ import {
   Grid,
   LinearProgress,
 } from '@mui/material';
-import { useRandomGames } from '../api/hooks';
+import { useRandomGames, useGameMutation } from '../api/hooks';
 import { Error } from './Error';
 import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import { StyledCardHeader } from './Styled';
 
-export const Game = ({
-  leftPlayers,
-  rightPlayers,
-  leftScore,
-  rightScore,
-  table,
-}: Api.Game) => {
-  function rigthWins() {}
-  function leftWins() {}
+type GameProps = {
+  tournament: string;
+  game: Api.Game;
+};
+
+type Winer = 'rigth' | 'left' | 'draw';
+
+export const Game = ({ tournament, game }: GameProps) => {
+  const { mutate } = useGameMutation();
+  function wins(winer: Winer) {
+    mutate({
+      tournament: tournament,
+      table: game.table.id.toString(),
+      game: {
+        rightPlayers: game.rightPlayers,
+        leftPlayers: game.leftPlayers,
+        winner: winer,
+      },
+    });
+  }
   return (
     <Card sx={{ minWidth: '300px', margin: (theme) => theme.spacing(2) }}>
       <StyledCardHeader
@@ -33,12 +44,12 @@ export const Game = ({
           </Avatar>
         }
         title="Table"
-        subheader={`${table.name}`}
+        subheader={`${game.table.name}`}
       />
       <CardContent>
         <Grid container spacing={2} columns={3} direction="column">
           <Grid container item columns={2} direction="column">
-            {rightPlayers?.map((player) => (
+            {game.rightPlayers?.map((player) => (
               <Grid item key={player}>
                 <Player nickname={player} />
               </Grid>
@@ -48,51 +59,53 @@ export const Game = ({
             <LinearProgress
               color="secondary"
               variant="determinate"
-              value={(leftScore / (rightScore + leftScore)) * 100}
+              value={
+                (game.leftScore / (game.rightScore + game.leftScore)) * 100
+              }
             />
           </Grid>
           <Grid container item columns={1} direction="column">
             <Button
               variant="outlined"
-              onClick={rigthWins}
+              onClick={() => wins('rigth')}
               startIcon={
                 <EmojiEventsOutlinedIcon
-                  sx={{ color: `${table.color.right}` }}
+                  sx={{ color: `${game.table.color.right}` }}
                 />
               }
             >
-              {table.color.right} wins {rightScore} points
+              {game.table.color.right} wins {game.rightScore} points
+            </Button>
+          </Grid>
+          <Grid container item columns={1} direction="column">
+            <Button variant="outlined" onClick={() => wins('draw')}>
+              Draw
             </Button>
           </Grid>
           <Grid container item columns={1} direction="column">
             <Button
               variant="outlined"
-            >
-              Draw
-            </Button>
-          </Grid>          
-          <Grid container item columns={1} direction="column">
-            <Button
-              variant="outlined"
-              onClick={leftWins}
+              onClick={() => wins('left')}
               startIcon={
                 <EmojiEventsOutlinedIcon
-                  sx={{ color: `${table.color.left}` }}
+                  sx={{ color: `${game.table.color.left}` }}
                 />
               }
             >
-              {table.color.left} wins {leftScore} points
+              {game.table.color.left} wins {game.leftScore} points
             </Button>
           </Grid>
           <Grid item>
             <LinearProgress
               color="secondary"
               variant="determinate"
-              value={(rightScore / (leftScore + rightScore)) * 100}
+              value={
+                (game.rightScore / (game.leftScore + game.rightScore)) * 100
+              }
             />
-          </Grid>          
+          </Grid>
           <Grid container item columns={2} direction="column">
-            {leftPlayers?.map((player) => (
+            {game.leftPlayers?.map((player) => (
               <Grid item key={player}>
                 <Player nickname={player} />
               </Grid>
@@ -144,7 +157,7 @@ const Games = ({ tournament }: GamesProps) => {
     <Grid container spacing={2} direction="row">
       {data?.map((game) => (
         <Grid item key={game.table.id}>
-          <Game {...game} />
+          <Game tournament={tournament} game={game} />
         </Grid>
       ))}
     </Grid>

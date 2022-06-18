@@ -15,12 +15,15 @@ export const usePlayers = () => {
 };
 
 export const useGames = (tournament: string) => {
-  return useQuery<Api.Game[], Error>('games', async (): Promise<Api.Game[]> => {
-    return api.tournaments
-      .gamesDetail(tournament)
-      .then(handleErrors)
-      .then((r) => r.data);
-  });
+  return useQuery<Api.Game[], Error>(
+    ['tournamentsGames', tournament],
+    async (): Promise<Api.Game[]> => {
+      return api.tournaments
+        .gamesDetail(tournament)
+        .then(handleErrors)
+        .then((r) => r.data);
+    }
+  );
 };
 
 export const useRandomGames = (tournament: string) => {
@@ -103,12 +106,15 @@ export const useTournamentPlayerDeleteMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation(() => api.tournaments.playersDelete(tournament, nickname), {
-    onSuccess: () => queryClient.invalidateQueries('tournamentPlayers'),
-    onError: (error) => {
-      handleErrors(error as Response);
-    },
-  });
+  return useMutation(
+    () => api.tournaments.playersDelete(tournament, nickname),
+    {
+      onSuccess: () => queryClient.invalidateQueries('tournamentPlayers'),
+      onError: (error) => {
+        handleErrors(error as Response);
+      },
+    }
+  );
 };
 
 export const usePlayerMutation = () => {
@@ -116,6 +122,31 @@ export const usePlayerMutation = () => {
 
   return useMutation(
     (player: Api.CreatePlayer) => api.players.playersCreate(player),
+    {
+      onSuccess: () => queryClient.invalidateQueries('players'),
+      onError: (error) => {
+        handleErrors(error as Response);
+      },
+    }
+  );
+};
+
+type GameMutationParams = {
+  tournament: string;
+  table: string;
+  game: Api.GameResult;
+};
+
+export const useGameMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (result: GameMutationParams) =>
+      api.tournaments.tablesGamesCreate(
+        result.tournament,
+        result.table,
+        result.game
+      ),
     {
       onSuccess: () => queryClient.invalidateQueries('players'),
       onError: (error) => {
