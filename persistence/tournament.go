@@ -153,6 +153,22 @@ func (r *tournamentRepository) ActivatePlayer(tournamentId string, nickname stri
 	return nil, false
 }
 
+func (r *tournamentRepository) UpdatePlayerRanking(tournamentId string, nickname string, gameScore int) (*model.TournamentPlayer, model.Found) {
+	if player, found := r.FindPlayer(tournamentId, nickname); found {
+		tmp := int(player.Ranking) + gameScore
+		if tmp >= 0 {
+			player.Ranking = uint(tmp)
+		} else {
+			player.Ranking = 0
+		}
+		if err := r.db.Save(player).Error; err != nil {
+			panic(err)
+		}
+		return player, true
+	}
+	return nil, false
+}
+
 func (r *tournamentRepository) ShuffleActivePlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {
 	if players, found := r.ActivePlayers(tournamentId); found {
 		rand.Shuffle(len(players), func(i, j int) {

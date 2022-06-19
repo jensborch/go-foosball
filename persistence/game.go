@@ -14,6 +14,13 @@ func (r *gameRepository) Store(g *model.Game) {
 	if err := r.db.Create(g).Error; err != nil {
 		panic(err)
 	}
+	tourRepo := NewTournamentRepository(r.db)
+	for _, name := range g.LeftPlayerNames() {
+		tourRepo.UpdatePlayerRanking(g.TournamentTable.Tournament.IdAsString(), name, g.LeftScore)
+	}
+	for _, name := range g.RightPlayerNames() {
+		tourRepo.UpdatePlayerRanking(g.TournamentTable.Tournament.IdAsString(), name, g.RightScore)
+	}
 }
 
 func (r *gameRepository) Remove(id string) model.Found {
