@@ -103,16 +103,18 @@ definitions:
       leftPlayers:
         items:
           type: string
+        maxItems: 2
         minItems: 1
         type: array
       rightPlayers:
         items:
           type: string
+        maxItems: 2
         minItems: 1
         type: array
       winner:
         enum:
-        - rigth
+        - right
         - left
         - draw
         type: string

@@ -1196,6 +1196,7 @@
             "properties": {
                 "leftPlayers": {
                     "type": "array",
+                    "maxItems": 2,
                     "minItems": 1,
                     "items": {
                         "type": "string"
@@ -1203,6 +1204,7 @@
                 },
                 "rightPlayers": {
                     "type": "array",
+                    "maxItems": 2,
                     "minItems": 1,
                     "items": {
                         "type": "string"
@@ -1211,7 +1213,7 @@
                 "winner": {
                     "type": "string",
                     "enum": [
-                        "rigth",
+                        "right",
                         "left",
                         "draw"
                     ]

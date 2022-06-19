@@ -20,7 +20,7 @@ type GameProps = {
   game: Api.Game;
 };
 
-type Winer = 'rigth' | 'left' | 'draw';
+type Winer = 'right' | 'left' | 'draw';
 
 export const Game = ({ tournament, game }: GameProps) => {
   const { mutate } = useGameMutation();
@@ -67,7 +67,7 @@ export const Game = ({ tournament, game }: GameProps) => {
           <Grid container item columns={1} direction="column">
             <Button
               variant="outlined"
-              onClick={() => wins('rigth')}
+              onClick={() => wins('right')}
               startIcon={
                 <EmojiEventsOutlinedIcon
                   sx={{ color: `${game.table.color.right}` }}

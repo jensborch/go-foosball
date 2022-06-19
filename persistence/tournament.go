@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"fmt"
 	"math/rand"
 
 	"github.com/jensborch/go-foosball/model"
@@ -109,9 +110,11 @@ func (r *tournamentRepository) FindPlayer(tournamentId string, nickname string) 
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Joins("inner join players on tournament_players.player_id = players.id").
 		Where("players.nickname = ?", nickname).
-		Where("tournaments.ID = ?", tournamentId).Scan(&player)
-	if results.RowsAffected > 0 {
+		Where("tournaments.ID = ?", tournamentId).Find(&player)
+	if results.RowsAffected == 1 {
 		return &player, true
+	} else if results.RowsAffected > 1 {
+		panic(fmt.Errorf("found %d players with nickname %s in tournament %s", results.RowsAffected, nickname, tournamentId))
 	} else {
 		return nil, false
 	}

@@ -1,6 +1,8 @@
 package persistence
 
 import (
+	"fmt"
+
 	"github.com/jensborch/go-foosball/model"
 	"gorm.io/gorm"
 )
@@ -17,17 +19,13 @@ func (r *playerRepository) Store(player *model.Player) {
 }
 
 func (r *playerRepository) Remove(nickname string) model.Found {
-	if len(nickname) > 0 {
-		//TODO add check for tournament
-		if _, found := r.Find(nickname); found {
-			if err := r.db.Where("nickname = ?", nickname).Delete(&model.Player{}).Error; err != nil {
-				panic(err)
-			} else {
-				return true
-			}
+	found := false
+	if _, found = r.Find(nickname); found {
+		if err := r.db.Where("nickname = ?", nickname).Delete(&model.Player{}).Error; err != nil {
+			panic(err)
 		}
 	}
-	return false
+	return found
 }
 
 func (r *playerRepository) Update(player *model.Player) {
@@ -37,9 +35,15 @@ func (r *playerRepository) Update(player *model.Player) {
 }
 
 func (r *playerRepository) Find(nickname string) (*model.Player, model.Found) {
-	var player model.Player
-	result := r.db.Where("nickname = ?", nickname).First(&player)
-	return &player, HasBeenFound(result.Error)
+	var player *model.Player
+	result := r.db.Where("nickname = ?", nickname).Find(&player)
+	if result.RowsAffected == 1 {
+		return player, true
+	} else if result.RowsAffected > 1 {
+		panic(fmt.Errorf("found %d players with nickname %s", result.RowsAffected, nickname))
+	} else {
+		return nil, false
+	}
 }
 
 func (r *playerRepository) FindByTournament(id string) []*model.Player {

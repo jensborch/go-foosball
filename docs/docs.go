@@ -1204,6 +1204,7 @@ const docTemplate_swagger = `{
             "properties": {
                 "leftPlayers": {
                     "type": "array",
+                    "maxItems": 2,
                     "minItems": 1,
                     "items": {
                         "type": "string"
@@ -1211,6 +1212,7 @@ const docTemplate_swagger = `{
                 },
                 "rightPlayers": {
                     "type": "array",
+                    "maxItems": 2,
                     "minItems": 1,
                     "items": {
                         "type": "string"
@@ -1219,7 +1221,7 @@ const docTemplate_swagger = `{
                 "winner": {
                     "type": "string",
                     "enum": [
-                        "rigth",
+                        "right",
                         "left",
                         "draw"
                     ]

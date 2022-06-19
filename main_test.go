@@ -301,12 +301,13 @@ func randomGame(ts *httptest.Server, id uint) func(t *testing.T) []model.GameJso
 	}
 }
 
-func postGame(ts *httptest.Server, tournamentId uint, tableId uint, players []string, winner string) func(t *testing.T) model.GameJson {
+func postGame(ts *httptest.Server, tournamentId uint, tableId uint, right []string, left []string, winner string) func(t *testing.T) model.GameJson {
 	return func(t *testing.T) model.GameJson {
 
 		game, err := json.Marshal(map[string]interface{}{
-			"players": players,
-			"winner":  winner,
+			"leftPlayers":  left,
+			"rightPlayers": right,
+			"winner":       winner,
 		})
 
 		if err != nil {
@@ -365,9 +366,9 @@ func Test(t *testing.T) {
 
 	random := randomGame(ts, tournament.ID)(t)
 
-	gamePlayers := append(random[0].LeftPlayers, random[0].RightPlayers...)
+	//gamePlayers := append(random[0].LeftPlayers, random[0].RightPlayers...)
 
-	postGame(ts, tournament.ID, random[0].Table.ID, gamePlayers, string(model.RIGHT))(t)
+	postGame(ts, tournament.ID, random[0].Table.ID, random[0].RightPlayers, random[0].LeftPlayers, string(model.RIGHT))(t)
 
 	games := getGame(ts, tournament.ID)(t)
 
@@ -376,10 +377,10 @@ func Test(t *testing.T) {
 	}
 
 	if games[0].LeftScore == 0 || games[0].RightScore == 0 {
-		t.Fatalf("Expected a score, got left score %v and rigth score %d", games[0].LeftScore, games[0].RightScore)
+		t.Fatalf("Expected a score, got left score %v and right score %d", games[0].LeftScore, games[0].RightScore)
 	}
 
-	postGame(ts, tournament.ID, random[0].Table.ID, gamePlayers, string(model.RIGHT))(t)
+	postGame(ts, tournament.ID, random[0].Table.ID, random[0].RightPlayers, random[0].LeftPlayers, string(model.RIGHT))(t)
 
 	games = getGame(ts, tournament.ID)(t)
 
