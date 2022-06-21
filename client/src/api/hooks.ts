@@ -2,9 +2,19 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import * as Api from '../api/Api';
 import { api, handleErrors } from './util';
 
+enum CacheKeys {
+  Players = 'players',
+  TournamentsGames = 'tournamentsGames',
+  RandomGames = 'randomGames',
+  TournamentPlayers = 'tournamentPlayers',
+  Tables = 'Tables',
+  TournamentTables = 'TournamentTables',
+  Tournaments = 'Tournaments',
+}
+
 export const usePlayers = () => {
   return useQuery<Api.Player[], Error>(
-    'players',
+    CacheKeys.Players,
     async (): Promise<Api.Player[]> => {
       return api.players
         .playersList()
@@ -16,7 +26,7 @@ export const usePlayers = () => {
 
 export const useGames = (tournament: string) => {
   return useQuery<Api.Game[], Error>(
-    ['tournamentsGames', tournament],
+    [CacheKeys.TournamentsGames, tournament],
     async (): Promise<Api.Game[]> => {
       return api.tournaments
         .gamesDetail(tournament)
@@ -28,7 +38,7 @@ export const useGames = (tournament: string) => {
 
 export const useRandomGames = (tournament: string) => {
   return useQuery<Api.Game[], Error>(
-    'randomGames',
+    CacheKeys.RandomGames,
     async (): Promise<Api.Game[]> => {
       return api.tournaments
         .gamesRandomDetail(tournament)
@@ -40,7 +50,7 @@ export const useRandomGames = (tournament: string) => {
 
 export const useTournamentPlayers = (tournament: string) => {
   return useQuery<Api.TournamentPlayer[], Error>(
-    ['tournamentPlayers', tournament],
+    [CacheKeys.TournamentPlayers, tournament],
     async (): Promise<Api.TournamentPlayer[]> => {
       return api.tournaments
         .playersDetail(tournament)
@@ -52,7 +62,7 @@ export const useTournamentPlayers = (tournament: string) => {
 
 export const useTables = () => {
   return useQuery<Api.Table[], Error>(
-    'tables',
+    CacheKeys.Tables,
     async (): Promise<Api.Table[]> => {
       return api.tables
         .tablesList()
@@ -64,7 +74,7 @@ export const useTables = () => {
 
 export const useTournamentTables = (tournament: string) => {
   return useQuery<Api.TournamentTable[], Error>(
-    'tournamentTables',
+    CacheKeys.TournamentTables,
     async (): Promise<Api.TournamentTable[]> => {
       return api.tournaments
         .tablesDetail(tournament)
@@ -76,7 +86,7 @@ export const useTournamentTables = (tournament: string) => {
 
 export const useTournaments = () => {
   return useQuery<Api.Tournament[], Error>(
-    'tournaments',
+    CacheKeys.Tournaments,
     async (): Promise<Api.Tournament[]> => {
       return api.tournaments
         .tournamentsList()
@@ -92,7 +102,8 @@ export const useTournamentPlayerMutation = (id: string) => {
   return useMutation(
     (player: Api.AddPlayer) => api.tournaments.playersCreate(id, player),
     {
-      onSuccess: () => queryClient.invalidateQueries('tournamentPlayers'),
+      onSuccess: () =>
+        queryClient.invalidateQueries(CacheKeys.TournamentPlayers),
       onError: (error) => {
         handleErrors(error as Response);
       },
@@ -109,7 +120,8 @@ export const useTournamentPlayerDeleteMutation = (
   return useMutation(
     () => api.tournaments.playersDelete(tournament, nickname),
     {
-      onSuccess: () => queryClient.invalidateQueries('tournamentPlayers'),
+      onSuccess: () =>
+        queryClient.invalidateQueries(CacheKeys.TournamentPlayers),
       onError: (error) => {
         handleErrors(error as Response);
       },
@@ -123,7 +135,7 @@ export const usePlayerMutation = () => {
   return useMutation(
     (player: Api.CreatePlayer) => api.players.playersCreate(player),
     {
-      onSuccess: () => queryClient.invalidateQueries('players'),
+      onSuccess: () => queryClient.invalidateQueries(CacheKeys.Players),
       onError: (error) => {
         handleErrors(error as Response);
       },
@@ -148,7 +160,8 @@ export const useGameMutation = () => {
         result.game
       ),
     {
-      onSuccess: () => queryClient.invalidateQueries('players'),
+      onSuccess: () =>
+        queryClient.invalidateQueries(CacheKeys.TournamentPlayers),
       onError: (error) => {
         handleErrors(error as Response);
       },
