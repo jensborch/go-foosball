@@ -14,6 +14,7 @@ import { Error } from './Error';
 import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import { StyledCardHeader } from './Styled';
+import { useEffect, useState } from 'react';
 
 type GameProps = {
   tournament: string;
@@ -23,6 +24,10 @@ type GameProps = {
 type Winer = 'right' | 'left' | 'draw';
 
 export const Game = ({ tournament, game }: GameProps) => {
+  const [disabled, setDisabled] = useState(false);
+  useEffect(() => {
+    setDisabled(false);
+  }, [tournament, game])
   const { mutate } = useGameMutation();
   function wins(winer: Winer) {
     mutate({
@@ -34,6 +39,7 @@ export const Game = ({ tournament, game }: GameProps) => {
         winner: winer,
       },
     });
+    setDisabled(true);
   }
   return (
     <Card sx={{ minWidth: '300px', margin: (theme) => theme.spacing(2) }}>
@@ -67,6 +73,7 @@ export const Game = ({ tournament, game }: GameProps) => {
           <Grid container item columns={1} direction="column">
             <Button
               variant="outlined"
+              disabled={disabled}
               onClick={() => wins('right')}
               startIcon={
                 <EmojiEventsOutlinedIcon
@@ -78,13 +85,18 @@ export const Game = ({ tournament, game }: GameProps) => {
             </Button>
           </Grid>
           <Grid container item columns={1} direction="column">
-            <Button variant="outlined" onClick={() => wins('draw')}>
+            <Button
+              variant="outlined"
+              disabled={disabled}
+              onClick={() => wins('draw')}
+            >
               Draw
             </Button>
           </Grid>
           <Grid container item columns={1} direction="column">
             <Button
               variant="outlined"
+              disabled={disabled}
               onClick={() => wins('left')}
               startIcon={
                 <EmojiEventsOutlinedIcon

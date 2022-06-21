@@ -102,8 +102,10 @@ export const useTournamentPlayerMutation = (id: string) => {
   return useMutation(
     (player: Api.AddPlayer) => api.tournaments.playersCreate(id, player),
     {
-      onSuccess: () =>
-        queryClient.invalidateQueries(CacheKeys.TournamentPlayers),
+      onSuccess: () => {
+        queryClient.invalidateQueries(CacheKeys.TournamentPlayers);
+        queryClient.invalidateQueries(CacheKeys.RandomGames);
+      },
       onError: (error) => {
         handleErrors(error as Response);
       },
@@ -120,8 +122,10 @@ export const useTournamentPlayerDeleteMutation = (
   return useMutation(
     () => api.tournaments.playersDelete(tournament, nickname),
     {
-      onSuccess: () =>
-        queryClient.invalidateQueries(CacheKeys.TournamentPlayers),
+      onSuccess: () => {
+        queryClient.invalidateQueries(CacheKeys.TournamentPlayers);
+        queryClient.invalidateQueries(CacheKeys.RandomGames);
+      },
       onError: (error) => {
         handleErrors(error as Response);
       },
