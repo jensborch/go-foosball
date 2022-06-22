@@ -16,6 +16,18 @@ import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import { StyledCardHeader } from './Styled';
 import { useEffect, useState } from 'react';
 
+const Players = ({players}: {players : string[]}) => {
+  return (
+    <Grid container item columns={2} spacing={2} direction="row">
+    {players?.map((player) => (
+      <Grid item key={player}>
+        <Player nickname={player} />
+      </Grid>
+    ))}
+  </Grid>
+  )
+}
+
 type GameProps = {
   tournament: string;
   game: Api.Game;
@@ -54,13 +66,7 @@ export const Game = ({ tournament, game }: GameProps) => {
       />
       <CardContent>
         <Grid container spacing={2} columns={3} direction="column">
-          <Grid container item columns={2} direction="column">
-            {game.rightPlayers?.map((player) => (
-              <Grid item key={player}>
-                <Player nickname={player} />
-              </Grid>
-            ))}
-          </Grid>
+          <Players players={game.rightPlayers}/>
           <Grid item>
             <LinearProgress
               color="secondary"
@@ -116,13 +122,7 @@ export const Game = ({ tournament, game }: GameProps) => {
               }
             />
           </Grid>
-          <Grid container item columns={2} direction="column">
-            {game.leftPlayers?.map((player) => (
-              <Grid item key={player}>
-                <Player nickname={player} />
-              </Grid>
-            ))}
-          </Grid>
+          <Players players={game.leftPlayers}/>
         </Grid>
       </CardContent>
     </Card>
