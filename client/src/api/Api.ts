@@ -366,10 +366,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary List players
      * @request GET:/players
      */
-    playersList: (params: RequestParams = {}) =>
+    playersList: (query?: { exclude?: number }, params: RequestParams = {}) =>
       this.request<Player[], any>({
         path: `/players`,
         method: "GET",
+        query: query,
         type: ContentType.Json,
         format: "json",
         ...params,

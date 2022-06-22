@@ -12,12 +12,13 @@ enum CacheKeys {
   Tournaments = 'Tournaments',
 }
 
-export const usePlayers = () => {
+export const usePlayers = (tournament?: number) => {
   return useQuery<Api.Player[], Error>(
-    CacheKeys.Players,
+    [CacheKeys.Players, tournament],
     async (): Promise<Api.Player[]> => {
       return api.players
-        .playersList()
+        .playersList({ exclude: tournament})
+        
         .then(handleErrors)
         .then((r) => r.data);
     }

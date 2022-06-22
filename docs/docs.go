@@ -96,6 +96,14 @@ const docTemplate_swagger = `{
                     "player"
                 ],
                 "summary": "List players",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "exlude tournament from list",
+                        "name": "exclude",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

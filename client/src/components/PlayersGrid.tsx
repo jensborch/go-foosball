@@ -104,7 +104,7 @@ type PlayersGridProps = {
 };
 
 const PlayersGrid = ({ tournament }: PlayersGridProps) => {
-  const { status, error, data } = usePlayers();
+  const { status, error, data } = usePlayers(Number.parseInt(tournament));
   if (status === 'loading') {
     return <CircularProgress />;
   }

@@ -40,14 +40,20 @@ func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 // @Tags         player
 // @Accept       json
 // @Produce      json
+// @Param        exclude  query     int  false  "exlude tournament from list"
 // @Success      200      {array}   model.Player
 // @Router       /players [get]
 func GetPlayers(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
 		r := persistence.NewPlayerRepository(db)
-		players := r.FindAll()
-		c.JSON(http.StatusOK, players)
+		if exclude, found := c.GetQuery("exclude"); found {
+			players := r.FindAllNotInTournament(exclude)
+			c.JSON(http.StatusOK, players)
+		} else {
+			players := r.FindAll()
+			c.JSON(http.StatusOK, players)
+		}
 	}
 }
 

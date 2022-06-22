@@ -24,6 +24,7 @@ type PlayerRepository interface {
 	Update(player *Player)
 	Find(nickname string) (*Player, Found)
 	FindAll() []*Player
+	FindAllNotInTournament(id string) []*Player
 	FindByTournament(id string) []*Player
 }
 

@@ -1,9 +1,9 @@
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import { useState } from 'react';
 import PersonIcon from '@mui/icons-material/Person';
-import AddIcon from '@mui/icons-material/Add';
 import AddPlayers from './AddPlayers';
 import AddTableDialog from './AddTableDialog';
+import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
 
 type AddSpeedDialProps = {
   tournament: string;
@@ -33,7 +33,7 @@ const AddSpeedDial = ({ tournament }: AddSpeedDialProps) => {
         />
         <SpeedDialAction
           tooltipTitle="Add table"
-          icon={<AddIcon />}
+          icon={<TableRestaurantIcon />}
           onClick={() => {
             setOpen(false);
             setTablesOpen(true);

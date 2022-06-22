@@ -62,6 +62,13 @@ func (r *playerRepository) FindAll() []*model.Player {
 	return players
 }
 
+func (r *playerRepository) FindAllNotInTournament(id string) []*model.Player {
+	var players []*model.Player
+	sub := r.db.Select("player_id").Where("tournament_id = ?", id).Table("tournament_players")
+	r.db.Model(&model.Player{}).Where("players.id NOT IN (?)", sub).Group("players.nickname").Find(&players)
+	return players
+}
+
 // NewPlayerRepository creats new repository
 func NewPlayerRepository(db *gorm.DB) model.PlayerRepository {
 	return &playerRepository{
