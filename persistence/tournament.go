@@ -174,6 +174,10 @@ func (r *tournamentRepository) ShuffleActivePlayers(tournamentId string) ([]*mod
 		rand.Shuffle(len(players), func(i, j int) {
 			players[i], players[j] = players[j], players[i]
 		})
+		length := len(players)
+		if length%2 != 0 {
+			players = players[:length-1]
+		}
 		return players, found
 	} else {
 		return []*model.TournamentPlayer{}, found

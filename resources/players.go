@@ -56,7 +56,7 @@ func GetPlayers(db *gorm.DB) func(*gin.Context) {
 }
 
 type CreatePlayerRequest struct {
-	Nickname string `json:"nickname" binding:"required" validate:"gte=2"`
+	Nickname string `json:"nickname" validate:"gte=2,required"`
 	RealName string `json:"realname" validate:"gte=2"`
 	RFID     string `json:"rfid"`
 } //@name CreatePlayer
