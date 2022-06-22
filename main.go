@@ -21,6 +21,7 @@ import (
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 // @title           Go-foosball API
@@ -64,7 +65,9 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 		v.RegisterValidation("gamewinner", resources.GameWinnerValidator)
 	}
 
-	db, err := gorm.Open(sqlite.Open(dbfile), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(dbfile), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		panic("failed to connect database")
 	}

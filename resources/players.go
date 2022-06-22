@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/gin-gonic/gin/binding"
-
 	"github.com/gin-gonic/gin"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
@@ -78,8 +76,7 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
 		var player CreatePlayerRequest
-		if err := c.ShouldBindWith(&player, binding.JSON); err != nil {
-			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+		if ok := ShouldBindAndValidate(&player, c); !ok {
 			return
 		}
 		tx := db.Begin()

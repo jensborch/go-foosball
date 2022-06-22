@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
 	"gorm.io/gorm"
@@ -67,8 +66,7 @@ type CreateTableRequest struct {
 func PostTable(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var table CreateTableRequest
-		if err := c.ShouldBindWith(&table, binding.JSON); err != nil {
-			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+		if ok := ShouldBindAndValidate(&table, c); !ok {
 			return
 		}
 		tx := db.Begin()
@@ -122,8 +120,7 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
 		var representation AddTableRequest
-		if err := c.ShouldBindWith(&representation, binding.JSON); err != nil {
-			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+		if ok := ShouldBindAndValidate(&representation, c); !ok {
 			return
 		}
 		tx := db.Begin()

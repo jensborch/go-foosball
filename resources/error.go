@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator"
 	"gorm.io/gorm"
 )
 
@@ -44,4 +46,20 @@ func HandlePanic(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, NewErrorResponse("Unknown error"))
 		}
 	}
+}
+
+//ShouldBindAndValidate checks if interface is valid and then returns true
+func ShouldBindAndValidate(i interface{}, c *gin.Context) bool {
+	ok := true
+	if err := c.ShouldBindWith(&i, binding.JSON); err == nil {
+		validate := validator.New()
+		if err := validate.Struct(&i); err != nil {
+			ok = false
+			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+		}
+	} else {
+		ok = false
+		c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+	}
+	return ok
 }

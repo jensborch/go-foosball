@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
 	"gorm.io/gorm"
@@ -113,8 +112,7 @@ type CreateTournamentRequest struct {
 func PostTournament(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var tournament CreateTournamentRequest
-		if err := c.ShouldBindWith(&tournament, binding.JSON); err != nil {
-			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+		if ok := ShouldBindAndValidate(&tournament, c); !ok {
 			return
 		}
 		tx := db.Begin()
@@ -149,8 +147,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
 		var pr AddPlayerRequest
-		if err := c.ShouldBindWith(&pr, binding.JSON); err != nil {
-			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+		if ok := ShouldBindAndValidate(&pr, c); !ok {
 			return
 		}
 		tx := db.Begin()

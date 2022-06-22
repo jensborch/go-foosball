@@ -8,7 +8,6 @@ import (
 	"github.com/jensborch/go-foosball/model"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 	"github.com/jensborch/go-foosball/persistence"
 	"gorm.io/gorm"
 )
@@ -104,8 +103,7 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 		tourId := c.Param(tournamentParam)
 		tableId := c.Param(tableParam)
 		var gr GameResultRequest
-		if err := c.ShouldBindWith(&gr, binding.JSON); err != nil {
-			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+		if ok := ShouldBindAndValidate(&gr, c); !ok {
 			return
 		}
 		tx := db.Begin()
