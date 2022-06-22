@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/go-playground/validator"
+	"github.com/go-playground/validator/v10"
 	"github.com/jensborch/go-foosball/model"
 
 	"github.com/gin-gonic/gin"
@@ -55,7 +55,7 @@ func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 type GameResultRequest struct {
 	RightPlayers []string     `json:"rightPlayers" validate:"required,gte=1,lte=2"`
 	LeftPlayers  []string     `json:"leftPlayers" validate:"required,gte=1,lte=2"`
-	Winner       model.Winner `json:"winner,omitempty" enums:"right,left,draw" validate:"required,gamewinner"`
+	Winner       model.Winner `json:"winner,omitempty" enums:"right,left,draw" validate:"required"`
 } //@name GameResult
 
 var GameWinnerValidator validator.Func = func(fl validator.FieldLevel) bool {

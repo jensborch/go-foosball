@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 )
 
@@ -49,12 +50,12 @@ func HandlePanic(c *gin.Context) {
 //ShouldBindAndValidate checks if interface is valid and then returns true
 func ShouldBindAndValidate(i interface{}, c *gin.Context) bool {
 	ok := true
-	if err := c.ShouldBindJSON(&i); err == nil {
-		/*validate := validator.New()
-		if err := validate.Struct(&i); err != nil {
+	if err := c.ShouldBindJSON(i); err == nil {
+		validate := validator.New()
+		if err := validate.Struct(i); err != nil {
 			ok = false
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
-		}*/
+		}
 	} else {
 		ok = false
 		c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
