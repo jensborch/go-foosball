@@ -53,9 +53,9 @@ func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 
 // GameResultRequest represents a played game
 type GameResultRequest struct {
-	RightPlayers []string     `json:"rightPlayers" validate:"required,gte=1,lte=2"`
-	LeftPlayers  []string     `json:"leftPlayers" validate:"required,gte=1,lte=2"`
-	Winner       model.Winner `json:"winner,omitempty" enums:"right,left,draw" validate:"required"`
+	RightPlayers []string     `json:"rightPlayers" binding:"required,gte=1,lte=2"`
+	LeftPlayers  []string     `json:"leftPlayers" binding:"required,gte=1,lte=2"`
+	Winner       model.Winner `json:"winner,omitempty" enums:"right,left,draw" binding:"gamewinner" binding:"required"`
 } //@name GameResult
 
 var GameWinnerValidator validator.Func = func(fl validator.FieldLevel) bool {
@@ -103,7 +103,8 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 		tourId := c.Param(tournamentParam)
 		tableId := c.Param(tableParam)
 		var gr GameResultRequest
-		if ok := ShouldBindAndValidate(&gr, c); !ok {
+		if err := c.ShouldBindJSON(&gr); err != nil {
+			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
 		}
 		tx := db.Begin()
@@ -165,7 +166,7 @@ func GetGames(db *gorm.DB) func(*gin.Context) {
 var gameEventPublisher = NewEventPublisher()
 
 type GameStartEventRepresentation struct {
-	Id string `json:"id" validate:"required"`
+	Id string `json:"id" binding:"required"`
 } //@name GameStartEvent
 
 // GetGameStart publishes a game start event using web socket

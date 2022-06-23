@@ -27,13 +27,13 @@ type Game struct {
 }
 
 type GameJson struct {
-	CreatedAt    time.Time `json:"created" validate:"required"`
-	UpdatedAt    time.Time `json:"updated" validate:"required"`
-	Table        Table     `json:"table" validate:"required"`
-	RightPlayers []string  `json:"rightPlayers" validate:"required"`
-	LeftPlayers  []string  `json:"leftPlayers" validate:"required"`
-	RightScore   int       `json:"rightScore" validate:"required"`
-	LeftScore    int       `json:"leftScore" validate:"required"`
+	CreatedAt    time.Time `json:"created" binding:"required"`
+	UpdatedAt    time.Time `json:"updated" binding:"required"`
+	Table        Table     `json:"table" binding:"required"`
+	RightPlayers []string  `json:"rightPlayers" binding:"required"`
+	LeftPlayers  []string  `json:"leftPlayers" binding:"required"`
+	RightScore   int       `json:"rightScore" binding:"required"`
+	LeftScore    int       `json:"leftScore" binding:"required"`
 	Winner       Winner    `json:"winner,omitempty"`
 } //@name Game
 

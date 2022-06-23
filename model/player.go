@@ -8,11 +8,11 @@ import (
 
 // Player playing foosball games
 type Player struct {
-	ID        uint           `json:"-" validate:"required" gorm:"primary_key"`
-	CreatedAt time.Time      `json:"created" validate:"required" gorm:"not null"`
-	UpdatedAt time.Time      `json:"updated" validate:"required" gorm:"not null"`
+	ID        uint           `json:"-" binding:"required" gorm:"primary_key"`
+	CreatedAt time.Time      `json:"created" binding:"required" gorm:"not null"`
+	UpdatedAt time.Time      `json:"updated" binding:"required" gorm:"not null"`
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
-	Nickname  string         `json:"nickname" validate:"required" gorm:"size:50;unique_index,not null"`
+	Nickname  string         `json:"nickname" binding:"required" gorm:"size:50;unique_index,not null"`
 	RealName  string         `json:"realname" gorm:"type:varchar(100)"`
 	RFID      string         `json:"rfid,omitempty" gorm:"type:varchar(36)"`
 } //@name Player

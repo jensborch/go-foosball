@@ -12,9 +12,9 @@ type Found = bool
 
 // Base is a gorm model replacment with json tags
 type Base struct {
-	ID        uint           `json:"id" validate:"required" gorm:"primary_key"`
-	CreatedAt time.Time      `json:"created" validate:"required" gorm:"not null"`
-	UpdatedAt time.Time      `json:"updated" validate:"required" gorm:"not null"`
+	ID        uint           `json:"id" binding:"required" gorm:"primary_key"`
+	CreatedAt time.Time      `json:"created" binding:"required" gorm:"not null"`
+	UpdatedAt time.Time      `json:"updated" binding:"required" gorm:"not null"`
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 }
 

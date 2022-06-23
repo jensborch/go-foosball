@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/jensborch/go-foosball/model"
@@ -101,6 +102,19 @@ func newPlayer(nickname string, realname string) func(t *testing.T) []byte {
 			t.Fatalf("Expected no error, got %v", err)
 		}
 		return player
+	}
+}
+
+func TestPostPlayerNotValid(t *testing.T) {
+	ts, _ := startServer()
+	defer ts.Close()
+
+	player := newPlayer("p", "n")(t)
+
+	resp, _ := http.Post(fmt.Sprintf("%s/players", ts.URL), "application/json", bytes.NewBuffer(player))
+
+	if resp.StatusCode != 400 {
+		t.Fatalf("Expected status code 400, got %v", resp.StatusCode)
 	}
 }
 
@@ -329,6 +343,37 @@ func postGame(ts *httptest.Server, tournamentId uint, tableId uint, right []stri
 	}
 }
 
+func postGameNotValid(ts *httptest.Server, tournamentId uint, tableId uint) func(t *testing.T) {
+	return func(t *testing.T) {
+
+		game, err := json.Marshal(map[string]interface{}{
+			"leftPlayers":  []string{},
+			"rightPlayers": []string{},
+			"winner":       "right",
+		})
+
+		if err != nil {
+			t.Fatalf("Expected no error, got %v", err)
+		}
+
+		resp, _ := http.Post(fmt.Sprintf("%s/tournaments/%d/tables/%d/games", ts.URL, tournamentId, tableId), "application/json", bytes.NewBuffer(game))
+
+		if resp.StatusCode != 400 {
+			t.Fatalf("Expected status code 400, got %v", resp.StatusCode)
+		}
+
+		result := resources.ErrorResponse{}
+		if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+			t.Fatalf("Expected a error, got %v", err)
+		}
+
+		if !strings.Contains(result.Error, "RightPlayers") {
+			t.Fatalf("Expected a error msg, got %s", result.Error)
+		}
+
+	}
+}
+
 func getGame(ts *httptest.Server, tournamentId uint) func(t *testing.T) []model.GameJson {
 	return func(t *testing.T) []model.GameJson {
 
@@ -366,8 +411,6 @@ func Test(t *testing.T) {
 
 	random := randomGame(ts, tournament.ID)(t)
 
-	//gamePlayers := append(random[0].LeftPlayers, random[0].RightPlayers...)
-
 	postGame(ts, tournament.ID, random[0].Table.ID, random[0].RightPlayers, random[0].LeftPlayers, string(model.RIGHT))(t)
 
 	games := getGame(ts, tournament.ID)(t)
@@ -380,12 +423,5 @@ func Test(t *testing.T) {
 		t.Fatalf("Expected a score, got left score %v and right score %d", games[0].LeftScore, games[0].RightScore)
 	}
 
-	postGame(ts, tournament.ID, random[0].Table.ID, random[0].RightPlayers, random[0].LeftPlayers, string(model.RIGHT))(t)
-
-	games = getGame(ts, tournament.ID)(t)
-
-	if len(games) != 2 {
-		t.Fatalf("Expected two game to be played, got %v", len(games))
-	}
-
+	postGameNotValid(ts, tournament.ID, random[0].Table.ID)(t)
 }

@@ -17,7 +17,7 @@ func NewErrorResponse(error string) *ErrorResponse {
 
 // ErrorResponse provides an error response for the API
 type ErrorResponse struct {
-	Error string `json:"error" validate:"required"`
+	Error string `json:"error" binding:"required"`
 } //@name Error
 
 //HandlePanicInTransaction provides a defer function to handle panics when a transaction has been started

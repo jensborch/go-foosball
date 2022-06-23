@@ -3,14 +3,14 @@ package model
 // Tournament played
 type Tournament struct {
 	Base
-	Name           string `json:"name" validate:"required" gorm:"type:varchar(100);not null"`
-	GameScore      uint   `json:"score" validate:"required" gorm:"not null"`
-	InitialRanking uint   `json:"initial" validate:"required" gorm:"not null"`
+	Name           string `json:"name" binding:"required" gorm:"type:varchar(100);not null"`
+	GameScore      uint   `json:"score" binding:"required" gorm:"not null"`
+	InitialRanking uint   `json:"initial" binding:"required" gorm:"not null"`
 } //@name Tournament
 type TournamentTable struct {
 	Base
 	TableID      uint       `json:"-" gorm:"not null"`
-	Table        Table      `json:"table" validate:"required"`
+	Table        Table      `json:"table" binding:"required"`
 	TournamentId uint       `json:"-" gorm:"not null"`
 	Tournament   Tournament `json:"-"`
 } //@name TournamentTable
@@ -19,11 +19,11 @@ type TournamentTable struct {
 type TournamentPlayer struct {
 	Base
 	PlayerID     uint       `json:"-" gorm:"index:player_tournament,unique;not null"`
-	Player       Player     `json:"player" validate:"required"`
+	Player       Player     `json:"player" binding:"required"`
 	TournamentID uint       `json:"-" gorm:"index:player_tournament,unique;not null"`
 	Tournament   Tournament `json:"-"`
-	Ranking      uint       `json:"ranking" validate:"required"`
-	Active       bool       `json:"active" validate:"required"`
+	Ranking      uint       `json:"ranking" binding:"required"`
+	Active       bool       `json:"active" binding:"required"`
 } //@name TournamentPlayer
 
 // TournamentRepository provides access games etc.

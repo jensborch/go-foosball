@@ -56,8 +56,8 @@ func GetPlayers(db *gorm.DB) func(*gin.Context) {
 }
 
 type CreatePlayerRequest struct {
-	Nickname string `json:"nickname" validate:"gte=2,required"`
-	RealName string `json:"realname" validate:"gte=2"`
+	Nickname string `json:"nickname" binding:"gte=2,required"`
+	RealName string `json:"realname" binding:"gte=2"`
 	RFID     string `json:"rfid"`
 } //@name CreatePlayer
 
@@ -76,7 +76,8 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
 		var player CreatePlayerRequest
-		if ok := ShouldBindAndValidate(&player, c); !ok {
+		if err := c.ShouldBindJSON(&player); err != nil {
+			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
 		}
 		tx := db.Begin()

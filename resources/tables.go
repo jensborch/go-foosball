@@ -48,8 +48,8 @@ func GetTables(db *gorm.DB) func(*gin.Context) {
 }
 
 type CreateTableRequest struct {
-	Name  string      `json:"name" validate:"required"`
-	Color model.Color `json:"color" validate:"required"`
+	Name  string      `json:"name" binding:"required"`
+	Color model.Color `json:"color" binding:"required"`
 } //@name CreateTable
 
 // PostTable creats new table
@@ -66,7 +66,8 @@ type CreateTableRequest struct {
 func PostTable(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var table CreateTableRequest
-		if ok := ShouldBindAndValidate(&table, c); !ok {
+		if err := c.ShouldBindJSON(&table); err != nil {
+			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
 		}
 		tx := db.Begin()
@@ -101,7 +102,7 @@ func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 type AddTableRequest struct {
-	ID uint `json:"id" validate:"required"`
+	ID uint `json:"id" binding:"required"`
 } //@name AddTable
 
 // PostTournamentTables adds a table to a tournament
@@ -120,7 +121,8 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
 		var representation AddTableRequest
-		if ok := ShouldBindAndValidate(&representation, c); !ok {
+		if err := c.ShouldBindJSON(&representation); err != nil {
+			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
 		}
 		tx := db.Begin()

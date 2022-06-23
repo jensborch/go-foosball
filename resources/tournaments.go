@@ -50,10 +50,10 @@ func GetTournaments(db *gorm.DB) func(*gin.Context) {
 
 //TournamentPlayerRepresenatation represents a player in a tournament
 type TournamentPlayerRepresenatation struct {
-	Nickname string `json:"nickname" validate:"required"`
+	Nickname string `json:"nickname" binding:"required"`
 	RealName string `json:"realname"`
 	RFID     string `json:"rfid,omitempty"`
-	Active   bool   `json:"active" validate:"required"`
+	Active   bool   `json:"active" binding:"required"`
 	Ranking  uint   `json:"ranking,omitempty"`
 } //@name TournamentPlayer
 
@@ -94,7 +94,7 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 type CreateTournamentRequest struct {
-	Name           string `json:"name" validate:"required"`
+	Name           string `json:"name" binding:"required"`
 	GameScore      uint   `json:"score"`
 	InitialRanking uint   `json:"initial"`
 } //@name CreateTournament
@@ -112,7 +112,8 @@ type CreateTournamentRequest struct {
 func PostTournament(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var tournament CreateTournamentRequest
-		if ok := ShouldBindAndValidate(&tournament, c); !ok {
+		if err := c.ShouldBindJSON(&tournament); err != nil {
+			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
 		}
 		tx := db.Begin()
@@ -127,7 +128,7 @@ func PostTournament(db *gorm.DB) func(*gin.Context) {
 }
 
 type AddPlayerRequest struct {
-	Nickname string `json:"nickname" validate:"required"`
+	Nickname string `json:"nickname" binding:"required"`
 	Ranking  uint   `json:"ranking"`
 } //@name AddPlayer
 
@@ -147,7 +148,8 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
 		var pr AddPlayerRequest
-		if ok := ShouldBindAndValidate(&pr, c); !ok {
+		if err := c.ShouldBindJSON(&pr); err != nil {
+			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 			return
 		}
 		tx := db.Begin()
