@@ -55,7 +55,7 @@ func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 type GameResultRequest struct {
 	RightPlayers []string     `json:"rightPlayers" binding:"required,gte=1,lte=2"`
 	LeftPlayers  []string     `json:"leftPlayers" binding:"required,gte=1,lte=2"`
-	Winner       model.Winner `json:"winner,omitempty" enums:"right,left,draw" binding:"gamewinner" binding:"required"`
+	Winner       model.Winner `json:"winner,omitempty" enums:"right,left,draw" binding:"gamewinner,required"`
 } //@name GameResult
 
 var GameWinnerValidator validator.Func = func(fl validator.FieldLevel) bool {
