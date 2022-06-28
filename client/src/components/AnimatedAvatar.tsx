@@ -1,4 +1,5 @@
 import { Avatar, keyframes } from '@mui/material';
+import { useRef } from 'react';
 import { Transition, TransitionStatus } from 'react-transition-group';
 
 const flip = keyframes`
@@ -23,23 +24,29 @@ const AnimatedAvatar = ({
   setSelected,
   selectedComp,
   deselectedComp,
-  timeout = 500
+  timeout = 500,
 }: AnimatedAvatarProps) => {
+  const nodeRef = useRef<any>();
   return (
-    <Transition in={selected} timeout={timeout}>
+    <Transition in={selected} timeout={timeout} nodeRef={nodeRef}>
       {(state: TransitionStatus) => {
         switch (state) {
           case 'entering':
-            return <Avatar sx={{ animation: `${flip} ${timeout}ms` }}> </Avatar>;
+          case 'exiting':
+            return (
+              <Avatar ref={nodeRef} sx={{ animation: `${flip} ${timeout}ms` }}>
+                {' '}
+              </Avatar>
+            );
           case 'entered':
             return (
-              <Avatar onClick={() => setSelected(false)}>{selectedComp}</Avatar>
+              <Avatar ref={nodeRef} onClick={() => setSelected(false)}>
+                {selectedComp}
+              </Avatar>
             );
-          case 'exiting':
-            return <Avatar sx={{ animation: `${flip} ${timeout}ms` }}> </Avatar>;
           case 'exited':
             return (
-              <Avatar onClick={() => setSelected(true)}>
+              <Avatar ref={nodeRef} onClick={() => setSelected(true)}>
                 {deselectedComp}
               </Avatar>
             );

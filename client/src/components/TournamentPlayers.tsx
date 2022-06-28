@@ -51,8 +51,8 @@ const Player = ({ tournament, player }: PlayerProps) => {
         <AnimatedAvatar
           selected={player.active}
           setSelected={setSelected}
-          selectedComp={player.nickname.substring(0, 2)}
-          deselectedComp={<CheckIcon />}
+          selectedComp={<CheckIcon />}
+          deselectedComp={player.nickname.substring(0, 1).toUpperCase()}
         ></AnimatedAvatar>
       </ListItemAvatar>
       <ListItemText primary={player.nickname} secondary={player.realname} />
