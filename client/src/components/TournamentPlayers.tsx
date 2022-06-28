@@ -21,6 +21,7 @@ import { Error } from './Error';
 import CheckIcon from '@mui/icons-material/Check';
 import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
 import { StyledCardHeader } from './Styled';
+import AnimatedAvatar from './AnimatedAvatar';
 
 type PlayerProps = {
   tournament: string;
@@ -41,16 +42,18 @@ const Player = ({ tournament, player }: PlayerProps) => {
   function deselect() {
     del();
   }
+  function setSelected(selected: boolean) {
+    selected ? select() : deselect();
+  }
   return (
     <ListItem disableGutters>
       <ListItemAvatar>
-        {player.active ? (
-          <Avatar onClick={deselect}>
-            <CheckIcon />
-          </Avatar>
-        ) : (
-          <Avatar onClick={select}>{player.nickname.substring(0, 2)}</Avatar>
-        )}
+        <AnimatedAvatar
+          selected={player.active}
+          setSelected={setSelected}
+          selectedComp={player.nickname.substring(0, 2)}
+          deselectedComp={<CheckIcon />}
+        ></AnimatedAvatar>
       </ListItemAvatar>
       <ListItemText primary={player.nickname} secondary={player.realname} />
       <ListItemSecondaryAction>
