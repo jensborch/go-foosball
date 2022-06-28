@@ -2,16 +2,16 @@ import {
   AppBar,
   Grid,
   IconButton,
-  Link,
   Toolbar,
   Typography,
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import { Children } from 'react';
+import { Link } from 'react-router-dom';
 
 type MenuProps = {
   title: string;
-  children?: JSX.Element | JSX.Element[];
+  children?: React.ReactNode;
 };
 
 const Menu = ({ title, children }: MenuProps) => {
@@ -20,13 +20,13 @@ const Menu = ({ title, children }: MenuProps) => {
     <AppBar position="static">
       <Toolbar>
         <IconButton
-          href="/"
+          to="/"
           component={Link}
           sx={{
             marginLeft: (theme) => theme.spacing(-1),
             marginRight: (theme) => theme.spacing(2),
           }}
-          color="inherit"
+          color="inherit" 
           aria-label="Home"
         >
           <HomeIcon />
@@ -40,6 +40,7 @@ const Menu = ({ title, children }: MenuProps) => {
           direction="row-reverse"
           sx={{
             position: 'absolute',
+            width: '30%',
             top: (theme) => theme.spacing(3.5),
             right: (theme) => theme.spacing(5),
           }}

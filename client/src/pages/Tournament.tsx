@@ -18,9 +18,9 @@ function Tournament() {
   return (
     <>
       <Menu title="Foosball">
-        <Start />
-        <RefreshRandomGames />
         <AddSpeedDial tournament={id} />
+        <RefreshRandomGames />
+        <Start />
       </Menu>
       <Box
         sx={{

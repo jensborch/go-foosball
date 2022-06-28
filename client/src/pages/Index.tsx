@@ -6,7 +6,9 @@ import { Box } from '@mui/system';
 function Index() {
   return (
     <>
-      <Menu title="Foosball" children={undefined}></Menu>
+      <Menu title="Foosball">
+        <CreateTournament />
+      </Menu>
       <Box
         sx={{
           margin: (theme) => theme.spacing(4),
@@ -14,7 +16,6 @@ function Index() {
       >
         <Tournaments />
       </Box>
-      <CreateTournament />
     </>
   );
 }

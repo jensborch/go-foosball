@@ -7,7 +7,7 @@ const Start = () => {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Fab onClick={() => setOpen(true)} color="default" aria-label="add">
+      <Fab onClick={() => setOpen(true)} color="default" aria-label="Start">
         <TimerIcon />
       </Fab>
       <Timer timeout={2 * 60} open={open} setOpen={setOpen} />
