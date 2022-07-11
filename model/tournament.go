@@ -1,5 +1,13 @@
 package model
 
+import (
+	"fmt"
+	"time"
+
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
+)
+
 // Tournament played
 type Tournament struct {
 	Base
@@ -25,6 +33,14 @@ type TournamentPlayer struct {
 	Ranking      uint       `json:"ranking" binding:"required"`
 	Active       bool       `json:"active" binding:"required"`
 } //@name TournamentPlayer
+
+type TournamentPlayerHistory struct {
+	CreatedAt          time.Time        `json:"created" binding:"required" gorm:"not null"`
+	DeletedAt          gorm.DeletedAt   `json:"-" gorm:"index"`
+	TournamentPlayerID uint             `json:"-" gorm:"index:tournament_player"`
+	TournamentPlayer   TournamentPlayer `json:"-"`
+	Ranking            uint             `json:"ranking" binding:"required"`
+} //@name TournamentPlayerHistory
 
 // TournamentRepository provides access games etc.
 type TournamentRepository interface {
@@ -73,4 +89,21 @@ func NewTournamentPlayer(player *Player, tournament *Tournament) *TournamentPlay
 		Ranking:    tournament.InitialRanking,
 		Active:     true,
 	}
+}
+
+func NewTournamentPlayerHistory(player *TournamentPlayer) *TournamentPlayerHistory {
+	return &TournamentPlayerHistory{
+		TournamentPlayer:   *player,
+		TournamentPlayerID: player.PlayerID,
+		Ranking:            player.Ranking,
+		CreatedAt:          player.CreatedAt,
+	}
+}
+
+func (player *TournamentPlayer) AfterSave(tx *gorm.DB) (err error) {
+	if err := tx.Omit(clause.Associations).Create(NewTournamentPlayerHistory(player)).Error; err != nil {
+		//return errors.New("unable to update player history: ")
+		return fmt.Errorf("unable to update player history: %s", err)
+	}
+	return nil
 }

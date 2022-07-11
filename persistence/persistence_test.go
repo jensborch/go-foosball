@@ -18,6 +18,7 @@ func InitDB(t *testing.T) *gorm.DB {
 		&model.TournamentPlayer{},
 		&model.Table{},
 		&model.Player{},
-		&model.Game{})
+		&model.Game{},
+		&model.TournamentPlayerHistory{})
 	return db
 }

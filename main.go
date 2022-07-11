@@ -74,7 +74,13 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 		panic("failed to connect database")
 	}
 
-	db.AutoMigrate(&model.Tournament{}, &model.TournamentTable{}, &model.Table{}, &model.Player{}, &model.TournamentPlayer{}, &model.Game{})
+	db.AutoMigrate(&model.Tournament{},
+		&model.TournamentTable{},
+		&model.Table{},
+		&model.Player{},
+		&model.TournamentPlayer{},
+		&model.Game{},
+		&model.TournamentPlayerHistory{})
 
 	players := router.Group("/players")
 	players.GET("", resources.GetPlayers(db))
