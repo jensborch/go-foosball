@@ -232,6 +232,15 @@ func (r *tournamentRepository) FindAll() []*model.Tournament {
 	return tournaments
 }
 
+func (r *tournamentRepository) PlayerHistory(tournamentId string, nickname string) ([]*model.TournamentPlayerHistory, model.Found) {
+	if player, found := r.FindPlayer(tournamentId, nickname); found {
+		var history []*model.TournamentPlayerHistory
+		r.db.Where("tournament_player_id = ?", player.ID).Find(&history)
+		return history, true
+	}
+	return nil, false
+}
+
 // NewTournamentRepository creats new repository
 func NewTournamentRepository(db *gorm.DB) model.TournamentRepository {
 	return &tournamentRepository{

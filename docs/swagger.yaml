@@ -204,6 +204,16 @@ definitions:
     - active
     - nickname
     type: object
+  TournamentPlayerHistory:
+    properties:
+      created:
+        type: string
+      ranking:
+        type: integer
+    required:
+    - created
+    - ranking
+    type: object
   TournamentTable:
     properties:
       created:
@@ -729,6 +739,41 @@ paths:
           schema:
             $ref: '#/definitions/Error'
       summary: Add player to tournament
+      tags:
+      - tournament
+  /tournaments/{id}/players/{nickname}/history:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Player nickname
+        in: path
+        name: nickanme
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/TournamentPlayerHistory'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Get player ranking history in tournament
       tags:
       - tournament
   /tournaments/{id}/players/{player}:

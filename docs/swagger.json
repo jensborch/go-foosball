@@ -785,6 +785,59 @@
                 }
             }
         },
+        "/tournaments/{id}/players/{nickname}/history": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tournament"
+                ],
+                "summary": "Get player ranking history in tournament",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tournament ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Player nickname",
+                        "name": "nickanme",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TournamentPlayerHistory"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
         "/tournaments/{id}/players/{player}": {
             "delete": {
                 "consumes": [
@@ -1343,6 +1396,21 @@
                 },
                 "rfid": {
                     "type": "string"
+                }
+            }
+        },
+        "TournamentPlayerHistory": {
+            "type": "object",
+            "required": [
+                "created",
+                "ranking"
+            ],
+            "properties": {
+                "created": {
+                    "type": "string"
+                },
+                "ranking": {
+                    "type": "integer"
                 }
             }
         },

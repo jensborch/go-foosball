@@ -99,9 +99,13 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	tournaments.POST("", resources.PostTournament(db))
 	tournaments.GET("/:id", resources.GetTournament("id", db))
 	tournaments.DELETE("/:id", resources.DeleteTournament("id", db))
+
 	tournaments.GET("/:id/players", resources.GetTournamentPlayes("id", db))
 	tournaments.POST("/:id/players", resources.PostTournamentPlayer("id", db))
 	tournaments.DELETE("/:id/players/:name", resources.DeleteTournamentPlayer("id", "name", db))
+	//tournaments.GET("/:id/players/:name", resources.GetTournamentPlayer("id", "name", db))
+	tournaments.GET("/:id/players/:name/history", resources.GetTournamentPlayeHistory("id", "name", db))
+
 	tournaments.GET("/:id/tables", resources.GetTournamentTables("id", db))
 	tournaments.POST("/:id/tables", resources.PostTournamentTables("id", db))
 	tournaments.DELETE("/:id/tables/:table", resources.DeleteTournamentTable("id", "table", db))

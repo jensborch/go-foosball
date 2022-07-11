@@ -247,3 +247,27 @@ var playerEventPublisher = NewEventPublisher()
 func GetPlayerEvents(param string) func(c *gin.Context) {
 	return playerEventPublisher.Get(param)
 }
+
+// GetTournamentPlayeHistory get player ranking history in a given tournament
+// @Summary      Get player ranking history in tournament
+// @Tags         tournament
+// @Accept       json
+// @Produce      json
+// @Param        id       path      string  true  "Tournament ID"
+// @Param        nickanme path      string  true  "Player nickname"
+// @Success      200      {array}   model.TournamentPlayerHistory
+// @Failure      404      {object}  ErrorResponse
+// @Failure      500      {object}  ErrorResponse
+// @Router       /tournaments/{id}/players/{nickname}/history [get]
+func GetTournamentPlayeHistory(tournamentParam string, playerParam string, db *gorm.DB) func(*gin.Context) {
+	return func(c *gin.Context) {
+		defer HandlePanic(c)
+		id := c.Param(tournamentParam)
+		nickname := c.Param(playerParam)
+		if history, found := persistence.NewTournamentRepository(db).PlayerHistory(id, nickname); found {
+			c.JSON(http.StatusOK, history)
+		} else {
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s or player %s", id, nickname)))
+		}
+	}
+}

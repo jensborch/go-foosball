@@ -61,6 +61,7 @@ type TournamentRepository interface {
 	ActivatePlayer(tournamentId string, nickname string) (*TournamentPlayer, Found)
 	RandomGames(id string) ([]*Game, Found)
 	UpdatePlayerRanking(tournamentId string, nickname string, gameScore int) (*TournamentPlayer, Found)
+	PlayerHistory(tournamentId string, nickname string) ([]*TournamentPlayerHistory, Found)
 }
 
 // NewTournament creates a new tournament
