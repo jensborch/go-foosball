@@ -102,7 +102,6 @@ func NewTournamentPlayerHistory(player *TournamentPlayer) *TournamentPlayerHisto
 
 func (player *TournamentPlayer) AfterSave(tx *gorm.DB) (err error) {
 	if err := tx.Omit(clause.Associations).Create(NewTournamentPlayerHistory(player)).Error; err != nil {
-		//return errors.New("unable to update player history: ")
 		return fmt.Errorf("unable to update player history: %s", err)
 	}
 	return nil
