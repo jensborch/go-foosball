@@ -13,13 +13,13 @@ import (
 )
 
 // GetGamesInTournament find all games in tournament
-// @Summary      Get all games in a tournament
-// @Tags         tournament
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Tournament ID"
-// @Success      200      {array}   model.GameJson
-// @Router       /tournaments/{id}/games [get]
+// @Summary  Get all games in a tournament
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Param    id   path     string  true  "Tournament ID"
+// @Success  200  {array}  model.GameJson
+// @Router   /tournaments/{id}/games [get]
 func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -29,15 +29,15 @@ func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 // GetRandomGames for a tournament
-// @Summary      Get random game for a tournament
-// @Tags         actions
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Tournament ID"
-// @Success      200      {array}   model.GameJson
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /tournaments/{id}/games/random [get]
+// @Summary  Get random game for a tournament
+// @Tags     actions
+// @Accept   json
+// @Produce  json
+// @Param    id   path      string  true  "Tournament ID"
+// @Success  200  {array}   model.GameJson
+// @Failure  404  {object}  ErrorResponse
+// @Failure  500  {object}  ErrorResponse
+// @Router   /tournaments/{id}/games/random [get]
 func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -86,18 +86,18 @@ func addPlayers(tourId string, players []string, repo model.TournamentRepository
 }
 
 // PostGame saves a played game
-// @Summary      Submit gamne results
-// @Tags         tournament
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Tournament ID"
-// @Param        table    path      string  true  "Table ID"
-// @Param        game     body      GameResultRequest true  "Submit game results"
-// @Success      200      {object}  model.GameJson
-// @Failure      400      {object}  ErrorResponse
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /tournaments/{id}/tables/{table}/games [post]
+// @Summary  Submit gamne results
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Param    id     path      string             true  "Tournament ID"
+// @Param    table  path      string             true  "Table ID"
+// @Param    game   body      GameResultRequest  true  "Submit game results"
+// @Success  200    {object}  model.GameJson
+// @Failure  400    {object}  ErrorResponse
+// @Failure  404    {object}  ErrorResponse
+// @Failure  500    {object}  ErrorResponse
+// @Router   /tournaments/{id}/tables/{table}/games [post]
 func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		tourId := c.Param(tournamentParam)
@@ -128,15 +128,15 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 }
 
 // GetGame returns a game played
-// @Summary      Get gamne results
-// @Tags         game
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Game ID"
-// @Success      200      {object}  model.GameJson
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /games/{id} [get]
+// @Summary  Get gamne results
+// @Tags     game
+// @Accept   json
+// @Produce  json
+// @Param    id   path      string  true  "Game ID"
+// @Success  200  {object}  model.GameJson
+// @Failure  404  {object}  ErrorResponse
+// @Failure  500  {object}  ErrorResponse
+// @Router   /games/{id} [get]
 func GetGame(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -150,12 +150,12 @@ func GetGame(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 // GetGames returns all games
-// @Summary      Get all gamne results
-// @Tags         game
-// @Accept       json
-// @Produce      json
-// @Success      200      {array}  model.GameJson
-// @Router       /games [get]
+// @Summary  Get all gamne results
+// @Tags     game
+// @Accept   json
+// @Produce  json
+// @Success  200  {array}  model.GameJson
+// @Router   /games [get]
 func GetGames(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -170,15 +170,15 @@ type GameStartEventRepresentation struct {
 } //@name GameStartEvent
 
 // GetGameStart publishes a game start event using web socket
-// @Summary      Publishes a game start event
-// @Tags         actions
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Tournament ID"
-// @Success      204
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /tournaments/{id}/games/start [get]
+// @Summary  Publishes a game start event
+// @Tags     actions
+// @Accept   json
+// @Produce  json
+// @Param    id  path  string  true  "Tournament ID"
+// @Success  204
+// @Failure  404  {object}  ErrorResponse
+// @Failure  500  {object}  ErrorResponse
+// @Router   /tournaments/{id}/games/start [get]
 func GetGameStart(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -193,12 +193,12 @@ func GetGameStart(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 // GetGameEvents creats web socket with tournamnent game events
-// @Summary      Opens a web socket for tournamnent game start events
-// @Tags         events
-// @Produce      json-stream
-// @Param        id       path      string  true  "Tournament ID"
-// @Success      200      {object}  GameStartEventRepresentation
-// @Router       /tournaments/{id}/events/game [get]
+// @Summary  Opens a web socket for tournamnent game start events
+// @Tags     events
+// @Produce  json-stream
+// @Param    id   path      string  true  "Tournament ID"
+// @Success  200  {object}  GameStartEventRepresentation
+// @Router   /tournaments/{id}/events/game [get]
 func GetGameEvents(param string) func(c *gin.Context) {
 	return gameEventPublisher.Get(param)
 }

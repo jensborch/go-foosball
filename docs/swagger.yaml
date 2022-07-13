@@ -757,6 +757,7 @@ paths:
         required: true
         type: string
       - description: The RFC3339 date to get history from
+        format: date
         in: query
         name: from
         required: true

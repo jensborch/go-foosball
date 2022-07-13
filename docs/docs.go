@@ -822,6 +822,7 @@ const docTemplate_swagger = `{
                     },
                     {
                         "type": "string",
+                        "format": "date",
                         "description": "The RFC3339 date to get history from",
                         "name": "from",
                         "in": "query",

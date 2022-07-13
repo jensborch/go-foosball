@@ -22,6 +22,9 @@ all: test vet build
 swagger: 
 	$(GOPATH)/bin/swag init
 
+format: 
+	$(GOPATH)/bin/swag fmt
+
 build:
 	go build ${LDFLAGS} -o ${BINARY}
 

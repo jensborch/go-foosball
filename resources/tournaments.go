@@ -12,15 +12,15 @@ import (
 )
 
 // GetTournament gets info about a tournament
-// @Summary      Get tournament
-// @Tags         tournament
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Tournament ID"
-// @Success      200      {object}  model.Tournament
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /tournaments/{id} [get]
+// @Summary  Get tournament
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Param    id   path      string  true  "Tournament ID"
+// @Success  200  {object}  model.Tournament
+// @Failure  404  {object}  ErrorResponse
+// @Failure  500  {object}  ErrorResponse
+// @Router   /tournaments/{id} [get]
 func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -35,12 +35,12 @@ func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 // GetTournaments gets a list of all tournaments
-// @Summary      Get all tournaments
-// @Tags         tournament
-// @Accept       json
-// @Produce      json
-// @Success      200      {array}   model.Tournament
-// @Router       /tournaments [get]
+// @Summary  Get all tournaments
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Success  200  {array}  model.Tournament
+// @Router   /tournaments [get]
 func GetTournaments(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -69,15 +69,15 @@ func NewPlayerRepresentation(tp *model.TournamentPlayer) TournamentPlayerReprese
 }
 
 // GetTournamentPlayes get players in a given tournament
-// @Summary      Get players in tournament
-// @Tags         tournament
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Tournament ID"
-// @Success      200      {array}   TournamentPlayerRepresenatation
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /tournaments/{id}/players [get]
+// @Summary  Get players in tournament
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Param    id   path      string  true  "Tournament ID"
+// @Success  200  {array}   TournamentPlayerRepresenatation
+// @Failure  404  {object}  ErrorResponse
+// @Failure  500  {object}  ErrorResponse
+// @Router   /tournaments/{id}/players [get]
 func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -101,15 +101,15 @@ type CreateTournamentRequest struct {
 } //@name CreateTournament
 
 // PostTournament creats tournament
-// @Summary      Create tournament
-// @Tags         tournament
-// @Accept       json
-// @Produce      json
-// @Param        tournament  body      CreateTournamentRequest  true  "The tournament"
-// @Success      200         {object}  model.Tournament
-// @Failure      400         {object}  ErrorResponse
-// @Failure      500         {object}  ErrorResponse
-// @Router       /tournaments [post]
+// @Summary  Create tournament
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Param    tournament  body      CreateTournamentRequest  true  "The tournament"
+// @Success  200         {object}  model.Tournament
+// @Failure  400         {object}  ErrorResponse
+// @Failure  500         {object}  ErrorResponse
+// @Router   /tournaments [post]
 func PostTournament(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var tournament CreateTournamentRequest
@@ -134,17 +134,17 @@ type AddPlayerRequest struct {
 } //@name AddPlayer
 
 // PostTournamentPlayer addes player to a tournament
-// @Summary      Add player to tournament
-// @Tags         tournament
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Tournament ID"
-// @Param        player   body      AddPlayerRequest  true  "The tournament"
-// @Success      200      {object}  TournamentPlayerRepresenatation
-// @Failure      400      {object}  ErrorResponse
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /tournaments/{id}/players [post]
+// @Summary  Add player to tournament
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Param    id      path      string            true  "Tournament ID"
+// @Param    player  body      AddPlayerRequest  true  "The tournament"
+// @Success  200     {object}  TournamentPlayerRepresenatation
+// @Failure  400     {object}  ErrorResponse
+// @Failure  404     {object}  ErrorResponse
+// @Failure  500     {object}  ErrorResponse
+// @Router   /tournaments/{id}/players [post]
 func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
@@ -185,15 +185,15 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 // DeleteTournament removes a tournament
-// @Summary      Remove tournament
-// @Tags         tournament
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Tournament ID"
-// @Success      204
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /tournaments/{id} [delete]
+// @Summary  Remove tournament
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Param    id  path  string  true  "Tournament ID"
+// @Success  204
+// @Failure  404  {object}  ErrorResponse
+// @Failure  500  {object}  ErrorResponse
+// @Router   /tournaments/{id} [delete]
 func DeleteTournament(tournamentParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(tournamentParam)
@@ -209,16 +209,16 @@ func DeleteTournament(tournamentParam string, db *gorm.DB) func(*gin.Context) {
 }
 
 // DeleteTournamentPlayer removes player from a tournament
-// @Summary      Remove player from tournament
-// @Tags         tournament
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Tournament ID"
-// @Param        player   path      string  true  "Player ID"
-// @Success      204
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /tournaments/{id}/players/{player} [delete]
+// @Summary  Remove player from tournament
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Param    id      path  string  true  "Tournament ID"
+// @Param    player  path  string  true  "Player ID"
+// @Success  204
+// @Failure  404  {object}  ErrorResponse
+// @Failure  500  {object}  ErrorResponse
+// @Router   /tournaments/{id}/players/{player} [delete]
 func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(tournamentParam)
@@ -239,28 +239,28 @@ func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm
 var playerEventPublisher = NewEventPublisher()
 
 // GetPlayerEvents creats web socket with tournamnent player events
-// @Summary      Opens a web socket for tournamnent player events
-// @Tags         events
-// @Produce      json-stream
-// @Param        id       path      string  true  "Tournament ID"
-// @Success      200      {object}  TournamentPlayerRepresenatation
-// @Router       /tournaments/{id}/events/player [get]
+// @Summary  Opens a web socket for tournamnent player events
+// @Tags     events
+// @Produce  json-stream
+// @Param    id   path      string  true  "Tournament ID"
+// @Success  200  {object}  TournamentPlayerRepresenatation
+// @Router   /tournaments/{id}/events/player [get]
 func GetPlayerEvents(param string) func(c *gin.Context) {
 	return playerEventPublisher.Get(param)
 }
 
 // GetTournamentPlayeHistory get player ranking history in a given tournament
-// @Summary      Get player ranking history in tournament
-// @Tags         tournament
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Tournament ID"
-// @Param        nickanme path      string  true  "Player nickname"
-// @Param        from     query     string    true  "The RFC3339 date to get history from"
-// @Success      200      {array}   model.TournamentPlayerHistory
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /tournaments/{id}/players/{nickname}/history [get]
+// @Summary  Get player ranking history in tournament
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Param    id        path      string  true  "Tournament ID"
+// @Param    nickanme  path      string  true  "Player nickname"
+// @Param    from      query     string  true  "The RFC3339 date to get history from"  Format(date)
+// @Success  200       {array}   model.TournamentPlayerHistory
+// @Failure  404       {object}  ErrorResponse
+// @Failure  500       {object}  ErrorResponse
+// @Router   /tournaments/{id}/players/{nickname}/history [get]
 func GetTournamentPlayeHistory(tournamentParam string, playerParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)

@@ -11,15 +11,15 @@ import (
 )
 
 // GetPlayer gets player info
-// @Summary      Get player
-// @Tags         player
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Player ID"
-// @Success      200      {object}  model.Player
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /players/{id} [get]
+// @Summary  Get player
+// @Tags     player
+// @Accept   json
+// @Produce  json
+// @Param    id   path      string  true  "Player ID"
+// @Success  200  {object}  model.Player
+// @Failure  404  {object}  ErrorResponse
+// @Failure  500  {object}  ErrorResponse
+// @Router   /players/{id} [get]
 func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -34,13 +34,13 @@ func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 // GetPlayers get a list of all players
-// @Summary      List players
-// @Tags         player
-// @Accept       json
-// @Produce      json
-// @Param        exclude  query     int  false  "exlude tournament from list"
-// @Success      200      {array}   model.Player
-// @Router       /players [get]
+// @Summary  List players
+// @Tags     player
+// @Accept   json
+// @Produce  json
+// @Param    exclude  query    int  false  "exlude tournament from list"
+// @Success  200      {array}  model.Player
+// @Router   /players [get]
 func GetPlayers(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -62,16 +62,16 @@ type CreatePlayerRequest struct {
 } //@name CreatePlayer
 
 // PostPlayer creates a new player
-// @Summary      Create a new player
-// @Tags         player
-// @Accept       json
-// @Produce      json
-// @Param        player   body      CreatePlayerRequest true  "Create player"
-// @Success      201      {object}  model.Player
-// @Failure      400      {object}  ErrorResponse
-// @Failure      409      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /players [post]
+// @Summary  Create a new player
+// @Tags     player
+// @Accept   json
+// @Produce  json
+// @Param    player  body      CreatePlayerRequest  true  "Create player"
+// @Success  201     {object}  model.Player
+// @Failure  400     {object}  ErrorResponse
+// @Failure  409     {object}  ErrorResponse
+// @Failure  500     {object}  ErrorResponse
+// @Router   /players [post]
 func PostPlayer(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -94,15 +94,15 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 }
 
 //DeletePlayer deletes a player
-// @Summary      Delete player
-// @Tags         player
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Player ID"
-// @Success      204
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /players/{id} [delete]
+// @Summary  Delete player
+// @Tags     player
+// @Accept   json
+// @Produce  json
+// @Param    id  path  string  true  "Player ID"
+// @Success  204
+// @Failure  404  {object}  ErrorResponse
+// @Failure  500  {object}  ErrorResponse
+// @Router   /players/{id} [delete]
 func DeletePlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)

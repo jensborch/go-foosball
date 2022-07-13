@@ -24,11 +24,11 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-// @title           Go-foosball API
-// @version         0.8
-// @description     Foosball tournament REST service.
+// @title        Go-foosball API
+// @version      0.8
+// @description  Foosball tournament REST service.
 
-// @BasePath /
+// @BasePath  /
 
 // React client static web server content.
 //go:embed client/build

@@ -12,15 +12,15 @@ import (
 )
 
 // GetTable get info about a table
-// @Summary      Get table
-// @Tags         table
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Table ID"
-// @Success      200      {object}  model.Table
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /tables/{id} [get]
+// @Summary  Get table
+// @Tags     table
+// @Accept   json
+// @Produce  json
+// @Param    id   path      string  true  "Table ID"
+// @Success  200  {object}  model.Table
+// @Failure  404  {object}  ErrorResponse
+// @Failure  500  {object}  ErrorResponse
+// @Router   /tables/{id} [get]
 func GetTable(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -34,12 +34,12 @@ func GetTable(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 // GetTables get list of all tables
-// @Summary      Get all tables
-// @Tags         table
-// @Accept       json
-// @Produce      json
-// @Success      200      {array}  model.Table
-// @Router       /tables [get]
+// @Summary  Get all tables
+// @Tags     table
+// @Accept   json
+// @Produce  json
+// @Success  200  {array}  model.Table
+// @Router   /tables [get]
 func GetTables(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -53,16 +53,16 @@ type CreateTableRequest struct {
 } //@name CreateTable
 
 // PostTable creats new table
-// @Summary      Create table
-// @Tags         table
-// @Accept       json
-// @Produce      json
-// @Param        table    body      CreateTableRequest true  "The table"
-// @Success      200      {object}  model.Table
-// @Failure      400      {object}  ErrorResponse
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /tables/ [post]
+// @Summary  Create table
+// @Tags     table
+// @Accept   json
+// @Produce  json
+// @Param    table  body      CreateTableRequest  true  "The table"
+// @Success  200    {object}  model.Table
+// @Failure  400    {object}  ErrorResponse
+// @Failure  404    {object}  ErrorResponse
+// @Failure  500    {object}  ErrorResponse
+// @Router   /tables/ [post]
 func PostTable(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var table CreateTableRequest
@@ -79,15 +79,15 @@ func PostTable(db *gorm.DB) func(*gin.Context) {
 }
 
 // GetTournamentTables list tables in a tournament
-// @Summary      Get tables in a tournament
-// @Tags         tournament
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Tournament ID"
-// @Success      200      {array}   model.TournamentTable
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /tournaments/{id}/tables [get]
+// @Summary  Get tables in a tournament
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Param    id   path      string  true  "Tournament ID"
+// @Success  200  {array}   model.TournamentTable
+// @Failure  404  {object}  ErrorResponse
+// @Failure  500  {object}  ErrorResponse
+// @Router   /tournaments/{id}/tables [get]
 func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
@@ -106,17 +106,17 @@ type AddTableRequest struct {
 } //@name AddTable
 
 // PostTournamentTables adds a table to a tournament
-// @Summary      Add table to tournament
-// @Tags         tournament
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Tournament ID"
-// @Param        table    body      AddTableRequest true "The table"
-// @Success      201      {object}  model.TournamentTable
-// @Failure      400      {object}  ErrorResponse
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /tournaments/{id}/tables [post]
+// @Summary  Add table to tournament
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Param    id     path      string           true  "Tournament ID"
+// @Param    table  body      AddTableRequest  true  "The table"
+// @Success  201    {object}  model.TournamentTable
+// @Failure  400    {object}  ErrorResponse
+// @Failure  404    {object}  ErrorResponse
+// @Failure  500    {object}  ErrorResponse
+// @Router   /tournaments/{id}/tables [post]
 func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
@@ -139,16 +139,16 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 // DeleteTournamentTable deletes a table from a tournament
-// @Summary      Remove table from tournament
-// @Tags         tournament
-// @Accept       json
-// @Produce      json
-// @Param        id       path      string  true  "Tournament ID"
-// @Param        tableId  path      string  true  "Table ID"
-// @Success      204
-// @Failure      404      {object}  ErrorResponse
-// @Failure      500      {object}  ErrorResponse
-// @Router       /tournaments/{id}/tables/{tableId} [delete]
+// @Summary  Remove table from tournament
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Param    id       path  string  true  "Tournament ID"
+// @Param    tableId  path  string  true  "Table ID"
+// @Success  204
+// @Failure  404  {object}  ErrorResponse
+// @Failure  500  {object}  ErrorResponse
+// @Router   /tournaments/{id}/tables/{tableId} [delete]
 func DeleteTournamentTable(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		tourId := c.Param(tournamentParam)
