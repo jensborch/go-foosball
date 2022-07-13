@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/resources"
@@ -392,6 +393,24 @@ func getGame(ts *httptest.Server, tournamentId uint) func(t *testing.T) []model.
 	}
 }
 
+func getHistory(ts *httptest.Server, tournamentId uint, nickname string) func(t *testing.T) []model.TournamentPlayerHistory {
+	return func(t *testing.T) []model.TournamentPlayerHistory {
+
+		resp, _ := http.Get(fmt.Sprintf("%s/tournaments/%d/players/%s/history?from=%s", ts.URL, tournamentId, nickname, time.Now().Format("2006-01-02")))
+
+		if resp.StatusCode != 200 {
+			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
+		}
+
+		result := []model.TournamentPlayerHistory{}
+		if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+			t.Fatalf("Expected player history, got %v", err)
+		}
+
+		return result
+	}
+}
+
 func Test(t *testing.T) {
 	ts, _ := startServer()
 	defer ts.Close()
@@ -424,4 +443,12 @@ func Test(t *testing.T) {
 	}
 
 	postGameNotValid(ts, tournament.ID, random[0].Table.ID)(t)
+
+	for _, p := range players {
+		history := getHistory(ts, tournament.ID, p.Nickname)(t)
+
+		if len(history) < 1 {
+			t.Fatalf("Expected player history, got %v", len(history))
+		}
+	}
 }

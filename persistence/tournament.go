@@ -3,6 +3,7 @@ package persistence
 import (
 	"fmt"
 	"math/rand"
+	"time"
 
 	"github.com/jensborch/go-foosball/model"
 	"gorm.io/gorm"
@@ -232,10 +233,13 @@ func (r *tournamentRepository) FindAll() []*model.Tournament {
 	return tournaments
 }
 
-func (r *tournamentRepository) PlayerHistory(tournamentId string, nickname string) ([]*model.TournamentPlayerHistory, model.Found) {
+func (r *tournamentRepository) PlayerHistory(tournamentId string, nickname string, from time.Time) ([]*model.TournamentPlayerHistory, model.Found) {
 	if player, found := r.FindPlayer(tournamentId, nickname); found {
 		var history []*model.TournamentPlayerHistory
-		r.db.Where("tournament_player_id = ?", player.ID).Find(&history)
+		r.db.
+			Where("tournament_player_id = ?", player.ID).
+			Where("created_at >= ?", from).
+			Find(&history)
 		return history, true
 	}
 	return nil, false

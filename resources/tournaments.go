@@ -3,6 +3,7 @@ package resources
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jensborch/go-foosball/model"
@@ -255,6 +256,7 @@ func GetPlayerEvents(param string) func(c *gin.Context) {
 // @Produce      json
 // @Param        id       path      string  true  "Tournament ID"
 // @Param        nickanme path      string  true  "Player nickname"
+// @Param        from     query     date    true  "Date to get history from"
 // @Success      200      {array}   model.TournamentPlayerHistory
 // @Failure      404      {object}  ErrorResponse
 // @Failure      500      {object}  ErrorResponse
@@ -264,10 +266,18 @@ func GetTournamentPlayeHistory(tournamentParam string, playerParam string, db *g
 		defer HandlePanic(c)
 		id := c.Param(tournamentParam)
 		nickname := c.Param(playerParam)
-		if history, found := persistence.NewTournamentRepository(db).PlayerHistory(id, nickname); found {
-			c.JSON(http.StatusOK, history)
+		if from, found := c.GetQuery("from"); found {
+			if time, err := time.Parse("2006-01-02", from); err != nil {
+				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Error parsing from date: %s", err)))
+			} else {
+				if history, found := persistence.NewTournamentRepository(db).PlayerHistory(id, nickname, time); found {
+					c.JSON(http.StatusOK, history)
+				} else {
+					c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s or player %s", id, nickname)))
+				}
+			}
 		} else {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s or player %s", id, nickname)))
+			c.JSON(http.StatusBadRequest, NewErrorResponse("A from date must be specified"))
 		}
 	}
 }
