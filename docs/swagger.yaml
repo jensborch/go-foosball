@@ -756,6 +756,11 @@ paths:
         name: nickanme
         required: true
         type: string
+      - description: The RFC3339 date to get history from
+        in: query
+        name: from
+        required: true
+        type: string
       produces:
       - application/json
       responses:

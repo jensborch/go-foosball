@@ -98,6 +98,11 @@ export interface TournamentPlayer {
   rfid?: string;
 }
 
+export interface TournamentPlayerHistory {
+  created: string;
+  ranking: number;
+}
+
 export interface TournamentTable {
   created: string;
   id: number;
@@ -659,6 +664,30 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/tournaments/${id}/players`,
         method: "POST",
         body: player,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags tournament
+     * @name PlayersHistoryDetail
+     * @summary Get player ranking history in tournament
+     * @request GET:/tournaments/{id}/players/{nickname}/history
+     */
+    playersHistoryDetail: (
+      id: string,
+      nickanme: string,
+      nickname: string,
+      query: { from: string },
+      params: RequestParams = {},
+    ) =>
+      this.request<TournamentPlayerHistory[], Error>({
+        path: `/tournaments/${id}/players/${nickname}/history`,
+        method: "GET",
+        query: query,
         type: ContentType.Json,
         format: "json",
         ...params,
