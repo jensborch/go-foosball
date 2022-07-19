@@ -6,6 +6,7 @@ import {
   Chip,
   CircularProgress,
   Divider,
+  Grid,
   List,
   ListItem,
   ListItemAvatar,
@@ -76,26 +77,28 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
     return <Error msg={error?.message}></Error>;
   }
   return (
-    <Card sx={{ minWidth: '200px' }}>
-      <StyledCardHeader
-        avatar={
-          <Avatar>
-            <EmojiPeopleOutlinedIcon />
-          </Avatar>
-        }
-        title="Players"
-      />
-      <CardContent>
-        <List>
-          {data?.map((p, i) => (
-            <div key={p.nickname}>
-              <Player player={p} tournament={tournament} />
-              {i !== data.length - 1 ? <Divider /> : null}
-            </div>
-          ))}
-        </List>
-      </CardContent>
-    </Card>
+    <Grid item>
+      <Card sx={{ minWidth: '200px' }}>
+        <StyledCardHeader
+          avatar={
+            <Avatar>
+              <EmojiPeopleOutlinedIcon />
+            </Avatar>
+          }
+          title="Players"
+        />
+        <CardContent>
+          <List>
+            {data?.map((p, i) => (
+              <div key={p.nickname}>
+                <Player player={p} tournament={tournament} />
+                {i !== data.length - 1 ? <Divider /> : null}
+              </div>
+            ))}
+          </List>
+        </CardContent>
+      </Card>
+    </Grid>
   );
 };
 

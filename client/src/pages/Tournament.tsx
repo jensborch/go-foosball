@@ -27,13 +27,9 @@ function Tournament() {
           margin: (theme) => theme.spacing(4),
         }}
       >
-        <Grid container direction="row">
-          <Grid item>
-            <TournamentPlayers tournament={id} />
-          </Grid>
-          <Grid item>
-            <Games tournament={id} />
-          </Grid>
+        <Grid container spacing={2} direction="row">
+          <TournamentPlayers tournament={id} />
+          <Games tournament={id} />
         </Grid>
       </Box>
     </>

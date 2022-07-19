@@ -18,7 +18,7 @@ import { useEffect, useState } from 'react';
 
 const Players = ({players}: {players : string[]}) => {
   return (
-    <Grid container item columns={2} spacing={2} direction="row">
+    <Grid container item columns={2} spacing={2} direction="row" justifyContent="center">
     {players?.map((player) => (
       <Grid item key={player}>
         <Player nickname={player} />
@@ -54,7 +54,7 @@ export const Game = ({ tournament, game }: GameProps) => {
     setDisabled(true);
   }
   return (
-    <Card sx={{ minWidth: '300px', margin: (theme) => theme.spacing(2) }}>
+    <Card sx={{ minWidth: '300px'}}>
       <StyledCardHeader
         avatar={
           <Avatar>
@@ -72,7 +72,7 @@ export const Game = ({ tournament, game }: GameProps) => {
               color="secondary"
               variant="determinate"
               value={
-                (game.leftScore / (game.rightScore + game.leftScore)) * 100
+                (game.rightScore / (game.rightScore + game.leftScore)) * 100
               }
             />
           </Grid>
@@ -118,7 +118,7 @@ export const Game = ({ tournament, game }: GameProps) => {
               color="secondary"
               variant="determinate"
               value={
-                (game.rightScore / (game.leftScore + game.rightScore)) * 100
+                (game.leftScore / (game.leftScore + game.rightScore)) * 100
               }
             />
           </Grid>
@@ -135,7 +135,7 @@ type PlayerProps = {
 
 const Player = ({ nickname }: PlayerProps) => {
   return (
-    <Card>
+    <Card sx={{ minWidth: '140px'}}>
       <CardHeader
         avatar={
           <Avatar
@@ -166,13 +166,13 @@ const Games = ({ tournament }: GamesProps) => {
     return <Error msg={error?.message}></Error>;
   }
   return (
-    <Grid container spacing={2} direction="row">
+    <>
       {data?.map((game) => (
         <Grid item key={game.table.id}>
           <Game tournament={tournament} game={game} />
         </Grid>
       ))}
-    </Grid>
+    </>
   );
 };
 
