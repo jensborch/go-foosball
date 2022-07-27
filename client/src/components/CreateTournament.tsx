@@ -1,32 +1,19 @@
 import { Fab } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
-import { useMutation, useQueryClient } from 'react-query';
-import { api, handleErrors } from '../api/util';
+import { useState } from 'react';
+import CreateTournamentDialog from './CreateTournamentDialog';
 
 export const CreateTournament = () => {
-  const queryClient = useQueryClient();
-
-  const { mutate } = useMutation(
-    () => api.tournaments.tournamentsCreate({ initial: 0, name: '', score: 0 }),
-    {
-      onSuccess: () => queryClient.invalidateQueries('tournaments'),
-      onError: (error) => {
-        handleErrors(error as Response);
-      },
-    }
-  );
-
-  const onCreateTournament = () => {
-    mutate();
-  };
+  const [open, setOpen] = useState(false);
   return (
     <Fab
       color="default"
       aria-label="Create tournament"
-      onClick={onCreateTournament}
+      onClick={() => setOpen(true)}
     >
       <AddIcon />
+      <CreateTournamentDialog open={open} setOpen={setOpen} />
     </Fab>
   );
 };

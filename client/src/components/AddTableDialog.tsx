@@ -1,6 +1,5 @@
 import {
   CircularProgress,
-  Dialog,
   Divider,
   List,
   ListItem,
@@ -24,16 +23,16 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
   function handleAdd(): void {}
   if (status === 'loading') {
     return (
-      <Dialog onClose={() => setOpen(false)} open={open}>
+      <FullScreenDialog setOpen={setOpen} open={open} title="Add table">
         <CircularProgress />
-      </Dialog>
+      </FullScreenDialog>
     );
   }
   if (status === 'error') {
     return (
-      <Dialog onClose={() => setOpen(false)} open={open}>
+      <FullScreenDialog setOpen={setOpen} open={open} title="Add table">
         <Error msg={error?.message}></Error>
-      </Dialog>
+      </FullScreenDialog>
     );
   }
   return (

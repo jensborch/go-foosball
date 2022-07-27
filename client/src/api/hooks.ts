@@ -97,6 +97,22 @@ export const useTournaments = () => {
   );
 };
 
+export const useTournamentMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (trournament: Api.CreateTournament) => api.tournaments.tournamentsCreate(trournament),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([CacheKeys.Tournaments]);
+      },
+      onError: (error) => {
+        handleErrors(error as Response);
+      },
+    }
+  );
+};
+
 export const useTournamentPlayerMutation = (tournament: string) => {
   const queryClient = useQueryClient();
 
