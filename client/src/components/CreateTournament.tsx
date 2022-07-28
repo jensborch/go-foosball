@@ -7,13 +7,15 @@ import CreateTournamentDialog from './CreateTournamentDialog';
 export const CreateTournament = () => {
   const [open, setOpen] = useState(false);
   return (
-    <Fab
-      color="default"
-      aria-label="Create tournament"
-      onClick={() => setOpen(true)}
-    >
-      <AddIcon />
+    <>
+      <Fab
+        color="default"
+        aria-label="Create tournament"
+        onClick={() => setOpen(true)}
+      >
+        <AddIcon />
+      </Fab>
       <CreateTournamentDialog open={open} setOpen={setOpen} />
-    </Fab>
+    </>
   );
 };
