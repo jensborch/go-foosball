@@ -3,7 +3,7 @@ import {
   Card,
   CardActions,
   CardContent,
-
+  Grid,
   TextField,
 } from '@mui/material';
 import { useTournamentMutation } from '../api/hooks';
@@ -32,39 +32,58 @@ const CreateTournamentDialog = ({ open, setOpen }: CreateTournamentProps) => {
 
   return (
     <FullScreenDialog setOpen={setOpen} open={open} title="Create tournament">
-      <Card>
-        <CardContent>
-        <TextField
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          helperText="Name"
-          label="Name"
-          margin="dense"
-        />
-        <TextField
-          type="number"
-          value={initial}
-          onChange={(e) => setInitial(parseInt(e.target.value))}
-          helperText="Initial"
-          label="Initial"
-          margin="dense"
-        />
-        <TextField
-          type="number"
-          value={score}
-          onChange={(e) => setScore(parseInt(e.target.value))}
-          helperText="Score"
-          label="Score"
-          margin="dense"
-        />        
-        </CardContent>
-        <CardActions>
-          <Button variant="outlined" onClick={onCreateTournament}>
-            Create
-          </Button>
-        </CardActions>
-      </Card>
+      <Grid
+        sx={{
+          margin: (theme) => theme.spacing(),
+        }}
+        spacing={2}
+        container
+        direction="row"
+      >
+        <Grid item>
+          <Card>
+            <CardContent>
+              <Grid container direction="column">
+                <Grid item>
+                  <TextField
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    helperText="Name"
+                    label="Name"
+                    margin="dense"
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    type="number"
+                    value={initial}
+                    onChange={(e) => setInitial(parseInt(e.target.value))}
+                    helperText="Initial"
+                    label="Initial"
+                    margin="dense"
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    type="number"
+                    value={score}
+                    onChange={(e) => setScore(parseInt(e.target.value))}
+                    helperText="Score"
+                    label="Score"
+                    margin="dense"
+                  />
+                </Grid>
+              </Grid>
+            </CardContent>
+            <CardActions>
+              <Button variant="outlined" onClick={onCreateTournament}>
+                Create
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+      </Grid>
     </FullScreenDialog>
   );
 };
