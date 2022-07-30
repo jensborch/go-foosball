@@ -46,7 +46,9 @@ func (r *gameRepository) FindAll() []*model.Game {
 		Preload("RightPlayerTwo.Player").
 		Preload("LeftPlayerOne.Player").
 		Preload("LeftPlayerTwo.Player").
-		Preload(clause.Associations).Find(&games).Error; err != nil {
+		Preload(clause.Associations).
+		Order("created_at").
+		Find(&games).Error; err != nil {
 		panic(err)
 	}
 	return games
@@ -64,6 +66,7 @@ func (r *gameRepository) FindByTournament(id string) []*model.Game {
 		Joins("inner join tables on tournament_tables.table_id = tables.id").
 		Joins("inner join tournaments on tournaments.id == tournament_tables.tournament_id").
 		Where("tournaments.ID = ?", id).
+		Order("games.created_at").
 		Find(&games).Error; err != nil {
 		panic(err)
 	}

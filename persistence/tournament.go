@@ -3,6 +3,7 @@ package persistence
 import (
 	"fmt"
 	"math/rand"
+	"sort"
 	"time"
 
 	"github.com/jensborch/go-foosball/model"
@@ -54,7 +55,8 @@ func (r *tournamentRepository) FindAllTables(id string) ([]*model.TournamentTabl
 	err := r.db.Model(&model.TournamentTable{}).
 		Preload(clause.Associations).
 		Joins("join tournaments on tournament_tables.tournament_id = tournaments.id").
-		Where("tournaments.ID = ?", id).Find(&tables).Error
+		Where("tournaments.ID = ?", id).
+		Find(&tables).Error
 	return tables, HasBeenFound(err)
 }
 
@@ -65,7 +67,8 @@ func (r *tournamentRepository) FindTable(tournamentId string, tableId string) (*
 		Joins("inner join tournaments on tournament_tables.tournament_id = tournaments.id").
 		Joins("inner join tables on tournament_tables.table_id = tables.id").
 		Where("tables.ID = ?", tableId).
-		Where("tournaments.ID = ?", tournamentId).Find(&table).Error
+		Where("tournaments.ID = ?", tournamentId).
+		Find(&table).Error
 	return &table, HasBeenFound(err)
 }
 
@@ -100,8 +103,18 @@ func (r *tournamentRepository) FindAllActivePlayers(tournamentId string) ([]*mod
 	err := r.db.Model(&model.TournamentPlayer{}).
 		Preload(clause.Associations).
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
-		Where("tournaments.ID = ?", tournamentId).Find(&players).Error
-	return players, HasBeenFound(err)
+		Where("tournaments.ID = ?", tournamentId).
+		Find(&players).Error
+	return sortPlayers(players), HasBeenFound(err)
+}
+
+func sortPlayers(players []*model.TournamentPlayer) []*model.TournamentPlayer {
+	if players != nil {
+		sort.Slice(players, func(p, q int) bool {
+			return players[p].Player.Nickname < players[q].Player.Nickname
+		})
+	}
+	return players
 }
 
 func (r *tournamentRepository) FindPlayer(tournamentId string, nickname string) (*model.TournamentPlayer, model.Found) {
@@ -111,7 +124,8 @@ func (r *tournamentRepository) FindPlayer(tournamentId string, nickname string) 
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Joins("inner join players on tournament_players.player_id = players.id").
 		Where("players.nickname = ?", nickname).
-		Where("tournaments.ID = ?", tournamentId).Find(&player)
+		Where("tournaments.ID = ?", tournamentId).
+		Find(&player)
 	if results.RowsAffected == 1 {
 		return &player, true
 	} else if results.RowsAffected > 1 {
@@ -128,8 +142,9 @@ func (r *tournamentRepository) ActivePlayers(tournamentId string) ([]*model.Tour
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Joins("inner join players on tournament_players.player_id = players.id").
 		Where("tournament_players.active = ?", true).
-		Where("tournaments.ID = ?", tournamentId).Find(&players).Error
-	return players, HasBeenFound(err)
+		Where("tournaments.ID = ?", tournamentId).
+		Find(&players).Error
+	return sortPlayers(players), HasBeenFound(err)
 }
 
 func (r *tournamentRepository) DeactivatePlayer(tournamentId string, nickname string) (*model.TournamentPlayer, model.Found) {
@@ -229,7 +244,7 @@ func (r *tournamentRepository) Find(id string) (*model.Tournament, model.Found) 
 
 func (r *tournamentRepository) FindAll() []*model.Tournament {
 	var tournaments []*model.Tournament
-	r.db.Find(&tournaments)
+	r.db.Order("name").Find(&tournaments)
 	return tournaments
 }
 
@@ -239,6 +254,7 @@ func (r *tournamentRepository) PlayerHistory(tournamentId string, nickname strin
 		r.db.
 			Where("tournament_player_id = ?", player.ID).
 			Where("created_at >= ?", from).
+			Order("created_at").
 			Find(&history)
 		return history, true
 	}

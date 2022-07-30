@@ -27,7 +27,7 @@ func (r *tableRepository) Find(id string) (*model.Table, model.Found) {
 
 func (r *tableRepository) FindAll() []*model.Table {
 	var tables []*model.Table
-	r.db.Find(&tables)
+	r.db.Order("name").Find(&tables)
 	return tables
 }
 
