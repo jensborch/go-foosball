@@ -1,7 +1,7 @@
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import { useState } from 'react';
 import PersonIcon from '@mui/icons-material/Person';
-import AddPlayers from './AddPlayers';
+import AddPlayersDialog from './AddPlayersDialog';
 import AddTableDialog from './AddTableDialog';
 import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
 
@@ -40,7 +40,7 @@ const AddSpeedDial = ({ tournament }: AddSpeedDialProps) => {
           }}
         />
       </SpeedDial>
-      <AddPlayers
+      <AddPlayersDialog
         open={playersOpen}
         setOpen={setPlayersOpen}
         tournament={tournament}

@@ -17,8 +17,8 @@ export const usePlayers = (tournament?: number) => {
     [CacheKeys.Players, tournament],
     async (): Promise<Api.Player[]> => {
       return api.players
-        .playersList({ exclude: tournament})
-        
+        .playersList({ exclude: tournament })
+
         .then(handleErrors)
         .then((r) => r.data);
     }
@@ -101,14 +101,12 @@ export const useTournamentMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (trournament: Api.CreateTournament) => api.tournaments.tournamentsCreate(trournament),
+    (trournament: Api.CreateTournament) =>
+      api.tournaments.tournamentsCreate(trournament),
     {
       onSuccess: () => {
         queryClient.invalidateQueries([CacheKeys.Tournaments]);
-      },
-      onError: (error) => {
-        handleErrors(error as Response);
-      },
+      }
     }
   );
 };
@@ -117,15 +115,16 @@ export const useTournamentPlayerMutation = (tournament: string) => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (player: Api.AddPlayer) => api.tournaments.playersCreate(tournament, player),
+    (player: Api.AddPlayer) =>
+      api.tournaments.playersCreate(tournament, player),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([CacheKeys.TournamentPlayers, tournament]);
+        queryClient.invalidateQueries([
+          CacheKeys.TournamentPlayers,
+          tournament,
+        ]);
         queryClient.invalidateQueries(CacheKeys.RandomGames);
-      },
-      onError: (error) => {
-        handleErrors(error as Response);
-      },
+      }
     }
   );
 };
@@ -140,12 +139,12 @@ export const useTournamentPlayerDeleteMutation = (
     () => api.tournaments.playersDelete(tournament, nickname),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([CacheKeys.TournamentPlayers, tournament]);
+        queryClient.invalidateQueries([
+          CacheKeys.TournamentPlayers,
+          tournament,
+        ]);
         queryClient.invalidateQueries(CacheKeys.RandomGames);
-      },
-      onError: (error) => {
-        handleErrors(error as Response);
-      },
+      }  
     }
   );
 };
@@ -157,9 +156,6 @@ export const usePlayerMutation = () => {
     (player: Api.CreatePlayer) => api.players.playersCreate(player),
     {
       onSuccess: () => queryClient.invalidateQueries(CacheKeys.Players),
-      onError: (error) => {
-        handleErrors(error as Response);
-      },
     }
   );
 };
@@ -182,10 +178,7 @@ export const useGameMutation = () => {
       ),
     {
       onSuccess: () =>
-        queryClient.invalidateQueries(CacheKeys.TournamentPlayers),
-      onError: (error) => {
-        handleErrors(error as Response);
-      },
+        queryClient.invalidateQueries(CacheKeys.TournamentPlayers)
     }
   );
 };

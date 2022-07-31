@@ -1,19 +1,20 @@
-import { Api, ApiConfig } from "./Api";
+import { Api, ApiConfig } from './Api';
 
-export function toLocaleDateString(date: string | undefined): string | undefined {
-    return date === undefined ? undefined : new Date(date).toLocaleDateString();
+export function toLocaleDateString(
+  date: string | undefined
+): string | undefined {
+  return date === undefined ? undefined : new Date(date).toLocaleDateString();
 }
 
 export function handleErrors<R extends Response>(response: R) {
-    if (!response.ok) {
-      throw Error(response.statusText);
-    }
-    return response;
+  if (!response.ok) {
+    throw Error(response.statusText);
   }
-  
-
-const conf:  ApiConfig = {
-    baseUrl:  "http://localhost:8080"
+  return response;
 }
+
+const conf: ApiConfig = {
+  baseUrl: 'http://localhost:8080',
+};
 
 export const api = new Api(conf);

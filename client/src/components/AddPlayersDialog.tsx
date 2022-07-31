@@ -1,3 +1,4 @@
+import FullScreenDialog from './FullScreenDialog';
 import * as Api from '../api/Api';
 import { useState } from 'react';
 import {
@@ -16,6 +17,7 @@ import {
   usePlayers,
   useTournamentPlayerMutation,
 } from '../api/hooks';
+import ErrorSnackbar from './ErrorSnackbar';
 
 type PlayerProps = {
   tournament: string;
@@ -61,7 +63,7 @@ const NewPlayer = () => {
   const [nickname, setNickname] = useState('');
   const [realname, setRealname] = useState('');
   const { mutate } = usePlayerMutation();
-
+  
   const onCreatePlayer = () => {
     mutate({
       nickname,
@@ -99,11 +101,11 @@ const NewPlayer = () => {
   );
 };
 
-type PlayersGridProps = {
+type PlayersProps = {
   tournament: string;
 };
 
-const PlayersGrid = ({ tournament }: PlayersGridProps) => {
+const Players = ({ tournament }: PlayersProps) => {
   const { status, error, data } = usePlayers(Number.parseInt(tournament));
   if (status === 'loading') {
     return <CircularProgress />;
@@ -124,10 +126,7 @@ const PlayersGrid = ({ tournament }: PlayersGridProps) => {
       <Grid spacing={2} item container direction="row">
         {data?.map((player, _) => (
           <Grid item key={player.nickname}>
-            <Player
-              player={player}
-              tournament={tournament}
-            />
+            <Player player={player} tournament={tournament} />
           </Grid>
         ))}
       </Grid>
@@ -140,4 +139,18 @@ const PlayersGrid = ({ tournament }: PlayersGridProps) => {
   );
 };
 
-export default PlayersGrid;
+type AddPlayersProps = {
+  tournament: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
+
+const AddPlayersDialog = ({ tournament, open, setOpen }: AddPlayersProps) => {
+  return (
+    <FullScreenDialog open={open} setOpen={setOpen}>
+      <Players tournament={tournament} />
+    </FullScreenDialog>
+  );
+};
+
+export default AddPlayersDialog;
