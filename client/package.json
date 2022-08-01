@@ -4,7 +4,7 @@
   "license": "MIT",
   "dependencies": {
     "@emotion/react": "^11.9.3",
-    "@emotion/styled": "^11.9.3",
+    "@emotion/styled": "^11.10.0",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.9.2",
     "@mui/system": "^5.9.2",
