@@ -106,7 +106,7 @@ export const useTournamentMutation = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries([CacheKeys.Tournaments]);
-      }
+      },
     }
   );
 };
@@ -124,7 +124,10 @@ export const useTournamentPlayerMutation = (tournament: string) => {
           tournament,
         ]);
         queryClient.invalidateQueries(CacheKeys.RandomGames);
-      }
+      },
+      onError: (error) => {
+        //Do nothing
+      },
     }
   );
 };
@@ -144,7 +147,10 @@ export const useTournamentPlayerDeleteMutation = (
           tournament,
         ]);
         queryClient.invalidateQueries(CacheKeys.RandomGames);
-      }  
+      },
+      onError: (error) => {
+        //Do nothing
+      },
     }
   );
 };
@@ -156,6 +162,9 @@ export const usePlayerMutation = () => {
     (player: Api.CreatePlayer) => api.players.playersCreate(player),
     {
       onSuccess: () => queryClient.invalidateQueries(CacheKeys.Players),
+      onError: (error) => {
+        //Do nothing
+      },
     }
   );
 };
@@ -178,7 +187,10 @@ export const useGameMutation = () => {
       ),
     {
       onSuccess: () =>
-        queryClient.invalidateQueries(CacheKeys.TournamentPlayers)
+        queryClient.invalidateQueries(CacheKeys.TournamentPlayers),
+      onError: (error) => {
+        //Do nothing
+      },
     }
   );
 };

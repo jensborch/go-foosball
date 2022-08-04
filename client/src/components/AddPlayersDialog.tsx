@@ -26,7 +26,7 @@ type PlayerProps = {
 
 const Player = ({ tournament, player }: PlayerProps) => {
   const [ranking, setRanking] = useState(NaN);
-  const { mutate } = useTournamentPlayerMutation(tournament);
+  const { mutate, error, isError } = useTournamentPlayerMutation(tournament);
 
   const onAddPlayer = () => {
     mutate({
@@ -36,34 +36,37 @@ const Player = ({ tournament, player }: PlayerProps) => {
   };
 
   return (
-    <Card key={player.nickname}>
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="h3">
-          {player.nickname} - {player.realname}
-        </Typography>
-        <TextField
-          type="number"
-          value={ranking}
-          onChange={(e) => setRanking(parseInt(e.target.value))}
-          helperText="Ranking"
-          label="Ranking"
-          margin="dense"
-        />
-      </CardContent>
-      <CardActions>
-        <Button variant="outlined" onClick={onAddPlayer}>
-          Add
-        </Button>
-      </CardActions>
-    </Card>
+    <>
+      {isError && <ErrorSnackbar msg={(error as any)?.error.error} />}
+      <Card key={player.nickname}>
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="h3">
+            {player.nickname} - {player.realname}
+          </Typography>
+          <TextField
+            type="number"
+            value={ranking}
+            onChange={(e) => setRanking(parseInt(e.target.value))}
+            helperText="Ranking"
+            label="Ranking"
+            margin="dense"
+          />
+        </CardContent>
+        <CardActions>
+          <Button variant="outlined" onClick={onAddPlayer}>
+            Add
+          </Button>
+        </CardActions>
+      </Card>
+    </>
   );
 };
 
 const NewPlayer = () => {
   const [nickname, setNickname] = useState('');
   const [realname, setRealname] = useState('');
-  const { mutate } = usePlayerMutation();
-  
+  const { mutate, error, isError } = usePlayerMutation();
+
   const onCreatePlayer = () => {
     mutate({
       nickname,
@@ -71,33 +74,36 @@ const NewPlayer = () => {
     });
   };
   return (
-    <Card>
-      <CardContent>
-        <Grid container direction="column">
-          <Grid item>
-            <TextField
-              helperText="Name"
-              value={realname}
-              onChange={(event) => setRealname(event.target.value)}
-              label="Name"
-            />
+    <>
+      {isError && <ErrorSnackbar msg={(error as any)?.error.error} />}
+      <Card>
+        <CardContent>
+          <Grid container direction="column">
+            <Grid item>
+              <TextField
+                helperText="Name"
+                value={realname}
+                onChange={(event) => setRealname(event.target.value)}
+                label="Name"
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                helperText="Nickname"
+                value={nickname}
+                onChange={(event) => setNickname(event.target.value)}
+                label="Nickname"
+              />
+            </Grid>
           </Grid>
-          <Grid item>
-            <TextField
-              helperText="Nickname"
-              value={nickname}
-              onChange={(event) => setNickname(event.target.value)}
-              label="Nickname"
-            />
-          </Grid>
-        </Grid>
-      </CardContent>
-      <CardActions>
-        <Button variant="outlined" onClick={onCreatePlayer}>
-          Create
-        </Button>
-      </CardActions>
-    </Card>
+        </CardContent>
+        <CardActions>
+          <Button variant="outlined" onClick={onCreatePlayer}>
+            Create
+          </Button>
+        </CardActions>
+      </Card>
+    </>
   );
 };
 
@@ -107,12 +113,6 @@ type PlayersProps = {
 
 const Players = ({ tournament }: PlayersProps) => {
   const { status, error, data } = usePlayers(Number.parseInt(tournament));
-  if (status === 'loading') {
-    return <CircularProgress />;
-  }
-  if (status === 'error') {
-    return <Error msg={error?.message}></Error>;
-  }
   return (
     <Grid
       sx={{
@@ -123,18 +123,24 @@ const Players = ({ tournament }: PlayersProps) => {
       spacing={2}
       direction="row"
     >
-      <Grid spacing={2} item container direction="row">
-        {data?.map((player, _) => (
-          <Grid item key={player.nickname}>
-            <Player player={player} tournament={tournament} />
+      {status === 'loading' && <CircularProgress />}
+      {status === 'error' && <Error msg={error?.message}></Error>}
+      {status === 'success' && (
+        <>
+          <Grid spacing={2} item container direction="row">
+            {data?.map((player, _) => (
+              <Grid item key={player.nickname}>
+                <Player player={player} tournament={tournament} />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
-      <Grid item container direction="row">
-        <Grid item>
-          <NewPlayer />
-        </Grid>
-      </Grid>
+          <Grid item container direction="row">
+            <Grid item>
+              <NewPlayer />
+            </Grid>
+          </Grid>
+        </>
+      )}
     </Grid>
   );
 };
