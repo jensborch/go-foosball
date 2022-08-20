@@ -17,7 +17,7 @@ import {
   useTournamentPlayerMutation,
 } from '../api/hooks';
 import ErrorSnackbar from './ErrorSnackbar';
-import { StyledCard } from './Styled';
+import { DefaultGrid, StyledCard } from './Styled';
 
 type PlayerProps = {
   tournament: string;
@@ -25,7 +25,7 @@ type PlayerProps = {
 };
 
 const Player = ({ tournament, player }: PlayerProps) => {
-  const [ranking, setRanking] = useState(NaN);
+  const [ranking, setRanking] = useState(1500);
   const { mutate, error, isError } = useTournamentPlayerMutation(tournament);
 
   const onAddPlayer = () => {
@@ -114,20 +114,12 @@ type PlayersProps = {
 const Players = ({ tournament }: PlayersProps) => {
   const { status, error, data } = usePlayers(Number.parseInt(tournament));
   return (
-    <Grid
-      sx={{
-        margin: (theme) => theme.spacing(),
-      }}
-      item
-      container
-      spacing={2}
-      direction="row"
-    >
+    <DefaultGrid container direction="row">
       {status === 'loading' && <CircularProgress />}
       {status === 'error' && <Error msg={error?.message}></Error>}
       {status === 'success' && (
         <>
-          <Grid spacing={2} item container direction="row">
+          <Grid item container direction="row">
             {data?.map((player, _) => (
               <Grid item key={player.nickname}>
                 <Player player={player} tournament={tournament} />
@@ -141,7 +133,7 @@ const Players = ({ tournament }: PlayersProps) => {
           </Grid>
         </>
       )}
-    </Grid>
+    </DefaultGrid>
   );
 };
 

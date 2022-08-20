@@ -3,7 +3,6 @@ import { toLocaleDateString } from '../api/util';
 import { Error } from './Error';
 import {
   Avatar,
-  Card,
   CardContent,
   CardHeader,
   CircularProgress,
@@ -12,8 +11,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useTournaments } from '../api/hooks';
-import { StyledCard } from './Styled';
-
+import { DefaultGrid, StyledCard } from './Styled';
 
 const Tournament = ({ created, name, score, initial, id }: Api.Tournament) => {
   const navigate = useNavigate();
@@ -52,13 +50,13 @@ const Tournaments = () => {
     return <Error msg={error?.message}></Error>;
   }
   return (
-    <Grid container spacing={2} direction="row">
+    <DefaultGrid container direction="row">
       {data?.map((tournament) => (
         <Grid item key={tournament.id}>
           <Tournament {...tournament} />
         </Grid>
       ))}
-    </Grid>
+    </DefaultGrid>
   );
 };
 

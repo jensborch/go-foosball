@@ -8,7 +8,7 @@ import {
 import { useTournamentMutation } from '../api/hooks';
 import FullScreenDialog from './FullScreenDialog';
 import { useState } from 'react';
-import { StyledCard } from './Styled';
+import { DefaultGrid, StyledCard } from './Styled';
 
 type CreateTournamentProps = {
   open: boolean;
@@ -32,14 +32,7 @@ const CreateTournamentDialog = ({ open, setOpen }: CreateTournamentProps) => {
 
   return (
     <FullScreenDialog setOpen={setOpen} open={open} title="Create tournament">
-      <Grid
-        sx={{
-          margin: (theme) => theme.spacing(),
-        }}
-        spacing={2}
-        container
-        direction="row"
-      >
+      <DefaultGrid container direction="row">
         <Grid item>
           <StyledCard>
             <CardContent>
@@ -83,7 +76,7 @@ const CreateTournamentDialog = ({ open, setOpen }: CreateTournamentProps) => {
             </CardActions>
           </StyledCard>
         </Grid>
-      </Grid>
+      </DefaultGrid>
     </FullScreenDialog>
   );
 };

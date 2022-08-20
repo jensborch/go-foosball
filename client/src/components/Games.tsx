@@ -16,17 +16,24 @@ import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import { StyledCard, StyledCardHeader } from './Styled';
 import { useEffect, useState } from 'react';
 
-const Players = ({players}: {players : string[]}) => {
+const Players = ({ players }: { players: string[] }) => {
   return (
-    <Grid container item columns={2} spacing={2} direction="row" justifyContent="center">
-    {players?.map((player) => (
-      <Grid item key={player}>
-        <Player nickname={player} />
-      </Grid>
-    ))}
-  </Grid>
-  )
-}
+    <Grid
+      container
+      item
+      columns={2}
+      spacing={2}
+      direction="row"
+      justifyContent="center"
+    >
+      {players?.map((player) => (
+        <Grid item key={player}>
+          <Player nickname={player} />
+        </Grid>
+      ))}
+    </Grid>
+  );
+};
 
 type GameProps = {
   tournament: string;
@@ -39,7 +46,7 @@ export const Game = ({ tournament, game }: GameProps) => {
   const [disabled, setDisabled] = useState(false);
   useEffect(() => {
     setDisabled(false);
-  }, [tournament, game])
+  }, [tournament, game]);
   const { mutate } = useGameMutation();
   function wins(winer: Winer) {
     mutate({
@@ -54,7 +61,7 @@ export const Game = ({ tournament, game }: GameProps) => {
     setDisabled(true);
   }
   return (
-    <StyledCard sx={{ minWidth: '300px'}}>
+    <StyledCard sx={{ minWidth: '300px' }}>
       <StyledCardHeader
         avatar={
           <Avatar>
@@ -66,7 +73,7 @@ export const Game = ({ tournament, game }: GameProps) => {
       />
       <CardContent>
         <Grid container spacing={2} columns={3} direction="column">
-          <Players players={game.rightPlayers}/>
+          <Players players={game.rightPlayers} />
           <Grid item>
             <LinearProgress
               color="secondary"
@@ -122,7 +129,7 @@ export const Game = ({ tournament, game }: GameProps) => {
               }
             />
           </Grid>
-          <Players players={game.leftPlayers}/>
+          <Players players={game.leftPlayers} />
         </Grid>
       </CardContent>
     </StyledCard>
@@ -135,7 +142,7 @@ type PlayerProps = {
 
 const Player = ({ nickname }: PlayerProps) => {
   return (
-    <Card sx={{ minWidth: '140px'}}>
+    <Card sx={{ minWidth: '140px' }}>
       <CardHeader
         avatar={
           <Avatar
@@ -160,10 +167,18 @@ const Games = ({ tournament }: GamesProps) => {
   const { status, error, data } = useRandomGames(tournament);
 
   if (status === 'loading') {
-    return <CircularProgress />;
+    return (
+      <Grid item>
+        <CircularProgress />
+      </Grid>
+    );
   }
   if (status === 'error') {
-    return <Error msg={error?.message}></Error>;
+    return (
+      <Grid item>
+        <Error msg={error?.message}></Error>
+      </Grid>
+    );
   }
   return (
     <>
