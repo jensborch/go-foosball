@@ -13,7 +13,7 @@ import { useRandomGames, useGameMutation } from '../api/hooks';
 import { Error } from './Error';
 import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
-import { StyledCardHeader } from './Styled';
+import { StyledCard, StyledCardHeader } from './Styled';
 import { useEffect, useState } from 'react';
 
 const Players = ({players}: {players : string[]}) => {
@@ -54,7 +54,7 @@ export const Game = ({ tournament, game }: GameProps) => {
     setDisabled(true);
   }
   return (
-    <Card sx={{ minWidth: '300px'}}>
+    <StyledCard sx={{ minWidth: '300px'}}>
       <StyledCardHeader
         avatar={
           <Avatar>
@@ -125,7 +125,7 @@ export const Game = ({ tournament, game }: GameProps) => {
           <Players players={game.leftPlayers}/>
         </Grid>
       </CardContent>
-    </Card>
+    </StyledCard>
   );
 };
 

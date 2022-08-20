@@ -1,7 +1,6 @@
 import * as Api from '../api/Api';
 import {
   Avatar,
-  Card,
   CardContent,
   Chip,
   CircularProgress,
@@ -21,7 +20,7 @@ import {
 import { Error } from './Error';
 import CheckIcon from '@mui/icons-material/Check';
 import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
-import { StyledCardHeader } from './Styled';
+import { StyledCard, StyledCardHeader } from './Styled';
 import AnimatedAvatar from './AnimatedAvatar';
 
 type PlayerProps = {
@@ -78,7 +77,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
   }
   return (
     <Grid item>
-      <Card sx={{ minWidth: '200px' }}>
+      <StyledCard sx={{ minWidth: '200px' }}>
         <StyledCardHeader
           avatar={
             <Avatar>
@@ -97,7 +96,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
             ))}
           </List>
         </CardContent>
-      </Card>
+      </StyledCard>
     </Grid>
   );
 };

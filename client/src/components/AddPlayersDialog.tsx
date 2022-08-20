@@ -2,7 +2,6 @@ import FullScreenDialog from './FullScreenDialog';
 import * as Api from '../api/Api';
 import { useState } from 'react';
 import {
-  Card,
   CardContent,
   Grid,
   Typography,
@@ -18,6 +17,7 @@ import {
   useTournamentPlayerMutation,
 } from '../api/hooks';
 import ErrorSnackbar from './ErrorSnackbar';
+import { StyledCard } from './Styled';
 
 type PlayerProps = {
   tournament: string;
@@ -38,7 +38,7 @@ const Player = ({ tournament, player }: PlayerProps) => {
   return (
     <>
       {isError && <ErrorSnackbar msg={(error as any)?.error.error} />}
-      <Card key={player.nickname}>
+      <StyledCard key={player.nickname}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="h3">
             {player.nickname} - {player.realname}
@@ -57,7 +57,7 @@ const Player = ({ tournament, player }: PlayerProps) => {
             Add
           </Button>
         </CardActions>
-      </Card>
+      </StyledCard>
     </>
   );
 };
@@ -76,7 +76,7 @@ const NewPlayer = () => {
   return (
     <>
       {isError && <ErrorSnackbar msg={(error as any)?.error.error} />}
-      <Card>
+      <StyledCard>
         <CardContent>
           <Grid container direction="column">
             <Grid item>
@@ -102,7 +102,7 @@ const NewPlayer = () => {
             Create
           </Button>
         </CardActions>
-      </Card>
+      </StyledCard>
     </>
   );
 };

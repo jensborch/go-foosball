@@ -12,14 +12,14 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useTournaments } from '../api/hooks';
+import { StyledCard } from './Styled';
 
 
 const Tournament = ({ created, name, score, initial, id }: Api.Tournament) => {
   const navigate = useNavigate();
   return (
-    <Card
+    <StyledCard
       sx={{ minWidth: '275px', cursor: 'pointer' }}
-      elevation={4}
       onClick={() => navigate(`./tournament/${id}`)}
     >
       <CardHeader
@@ -39,7 +39,7 @@ const Tournament = ({ created, name, score, initial, id }: Api.Tournament) => {
         <Typography variant="body1">Score pr. game: {score}</Typography>
         <Typography variant="body1">Initial ranking: {initial}</Typography>
       </CardContent>
-    </Card>
+    </StyledCard>
   );
 };
 
