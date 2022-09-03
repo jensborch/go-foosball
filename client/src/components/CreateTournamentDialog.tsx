@@ -36,7 +36,7 @@ const CreateTournamentDialog = ({ open, setOpen }: CreateTournamentProps) => {
         <Grid item>
           <StyledCard>
             <CardContent>
-              <Grid container direction="column">
+              <Grid item container direction="column">
                 <Grid item>
                   <TextField
                     type="text"

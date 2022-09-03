@@ -1,11 +1,13 @@
 import * as Api from '../api/Api';
 import {
   Avatar,
+  CardActions,
   CardContent,
   Chip,
   CircularProgress,
   Divider,
   Grid,
+  IconButton,
   List,
   ListItem,
   ListItemAvatar,
@@ -22,6 +24,10 @@ import CheckIcon from '@mui/icons-material/Check';
 import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
 import { StyledCard, StyledCardHeader } from './Styled';
 import AnimatedAvatar from './AnimatedAvatar';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
+import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
+import { useState } from 'react';
 
 type PlayerProps = {
   tournament: string;
@@ -63,11 +69,58 @@ const Player = ({ tournament, player }: PlayerProps) => {
   );
 };
 
+type SortOrder = 'alpha' | 'winner' | 'favorit';
+
+type SortPlayersProps = {
+  setOrder: (order: SortOrder) => void;
+};
+
+const sortPlayers =
+  (order: SortOrder) =>
+  (p1: Api.TournamentPlayer, p2: Api.TournamentPlayer): number => {
+    switch (order) {
+      case 'alpha':
+        return p1.nickname.localeCompare(p2.nickname);
+      case 'winner':
+        return p1.ranking && p2.ranking ? p2.ranking - p1.ranking : 0;
+      case 'favorit':
+        return 0; //TODO
+    }
+  };
+
+const SortPlayers = ({ setOrder }: SortPlayersProps) => {
+  return (
+    <CardActions>
+      <Grid container justifyContent="space-around">
+        <Grid item>
+          <IconButton
+            aria-label="Favorites"
+            onClick={() => setOrder('favorit')}
+          >
+            <FavoriteBorderOutlinedIcon />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton aria-label="Winners" onClick={() => setOrder('winner')}>
+            <EmojiEventsOutlinedIcon />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton aria-label="Alpha" onClick={() => setOrder('alpha')}>
+            <SortByAlphaIcon />
+          </IconButton>
+        </Grid>
+      </Grid>
+    </CardActions>
+  );
+};
+
 type PlayersProps = {
   tournament: string;
 };
 
 const TournamentPlayers = ({ tournament }: PlayersProps) => {
+  const [order, setOder] = useState<SortOrder>('winner');
   const { status, error, data } = useTournamentPlayers(tournament);
   if (status === 'loading') {
     return <CircularProgress />;
@@ -88,7 +141,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
         />
         <CardContent>
           <List>
-            {data?.map((p, i) => (
+            {data?.sort(sortPlayers(order)).map((p, i) => (
               <div key={p.nickname}>
                 <Player player={p} tournament={tournament} />
                 {i !== data.length - 1 ? <Divider /> : null}
@@ -96,6 +149,8 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
             ))}
           </List>
         </CardContent>
+        <Divider />
+        <SortPlayers setOrder={setOder} />
       </StyledCard>
     </Grid>
   );
