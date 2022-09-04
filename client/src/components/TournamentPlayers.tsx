@@ -29,7 +29,6 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
 import { useState } from 'react';
