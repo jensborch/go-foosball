@@ -130,7 +130,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
   }
   return (
     <Grid item>
-      <StyledCard sx={{ minWidth: '200px' }}>
+      <StyledCard sx={{ minWidth: '200px', maxHeight: '100vh' }}>
         <StyledCardHeader
           avatar={
             <Avatar>
@@ -139,7 +139,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
           }
           title="Players"
         />
-        <CardContent>
+        <CardContent sx={{ overflow: 'auto', maxHeight: '65vh' }}>
           <List>
             {data?.sort(sortPlayers(order)).map((p, i) => (
               <div key={p.nickname}>
