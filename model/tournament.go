@@ -32,6 +32,7 @@ type TournamentPlayer struct {
 	Tournament   Tournament `json:"-"`
 	Ranking      uint       `json:"ranking" binding:"required"`
 	Active       bool       `json:"active" binding:"required"`
+	Latest       *time.Time `json:"latest"`
 } //@name TournamentPlayer
 
 type TournamentPlayerHistory struct {

@@ -1393,6 +1393,9 @@
                 "active": {
                     "type": "boolean"
                 },
+                "latest": {
+                    "type": "string"
+                },
                 "nickname": {
                     "type": "string"
                 },

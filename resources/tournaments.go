@@ -49,13 +49,14 @@ func GetTournaments(db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-//TournamentPlayerRepresenatation represents a player in a tournament
+// TournamentPlayerRepresenatation represents a player in a tournament
 type TournamentPlayerRepresenatation struct {
-	Nickname string `json:"nickname" binding:"required"`
-	RealName string `json:"realname"`
-	RFID     string `json:"rfid,omitempty"`
-	Active   bool   `json:"active" binding:"required"`
-	Ranking  uint   `json:"ranking,omitempty"`
+	Nickname string     `json:"nickname" binding:"required"`
+	RealName string     `json:"realname"`
+	RFID     string     `json:"rfid,omitempty"`
+	Active   bool       `json:"active" binding:"required"`
+	Ranking  uint       `json:"ranking,omitempty"`
+	Latest   *time.Time `json:"latest,omitempty"`
 } //@name TournamentPlayer
 
 func NewPlayerRepresentation(tp *model.TournamentPlayer) TournamentPlayerRepresenatation {
@@ -65,6 +66,7 @@ func NewPlayerRepresentation(tp *model.TournamentPlayer) TournamentPlayerReprese
 		RFID:     tp.Player.RFID,
 		Active:   tp.Active,
 		Ranking:  tp.Ranking,
+		Latest:   tp.Latest,
 	}
 }
 

@@ -1401,6 +1401,9 @@ const docTemplate_swagger = `{
                 "active": {
                     "type": "boolean"
                 },
+                "latest": {
+                    "type": "string"
+                },
                 "nickname": {
                     "type": "string"
                 },

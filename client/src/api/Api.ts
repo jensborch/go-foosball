@@ -92,6 +92,7 @@ export interface Tournament {
 
 export interface TournamentPlayer {
   active: boolean;
+  latest?: string;
   nickname: string;
   ranking?: number;
   realname?: string;

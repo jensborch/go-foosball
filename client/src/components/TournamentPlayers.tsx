@@ -13,6 +13,7 @@ import {
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
+  Tooltip,
 } from '@mui/material';
 import {
   useTournamentPlayers,
@@ -25,8 +26,12 @@ import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
 import { StyledCard, StyledCardHeader } from './Styled';
 import AnimatedAvatar from './AnimatedAvatar';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
 import { useState } from 'react';
 
 type PlayerProps = {
@@ -73,6 +78,7 @@ type SortOrder = 'alpha' | 'winner' | 'favorit';
 
 type SortPlayersProps = {
   setOrder: (order: SortOrder) => void;
+  order: SortOrder;
 };
 
 const sortPlayers =
@@ -84,31 +90,48 @@ const sortPlayers =
       case 'winner':
         return p1.ranking && p2.ranking ? p2.ranking - p1.ranking : 0;
       case 'favorit':
-        return 0; //TODO
+        return p1.latest && p2.latest
+          ? Date.parse(p2.latest).valueOf() - Date.parse(p1.latest).valueOf()
+          : 0;
     }
   };
 
-const SortPlayers = ({ setOrder }: SortPlayersProps) => {
+const SortPlayers = ({ setOrder, order }: SortPlayersProps) => {
   return (
     <CardActions>
       <Grid container justifyContent="space-around">
         <Grid item>
-          <IconButton
-            aria-label="Favorites"
-            onClick={() => setOrder('favorit')}
-          >
-            <FavoriteBorderOutlinedIcon />
-          </IconButton>
+          <Tooltip title="Favorites">
+            <IconButton onClick={() => setOrder('favorit')}>
+              {order === 'favorit' ? (
+                <FavoriteIcon />
+              ) : (
+                <FavoriteBorderOutlinedIcon />
+              )}
+            </IconButton>
+          </Tooltip>
         </Grid>
         <Grid item>
-          <IconButton aria-label="Winners" onClick={() => setOrder('winner')}>
-            <EmojiEventsOutlinedIcon />
-          </IconButton>
+          <Tooltip title="Winner">
+            <IconButton aria-label="Winners" onClick={() => setOrder('winner')}>
+              {order === 'winner' ? (
+                <EmojiEventsIcon />
+              ) : (
+                <EmojiEventsOutlinedIcon />
+              )}
+            </IconButton>
+          </Tooltip>
         </Grid>
         <Grid item>
-          <IconButton aria-label="Alpha" onClick={() => setOrder('alpha')}>
-            <SortByAlphaIcon />
-          </IconButton>
+          <Tooltip title="Alphabetic">
+            <IconButton aria-label="Alpha" onClick={() => setOrder('alpha')}>
+              {order === 'alpha' ? (
+                <EmojiEmotionsIcon />
+              ) : (
+                <EmojiEmotionsOutlinedIcon />
+              )}
+            </IconButton>
+          </Tooltip>
         </Grid>
       </Grid>
     </CardActions>
@@ -140,7 +163,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
           title="Players"
         />
         <CardContent sx={{ overflow: 'auto', maxHeight: '65vh' }}>
-          <List>
+          <List dense={true}>
             {data?.sort(sortPlayers(order)).map((p, i) => (
               <div key={p.nickname}>
                 <Player player={p} tournament={tournament} />
@@ -150,7 +173,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
           </List>
         </CardContent>
         <Divider />
-        <SortPlayers setOrder={setOder} />
+        <SortPlayers setOrder={setOder} order={order} />
       </StyledCard>
     </Grid>
   );

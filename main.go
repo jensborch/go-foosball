@@ -31,10 +31,12 @@ import (
 // @BasePath  /
 
 // React client static web server content.
+//
 //go:embed client/build
 var client embed.FS
 
 // Static html for testing.
+//
 //go:embed html
 var html embed.FS
 

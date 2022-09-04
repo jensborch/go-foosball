@@ -110,7 +110,7 @@ func TestPostPlayerNotValid(t *testing.T) {
 	ts, _ := startServer()
 	defer ts.Close()
 
-	player := newPlayer("p", "n")(t)
+	player := newPlayer("p", "name")(t)
 
 	resp, _ := http.Post(fmt.Sprintf("%s/players", ts.URL), "application/json", bytes.NewBuffer(player))
 
@@ -123,8 +123,9 @@ func postPlayers(ts *httptest.Server) func(t *testing.T) []model.Player {
 	return func(t *testing.T) []model.Player {
 
 		players := []struct{ player []byte }{
-			{newPlayer("p1", "n1")(t)},
-			{newPlayer("p2", "n2")(t)},
+			{newPlayer("thomas", "Thomas")(t)},
+			{newPlayer("kristine", "Kristine")(t)},
+			{newPlayer("jens", "Jens")(t)},
 		}
 
 		for _, p := range players {
@@ -160,7 +161,7 @@ func postTournaments(ts *httptest.Server) func(t *testing.T) model.Tournament {
 
 		tournament, err := json.Marshal(map[string]interface{}{
 			"initial": 1500,
-			"name":    "test",
+			"name":    "MyTournament",
 			"score":   50,
 		})
 
@@ -231,8 +232,8 @@ func postTables(ts *httptest.Server) func(t *testing.T) []model.Table {
 	return func(t *testing.T) []model.Table {
 
 		tables := []struct{ table []byte }{
-			{newTable("t1", "black", "white")(t)},
-			{newTable("t2", "green", "blue")(t)},
+			{newTable("Table1", "black", "white")(t)},
+			{newTable("Table2", "green", "blue")(t)},
 		}
 
 		for _, p := range tables {

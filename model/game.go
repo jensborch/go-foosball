@@ -3,9 +3,12 @@ package model
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"math"
 	"reflect"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 // Game played
@@ -180,7 +183,7 @@ func isEmptyPlayer(p TournamentPlayer) bool {
 	return reflect.DeepEqual(p, TournamentPlayer{})
 }
 
-//AddTournamentPlayer adds a tournament player to a game
+// AddTournamentPlayer adds a tournament player to a game
 func (g *Game) AddTournamentPlayer(p *TournamentPlayer) error {
 	switch {
 	case isEmptyPlayer(g.RightPlayerOne):
@@ -197,7 +200,7 @@ func (g *Game) AddTournamentPlayer(p *TournamentPlayer) error {
 	return nil
 }
 
-//AddRightTournamentPlayer adds a tournament player to a game
+// AddRightTournamentPlayer adds a tournament player to a game
 func (g *Game) AddRightTournamentPlayer(p *TournamentPlayer) error {
 	switch {
 	case isEmptyPlayer(g.RightPlayerOne):
@@ -210,7 +213,7 @@ func (g *Game) AddRightTournamentPlayer(p *TournamentPlayer) error {
 	return nil
 }
 
-//AddLeftTournamentPlayer adds a tournament player to a game
+// AddLeftTournamentPlayer adds a tournament player to a game
 func (g *Game) AddLeftTournamentPlayer(p *TournamentPlayer) error {
 	switch {
 	case isEmptyPlayer(g.LeftPlayerOne):
@@ -237,4 +240,30 @@ func NewGame(table *TournamentTable) *Game {
 	return &Game{
 		TournamentTable: *table,
 	}
+}
+
+func (g Game) playerIds() []uint {
+	var players []uint
+	if isEmptyPlayer(g.LeftPlayerTwo) {
+		players = make([]uint, 2)
+		players[0] = g.LeftPlayerOne.Player.ID
+		players[1] = g.RightPlayerOne.Player.ID
+	} else {
+		players = make([]uint, 4)
+		players[0] = g.LeftPlayerOne.Player.ID
+		players[1] = g.LeftPlayerTwo.Player.ID
+		players[2] = g.RightPlayerOne.Player.ID
+		players[3] = g.RightPlayerTwo.Player.ID
+	}
+	return players
+}
+
+func (game *Game) AfterSave(tx *gorm.DB) (err error) {
+	if err := tx.Model(&TournamentPlayer{}).
+		Where("tournament_id = ?", game.TournamentTable.Tournament.ID).
+		Where("player_id in ?", game.playerIds()).
+		Update("latest", game.UpdatedAt).Error; err != nil {
+		return fmt.Errorf("unable to update tournament player: %s", err)
+	}
+	return nil
 }
