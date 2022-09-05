@@ -15,6 +15,18 @@ import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import { StyledCard, StyledCardHeader } from './Styled';
 import { useEffect, useState } from 'react';
+import {
+  blue,
+  blueGrey,
+  brown,
+  green,
+  grey,
+  orange,
+  pink,
+  purple,
+  red,
+  yellow,
+} from '@mui/material/colors';
 
 const Players = ({ players }: { players: string[] }) => {
   return (
@@ -35,27 +47,92 @@ const Players = ({ players }: { players: string[] }) => {
   );
 };
 
+type ScoreProps = {
+  first: number;
+  second: number;
+};
+const Score = ({ first, second }: ScoreProps) => (
+  <LinearProgress
+    color="secondary"
+    variant="determinate"
+    value={(first / (first + second)) * 100}
+  />
+);
+
+type WinnerProps = {
+  color: string;
+  score: number;
+  winner: Winner;
+  disabled: boolean;
+  onClick: (winner: Winner) => void;
+};
+
+const WinnerButton = ({
+  color,
+  winner,
+  score,
+  disabled,
+  onClick,
+}: WinnerProps) => (
+  <Button
+    sx={{ background: findColor(color) }}
+    variant="outlined"
+    disabled={disabled}
+    onClick={() => onClick(winner)}
+    startIcon={<EmojiEventsOutlinedIcon />}
+  >
+    {color} wins {score} points
+  </Button>
+);
+
+const findColor = (color: string): string => {
+  switch (color) {
+    case 'red':
+      return red[400];
+    case 'pink':
+      return pink[400];
+    case 'purple':
+      return purple[400];
+    case 'blue':
+      return blue[400];
+    case 'green':
+      return green[400];
+    case 'yellow':
+      return yellow[400];
+    case 'orange':
+      return orange[400];
+    case 'brown':
+      return brown[400];
+    case 'black':
+      return grey[400];
+    case 'white':
+      return 'white';
+    default:
+      return blueGrey[300];
+  }
+};
+
 type GameProps = {
   tournament: string;
   game: Api.Game;
 };
 
-type Winer = 'right' | 'left' | 'draw';
+type Winner = 'right' | 'left' | 'draw';
 
-export const Game = ({ tournament, game }: GameProps) => {
+const Game = ({ tournament, game }: GameProps) => {
   const [disabled, setDisabled] = useState(false);
   useEffect(() => {
     setDisabled(false);
   }, [tournament, game]);
   const { mutate } = useGameMutation();
-  function wins(winer: Winer) {
+  function wins(winner: Winner) {
     mutate({
       tournament: tournament,
       table: game.table.id.toString(),
       game: {
         rightPlayers: game.rightPlayers,
         leftPlayers: game.leftPlayers,
-        winner: winer,
+        winner: winner,
       },
     });
     setDisabled(true);
@@ -75,27 +152,16 @@ export const Game = ({ tournament, game }: GameProps) => {
         <Grid container spacing={2} columns={3} direction="column">
           <Players players={game.rightPlayers} />
           <Grid item>
-            <LinearProgress
-              color="secondary"
-              variant="determinate"
-              value={
-                (game.rightScore / (game.rightScore + game.leftScore)) * 100
-              }
-            />
+            <Score first={game.rightScore} second={game.leftScore} />
           </Grid>
           <Grid container item columns={1} direction="column">
-            <Button
-              variant="outlined"
+            <WinnerButton
+              color={game.table.color.right}
+              score={game.rightScore}
+              winner="right"
               disabled={disabled}
-              onClick={() => wins('right')}
-              startIcon={
-                <EmojiEventsOutlinedIcon
-                  sx={{ color: `${game.table.color.right}` }}
-                />
-              }
-            >
-              {game.table.color.right} wins {game.rightScore} points
-            </Button>
+              onClick={wins}
+            />
           </Grid>
           <Grid container item columns={1} direction="column">
             <Button
@@ -107,27 +173,16 @@ export const Game = ({ tournament, game }: GameProps) => {
             </Button>
           </Grid>
           <Grid container item columns={1} direction="column">
-            <Button
-              variant="outlined"
+            <WinnerButton
+              color={game.table.color.left}
+              score={game.leftScore}
+              winner="left"
               disabled={disabled}
-              onClick={() => wins('left')}
-              startIcon={
-                <EmojiEventsOutlinedIcon
-                  sx={{ color: `${game.table.color.left}` }}
-                />
-              }
-            >
-              {game.table.color.left} wins {game.leftScore} points
-            </Button>
+              onClick={wins}
+            />
           </Grid>
           <Grid item>
-            <LinearProgress
-              color="secondary"
-              variant="determinate"
-              value={
-                (game.leftScore / (game.leftScore + game.rightScore)) * 100
-              }
-            />
+            <Score first={game.leftScore} second={game.rightScore} />
           </Grid>
           <Players players={game.leftPlayers} />
         </Grid>
