@@ -5,6 +5,7 @@ import (
 	"flag"
 	"io/fs"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gin-contrib/cors"
@@ -34,11 +35,6 @@ import (
 //
 //go:embed client/build
 var client embed.FS
-
-// Static html for testing.
-//
-//go:embed html
-var html embed.FS
 
 func main() {
 	var (
@@ -132,9 +128,16 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 		serveStatic(c, client, "/client/", "client/build")
 	})
 
-	router.GET("/html/*any", func(c *gin.Context) {
-		serveStatic(c, html, "/html/", "html")
-	})
+	const avatars = "./avatars"
+	_, err = os.Stat(avatars)
+	if os.IsNotExist(err) {
+		err = os.Mkdir(avatars, 0755)
+		if err != nil {
+			panic("unable to create avatars foler")
+		}
+	}
+
+	router.Static("/avatars", avatars)
 
 	return router, db
 }

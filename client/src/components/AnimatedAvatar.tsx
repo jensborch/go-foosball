@@ -1,6 +1,7 @@
 import { Avatar, keyframes } from '@mui/material';
 import { useRef } from 'react';
 import { Transition, TransitionStatus } from 'react-transition-group';
+import { conf } from '../api/util';
 
 const flip = keyframes`
   0% {
@@ -17,6 +18,7 @@ type AnimatedAvatarProps = {
   selectedComp: React.ReactNode;
   deselectedComp: React.ReactNode;
   timeout?: number;
+  avatar?: string;
 };
 
 const AnimatedAvatar = ({
@@ -25,6 +27,7 @@ const AnimatedAvatar = ({
   selectedComp,
   deselectedComp,
   timeout = 500,
+  avatar,
 }: AnimatedAvatarProps) => {
   const nodeRef = useRef<any>();
   return (
@@ -45,8 +48,12 @@ const AnimatedAvatar = ({
               </Avatar>
             );
           case 'exited':
+            const src: any = {};
+            if (avatar) {
+              src.src = `${conf.baseUrl}/avatars/${avatar}.jpg`;
+            }
             return (
-              <Avatar ref={nodeRef} onClick={() => setSelected(true)}>
+              <Avatar ref={nodeRef} {...src} onClick={() => setSelected(true)}>
                 {deselectedComp}
               </Avatar>
             );

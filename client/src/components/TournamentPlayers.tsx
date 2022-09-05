@@ -59,6 +59,7 @@ const Player = ({ tournament, player }: PlayerProps) => {
     <ListItem disableGutters>
       <ListItemAvatar>
         <AnimatedAvatar
+          avatar={player.nickname}
           selected={player.active}
           setSelected={setSelected}
           selectedComp={<CheckIcon />}
