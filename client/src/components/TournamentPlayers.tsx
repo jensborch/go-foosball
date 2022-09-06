@@ -22,7 +22,6 @@ import {
 } from '../api/hooks';
 import { Error } from './Error';
 import CheckIcon from '@mui/icons-material/Check';
-import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
 import { StyledCard, StyledCardHeader } from './Styled';
 import AnimatedAvatar from './AnimatedAvatar';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
@@ -31,6 +30,7 @@ import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
+import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
 import { useState } from 'react';
 
 type PlayerProps = {

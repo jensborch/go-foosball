@@ -9,6 +9,7 @@ import {
   TextField,
   CardActions,
   CircularProgress,
+  Avatar,
 } from '@mui/material';
 import { Error } from './Error';
 import {
@@ -17,8 +18,8 @@ import {
   useTournamentPlayerMutation,
 } from '../api/hooks';
 import ErrorSnackbar from './ErrorSnackbar';
-import { DefaultGrid, StyledCard } from './Styled';
-
+import { DefaultGrid, StyledCard, StyledCardHeader } from './Styled';
+import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
 type PlayerProps = {
   tournament: string;
   player: Api.Player;
@@ -39,6 +40,14 @@ const Player = ({ tournament, player }: PlayerProps) => {
     <>
       {isError && <ErrorSnackbar msg={(error as any)?.error.error} />}
       <StyledCard key={player.nickname}>
+        <StyledCardHeader
+          avatar={
+            <Avatar>
+              <EmojiPeopleOutlinedIcon />
+            </Avatar>
+          }
+          title="Add player"
+        />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h3">
             {player.nickname} - {player.realname}
@@ -72,11 +81,21 @@ const NewPlayer = () => {
       nickname,
       realname,
     });
+    setNickname('');
+    setRealname('');
   };
   return (
     <>
       {isError && <ErrorSnackbar msg={(error as any)?.error.error} />}
       <StyledCard>
+        <StyledCardHeader
+          avatar={
+            <Avatar>
+              <EmojiPeopleOutlinedIcon />
+            </Avatar>
+          }
+          title="Create player"
+        />
         <CardContent>
           <Grid container direction="column">
             <Grid item>
@@ -114,26 +133,26 @@ type PlayersProps = {
 const Players = ({ tournament }: PlayersProps) => {
   const { status, error, data } = usePlayers(Number.parseInt(tournament));
   return (
-    <DefaultGrid container direction="row">
+    <Grid container direction="row">
       {status === 'loading' && <CircularProgress />}
       {status === 'error' && <Error msg={error?.message}></Error>}
       {status === 'success' && (
         <>
-          <Grid item container direction="row">
+          <DefaultGrid item container direction="row">
             {data?.map((player, _) => (
               <Grid item key={player.nickname}>
                 <Player player={player} tournament={tournament} />
               </Grid>
             ))}
-          </Grid>
-          <Grid item container direction="row">
+          </DefaultGrid>
+          <DefaultGrid item container direction="row">
             <Grid item>
               <NewPlayer />
             </Grid>
-          </Grid>
+          </DefaultGrid>
         </>
       )}
-    </DefaultGrid>
+    </Grid>
   );
 };
 

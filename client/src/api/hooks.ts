@@ -124,6 +124,7 @@ export const useTournamentPlayerMutation = (tournament: string) => {
           tournament,
         ]);
         queryClient.invalidateQueries(CacheKeys.RandomGames);
+        queryClient.invalidateQueries(CacheKeys.Players);
       },
       onError: (error) => {
         //Do nothing
