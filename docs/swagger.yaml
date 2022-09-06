@@ -392,6 +392,11 @@ paths:
     get:
       consumes:
       - application/json
+      parameters:
+      - description: exlude tournament from list
+        in: query
+        name: exclude
+        type: integer
       produces:
       - application/json
       responses:

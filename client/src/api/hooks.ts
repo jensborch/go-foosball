@@ -1,24 +1,27 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import * as Api from '../api/Api';
-import { api, handleErrors } from './util';
+import { queryAllByAltText } from "@testing-library/react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import * as Api from "../api/Api";
+import { api, handleErrors } from "./util";
 
 enum CacheKeys {
-  Players = 'players',
-  TournamentsGames = 'tournamentsGames',
-  RandomGames = 'randomGames',
-  TournamentPlayers = 'tournamentPlayers',
-  Tables = 'Tables',
-  TournamentTables = 'TournamentTables',
-  Tournaments = 'Tournaments',
+  Players = "players",
+  TournamentsGames = "tournamentsGames",
+  RandomGames = "randomGames",
+  TournamentPlayers = "tournamentPlayers",
+  Tables = "Tables",
+  TournamentTables = "TournamentTables",
+  Tournaments = "Tournaments",
 }
 
 export const usePlayers = (tournament?: number) => {
+  const query = {
+    ...(tournament && { exclude: tournament }),
+  };
   return useQuery<Api.Player[], Error>(
     [CacheKeys.Players, tournament],
     async (): Promise<Api.Player[]> => {
       return api.players
-        .playersList({ exclude: tournament })
-
+        .playersList(query)
         .then(handleErrors)
         .then((r) => r.data);
     }
@@ -61,12 +64,15 @@ export const useTournamentPlayers = (tournament: string) => {
   );
 };
 
-export const useTables = () => {
+export const useTables = (tournament?: number) => {
+  const query = {
+    ...(tournament && { exclude: tournament }),
+  };
   return useQuery<Api.Table[], Error>(
     CacheKeys.Tables,
     async (): Promise<Api.Table[]> => {
       return api.tables
-        .tablesList()
+        .tablesList(query)
         .then(handleErrors)
         .then((r) => r.data);
     }
@@ -163,6 +169,20 @@ export const usePlayerMutation = () => {
     (player: Api.CreatePlayer) => api.players.playersCreate(player),
     {
       onSuccess: () => queryClient.invalidateQueries(CacheKeys.Players),
+      onError: (error) => {
+        //Do nothing
+      },
+    }
+  );
+};
+
+export const useTableMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (table: Api.CreateTable) => api.tables.tablesCreate(table),
+    {
+      onSuccess: () => queryClient.invalidateQueries(CacheKeys.Tables),
       onError: (error) => {
         //Do nothing
       },

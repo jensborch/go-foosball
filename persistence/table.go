@@ -31,6 +31,18 @@ func (r *tableRepository) FindAll() []*model.Table {
 	return tables
 }
 
+func (r *tableRepository) FindAllNotInTournament(id string) []*model.Table {
+	var players []*model.Table
+	sub := r.db.Select("table_id").
+		Where("tournament_id = ?", id).
+		Table("tournament_tables")
+	r.db.Model(&model.Table{}).
+		Where("table.id NOT IN (?)", sub).
+		Order("name").
+		Find(&players)
+	return players
+}
+
 // NewTableRepository creats new repository
 func NewTableRepository(db *gorm.DB) model.TableRepository {
 	return &tableRepository{

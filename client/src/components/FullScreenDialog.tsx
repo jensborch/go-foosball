@@ -20,7 +20,7 @@ const Transition = React.forwardRef(function Transition(
 
 type FullScreenDialogProps = {
   title?: string;
-  children?: JSX.Element;
+  children?: React.ReactNode;
   open: boolean;
   setOpen: (open: boolean) => void;
 };

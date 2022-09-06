@@ -46,11 +46,9 @@ func GetPlayers(db *gorm.DB) func(*gin.Context) {
 		defer HandlePanic(c)
 		r := persistence.NewPlayerRepository(db)
 		if exclude, found := c.GetQuery("exclude"); found {
-			players := r.FindAllNotInTournament(exclude)
-			c.JSON(http.StatusOK, players)
+			c.JSON(http.StatusOK, r.FindAllNotInTournament(exclude))
 		} else {
-			players := r.FindAll()
-			c.JSON(http.StatusOK, players)
+			c.JSON(http.StatusOK, r.FindAll())
 		}
 	}
 }
@@ -93,7 +91,7 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-//DeletePlayer deletes a player
+// DeletePlayer deletes a player
 // @Summary  Delete player
 // @Tags     player
 // @Accept   json

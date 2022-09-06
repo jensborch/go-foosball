@@ -259,6 +259,14 @@ const docTemplate_swagger = `{
                     "table"
                 ],
                 "summary": "Get all tables",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "exlude tournament from list",
+                        "name": "exclude",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

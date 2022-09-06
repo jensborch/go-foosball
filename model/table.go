@@ -19,6 +19,7 @@ type TableRepository interface {
 	Remove(id string) Found
 	Find(id string) (*Table, Found)
 	FindAll() []*Table
+	FindAllNotInTournament(id string) []*Table
 }
 
 // NewTable creates a new table

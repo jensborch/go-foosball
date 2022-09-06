@@ -442,10 +442,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary Get all tables
      * @request GET:/tables
      */
-    tablesList: (params: RequestParams = {}) =>
+    tablesList: (query?: { exclude?: number }, params: RequestParams = {}) =>
       this.request<Table[], any>({
         path: `/tables`,
         method: "GET",
+        query: query,
         type: ContentType.Json,
         format: "json",
         ...params,

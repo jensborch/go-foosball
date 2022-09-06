@@ -38,12 +38,18 @@ func GetTable(param string, db *gorm.DB) func(*gin.Context) {
 // @Tags     table
 // @Accept   json
 // @Produce  json
+// @Param    exclude  query    int  false  "exlude tournament from list"
 // @Success  200  {array}  model.Table
 // @Router   /tables [get]
 func GetTables(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
-		c.JSON(http.StatusOK, persistence.NewTableRepository(db).FindAll())
+		r := persistence.NewTableRepository(db)
+		if exclude, found := c.GetQuery("exclude"); found {
+			c.JSON(http.StatusOK, r.FindAllNotInTournament(exclude))
+		} else {
+			c.JSON(http.StatusOK, r.FindAll())
+		}
 	}
 }
 

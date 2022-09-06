@@ -1,6 +1,6 @@
-import FullScreenDialog from './FullScreenDialog';
-import * as Api from '../api/Api';
-import { useState } from 'react';
+import FullScreenDialog from "./FullScreenDialog";
+import * as Api from "../api/Api";
+import { useState } from "react";
 import {
   CardContent,
   Grid,
@@ -10,16 +10,16 @@ import {
   CardActions,
   CircularProgress,
   Avatar,
-} from '@mui/material';
-import { Error } from './Error';
+} from "@mui/material";
+import { Error } from "./Error";
 import {
   usePlayerMutation,
   usePlayers,
   useTournamentPlayerMutation,
-} from '../api/hooks';
-import ErrorSnackbar from './ErrorSnackbar';
-import { DefaultGrid, StyledCard, StyledCardHeader } from './Styled';
-import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
+} from "../api/hooks";
+import ErrorSnackbar from "./ErrorSnackbar";
+import { DefaultGrid, StyledCard, StyledCardHeader } from "./Styled";
+import EmojiPeopleOutlinedIcon from "@mui/icons-material/EmojiPeopleOutlined";
 type PlayerProps = {
   tournament: string;
   player: Api.Player;
@@ -72,8 +72,8 @@ const Player = ({ tournament, player }: PlayerProps) => {
 };
 
 const NewPlayer = () => {
-  const [nickname, setNickname] = useState('');
-  const [realname, setRealname] = useState('');
+  const [nickname, setNickname] = useState("");
+  const [realname, setRealname] = useState("");
   const { mutate, error, isError } = usePlayerMutation();
 
   const onCreatePlayer = () => {
@@ -81,8 +81,8 @@ const NewPlayer = () => {
       nickname,
       realname,
     });
-    setNickname('');
-    setRealname('');
+    setNickname("");
+    setRealname("");
   };
   return (
     <>
@@ -126,18 +126,20 @@ const NewPlayer = () => {
   );
 };
 
-type PlayersProps = {
+type AddPlayersProps = {
   tournament: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
 };
 
-const Players = ({ tournament }: PlayersProps) => {
+const AddPlayersDialog = ({ tournament, open, setOpen }: AddPlayersProps) => {
   const { status, error, data } = usePlayers(Number.parseInt(tournament));
   return (
-    <Grid container direction="row">
-      {status === 'loading' && <CircularProgress />}
-      {status === 'error' && <Error msg={error?.message}></Error>}
-      {status === 'success' && (
-        <>
+    <FullScreenDialog open={open} setOpen={setOpen}>
+      {status === "loading" && <CircularProgress />}
+      {status === "error" && <Error msg={error?.message}></Error>}
+      {status === "success" && (
+        <Grid container direction="row">
           <DefaultGrid item container direction="row">
             {data?.map((player, _) => (
               <Grid item key={player.nickname}>
@@ -150,22 +152,8 @@ const Players = ({ tournament }: PlayersProps) => {
               <NewPlayer />
             </Grid>
           </DefaultGrid>
-        </>
+        </Grid>
       )}
-    </Grid>
-  );
-};
-
-type AddPlayersProps = {
-  tournament: string;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-};
-
-const AddPlayersDialog = ({ tournament, open, setOpen }: AddPlayersProps) => {
-  return (
-    <FullScreenDialog open={open} setOpen={setOpen}>
-      <Players tournament={tournament} />
     </FullScreenDialog>
   );
 };
