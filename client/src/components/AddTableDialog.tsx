@@ -1,6 +1,7 @@
 import {
   CircularProgress,
   Divider,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -14,7 +15,6 @@ import AddIcon from "@mui/icons-material/Add";
 import FullScreenDialog from "./FullScreenDialog";
 import { useState } from "react";
 import ErrorSnackbar from "./ErrorSnackbar";
-import { Box, color } from "@mui/system";
 
 type AddTableProps = {
   tournament: string;
@@ -37,8 +37,8 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
     mutate({
       name: table,
       color: {
-        left: "",
-        right: "",
+        left,
+        right,
       },
     });
   }
@@ -63,8 +63,10 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
           {(data ? data.length > 0 : false) && <Divider />}
           <ListSubheader>
             <ListItem>
-              <ListItemIcon onClick={() => handleAdd()}>
-                <AddIcon />
+              <ListItemIcon>
+                <IconButton onClick={() => handleAdd()}>
+                  <AddIcon />
+                </IconButton>
               </ListItemIcon>
               <TextField
                 sx={{ m: 2 }}

@@ -57,6 +57,7 @@ func corsHandler() gin.HandlerFunc {
 
 func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	router := gin.Default()
+	router.RemoveExtraSlash = true
 	router.Use(corsHandler())
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {

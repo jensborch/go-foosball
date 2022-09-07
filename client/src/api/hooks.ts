@@ -1,4 +1,3 @@
-import { queryAllByAltText } from "@testing-library/react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import * as Api from "../api/Api";
 import { api, handleErrors } from "./util";
