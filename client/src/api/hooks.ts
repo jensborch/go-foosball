@@ -170,6 +170,7 @@ export const useTournamentTableMutation = (tournament: string) => {
       onSuccess: () => {
         queryClient.invalidateQueries([CacheKeys.TournamentTables, tournament]);
         queryClient.invalidateQueries(CacheKeys.RandomGames);
+        queryClient.invalidateQueries(CacheKeys.Tables);
       },
       onError: (error) => {
         //Do nothing

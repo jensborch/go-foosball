@@ -43,7 +43,7 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
   const [right, setRight] = useState("");
   const [left, setLeft] = useState("");
   function handleSelect(id: number): void {
-    mutateTourTable(Number.parseInt(table));
+    mutateTourTable(id);
   }
   function handleAdd(): void {
     mutateTable({
