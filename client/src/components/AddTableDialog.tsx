@@ -9,12 +9,17 @@ import {
   ListSubheader,
   TextField,
 } from "@mui/material";
-import { useTableMutation, useTables } from "../api/hooks";
+import {
+  useTableMutation,
+  useTables,
+  useTournamentTableMutation,
+} from "../api/hooks";
 import { Error } from "./Error";
 import AddIcon from "@mui/icons-material/Add";
 import FullScreenDialog from "./FullScreenDialog";
 import { useState } from "react";
 import ErrorSnackbar from "./ErrorSnackbar";
+import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 
 type AddTableProps = {
   tournament: string;
@@ -25,16 +30,23 @@ type AddTableProps = {
 const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
   const { status, error, data } = useTables(Number.parseInt(tournament));
   const {
-    mutate,
+    mutate: mutateTable,
     error: mutateError,
     isError: isMutateError,
   } = useTableMutation();
+  const {
+    mutate: mutateTourTable,
+    error: mutateTourError,
+    isError: isMutateTourError,
+  } = useTournamentTableMutation(tournament);
   const [table, setTable] = useState("");
   const [right, setRight] = useState("");
   const [left, setLeft] = useState("");
-  function handleSelect(id: number): void {}
+  function handleSelect(id: number): void {
+    mutateTourTable(Number.parseInt(table));
+  }
   function handleAdd(): void {
-    mutate({
+    mutateTable({
       name: table,
       color: {
         left,
@@ -47,6 +59,9 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
       {isMutateError && (
         <ErrorSnackbar msg={(mutateError as any)?.error.error} />
       )}
+      {isMutateTourError && (
+        <ErrorSnackbar msg={(mutateTourError as any)?.error.error} />
+      )}
       {status === "loading" && <CircularProgress />}
       {status === "error" && <Error msg={error?.message} />}
       {status === "success" && (
@@ -57,17 +72,20 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
               button
               onClick={() => handleSelect(table.id)}
             >
-              <ListItemText primary={table.name} />
+              <ListItemIcon>
+                <IconButton>
+                  <TableRestaurantIcon />
+                </IconButton>
+              </ListItemIcon>
+              <ListItemText
+                primary={table.name}
+                secondary={`${table.color.right}/${table.color.left}`}
+              />
             </ListItem>
           ))}
           {(data ? data.length > 0 : false) && <Divider />}
           <ListSubheader>
             <ListItem>
-              <ListItemIcon>
-                <IconButton onClick={() => handleAdd()}>
-                  <AddIcon />
-                </IconButton>
-              </ListItemIcon>
               <TextField
                 sx={{ m: 2 }}
                 type="string"
@@ -91,7 +109,9 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
                 label="Left color"
                 variant="standard"
               />
-              <ListItemText />
+              <IconButton onClick={() => handleAdd()}>
+                <AddIcon />
+              </IconButton>
             </ListItem>
           </ListSubheader>
         </List>

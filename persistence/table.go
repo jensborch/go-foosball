@@ -32,15 +32,15 @@ func (r *tableRepository) FindAll() []*model.Table {
 }
 
 func (r *tableRepository) FindAllNotInTournament(id string) []*model.Table {
-	var players []*model.Table
+	var tables []*model.Table
 	sub := r.db.Select("table_id").
 		Where("tournament_id = ?", id).
 		Table("tournament_tables")
 	r.db.Model(&model.Table{}).
-		Where("table.id NOT IN (?)", sub).
+		Where("tables.id NOT IN (?)", sub).
 		Order("name").
-		Find(&players)
-	return players
+		Find(&tables)
+	return tables
 }
 
 // NewTableRepository creats new repository
