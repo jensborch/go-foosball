@@ -17,7 +17,7 @@ import {
 import { Error } from "./Error";
 import AddIcon from "@mui/icons-material/Add";
 import FullScreenDialog from "./FullScreenDialog";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import ErrorSnackbar from "./ErrorSnackbar";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 
@@ -45,7 +45,8 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
   function handleSelect(id: number): void {
     mutateTourTable(id);
   }
-  function handleAdd(): void {
+  function handleAdd(event: ChangeEvent<HTMLFormElement>): void {
+    event.preventDefault();
     mutateTable({
       name: table,
       color: {
@@ -53,6 +54,9 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
         right,
       },
     });
+    setTable("");
+    setRight("");
+    setLeft("");
   }
   return (
     <FullScreenDialog setOpen={setOpen} open={open} title="Add table">
@@ -85,34 +89,36 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
           ))}
           {(data ? data.length > 0 : false) && <Divider />}
           <ListSubheader>
-            <ListItem>
-              <TextField
-                sx={{ m: 2 }}
-                type="string"
-                value={table}
-                onChange={(e) => setTable(e.target.value)}
-                label="New table"
-                variant="standard"
-              />
-              <TextField
-                sx={{ m: 2 }}
-                type="string"
-                value={right}
-                onChange={(e) => setRight(e.target.value)}
-                label="Right color"
-                variant="standard"
-              />
-              <TextField
-                type="string"
-                value={left}
-                onChange={(e) => setLeft(e.target.value)}
-                label="Left color"
-                variant="standard"
-              />
-              <IconButton onClick={() => handleAdd()}>
-                <AddIcon />
-              </IconButton>
-            </ListItem>
+            <form onSubmit={handleAdd}>
+              <ListItem>
+                <TextField
+                  sx={{ m: 2 }}
+                  type="string"
+                  value={table}
+                  onChange={(e) => setTable(e.target.value)}
+                  label="New table"
+                  variant="standard"
+                />
+                <TextField
+                  sx={{ m: 2 }}
+                  type="string"
+                  value={right}
+                  onChange={(e) => setRight(e.target.value)}
+                  label="Right color"
+                  variant="standard"
+                />
+                <TextField
+                  type="string"
+                  value={left}
+                  onChange={(e) => setLeft(e.target.value)}
+                  label="Left color"
+                  variant="standard"
+                />
+                <IconButton type="submit">
+                  <AddIcon />
+                </IconButton>
+              </ListItem>
+            </form>
           </ListSubheader>
         </List>
       )}

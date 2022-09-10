@@ -3,7 +3,7 @@ package model
 // Table used in tournament
 type Table struct {
 	Base
-	Name  string `json:"name" binding:"required" gorm:"type:varchar(50);not null"`
+	Name  string `json:"name" binding:"required" gorm:"type:varchar(50);not null;index:table_name,unique"`
 	Color Color  `json:"color" binding:"required" gorm:"embedded"`
 } //@name Table
 

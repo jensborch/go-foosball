@@ -57,7 +57,6 @@ func corsHandler() gin.HandlerFunc {
 
 func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	router := gin.Default()
-	router.RemoveExtraSlash = true
 	router.Use(corsHandler())
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
@@ -84,31 +83,37 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	players := router.Group("/players")
 	players.GET("", resources.GetPlayers(db))
 	players.POST("", resources.PostPlayer(db))
+	players.POST("/", resources.PostPlayer(db))
 	players.GET("/:name", resources.GetPlayer("name", db))
 	players.DELETE("/:name", resources.DeletePlayer("name", db))
 
 	tables := router.Group("/tables")
 	tables.GET("", resources.GetTables(db))
 	tables.POST("", resources.PostTable(db))
+	tables.POST("/", resources.PostTable(db))
 	tables.GET("/:id", resources.GetTable("id", db))
 	//tables.DELETE("/:id", resources.DeleteTable("id", db))
 
 	tournaments := router.Group("/tournaments")
 	tournaments.GET("", resources.GetTournaments(db))
 	tournaments.POST("", resources.PostTournament(db))
+	tournaments.POST("/", resources.PostTournament(db))
 	tournaments.GET("/:id", resources.GetTournament("id", db))
 	tournaments.DELETE("/:id", resources.DeleteTournament("id", db))
 
 	tournaments.GET("/:id/players", resources.GetTournamentPlayes("id", db))
 	tournaments.POST("/:id/players", resources.PostTournamentPlayer("id", db))
+	tournaments.POST("/:id/players/", resources.PostTournamentPlayer("id", db))
 	tournaments.DELETE("/:id/players/:name", resources.DeleteTournamentPlayer("id", "name", db))
 	//tournaments.GET("/:id/players/:name", resources.GetTournamentPlayer("id", "name", db))
 	tournaments.GET("/:id/players/:name/history", resources.GetTournamentPlayeHistory("id", "name", db))
 
 	tournaments.GET("/:id/tables", resources.GetTournamentTables("id", db))
 	tournaments.POST("/:id/tables", resources.PostTournamentTables("id", db))
+	tournaments.POST("/:id/tables/", resources.PostTournamentTables("id", db))
 	tournaments.DELETE("/:id/tables/:table", resources.DeleteTournamentTable("id", "table", db))
 	tournaments.POST("/:id/tables/:table/games", resources.PostGame("id", "table", db))
+	tournaments.POST("/:id/tables/:table/games/", resources.PostGame("id", "table", db))
 	tournaments.GET("/:id/games", resources.GetGamesInTournament("id", db))
 
 	//Actions

@@ -135,7 +135,7 @@ func TestRandomGame(t *testing.T) {
 	tourRepo.AddPlayer(tournament.IdAsString(), player4)
 
 	tableRepo := NewTableRepository(db)
-	table := model.NewTable("Test", model.Color{
+	table := model.NewTable("New1", model.Color{
 		Right: "1",
 		Left:  "2",
 	})
@@ -165,7 +165,7 @@ func TestSaveGame(t *testing.T) {
 	tourRepo.AddPlayer(tournament.IdAsString(), player2)
 
 	tableRepo := NewTableRepository(db)
-	table := model.NewTable("Test", model.Color{
+	table := model.NewTable("New2", model.Color{
 		Right: "1",
 		Left:  "2",
 	})
