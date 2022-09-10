@@ -10,6 +10,7 @@ enum CacheKeys {
   Tables = "Tables",
   TournamentTables = "TournamentTables",
   Tournaments = "Tournaments",
+  TournamentHisory = "TournamentHisory",
 }
 
 export const usePlayers = (tournament?: number) => {
@@ -57,6 +58,18 @@ export const useTournamentPlayers = (tournament: string) => {
     async (): Promise<Api.TournamentPlayer[]> => {
       return api.tournaments
         .playersDetail(tournament)
+        .then(handleErrors)
+        .then((r) => r.data);
+    }
+  );
+};
+
+export const useTournamentHistory = (tournament: string) => {
+  return useQuery<Api.TournamentPlayerHistory[], Error>(
+    [CacheKeys.TournamentHisory, tournament],
+    async (): Promise<Api.TournamentPlayerHistory[]> => {
+      return api.tournaments
+        .historyDetail(tournament, { from: new Date().toISOString() })
         .then(handleErrors)
         .then((r) => r.data);
     }

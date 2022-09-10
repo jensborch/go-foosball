@@ -640,6 +640,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags tournament
+     * @name HistoryDetail
+     * @summary Get ranking history for a tournament
+     * @request GET:/tournaments/{id}/history
+     */
+    historyDetail: (id: string, query: { from: string }, params: RequestParams = {}) =>
+      this.request<TournamentPlayerHistory[], Error>({
+        path: `/tournaments/${id}/history`,
+        method: "GET",
+        query: query,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags tournament
      * @name PlayersDetail
      * @summary Get players in tournament
      * @request GET:/tournaments/{id}/players

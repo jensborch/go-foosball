@@ -261,6 +261,19 @@ func (r *tournamentRepository) PlayerHistory(tournamentId string, nickname strin
 	return nil, false
 }
 
+func (r *tournamentRepository) History(tournamentId string, from time.Time) ([]*model.TournamentPlayerHistory, model.Found) {
+	if _, found := r.Find(tournamentId); found {
+		var history []*model.TournamentPlayerHistory
+		r.db.
+			Where("tournament_player_id = ?", tournamentId).
+			Where("created_at >= ?", from).
+			Order("created_at").
+			Find(&history)
+		return history, true
+	}
+	return nil, false
+}
+
 // NewTournamentRepository creats new repository
 func NewTournamentRepository(db *gorm.DB) model.TournamentRepository {
 	return &tournamentRepository{

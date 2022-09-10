@@ -283,3 +283,34 @@ func GetTournamentPlayeHistory(tournamentParam string, playerParam string, db *g
 		}
 	}
 }
+
+// GetTournamentHistory get ranking history for a given tournament
+// @Summary  Get ranking history for a tournament
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Param    id        path      string  true  "Tournament ID"
+// @Param    from      query     string  true  "The RFC3339 date to get history from"  Format(date)
+// @Success  200       {array}   model.TournamentPlayerHistory
+// @Failure  404       {object}  ErrorResponse
+// @Failure  500       {object}  ErrorResponse
+// @Router   /tournaments/{id}/history [get]
+func GetTournamentHistory(tournamentParam string, db *gorm.DB) func(*gin.Context) {
+	return func(c *gin.Context) {
+		defer HandlePanic(c)
+		id := c.Param(tournamentParam)
+		if from, found := c.GetQuery("from"); found {
+			if time, err := time.Parse("2006-01-02", from); err != nil {
+				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Error parsing from date: %s", err)))
+			} else {
+				if history, found := persistence.NewTournamentRepository(db).History(id, time); found {
+					c.JSON(http.StatusOK, history)
+				} else {
+					c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
+				}
+			}
+		} else {
+			c.JSON(http.StatusBadRequest, NewErrorResponse("A from date must be specified"))
+		}
+	}
+}
