@@ -734,7 +734,7 @@ const docTemplate_swagger = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/TournamentPlayerHistory"
+                                "$ref": "#/definitions/TournamentHistory"
                             }
                         }
                     },
@@ -1453,6 +1453,26 @@ const docTemplate_swagger = `{
                 }
             }
         },
+        "TournamentHistory": {
+            "type": "object",
+            "required": [
+                "ranking"
+            ],
+            "properties": {
+                "nickname": {
+                    "type": "string"
+                },
+                "ranking": {
+                    "type": "integer"
+                },
+                "realname": {
+                    "type": "string"
+                },
+                "updated": {
+                    "type": "string"
+                }
+            }
+        },
         "TournamentPlayer": {
             "type": "object",
             "required": [
@@ -1483,15 +1503,15 @@ const docTemplate_swagger = `{
         "TournamentPlayerHistory": {
             "type": "object",
             "required": [
-                "created",
-                "ranking"
+                "ranking",
+                "updated"
             ],
             "properties": {
-                "created": {
-                    "type": "string"
-                },
                 "ranking": {
                     "type": "integer"
+                },
+                "updated": {
+                    "type": "string"
                 }
             }
         },

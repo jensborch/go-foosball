@@ -284,6 +284,22 @@ func GetTournamentPlayeHistory(tournamentParam string, playerParam string, db *g
 	}
 }
 
+type TournamentHistoryRepresenatation struct {
+	UpdatedAt time.Time `json:"updated"`
+	Nickname  string    `json:"nickname"`
+	RealName  string    `json:"realname"`
+	Ranking   uint      `json:"ranking" binding:"required"`
+} //@name TournamentHistory
+
+func newTournamentHistory(history *model.TournamentPlayerHistory) *TournamentHistoryRepresenatation {
+	return &TournamentHistoryRepresenatation{
+		UpdatedAt: history.UpdatedAt,
+		Nickname:  history.TournamentPlayer.Player.Nickname,
+		RealName:  history.TournamentPlayer.Player.RealName,
+		Ranking:   history.Ranking,
+	}
+}
+
 // GetTournamentHistory get ranking history for a given tournament
 // @Summary  Get ranking history for a tournament
 // @Tags     tournament
@@ -291,7 +307,7 @@ func GetTournamentPlayeHistory(tournamentParam string, playerParam string, db *g
 // @Produce  json
 // @Param    id        path      string  true  "Tournament ID"
 // @Param    from      query     string  true  "The RFC3339 date to get history from"  Format(date)
-// @Success  200       {array}   model.TournamentPlayerHistory
+// @Success  200       {array}   TournamentHistoryRepresenatation
 // @Failure  404       {object}  ErrorResponse
 // @Failure  500       {object}  ErrorResponse
 // @Router   /tournaments/{id}/history [get]
@@ -304,6 +320,10 @@ func GetTournamentHistory(tournamentParam string, db *gorm.DB) func(*gin.Context
 				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Error parsing from date: %s", err)))
 			} else {
 				if history, found := persistence.NewTournamentRepository(db).History(id, time); found {
+					result := make([]TournamentHistoryRepresenatation, len(history))
+					for i, h := range history {
+						result[i] = *newTournamentHistory(h)
+					}
 					c.JSON(http.StatusOK, history)
 				} else {
 					c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))

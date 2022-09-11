@@ -36,7 +36,7 @@ type TournamentPlayer struct {
 } //@name TournamentPlayer
 
 type TournamentPlayerHistory struct {
-	CreatedAt          time.Time        `json:"created" binding:"required" gorm:"not null"`
+	UpdatedAt          time.Time        `json:"updated" binding:"required" gorm:"not null"`
 	DeletedAt          gorm.DeletedAt   `json:"-" gorm:"index"`
 	TournamentPlayerID uint             `json:"-" gorm:"index:tournament_player"`
 	TournamentPlayer   TournamentPlayer `json:"-"`
@@ -99,7 +99,7 @@ func NewTournamentPlayerHistory(player *TournamentPlayer) *TournamentPlayerHisto
 		TournamentPlayer:   *player,
 		TournamentPlayerID: player.PlayerID,
 		Ranking:            player.Ranking,
-		CreatedAt:          player.CreatedAt,
+		UpdatedAt:          player.UpdatedAt,
 	}
 }
 

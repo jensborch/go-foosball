@@ -188,6 +188,19 @@ definitions:
     - score
     - updated
     type: object
+  TournamentHistory:
+    properties:
+      nickname:
+        type: string
+      ranking:
+        type: integer
+      realname:
+        type: string
+      updated:
+        type: string
+    required:
+    - ranking
+    type: object
   TournamentPlayer:
     properties:
       active:
@@ -208,13 +221,13 @@ definitions:
     type: object
   TournamentPlayerHistory:
     properties:
-      created:
-        type: string
       ranking:
         type: integer
+      updated:
+        type: string
     required:
-    - created
     - ranking
+    - updated
     type: object
   TournamentTable:
     properties:
@@ -704,7 +717,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/TournamentPlayerHistory'
+              $ref: '#/definitions/TournamentHistory'
             type: array
         "404":
           description: Not Found

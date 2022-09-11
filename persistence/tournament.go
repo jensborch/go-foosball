@@ -253,8 +253,8 @@ func (r *tournamentRepository) PlayerHistory(tournamentId string, nickname strin
 		var history []*model.TournamentPlayerHistory
 		r.db.
 			Where("tournament_player_id = ?", player.ID).
-			Where("created_at >= ?", from).
-			Order("created_at").
+			Where("updated_at >= ?", from).
+			Order("updated_at").
 			Find(&history)
 		return history, true
 	}
@@ -264,10 +264,12 @@ func (r *tournamentRepository) PlayerHistory(tournamentId string, nickname strin
 func (r *tournamentRepository) History(tournamentId string, from time.Time) ([]*model.TournamentPlayerHistory, model.Found) {
 	if _, found := r.Find(tournamentId); found {
 		var history []*model.TournamentPlayerHistory
-		r.db.
-			Where("tournament_player_id = ?", tournamentId).
-			Where("created_at >= ?", from).
-			Order("created_at").
+		r.db.Model(&model.TournamentPlayerHistory{}).
+			Preload(clause.Associations).
+			Joins("inner join tournament_players on tournament_players.id = tournament_player_histories.tournament_player_id").
+			Where("tournament_players.tournament_id = ?", tournamentId).
+			Where(" tournament_player_histories.updated_at >= ?", from).
+			Order(" tournament_player_histories.updated_at").
 			Find(&history)
 		return history, true
 	}

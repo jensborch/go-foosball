@@ -726,7 +726,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/TournamentPlayerHistory"
+                                "$ref": "#/definitions/TournamentHistory"
                             }
                         }
                     },
@@ -1445,6 +1445,26 @@
                 }
             }
         },
+        "TournamentHistory": {
+            "type": "object",
+            "required": [
+                "ranking"
+            ],
+            "properties": {
+                "nickname": {
+                    "type": "string"
+                },
+                "ranking": {
+                    "type": "integer"
+                },
+                "realname": {
+                    "type": "string"
+                },
+                "updated": {
+                    "type": "string"
+                }
+            }
+        },
         "TournamentPlayer": {
             "type": "object",
             "required": [
@@ -1475,15 +1495,15 @@
         "TournamentPlayerHistory": {
             "type": "object",
             "required": [
-                "created",
-                "ranking"
+                "ranking",
+                "updated"
             ],
             "properties": {
-                "created": {
-                    "type": "string"
-                },
                 "ranking": {
                     "type": "integer"
+                },
+                "updated": {
+                    "type": "string"
                 }
             }
         },

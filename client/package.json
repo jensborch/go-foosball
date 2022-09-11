@@ -16,6 +16,7 @@
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@types/react-transition-group": "^4.4.5",
+    "date-fns": "^2.29.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.0",

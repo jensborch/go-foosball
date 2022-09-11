@@ -90,6 +90,13 @@ export interface Tournament {
   updated: string;
 }
 
+export interface TournamentHistory {
+  nickname?: string;
+  ranking: number;
+  realname?: string;
+  updated?: string;
+}
+
 export interface TournamentPlayer {
   active: boolean;
   latest?: string;
@@ -100,8 +107,8 @@ export interface TournamentPlayer {
 }
 
 export interface TournamentPlayerHistory {
-  created: string;
   ranking: number;
+  updated: string;
 }
 
 export interface TournamentTable {
@@ -645,7 +652,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/tournaments/{id}/history
      */
     historyDetail: (id: string, query: { from: string }, params: RequestParams = {}) =>
-      this.request<TournamentPlayerHistory[], Error>({
+      this.request<TournamentHistory[], Error>({
         path: `/tournaments/${id}/history`,
         method: "GET",
         query: query,
