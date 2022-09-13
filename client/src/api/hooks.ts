@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import * as Api from "../api/Api";
 import { api, handleErrors } from "./util";
-import { sub } from "date-fns";
+import { format, sub } from "date-fns";
 
 enum CacheKeys {
   Players = "players",
@@ -71,7 +71,7 @@ export const useTournamentHistory = (tournament: string) => {
     async (): Promise<Api.TournamentHistory[]> => {
       return api.tournaments
         .historyDetail(tournament, {
-          from: sub(new Date(), { months: 1 }).toISOString(),
+          from: format(sub(new Date(), { months: 1 }), "yyyy-MM-dd"),
         })
         .then(handleErrors)
         .then((r) => r.data);

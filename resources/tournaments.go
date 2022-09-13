@@ -270,7 +270,7 @@ func GetTournamentPlayeHistory(tournamentParam string, playerParam string, db *g
 		nickname := c.Param(playerParam)
 		if from, found := c.GetQuery("from"); found {
 			if time, err := time.Parse("2006-01-02", from); err != nil {
-				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Error parsing from date: %s", err)))
+				c.JSON(http.StatusBadRequest, NewErrorResponse(fmt.Sprintf("Error parsing from date: %s", err)))
 			} else {
 				if history, found := persistence.NewTournamentRepository(db).PlayerHistory(id, nickname, time); found {
 					c.JSON(http.StatusOK, history)
@@ -317,7 +317,7 @@ func GetTournamentHistory(tournamentParam string, db *gorm.DB) func(*gin.Context
 		id := c.Param(tournamentParam)
 		if from, found := c.GetQuery("from"); found {
 			if time, err := time.Parse("2006-01-02", from); err != nil {
-				c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Error parsing from date: %s", err)))
+				c.JSON(http.StatusBadRequest, NewErrorResponse(fmt.Sprintf("Error parsing from date: %s", err)))
 			} else {
 				if history, found := persistence.NewTournamentRepository(db).History(id, time); found {
 					result := make([]TournamentHistoryRepresenatation, len(history))

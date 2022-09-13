@@ -1,12 +1,13 @@
-import { useParams } from 'react-router-dom';
-import AddSpeedDial from '../components/AddSpeedDial';
-import Menu from '../components/Menu';
-import Games from '../components/Games';
-import { Error } from '../components/Error';
-import RefreshRandomGames from '../components/RefreshRandomGames';
-import Start from '../components/Start';
-import TournamentPlayers from '../components/TournamentPlayers';
-import { DefaultGrid } from '../components/Styled';
+import { useParams } from "react-router-dom";
+import AddSpeedDial from "../components/AddSpeedDial";
+import Menu from "../components/Menu";
+import Games from "../components/Games";
+import History from "../components/History";
+import { Error } from "../components/Error";
+import RefreshRandomGames from "../components/RefreshRandomGames";
+import Start from "../components/Start";
+import TournamentPlayers from "../components/TournamentPlayers";
+import { DefaultGrid } from "../components/Styled";
 
 function Tournament() {
   const { id } = useParams();
@@ -24,6 +25,7 @@ function Tournament() {
       <DefaultGrid container direction="row">
         <TournamentPlayers tournament={id} />
         <Games tournament={id} />
+        <History tournament={id} />
       </DefaultGrid>
     </>
   );

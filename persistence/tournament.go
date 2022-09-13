@@ -268,8 +268,8 @@ func (r *tournamentRepository) History(tournamentId string, from time.Time) ([]*
 			Preload(clause.Associations).
 			Joins("inner join tournament_players on tournament_players.id = tournament_player_histories.tournament_player_id").
 			Where("tournament_players.tournament_id = ?", tournamentId).
-			Where(" tournament_player_histories.updated_at >= ?", from).
-			Order(" tournament_player_histories.updated_at").
+			Where("tournament_player_histories.updated_at >= ?", from).
+			Order("tournament_player_histories.updated_at").
 			Find(&history)
 		return history, true
 	}
