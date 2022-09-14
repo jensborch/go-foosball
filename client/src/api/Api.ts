@@ -91,10 +91,10 @@ export interface Tournament {
 }
 
 export interface TournamentHistory {
-  nickname?: string;
+  nickname: string;
   ranking: number;
   realname?: string;
-  updated?: string;
+  updated: string;
 }
 
 export interface TournamentPlayer {

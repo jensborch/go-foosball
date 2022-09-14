@@ -38,9 +38,9 @@ type TournamentPlayer struct {
 type TournamentPlayerHistory struct {
 	UpdatedAt          time.Time        `json:"updated" binding:"required" gorm:"not null"`
 	DeletedAt          gorm.DeletedAt   `json:"-" gorm:"index"`
-	TournamentPlayerID uint             `json:"-" gorm:"index:tournament_player"`
+	TournamentPlayerID uint             `json:"-" gorm:"index:tournament_player:not null"`
 	TournamentPlayer   TournamentPlayer `json:"-"`
-	Ranking            uint             `json:"ranking" binding:"required"`
+	Ranking            uint             `json:"ranking" binding:"required" gorm:"not null"`
 } //@name TournamentPlayerHistory
 
 // TournamentRepository provides access games etc.

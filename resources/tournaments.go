@@ -285,8 +285,8 @@ func GetTournamentPlayeHistory(tournamentParam string, playerParam string, db *g
 }
 
 type TournamentHistoryRepresenatation struct {
-	UpdatedAt time.Time `json:"updated"`
-	Nickname  string    `json:"nickname"`
+	UpdatedAt time.Time `json:"updated" binding:"required"`
+	Nickname  string    `json:"nickname" binding:"required"`
 	RealName  string    `json:"realname"`
 	Ranking   uint      `json:"ranking" binding:"required"`
 } //@name TournamentHistory
@@ -324,7 +324,7 @@ func GetTournamentHistory(tournamentParam string, db *gorm.DB) func(*gin.Context
 					for i, h := range history {
 						result[i] = *newTournamentHistory(h)
 					}
-					c.JSON(http.StatusOK, history)
+					c.JSON(http.StatusOK, result)
 				} else {
 					c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 				}

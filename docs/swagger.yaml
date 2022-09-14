@@ -199,7 +199,9 @@ definitions:
       updated:
         type: string
     required:
+    - nickname
     - ranking
+    - updated
     type: object
   TournamentPlayer:
     properties:

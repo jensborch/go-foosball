@@ -265,7 +265,8 @@ func (r *tournamentRepository) History(tournamentId string, from time.Time) ([]*
 	if _, found := r.Find(tournamentId); found {
 		var history []*model.TournamentPlayerHistory
 		r.db.Model(&model.TournamentPlayerHistory{}).
-			Preload(clause.Associations).
+			Distinct().
+			Preload("TournamentPlayer.Player").
 			Joins("inner join tournament_players on tournament_players.id = tournament_player_histories.tournament_player_id").
 			Where("tournament_players.tournament_id = ?", tournamentId).
 			Where("tournament_player_histories.updated_at >= ?", from).

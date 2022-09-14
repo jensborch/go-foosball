@@ -1456,7 +1456,9 @@ const docTemplate_swagger = `{
         "TournamentHistory": {
             "type": "object",
             "required": [
-                "ranking"
+                "nickname",
+                "ranking",
+                "updated"
             ],
             "properties": {
                 "nickname": {
