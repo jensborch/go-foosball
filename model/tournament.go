@@ -61,7 +61,7 @@ type TournamentRepository interface {
 	DeactivatePlayer(tournamentId string, nickname string) (*TournamentPlayer, Found)
 	ActivatePlayer(tournamentId string, nickname string) (*TournamentPlayer, Found)
 	RandomGames(id string) ([]*Game, Found)
-	UpdatePlayerRanking(tournamentId string, nickname string, gameScore int) (*TournamentPlayer, Found)
+	UpdatePlayerRanking(tournamentId string, nickname string, gameScore int, updated time.Time) (*TournamentPlayer, Found)
 	PlayerHistory(tournamentId string, nickname string, from time.Time) ([]*TournamentPlayerHistory, Found)
 	History(tournamentId string, from time.Time) ([]*TournamentPlayerHistory, Found)
 }
@@ -103,7 +103,7 @@ func NewTournamentPlayerHistory(player *TournamentPlayer) *TournamentPlayerHisto
 	}
 }
 
-func (player *TournamentPlayer) AfterSave(tx *gorm.DB) (err error) {
+func (player *TournamentPlayer) AfterCreate(tx *gorm.DB) (err error) {
 	if err := tx.Omit(clause.Associations).Create(NewTournamentPlayerHistory(player)).Error; err != nil {
 		return fmt.Errorf("unable to update player history: %s", err)
 	}

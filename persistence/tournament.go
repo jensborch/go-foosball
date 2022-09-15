@@ -169,7 +169,7 @@ func (r *tournamentRepository) ActivatePlayer(tournamentId string, nickname stri
 	return nil, false
 }
 
-func (r *tournamentRepository) UpdatePlayerRanking(tournamentId string, nickname string, gameScore int) (*model.TournamentPlayer, model.Found) {
+func (r *tournamentRepository) UpdatePlayerRanking(tournamentId string, nickname string, gameScore int, updated time.Time) (*model.TournamentPlayer, model.Found) {
 	if player, found := r.FindPlayer(tournamentId, nickname); found {
 		tmp := int(player.Ranking) + gameScore
 		if tmp >= 0 {
@@ -177,12 +177,20 @@ func (r *tournamentRepository) UpdatePlayerRanking(tournamentId string, nickname
 		} else {
 			player.Ranking = 0
 		}
+		player.UpdatedAt = updated
 		if err := r.db.Save(player).Error; err != nil {
 			panic(err)
 		}
+		r.addHistory(player)
 		return player, true
 	}
 	return nil, false
+}
+
+func (r *tournamentRepository) addHistory(player *model.TournamentPlayer) {
+	if err := r.db.Omit(clause.Associations).Create(model.NewTournamentPlayerHistory(player)).Error; err != nil {
+		panic(err)
+	}
 }
 
 func (r *tournamentRepository) ShuffleActivePlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {

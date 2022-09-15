@@ -16,10 +16,10 @@ func (r *gameRepository) Store(g *model.Game) {
 	}
 	tourRepo := NewTournamentRepository(r.db)
 	for _, name := range g.LeftPlayerNames() {
-		tourRepo.UpdatePlayerRanking(g.TournamentTable.Tournament.IdAsString(), name, g.LeftScore)
+		tourRepo.UpdatePlayerRanking(g.TournamentTable.Tournament.IdAsString(), name, g.LeftScore, g.UpdatedAt)
 	}
 	for _, name := range g.RightPlayerNames() {
-		tourRepo.UpdatePlayerRanking(g.TournamentTable.Tournament.IdAsString(), name, g.RightScore)
+		tourRepo.UpdatePlayerRanking(g.TournamentTable.Tournament.IdAsString(), name, g.RightScore, g.UpdatedAt)
 	}
 }
 

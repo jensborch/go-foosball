@@ -11,7 +11,7 @@ enum CacheKeys {
   Tables = "Tables",
   TournamentTables = "TournamentTables",
   Tournaments = "Tournaments",
-  TournamentHisory = "TournamentHisory",
+  TournamentHistory = "TournamentHistory",
 }
 
 export const usePlayers = (tournament?: number) => {
@@ -67,7 +67,7 @@ export const useTournamentPlayers = (tournament: string) => {
 
 export const useTournamentHistory = (tournament: string) => {
   return useQuery<Api.TournamentHistory[], Error>(
-    [CacheKeys.TournamentHisory, tournament],
+    [CacheKeys.TournamentHistory, tournament],
     async (): Promise<Api.TournamentHistory[]> => {
       return api.tournaments
         .historyDetail(tournament, {
@@ -240,8 +240,10 @@ export const useGameMutation = () => {
         result.game
       ),
     {
-      onSuccess: () =>
-        queryClient.invalidateQueries(CacheKeys.TournamentPlayers),
+      onSuccess: () => {
+        queryClient.invalidateQueries(CacheKeys.TournamentPlayers);
+        queryClient.invalidateQueries(CacheKeys.TournamentHistory);
+      },
       onError: (error) => {
         //Do nothing
       },
