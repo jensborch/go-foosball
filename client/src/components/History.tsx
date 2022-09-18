@@ -22,7 +22,7 @@ type HistoryProps = {
 
 const findMin = (history: TournamentHistory[], nickname: string) => {
   const date = history
-    .filter((h) => (h.nickname = nickname))
+    .filter((h) => h.nickname === nickname)
     .map((h) => new Date(h.updated))
     .reduce((a, b) => (a < b ? a : b));
   return history.find(
@@ -32,7 +32,7 @@ const findMin = (history: TournamentHistory[], nickname: string) => {
 
 const findMax = (history: TournamentHistory[], nickname: string) => {
   const date = history
-    .filter((h) => (h.nickname = nickname))
+    .filter((h) => h.nickname === nickname)
     .map((h) => new Date(h.updated))
     .reduce((a, b) => (a > b ? a : b));
   return history.find(
@@ -40,25 +40,17 @@ const findMax = (history: TournamentHistory[], nickname: string) => {
   );
 };
 
-type Result = {
-  nickname: string;
-  diff: number;
-};
-
 const historyDiff = (history?: TournamentHistory[]) => {
   const names = new Set(history?.map((p) => p.nickname));
-  const result: Result[] = [];
+  const result: [nickname: string, diff: number][] = [];
   names.forEach((n) => {
     const max = findMax(history!, n)?.ranking;
     const min = findMin(history!, n)?.ranking;
     if (min && max) {
-      result.push({
-        nickname: n,
-        diff: max - min,
-      });
+      result.push([n, max - min]);
     }
   });
-  return result;
+  return result.sort((a, b) => b[1] - a[1]);
 };
 
 const History = ({ tournament }: HistoryProps) => {
@@ -73,7 +65,7 @@ const History = ({ tournament }: HistoryProps) => {
               <EmojiEventsIcon />
             </Avatar>
           }
-          title="Winners"
+          title="History"
         />
         {status === "loading" && <CircularProgress />}
         {status === "error" && <Error msg={error?.message} />}
@@ -81,7 +73,7 @@ const History = ({ tournament }: HistoryProps) => {
           <CardContent sx={{ overflow: "auto", maxHeight: "65vh" }}>
             <List dense={false}>
               {diff.map((p) => (
-                <div key={p.nickname}>
+                <div key={p[1]}>
                   <ListItem disableGutters>
                     <ListItemAvatar>
                       <Badge
@@ -91,14 +83,12 @@ const History = ({ tournament }: HistoryProps) => {
                           vertical: "top",
                           horizontal: "right",
                         }}
-                        badgeContent={p.diff}
+                        badgeContent={p[1]}
                       >
-                        <Avatar>
-                          {p.nickname.substring(0, 1).toUpperCase()}
-                        </Avatar>
+                        <Avatar>{p[0].substring(0, 1).toUpperCase()}</Avatar>
                       </Badge>
                     </ListItemAvatar>
-                    <ListItemText primary={p.nickname} />
+                    <ListItemText primary={p[0]} />
                   </ListItem>
                 </div>
               ))}
