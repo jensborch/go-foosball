@@ -11,10 +11,21 @@ import {
   ListItemText,
   Badge,
   Grid,
+  CardActions,
+  Tooltip,
+  IconButton,
+  Divider,
 } from "@mui/material";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { TournamentHistory } from "../api/Api";
 import isEqual from "date-fns/isEqual";
+import TodayIcon from "@mui/icons-material/Today";
+import TodayOutlinedIcon from "@mui/icons-material/Today";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonth";
+import DateRangeIcon from "@mui/icons-material/DateRange";
+import DateRangeOutlinedIcon from "@mui/icons-material/DateRange";
+import { useState } from "react";
 
 type HistoryProps = {
   tournament: string;
@@ -53,8 +64,54 @@ const historyDiff = (history?: TournamentHistory[]) => {
   return result.sort((a, b) => b[1] - a[1]);
 };
 
+type Period = "day" | "week" | "month" | "year";
+
+type ByPeriodProps = {
+  period: Period;
+  setPeriod: (preiod: Period) => void;
+};
+
+const ByPeriod = ({ setPeriod, period }: ByPeriodProps) => {
+  return (
+    <CardActions>
+      <Grid container justifyContent="space-around">
+        <Grid item>
+          <Tooltip title="Day">
+            <IconButton onClick={() => setPeriod("day")}>
+              {period === "day" ? <TodayIcon /> : <TodayOutlinedIcon />}
+            </IconButton>
+          </Tooltip>
+        </Grid>
+        <Grid item>
+          <Tooltip title="Week">
+            <IconButton aria-label="Winners" onClick={() => setPeriod("week")}>
+              {period === "week" ? (
+                <DateRangeIcon />
+              ) : (
+                <DateRangeOutlinedIcon />
+              )}
+            </IconButton>
+          </Tooltip>
+        </Grid>
+        <Grid item>
+          <Tooltip title="Month">
+            <IconButton aria-label="Alpha" onClick={() => setPeriod("month")}>
+              {period === "month" ? (
+                <CalendarMonthIcon />
+              ) : (
+                <CalendarMonthOutlinedIcon />
+              )}
+            </IconButton>
+          </Tooltip>
+        </Grid>
+      </Grid>
+    </CardActions>
+  );
+};
+
 const History = ({ tournament }: HistoryProps) => {
   const { status, error, data } = useTournamentHistory(tournament);
+  const [period, setPeriod] = useState<Period>("day");
   const diff = historyDiff(data);
   return (
     <Grid item>
@@ -95,6 +152,8 @@ const History = ({ tournament }: HistoryProps) => {
             </List>
           </CardContent>
         )}
+        <Divider />
+        <ByPeriod setPeriod={setPeriod} period={period} />
       </StyledCard>
     </Grid>
   );
