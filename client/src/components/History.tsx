@@ -20,12 +20,14 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { TournamentHistory } from "../api/Api";
 import isEqual from "date-fns/isEqual";
 import TodayIcon from "@mui/icons-material/Today";
-import TodayOutlinedIcon from "@mui/icons-material/Today";
+import TodayOutlinedIcon from "@mui/icons-material/TodayOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonth";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import DateRangeIcon from "@mui/icons-material/DateRange";
-import DateRangeOutlinedIcon from "@mui/icons-material/DateRange";
+import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 import { useState } from "react";
+import sub from "date-fns/sub";
+import TimelineIcon from "@mui/icons-material/Timeline";
 
 type HistoryProps = {
   tournament: string;
@@ -51,7 +53,8 @@ const findMax = (history: TournamentHistory[], nickname: string) => {
   );
 };
 
-const historyDiff = (history?: TournamentHistory[]) => {
+const historyDiff = (period: Duration, history?: TournamentHistory[]) => {
+  history = history?.filter((h) => new Date(h.updated) > getFrom(period));
   const names = new Set(history?.map((p) => p.nickname));
   const result: [nickname: string, diff: number][] = [];
   names.forEach((n) => {
@@ -64,28 +67,43 @@ const historyDiff = (history?: TournamentHistory[]) => {
   return result.sort((a, b) => b[1] - a[1]);
 };
 
-type Period = "day" | "week" | "month" | "year";
-
-type ByPeriodProps = {
-  period: Period;
-  setPeriod: (preiod: Period) => void;
+const getFrom = (period: Duration): Date => {
+  const now = new Date();
+  switch (period) {
+    case "week":
+      return sub(now, { weeks: 1 });
+    case "month":
+      return sub(now, { months: 1 });
+    case "day":
+      return sub(now, { days: 1 });
+  }
 };
 
-const ByPeriod = ({ setPeriod, period }: ByPeriodProps) => {
+type Duration = "day" | "week" | "month";
+
+type ByDurationProps = {
+  duration: Duration;
+  setDuration: (duration: Duration) => void;
+};
+
+const ByDuration = ({ setDuration, duration }: ByDurationProps) => {
   return (
     <CardActions>
       <Grid container justifyContent="space-around">
         <Grid item>
           <Tooltip title="Day">
-            <IconButton onClick={() => setPeriod("day")}>
-              {period === "day" ? <TodayIcon /> : <TodayOutlinedIcon />}
+            <IconButton onClick={() => setDuration("day")}>
+              {duration === "day" ? <TodayIcon /> : <TodayOutlinedIcon />}
             </IconButton>
           </Tooltip>
         </Grid>
         <Grid item>
           <Tooltip title="Week">
-            <IconButton aria-label="Winners" onClick={() => setPeriod("week")}>
-              {period === "week" ? (
+            <IconButton
+              aria-label="Winners"
+              onClick={() => setDuration("week")}
+            >
+              {duration === "week" ? (
                 <DateRangeIcon />
               ) : (
                 <DateRangeOutlinedIcon />
@@ -95,8 +113,8 @@ const ByPeriod = ({ setPeriod, period }: ByPeriodProps) => {
         </Grid>
         <Grid item>
           <Tooltip title="Month">
-            <IconButton aria-label="Alpha" onClick={() => setPeriod("month")}>
-              {period === "month" ? (
+            <IconButton aria-label="Alpha" onClick={() => setDuration("month")}>
+              {duration === "month" ? (
                 <CalendarMonthIcon />
               ) : (
                 <CalendarMonthOutlinedIcon />
@@ -111,15 +129,15 @@ const ByPeriod = ({ setPeriod, period }: ByPeriodProps) => {
 
 const History = ({ tournament }: HistoryProps) => {
   const { status, error, data } = useTournamentHistory(tournament);
-  const [period, setPeriod] = useState<Period>("day");
-  const diff = historyDiff(data);
+  const [duration, setDuration] = useState<Duration>("day");
+  const diff = historyDiff(duration, data);
   return (
     <Grid item>
       <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>
         <StyledCardHeader
           avatar={
             <Avatar>
-              <EmojiEventsIcon />
+              <TimelineIcon />
             </Avatar>
           }
           title="History"
@@ -130,7 +148,7 @@ const History = ({ tournament }: HistoryProps) => {
           <CardContent sx={{ overflow: "auto", maxHeight: "65vh" }}>
             <List dense={false}>
               {diff.map((p) => (
-                <div key={p[1]}>
+                <div key={p[0]}>
                   <ListItem disableGutters>
                     <ListItemAvatar>
                       <Badge
@@ -140,6 +158,7 @@ const History = ({ tournament }: HistoryProps) => {
                           vertical: "top",
                           horizontal: "right",
                         }}
+                        showZero
                         badgeContent={p[1]}
                       >
                         <Avatar>{p[0].substring(0, 1).toUpperCase()}</Avatar>
@@ -153,7 +172,7 @@ const History = ({ tournament }: HistoryProps) => {
           </CardContent>
         )}
         <Divider />
-        <ByPeriod setPeriod={setPeriod} period={period} />
+        <ByDuration setDuration={setDuration} duration={duration} />
       </StyledCard>
     </Grid>
   );
