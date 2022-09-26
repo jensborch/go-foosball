@@ -16,7 +16,6 @@ import {
   IconButton,
   Divider,
 } from "@mui/material";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { TournamentHistory } from "../api/Api";
 import isEqual from "date-fns/isEqual";
 import TodayIcon from "@mui/icons-material/Today";

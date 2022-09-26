@@ -76,9 +76,7 @@ func (r *tournamentRepository) AddPlayerWithRanking(id string, p *model.Player, 
 	if t, found := r.Find(id); found {
 		tp := model.NewTournamentPlayerWithRanking(p, t, ranking)
 		r.db.Create(tp)
-		/*if err := r.db.Create(tp); err != nil {
-			panic(err)
-		}*/
+		r.addHistory(tp)
 		return tp, true
 	} else {
 		return nil, false
@@ -89,9 +87,7 @@ func (r *tournamentRepository) AddPlayer(id string, p *model.Player) (*model.Tou
 	if t, found := r.Find(id); found {
 		tp := model.NewTournamentPlayer(p, t)
 		r.db.Create(tp)
-		/*if err := r.db.Create(tp); err != nil {
-			panic(err)
-		}*/
+		r.addHistory(tp)
 		return tp, true
 	} else {
 		return nil, false
@@ -171,7 +167,10 @@ func (r *tournamentRepository) ActivatePlayer(tournamentId string, nickname stri
 
 func (r *tournamentRepository) UpdatePlayerRanking(tournamentId string, nickname string, gameScore int, updated time.Time) (*model.TournamentPlayer, model.Found) {
 	if player, found := r.FindPlayer(tournamentId, nickname); found {
+		println("######UPDATE#####")
+		println(player.Player.Nickname)
 		tmp := int(player.Ranking) + gameScore
+		println(tmp)
 		if tmp >= 0 {
 			player.Ranking = uint(tmp)
 		} else {
@@ -188,6 +187,9 @@ func (r *tournamentRepository) UpdatePlayerRanking(tournamentId string, nickname
 }
 
 func (r *tournamentRepository) addHistory(player *model.TournamentPlayer) {
+	println("######HIST#####")
+	println(player.Player.Nickname)
+	println(player.Ranking)
 	if err := r.db.Omit(clause.Associations).Create(model.NewTournamentPlayerHistory(player)).Error; err != nil {
 		panic(err)
 	}
@@ -278,7 +280,7 @@ func (r *tournamentRepository) History(tournamentId string, from time.Time) ([]*
 			Joins("inner join tournament_players on tournament_players.id = tournament_player_histories.tournament_player_id").
 			Where("tournament_players.tournament_id = ?", tournamentId).
 			Where("tournament_player_histories.updated_at >= ?", from).
-			Order("tournament_player_histories.updated_at").
+			Order("tournament_player_histories.updated_at DESC").
 			Find(&history)
 		return history, true
 	}

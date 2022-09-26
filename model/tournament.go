@@ -1,11 +1,9 @@
 package model
 
 import (
-	"fmt"
 	"time"
 
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 // Tournament played
@@ -97,15 +95,8 @@ func NewTournamentPlayer(player *Player, tournament *Tournament) *TournamentPlay
 func NewTournamentPlayerHistory(player *TournamentPlayer) *TournamentPlayerHistory {
 	return &TournamentPlayerHistory{
 		TournamentPlayer:   *player,
-		TournamentPlayerID: player.PlayerID,
+		TournamentPlayerID: player.ID,
 		Ranking:            player.Ranking,
 		UpdatedAt:          player.UpdatedAt,
 	}
-}
-
-func (player *TournamentPlayer) AfterCreate(tx *gorm.DB) (err error) {
-	if err := tx.Omit(clause.Associations).Create(NewTournamentPlayerHistory(player)).Error; err != nil {
-		return fmt.Errorf("unable to update player history: %s", err)
-	}
-	return nil
 }
