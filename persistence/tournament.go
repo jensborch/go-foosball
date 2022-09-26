@@ -167,8 +167,6 @@ func (r *tournamentRepository) ActivatePlayer(tournamentId string, nickname stri
 
 func (r *tournamentRepository) UpdatePlayerRanking(tournamentId string, nickname string, gameScore int, updated time.Time) (*model.TournamentPlayer, model.Found) {
 	if player, found := r.FindPlayer(tournamentId, nickname); found {
-		println("######UPDATE#####")
-		println(player.Player.Nickname)
 		tmp := int(player.Ranking) + gameScore
 		println(tmp)
 		if tmp >= 0 {
@@ -187,9 +185,6 @@ func (r *tournamentRepository) UpdatePlayerRanking(tournamentId string, nickname
 }
 
 func (r *tournamentRepository) addHistory(player *model.TournamentPlayer) {
-	println("######HIST#####")
-	println(player.Player.Nickname)
-	println(player.Ranking)
 	if err := r.db.Omit(clause.Associations).Create(model.NewTournamentPlayerHistory(player)).Error; err != nil {
 		panic(err)
 	}
