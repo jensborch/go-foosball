@@ -4,10 +4,9 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Typography,
-} from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useTimer } from 'react-use-precision-timer';
+} from "@mui/material";
+import { ColorHex, CountdownCircleTimer } from "react-countdown-circle-timer";
+import { theme } from "./Theming";
 
 type TimerProps = {
   timeout: number;
@@ -16,57 +15,27 @@ type TimerProps = {
 };
 
 const Timer = ({ timeout, open, setOpen }: TimerProps) => {
-  const [countdown, setCountdown] = useState(timeout);
-  const timer = useTimer({
-    delay: 1000,
-    callback: doCountDown,
-  });
-
-  function doCountDown() {
-    if (countdown > 0) {
-      setCountdown(countdown - 1);
-    } else {
-      timer.stop();
-    }
-  }
-
-  useEffect(() => {
-    if (open) {
-      setCountdown(timeout);
-      timer.start();
-    }
-  }, [open]);
-
-  function format(time: number) {
-    return time < 10 ? '0' + time : time;
-  }
-
-  function printCountDown(time: number) {
-    return format(minutes(time)) + ':' + format(seconds(time));
-  }
-
-  function minutes(time: number) {
-    return Math.floor(time / 60);
-  }
-
-  function seconds(time: number) {
-    return time % 60;
-  }
-
+  const primary = theme.palette.secondary.main as ColorHex;
+  const light = theme.palette.secondary.light as ColorHex;
+  const dark = theme.palette.secondary.dark as ColorHex;
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle>Timer</DialogTitle>
       <DialogContent>
-        <Typography noWrap={true} variant="h1">
-          {printCountDown(countdown)}
-        </Typography>
+        <CountdownCircleTimer
+          isPlaying
+          duration={timeout}
+          colors={[light, primary, dark]}
+          colorsTime={[40, 80, 120]}
+        >
+          {({ remainingTime }) => remainingTime}
+        </CountdownCircleTimer>
       </DialogContent>
       <DialogActions>
         <Button
           variant="contained"
           color="secondary"
           onClick={() => {
-            timer.stop();
             setOpen(false);
           }}
         >
