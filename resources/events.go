@@ -2,6 +2,7 @@ package resources
 
 import (
 	"log"
+	"net/http"
 	"sync"
 
 	"github.com/gin-gonic/gin"
@@ -11,6 +12,9 @@ import (
 var wsupgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
 }
 
 type EventPublisher struct {

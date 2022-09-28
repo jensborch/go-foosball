@@ -59,7 +59,7 @@ const historyDiff = (period: Duration, history?: TournamentHistory[]) => {
   names.forEach((n) => {
     const max = findMax(history!, n)?.ranking;
     const min = findMin(history!, n)?.ranking;
-    if (min && max) {
+    if (min && max && min !== max) {
       result.push([n, max - min]);
     }
   });

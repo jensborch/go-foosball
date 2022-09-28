@@ -20,7 +20,7 @@ function Tournament() {
       <Menu title="Foosball">
         <AddSpeedDial tournament={id} />
         <RefreshRandomGames />
-        <Start />
+        <Start tournament={id} />
       </Menu>
       <DefaultGrid container direction="row">
         <TournamentPlayers tournament={id} />
