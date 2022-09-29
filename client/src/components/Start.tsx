@@ -2,30 +2,37 @@ import { Fab } from "@mui/material";
 import { useEffect, useState } from "react";
 import Timer from "./Timer";
 import TimerIcon from "@mui/icons-material/Timer";
+import { conf } from "../api/util";
 
+const TIMEOUT = 120;
 const Start = ({ tournament }: { tournament: string }) => {
   const [open, setOpen] = useState(false);
+  const [reste, setReset] = useState(0);
 
   useEffect(() => {
     const websocket = new WebSocket(
-      `ws://localhost:8080/tournaments/${tournament}/events/game`
+      `ws://${conf.host}/tournaments/${tournament}/events/game`
     );
 
     websocket.onmessage = (msg) => {
-      setOpen(true);
+      if (open) {
+        setReset((r) => r + 1);
+      } else {
+        setOpen(true);
+      }
     };
 
     return () => {
       websocket.close();
     };
-  }, [tournament]);
+  }, [tournament, open]);
 
   return (
     <>
       <Fab onClick={() => setOpen(true)} color="default" aria-label="Start">
         <TimerIcon />
       </Fab>
-      <Timer timeout={2 * 60} open={open} setOpen={setOpen} />
+      <Timer reset={reste} timeout={TIMEOUT} open={open} setOpen={setOpen} />
     </>
   );
 };

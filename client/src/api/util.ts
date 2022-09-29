@@ -1,4 +1,4 @@
-import { Api, ApiConfig } from './Api';
+import { Api } from "./Api";
 
 export function toLocaleDateString(
   date: string | undefined
@@ -13,8 +13,9 @@ export function handleErrors<R extends Response>(response: R) {
   return response;
 }
 
-export const conf: ApiConfig = {
-  baseUrl: 'http://localhost:8080',
+export const conf: any = {
+  host: "localhost:8080",
+  baseUrl: () => `http://${conf.host}`,
 };
 
-export const api = new Api(conf);
+export const api = new Api({ baseUrl: conf.baseUrl() });

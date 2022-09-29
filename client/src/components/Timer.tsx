@@ -11,6 +11,7 @@ import { theme } from "./Theming";
 import Grid from "@mui/material/Grid";
 
 type TimerProps = {
+  reset: number;
   timeout: number;
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -52,19 +53,20 @@ const colorsTimes = (timeout: number, colors: number): ColorsTimesType => {
   return [timeout, ...result, 0] as any;
 };
 
-const Timer = ({ timeout, open, setOpen }: TimerProps) => {
-  const primary = theme.palette.secondary.main as ColorHex;
-  const light = theme.palette.secondary.light as ColorHex;
-  const dark = theme.palette.secondary.dark as ColorHex;
+const PRIMARY = theme.palette.secondary.main as ColorHex;
+const LIGHT = theme.palette.secondary.light as ColorHex;
+const DARK = theme.palette.secondary.dark as ColorHex;
 
+const Timer = ({ reset, timeout, open, setOpen }: TimerProps) => {
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle>Timer</DialogTitle>
       <DialogContent>
         <CountdownCircleTimer
+          key={reset}
           isPlaying
           duration={timeout}
-          colors={[light, primary, dark]}
+          colors={[LIGHT, PRIMARY, DARK]}
           colorsTime={colorsTimes(timeout, 3)}
         >
           {renderTime}

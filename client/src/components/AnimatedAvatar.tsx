@@ -1,7 +1,7 @@
-import { Avatar, keyframes } from '@mui/material';
-import { useRef } from 'react';
-import { Transition, TransitionStatus } from 'react-transition-group';
-import { conf } from '../api/util';
+import { Avatar, keyframes } from "@mui/material";
+import { useRef } from "react";
+import { Transition, TransitionStatus } from "react-transition-group";
+import { conf } from "../api/util";
 
 const flip = keyframes`
   0% {
@@ -34,23 +34,23 @@ const AnimatedAvatar = ({
     <Transition in={selected} timeout={timeout} nodeRef={nodeRef}>
       {(state: TransitionStatus) => {
         switch (state) {
-          case 'entering':
-          case 'exiting':
+          case "entering":
+          case "exiting":
             return (
               <Avatar ref={nodeRef} sx={{ animation: `${flip} ${timeout}ms` }}>
-                {' '}
+                {" "}
               </Avatar>
             );
-          case 'entered':
+          case "entered":
             return (
               <Avatar ref={nodeRef} onClick={() => setSelected(false)}>
                 {selectedComp}
               </Avatar>
             );
-          case 'exited':
+          case "exited":
             const src: any = {};
             if (avatar) {
-              src.src = `${conf.baseUrl}/avatars/${avatar}.jpg`;
+              src.src = `${conf.baseUrl()}/avatars/${avatar}.jpg`;
             }
             return (
               <Avatar ref={nodeRef} {...src} onClick={() => setSelected(true)}>
