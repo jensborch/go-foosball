@@ -3,11 +3,11 @@ import * as Api from "../api/Api";
 import { api, handleErrors } from "./util";
 import { format, sub } from "date-fns";
 
-enum CacheKeys {
-  Players = "players",
-  TournamentsGames = "tournamentsGames",
-  RandomGames = "randomGames",
-  TournamentPlayers = "tournamentPlayers",
+export enum CacheKeys {
+  Players = "Players",
+  TournamentsGames = "TournamentsGames",
+  RandomGames = "RandomGames",
+  TournamentPlayers = "TournamentPlayers",
   Tables = "Tables",
   TournamentTables = "TournamentTables",
   Tournaments = "Tournaments",
@@ -49,6 +49,9 @@ export const useRandomGames = (tournament: string) => {
         .gamesRandomDetail(tournament)
         .then(handleErrors)
         .then((r) => r.data);
+    },
+    {
+      staleTime: Infinity,
     }
   );
 };
