@@ -9,6 +9,7 @@ import {
 import { ColorHex, CountdownCircleTimer } from "react-countdown-circle-timer";
 import { theme } from "./Theming";
 import Grid from "@mui/material/Grid";
+import { useEffect } from "react";
 
 type TimerProps = {
   reset: number;
@@ -58,6 +59,17 @@ const LIGHT = theme.palette.secondary.light as ColorHex;
 const DARK = theme.palette.secondary.dark as ColorHex;
 
 const Timer = ({ reset, timeout, open, setOpen }: TimerProps) => {
+  useEffect(() => {
+    if (open) {
+      const start = new Audio(
+        `${process.env.PUBLIC_URL}/sounds/duke/${Math.floor(
+          Math.random() * 8
+        )}.wav`
+      );
+      start.play();
+    }
+  }, [reset, open]);
+
   return (
     <Dialog open={open} onClose={() => setOpen(false)}>
       <DialogTitle>Timer</DialogTitle>
