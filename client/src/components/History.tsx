@@ -27,6 +27,7 @@ import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 import { useState } from "react";
 import sub from "date-fns/sub";
 import TimelineIcon from "@mui/icons-material/Timeline";
+import PlayerAvatar from "./PlayerAvatar";
 
 type HistoryProps = {
   tournament: string;
@@ -160,7 +161,7 @@ const History = ({ tournament }: HistoryProps) => {
                         showZero
                         badgeContent={p[1]}
                       >
-                        <Avatar>{p[0].substring(0, 1).toUpperCase()}</Avatar>
+                        <PlayerAvatar nickname={p[0]} />
                       </Badge>
                     </ListItemAvatar>
                     <ListItemText primary={p[0]} />

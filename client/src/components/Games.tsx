@@ -1,4 +1,4 @@
-import * as Api from '../api/Api';
+import * as Api from "../api/Api";
 import {
   Avatar,
   Button,
@@ -8,13 +8,13 @@ import {
   CircularProgress,
   Grid,
   LinearProgress,
-} from '@mui/material';
-import { useRandomGames, useGameMutation } from '../api/hooks';
-import { Error } from './Error';
-import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
-import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
-import { StyledCard, StyledCardHeader } from './Styled';
-import { useEffect, useState } from 'react';
+} from "@mui/material";
+import { useRandomGames, useGameMutation } from "../api/hooks";
+import { Error } from "./Error";
+import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
+import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
+import { StyledCard, StyledCardHeader } from "./Styled";
+import { useEffect, useState } from "react";
 import {
   blue,
   blueGrey,
@@ -26,7 +26,8 @@ import {
   purple,
   red,
   yellow,
-} from '@mui/material/colors';
+} from "@mui/material/colors";
+import PlayerAvatar from "./PlayerAvatar";
 
 const Players = ({ players }: { players: string[] }) => {
   return (
@@ -87,26 +88,26 @@ const WinnerButton = ({
 
 const findColor = (color: string): string => {
   switch (color) {
-    case 'red':
+    case "red":
       return red[400];
-    case 'pink':
+    case "pink":
       return pink[400];
-    case 'purple':
+    case "purple":
       return purple[400];
-    case 'blue':
+    case "blue":
       return blue[400];
-    case 'green':
+    case "green":
       return green[400];
-    case 'yellow':
+    case "yellow":
       return yellow[400];
-    case 'orange':
+    case "orange":
       return orange[400];
-    case 'brown':
+    case "brown":
       return brown[400];
-    case 'black':
+    case "black":
       return grey[400];
-    case 'white':
-      return 'white';
+    case "white":
+      return "white";
     default:
       return blueGrey[300];
   }
@@ -117,7 +118,7 @@ type GameProps = {
   game: Api.Game;
 };
 
-type Winner = 'right' | 'left' | 'draw';
+type Winner = "right" | "left" | "draw";
 
 const Game = ({ tournament, game }: GameProps) => {
   const [disabled, setDisabled] = useState(false);
@@ -138,7 +139,7 @@ const Game = ({ tournament, game }: GameProps) => {
     setDisabled(true);
   }
   return (
-    <StyledCard sx={{ minWidth: '300px' }}>
+    <StyledCard sx={{ minWidth: "300px" }}>
       <StyledCardHeader
         avatar={
           <Avatar>
@@ -167,7 +168,7 @@ const Game = ({ tournament, game }: GameProps) => {
             <Button
               variant="outlined"
               disabled={disabled}
-              onClick={() => wins('draw')}
+              onClick={() => wins("draw")}
             >
               Draw
             </Button>
@@ -197,17 +198,9 @@ type PlayerProps = {
 
 const Player = ({ nickname }: PlayerProps) => {
   return (
-    <Card sx={{ minWidth: '140px' }}>
+    <Card sx={{ minWidth: "140px" }}>
       <CardHeader
-        avatar={
-          <Avatar
-            sx={{
-              backgroundColor: (theme) => theme.palette.secondary.main,
-            }}
-          >
-            {nickname.substring(0, 2)}
-          </Avatar>
-        }
+        avatar={<PlayerAvatar nickname={nickname} />}
         title={nickname}
       />
     </Card>
@@ -221,14 +214,14 @@ type GamesProps = {
 const Games = ({ tournament }: GamesProps) => {
   const { status, error, data } = useRandomGames(tournament);
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return (
       <Grid item>
         <CircularProgress />
       </Grid>
     );
   }
-  if (status === 'error') {
+  if (status === "error") {
     return (
       <Grid item>
         <Error msg={error?.message}></Error>
