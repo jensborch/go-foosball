@@ -1,4 +1,4 @@
-import { Avatar, keyframes } from "@mui/material";
+import { Avatar, keyframes, SxProps, Theme } from "@mui/material";
 import { useRef } from "react";
 import { Transition, TransitionStatus } from "react-transition-group";
 import { conf } from "../api/util";
@@ -21,6 +21,10 @@ type AnimatedAvatarProps = {
   avatar?: string;
 };
 
+const sx: SxProps<Theme> = {
+  backgroundColor: (theme) => theme.palette.secondary.main,
+};
+
 const AnimatedAvatar = ({
   selected,
   setSelected,
@@ -37,13 +41,16 @@ const AnimatedAvatar = ({
           case "entering":
           case "exiting":
             return (
-              <Avatar ref={nodeRef} sx={{ animation: `${flip} ${timeout}ms` }}>
+              <Avatar
+                ref={nodeRef}
+                sx={{ ...sx, animation: `${flip} ${timeout}ms` }}
+              >
                 {" "}
               </Avatar>
             );
           case "entered":
             return (
-              <Avatar ref={nodeRef} onClick={() => setSelected(false)}>
+              <Avatar ref={nodeRef} sx={sx} onClick={() => setSelected(false)}>
                 {selectedComp}
               </Avatar>
             );
