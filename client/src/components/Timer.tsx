@@ -59,6 +59,10 @@ const LIGHT = theme.palette.secondary.light as ColorHex;
 const DARK = theme.palette.secondary.dark as ColorHex;
 
 const Timer = ({ reset, timeout, open, setOpen }: TimerProps) => {
+  const onComplete = (elapsed: number) => {
+    const start = new Audio(`${process.env.PUBLIC_URL}/sounds/finish.wav`);
+    start.play();
+  };
   useEffect(() => {
     if (open) {
       const start = new Audio(
@@ -75,6 +79,7 @@ const Timer = ({ reset, timeout, open, setOpen }: TimerProps) => {
       <DialogTitle>Timer</DialogTitle>
       <DialogContent>
         <CountdownCircleTimer
+          onComplete={onComplete}
           key={reset}
           isPlaying
           duration={timeout}
