@@ -129,12 +129,6 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	games.GET("", resources.GetGames(db))
 	games.GET("/:id", resources.GetGame("id", db))
 
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-
-	router.GET("/client/*any", func(c *gin.Context) {
-		serveStatic(c, client, "/client/", "client/build")
-	})
-
 	const avatars = "./avatars"
 	_, err = os.Stat(avatars)
 	if os.IsNotExist(err) {
@@ -143,9 +137,13 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 			panic("unable to create avatars foler")
 		}
 	}
-
 	router.Static("/avatars", avatars)
 
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
+	router.GET("/client/*any", func(c *gin.Context) {
+		serveStatic(c, client, "/client/", "client/build")
+	})
 	return router, db
 }
 
@@ -154,6 +152,6 @@ func serveStatic(c *gin.Context, f fs.FS, prefix string, dir string) {
 	if err != nil {
 		panic(err)
 	}
-	path := c.Request.URL.Path[len(prefix):len(c.Request.URL.Path)]
-	c.FileFromFS(path, http.FS(subfs))
+	p := c.Request.URL.Path[len(prefix):len(c.Request.URL.Path)]
+	c.FileFromFS(p, http.FS(subfs))
 }
