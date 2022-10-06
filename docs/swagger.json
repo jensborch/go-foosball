@@ -6,7 +6,7 @@
         "contact": {},
         "version": "0.8"
     },
-    "basePath": "/",
+    "basePath": "/api",
     "paths": {
         "/games": {
             "get": {

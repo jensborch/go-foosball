@@ -29,7 +29,7 @@ import (
 // @version      0.8
 // @description  Foosball tournament REST service.
 
-// @BasePath  /
+// @BasePath  /api
 
 // React client static web server content.
 //
@@ -80,21 +80,23 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 		&model.Game{},
 		&model.TournamentPlayerHistory{})
 
-	players := router.Group("/players")
+	api := router.Group("/api")
+
+	players := api.Group("/players")
 	players.GET("", resources.GetPlayers(db))
 	players.POST("", resources.PostPlayer(db))
 	players.POST("/", resources.PostPlayer(db))
 	players.GET("/:name", resources.GetPlayer("name", db))
 	players.DELETE("/:name", resources.DeletePlayer("name", db))
 
-	tables := router.Group("/tables")
+	tables := api.Group("/tables")
 	tables.GET("", resources.GetTables(db))
 	tables.POST("", resources.PostTable(db))
 	tables.POST("/", resources.PostTable(db))
 	tables.GET("/:id", resources.GetTable("id", db))
 	//tables.DELETE("/:id", resources.DeleteTable("id", db))
 
-	tournaments := router.Group("/tournaments")
+	tournaments := api.Group("/tournaments")
 	tournaments.GET("", resources.GetTournaments(db))
 	tournaments.POST("", resources.PostTournament(db))
 	tournaments.POST("/", resources.PostTournament(db))
@@ -125,7 +127,7 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	tournaments.GET("/:id/events/player", resources.GetPlayerEvents("id"))
 	tournaments.GET("/:id/events/game", resources.GetGameEvents("id"))
 
-	games := router.Group("/games")
+	games := api.Group("/games")
 	games.GET("", resources.GetGames(db))
 	games.GET("/:id", resources.GetGame("id", db))
 
@@ -141,17 +143,30 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
+	router.GET("/", func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "/client")
+	})
+
+	subfs := subFs(client, "/client/", "client/build")
+	//router.StaticFS("/client", http.FS(subfs))
 	router.GET("/client/*any", func(c *gin.Context) {
-		serveStatic(c, client, "/client/", "client/build")
+		serveStatic(c, subfs, "/client/")
+	})
+	router.NoRoute(func(c *gin.Context) {
+		c.FileFromFS("index.html", http.FS(subfs))
 	})
 	return router, db
 }
 
-func serveStatic(c *gin.Context, f fs.FS, prefix string, dir string) {
+func serveStatic(c *gin.Context, f fs.FS, prefix string) {
+	p := c.Request.URL.Path[len(prefix):len(c.Request.URL.Path)]
+	c.FileFromFS(p, http.FS(f))
+}
+
+func subFs(f fs.FS, prefix string, dir string) fs.FS {
 	subfs, err := fs.Sub(f, dir)
 	if err != nil {
 		panic(err)
 	}
-	p := c.Request.URL.Path[len(prefix):len(c.Request.URL.Path)]
-	c.FileFromFS(p, http.FS(subfs))
+	return subfs
 }

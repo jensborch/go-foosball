@@ -1547,7 +1547,7 @@ const docTemplate_swagger = `{
 var SwaggerInfo_swagger = &swag.Spec{
 	Version:          "0.8",
 	Host:             "",
-	BasePath:         "/",
+	BasePath:         "/api",
 	Schemes:          []string{},
 	Title:            "Go-foosball API",
 	Description:      "Foosball tournament REST service.",

@@ -163,7 +163,7 @@ export enum ContentType {
 }
 
 export class HttpClient<SecurityDataType = unknown> {
-  public baseUrl: string = "/";
+  public baseUrl: string = "/api";
   private securityData: SecurityDataType | null = null;
   private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
   private abortControllers = new Map<CancelToken, AbortController>();
@@ -329,7 +329,7 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title Go-foosball API
  * @version 0.8
- * @baseUrl /
+ * @baseUrl /api
  * @contact
  *
  * Foosball tournament REST service.

@@ -18,4 +18,4 @@ export const conf: any = {
   baseUrl: () => `http://${conf.host}`,
 };
 
-export const api = new Api({ baseUrl: conf.baseUrl() });
+export const api = new Api({ baseUrl: `${conf.baseUrl()}/api` });

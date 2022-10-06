@@ -1,7 +1,7 @@
 import "./App.css";
 import Theming from "./components/Theming";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
 import Index from "./pages/Index";
 import React from "react";
 import Tournament from "./pages/Tournament";
@@ -14,12 +14,12 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <CssBaseline>
           <Theming>
-            <HashRouter>
+            <BrowserRouter basename={"/client"}>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/tournament/:id" element={<Tournament />} />
               </Routes>
-            </HashRouter>
+            </BrowserRouter>
           </Theming>
         </CssBaseline>
         '

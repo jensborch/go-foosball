@@ -29,10 +29,10 @@ func TestGetEmptyList(t *testing.T) {
 	defer ts.Close()
 
 	cases := []struct{ url string }{
-		{fmt.Sprintf("%s/players", ts.URL)},
-		{fmt.Sprintf("%s/tournaments", ts.URL)},
-		{fmt.Sprintf("%s/tables", ts.URL)},
-		{fmt.Sprintf("%s/games", ts.URL)},
+		{fmt.Sprintf("%s/api/players", ts.URL)},
+		{fmt.Sprintf("%s/api/tournaments", ts.URL)},
+		{fmt.Sprintf("%s/api/tables", ts.URL)},
+		{fmt.Sprintf("%s/api/games", ts.URL)},
 	}
 
 	for _, c := range cases {
@@ -63,10 +63,10 @@ func TestGetNotFound(t *testing.T) {
 	defer ts.Close()
 
 	cases := []struct{ url string }{
-		{fmt.Sprintf("%s/players/404", ts.URL)},
-		{fmt.Sprintf("%s/tournaments/404", ts.URL)},
-		{fmt.Sprintf("%s/tables/404", ts.URL)},
-		{fmt.Sprintf("%s/games/404", ts.URL)},
+		{fmt.Sprintf("%s/api/players/404", ts.URL)},
+		{fmt.Sprintf("%s/api/tournaments/404", ts.URL)},
+		{fmt.Sprintf("%s/api/tables/404", ts.URL)},
+		{fmt.Sprintf("%s/api/games/404", ts.URL)},
 	}
 
 	for _, c := range cases {
@@ -112,7 +112,7 @@ func TestPostPlayerNotValid(t *testing.T) {
 
 	player := newPlayer("p", "name")(t)
 
-	resp, _ := http.Post(fmt.Sprintf("%s/players", ts.URL), "application/json", bytes.NewBuffer(player))
+	resp, _ := http.Post(fmt.Sprintf("%s/api/players", ts.URL), "application/json", bytes.NewBuffer(player))
 
 	if resp.StatusCode != 400 {
 		t.Fatalf("Expected status code 400, got %v", resp.StatusCode)
@@ -130,14 +130,14 @@ func postPlayers(ts *httptest.Server) func(t *testing.T) []model.Player {
 
 		for _, p := range players {
 
-			resp, _ := http.Post(fmt.Sprintf("%s/players", ts.URL), "application/json", bytes.NewBuffer(p.player))
+			resp, _ := http.Post(fmt.Sprintf("%s/api/players", ts.URL), "application/json", bytes.NewBuffer(p.player))
 
 			if resp.StatusCode != 200 {
 				t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
 			}
 		}
 
-		resp, _ := http.Get(fmt.Sprintf("%s/players", ts.URL))
+		resp, _ := http.Get(fmt.Sprintf("%s/api/players", ts.URL))
 
 		if resp.StatusCode != 200 {
 			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
@@ -169,7 +169,7 @@ func postTournaments(ts *httptest.Server) func(t *testing.T) model.Tournament {
 			t.Fatalf("Expected no error, got %v", err)
 		}
 
-		postResp, _ := http.Post(fmt.Sprintf("%s/tournaments", ts.URL), "application/json", bytes.NewBuffer(tournament))
+		postResp, _ := http.Post(fmt.Sprintf("%s/api/tournaments", ts.URL), "application/json", bytes.NewBuffer(tournament))
 
 		if postResp.StatusCode != 200 {
 			t.Fatalf("Expected status code 200, got %v", postResp.StatusCode)
@@ -181,7 +181,7 @@ func postTournaments(ts *httptest.Server) func(t *testing.T) model.Tournament {
 			t.Fatalf("Expected a tournament, got %v", err)
 		}
 
-		getResp, _ := http.Get(fmt.Sprintf("%s/tournaments/%d", ts.URL, postResult.ID))
+		getResp, _ := http.Get(fmt.Sprintf("%s/api/tournaments/%d", ts.URL, postResult.ID))
 
 		if getResp.StatusCode != 200 {
 			t.Fatalf("Expected status code 200, got %v", getResp.StatusCode)
@@ -203,7 +203,7 @@ func addPlayer2Tournament(ts *httptest.Server, id uint, player string) func(t *t
 			t.Fatalf("Expected no error, got %v", err)
 		}
 
-		resp, _ := http.Post(fmt.Sprintf("%s/tournaments/%d/players", ts.URL, id), "application/json", bytes.NewBuffer(player))
+		resp, _ := http.Post(fmt.Sprintf("%s/api/tournaments/%d/players", ts.URL, id), "application/json", bytes.NewBuffer(player))
 
 		if resp.StatusCode != 200 {
 			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
@@ -238,14 +238,14 @@ func postTables(ts *httptest.Server) func(t *testing.T) []model.Table {
 
 		for _, p := range tables {
 
-			resp, _ := http.Post(fmt.Sprintf("%s/tables", ts.URL), "application/json", bytes.NewBuffer(p.table))
+			resp, _ := http.Post(fmt.Sprintf("%s/api/tables", ts.URL), "application/json", bytes.NewBuffer(p.table))
 
 			if resp.StatusCode != 200 {
 				t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
 			}
 		}
 
-		resp, _ := http.Get(fmt.Sprintf("%s/tables", ts.URL))
+		resp, _ := http.Get(fmt.Sprintf("%s/api/tables", ts.URL))
 
 		if resp.StatusCode != 200 {
 			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
@@ -275,7 +275,7 @@ func addTable2Tournament(ts *httptest.Server, id uint, table uint) func(t *testi
 			t.Fatalf("Expected no error, got %v", err)
 		}
 
-		resp, _ := http.Post(fmt.Sprintf("%s/tournaments/%d/tables", ts.URL, id), "application/json", bytes.NewBuffer(table))
+		resp, _ := http.Post(fmt.Sprintf("%s/api/tournaments/%d/tables", ts.URL, id), "application/json", bytes.NewBuffer(table))
 
 		if resp.StatusCode != 200 {
 			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
@@ -286,7 +286,7 @@ func addTable2Tournament(ts *httptest.Server, id uint, table uint) func(t *testi
 func randomGame(ts *httptest.Server, id uint) func(t *testing.T) []model.GameJson {
 	return func(t *testing.T) []model.GameJson {
 
-		resp, _ := http.Get(fmt.Sprintf("%s/tournaments/%d/games/random", ts.URL, id))
+		resp, _ := http.Get(fmt.Sprintf("%s/api/tournaments/%d/games/random", ts.URL, id))
 
 		if resp.StatusCode != 200 {
 			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
@@ -330,7 +330,7 @@ func postGame(ts *httptest.Server, tournamentId uint, tableId uint, right []stri
 			t.Fatalf("Expected no error, got %v", err)
 		}
 
-		resp, _ := http.Post(fmt.Sprintf("%s/tournaments/%d/tables/%d/games", ts.URL, tournamentId, tableId), "application/json", bytes.NewBuffer(game))
+		resp, _ := http.Post(fmt.Sprintf("%s/api/tournaments/%d/tables/%d/games", ts.URL, tournamentId, tableId), "application/json", bytes.NewBuffer(game))
 
 		if resp.StatusCode != 200 {
 			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
@@ -358,7 +358,7 @@ func postGameNotValid(ts *httptest.Server, tournamentId uint, tableId uint) func
 			t.Fatalf("Expected no error, got %v", err)
 		}
 
-		resp, _ := http.Post(fmt.Sprintf("%s/tournaments/%d/tables/%d/games", ts.URL, tournamentId, tableId), "application/json", bytes.NewBuffer(game))
+		resp, _ := http.Post(fmt.Sprintf("%s/api/tournaments/%d/tables/%d/games", ts.URL, tournamentId, tableId), "application/json", bytes.NewBuffer(game))
 
 		if resp.StatusCode != 400 {
 			t.Fatalf("Expected status code 400, got %v", resp.StatusCode)
@@ -379,7 +379,7 @@ func postGameNotValid(ts *httptest.Server, tournamentId uint, tableId uint) func
 func getGame(ts *httptest.Server, tournamentId uint) func(t *testing.T) []model.GameJson {
 	return func(t *testing.T) []model.GameJson {
 
-		resp, _ := http.Get(fmt.Sprintf("%s/tournaments/%d/games", ts.URL, tournamentId))
+		resp, _ := http.Get(fmt.Sprintf("%s/api/tournaments/%d/games", ts.URL, tournamentId))
 
 		if resp.StatusCode != 200 {
 			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
@@ -397,7 +397,7 @@ func getGame(ts *httptest.Server, tournamentId uint) func(t *testing.T) []model.
 func getHistory(ts *httptest.Server, tournamentId uint, nickname string) func(t *testing.T) []model.TournamentPlayerHistory {
 	return func(t *testing.T) []model.TournamentPlayerHistory {
 
-		resp, _ := http.Get(fmt.Sprintf("%s/tournaments/%d/players/%s/history?from=%s", ts.URL, tournamentId, nickname, time.Now().Format("2006-01-02")))
+		resp, _ := http.Get(fmt.Sprintf("%s/api/tournaments/%d/players/%s/history?from=%s", ts.URL, tournamentId, nickname, time.Now().Format("2006-01-02")))
 
 		if resp.StatusCode != 200 {
 			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)

@@ -11,7 +11,7 @@ const Start = ({ tournament }: { tournament: string }) => {
 
   useEffect(() => {
     const websocket = new WebSocket(
-      `ws://${conf.host}/tournaments/${tournament}/events/game`
+      `ws://${conf.host}/api/tournaments/${tournament}/events/game`
     );
 
     websocket.onmessage = (msg) => {
