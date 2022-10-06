@@ -98,8 +98,9 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 
 type CreateTournamentRequest struct {
 	Name           string `json:"name" binding:"required"`
-	GameScore      uint   `json:"score"`
-	InitialRanking uint   `json:"initial"`
+	GameScore      uint   `json:"score" binding:"required"`
+	InitialRanking uint   `json:"initial"  binding:"required"`
+	Timeout        uint   `json:"timeout"`
 } //@name CreateTournament
 
 // PostTournament creats tournament
@@ -125,6 +126,7 @@ func PostTournament(db *gorm.DB) func(*gin.Context) {
 		t := model.NewTournament(tournament.Name)
 		t.GameScore = tournament.GameScore
 		t.InitialRanking = tournament.InitialRanking
+		t.Timeout = tournament.Timeout
 		r.Store(t)
 		c.JSON(http.StatusOK, t)
 	}

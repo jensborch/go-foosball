@@ -12,6 +12,7 @@ type Tournament struct {
 	Name           string `json:"name" binding:"required" gorm:"type:varchar(100);not null"`
 	GameScore      uint   `json:"score" binding:"required" gorm:"not null"`
 	InitialRanking uint   `json:"initial" binding:"required" gorm:"not null"`
+	Timeout        uint   `json:"timeout" binding:"required" gorm:"default:120"`
 } //@name Tournament
 type TournamentTable struct {
 	Base

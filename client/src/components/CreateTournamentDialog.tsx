@@ -4,11 +4,11 @@ import {
   CardContent,
   Grid,
   TextField,
-} from '@mui/material';
-import { useTournamentMutation } from '../api/hooks';
-import FullScreenDialog from './FullScreenDialog';
-import { useState } from 'react';
-import { DefaultGrid, StyledCard } from './Styled';
+} from "@mui/material";
+import { useTournamentMutation } from "../api/hooks";
+import FullScreenDialog from "./FullScreenDialog";
+import { useState } from "react";
+import { DefaultGrid, StyledCard } from "./Styled";
 
 type CreateTournamentProps = {
   open: boolean;
@@ -17,8 +17,9 @@ type CreateTournamentProps = {
 
 const CreateTournamentDialog = ({ open, setOpen }: CreateTournamentProps) => {
   const [initial, setInitial] = useState(0);
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [score, setScore] = useState(0);
+  const [timeout, setTimeout] = useState(120);
   const { mutate } = useTournamentMutation();
 
   const onCreateTournament = () => {
@@ -26,6 +27,7 @@ const CreateTournamentDialog = ({ open, setOpen }: CreateTournamentProps) => {
       initial,
       name,
       score,
+      timeout,
     });
     setOpen(false);
   };
@@ -64,6 +66,16 @@ const CreateTournamentDialog = ({ open, setOpen }: CreateTournamentProps) => {
                     onChange={(e) => setScore(parseInt(e.target.value))}
                     helperText="Score"
                     label="Score"
+                    margin="dense"
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    type="number"
+                    value={timeout}
+                    onChange={(e) => setTimeout(parseInt(e.target.value))}
+                    helperText="Timeout"
+                    label="Timeout"
                     margin="dense"
                   />
                 </Grid>

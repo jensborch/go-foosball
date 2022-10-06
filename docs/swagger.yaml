@@ -57,8 +57,12 @@ definitions:
         type: string
       score:
         type: integer
+      timeout:
+        type: integer
     required:
+    - initial
     - name
+    - score
     type: object
   Error:
     properties:
@@ -178,6 +182,8 @@ definitions:
         type: string
       score:
         type: integer
+      timeout:
+        type: integer
       updated:
         type: string
     required:
@@ -186,6 +192,7 @@ definitions:
     - initial
     - name
     - score
+    - timeout
     - updated
     type: object
   TournamentHistory:

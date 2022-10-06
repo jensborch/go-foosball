@@ -1256,7 +1256,9 @@ const docTemplate_swagger = `{
         "CreateTournament": {
             "type": "object",
             "required": [
-                "name"
+                "initial",
+                "name",
+                "score"
             ],
             "properties": {
                 "initial": {
@@ -1266,6 +1268,9 @@ const docTemplate_swagger = `{
                     "type": "string"
                 },
                 "score": {
+                    "type": "integer"
+                },
+                "timeout": {
                     "type": "integer"
                 }
             }
@@ -1430,6 +1435,7 @@ const docTemplate_swagger = `{
                 "initial",
                 "name",
                 "score",
+                "timeout",
                 "updated"
             ],
             "properties": {
@@ -1446,6 +1452,9 @@ const docTemplate_swagger = `{
                     "type": "string"
                 },
                 "score": {
+                    "type": "integer"
+                },
+                "timeout": {
                     "type": "integer"
                 },
                 "updated": {

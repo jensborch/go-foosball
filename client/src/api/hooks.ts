@@ -121,6 +121,18 @@ export const useTournaments = () => {
   );
 };
 
+export const useTournament = (tournament: string) => {
+  return useQuery<Api.Tournament, Error>(
+    CacheKeys.Tournaments,
+    async (): Promise<Api.Tournament> => {
+      return api.tournaments
+        .tournamentsDetail(tournament)
+        .then(handleErrors)
+        .then((r) => r.data);
+    }
+  );
+};
+
 export const useTournamentMutation = () => {
   const queryClient = useQueryClient();
 

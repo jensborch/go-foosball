@@ -1248,7 +1248,9 @@
         "CreateTournament": {
             "type": "object",
             "required": [
-                "name"
+                "initial",
+                "name",
+                "score"
             ],
             "properties": {
                 "initial": {
@@ -1258,6 +1260,9 @@
                     "type": "string"
                 },
                 "score": {
+                    "type": "integer"
+                },
+                "timeout": {
                     "type": "integer"
                 }
             }
@@ -1422,6 +1427,7 @@
                 "initial",
                 "name",
                 "score",
+                "timeout",
                 "updated"
             ],
             "properties": {
@@ -1438,6 +1444,9 @@
                     "type": "string"
                 },
                 "score": {
+                    "type": "integer"
+                },
+                "timeout": {
                     "type": "integer"
                 },
                 "updated": {

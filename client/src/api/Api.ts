@@ -35,9 +35,10 @@ export interface CreateTable {
 }
 
 export interface CreateTournament {
-  initial?: number;
+  initial: number;
   name: string;
-  score?: number;
+  score: number;
+  timeout?: number;
 }
 
 export interface Error {
@@ -87,6 +88,7 @@ export interface Tournament {
   initial: number;
   name: string;
   score: number;
+  timeout: number;
   updated: string;
 }
 
