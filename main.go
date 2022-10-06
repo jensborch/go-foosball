@@ -148,19 +148,19 @@ func setupServer(dbfile string) (*gin.Engine, *gorm.DB) {
 	})
 
 	subfs := subFs(client, "/client/", "client/build")
-	//router.StaticFS("/client", http.FS(subfs))
 	router.GET("/client/*any", func(c *gin.Context) {
 		serveStatic(c, subfs, "/client/")
-	})
-	router.NoRoute(func(c *gin.Context) {
-		c.FileFromFS("index.html", http.FS(subfs))
 	})
 	return router, db
 }
 
 func serveStatic(c *gin.Context, f fs.FS, prefix string) {
 	p := c.Request.URL.Path[len(prefix):len(c.Request.URL.Path)]
-	c.FileFromFS(p, http.FS(f))
+	if _, error := f.Open(p); error == nil {
+		c.FileFromFS(p, http.FS(f))
+	} else {
+		c.FileFromFS("/", http.FS(f))
+	}
 }
 
 func subFs(f fs.FS, prefix string, dir string) fs.FS {
