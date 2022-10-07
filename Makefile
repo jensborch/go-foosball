@@ -7,6 +7,14 @@ COMMIT=$(shell git rev-parse HEAD)
 BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 GOPATH=$(shell go env GOPATH)
 
+export CGO_ENABLED := 1
+
+ifneq ($(VERSION),DEV)
+	export GIN_MODE=release
+endif
+
+export GIN_MODE=release
+
 LDFLAGS = -ldflags "-X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X main.BRANCH=${BRANCH}"
 
 ifeq ($(OS),Windows_NT)
