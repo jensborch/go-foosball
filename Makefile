@@ -2,7 +2,7 @@ GOARCH = amd64
 
 BIN = ~/go/bin
 
-VERSION=0.8.1
+VERSION ?= DEV
 COMMIT=$(shell git rev-parse HEAD)
 BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 GOPATH=$(shell go env GOPATH)
@@ -29,13 +29,13 @@ build:
 	go build ${LDFLAGS} -o ${BINARY}
 
 build-linux:
-	GOOS=linux GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}
+	GOOS=linux GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}-linux
 
 build-windows:
-	GOOS=windows GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}.exe
+	GOOS=windows GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}
 
-build-wm1:
-	GOOS=darwin GOARCH=arm64 go build ${LDFLAGS} -o ${BINARY}
+build-darwin-arm:
+	GOOS=darwin GOARCH=arm64 go build ${LDFLAGS} -o ${BINARY}-darwin-arm
 
 test:
 	go test -cover ./...
