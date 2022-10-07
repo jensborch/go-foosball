@@ -19,11 +19,11 @@ jobs:
     - name: Build client
       run: make client
     - name: Build Linux
-      run: make build-linux VERSION=${{ env:GITHUB_REF_NAME }}
+      run: make build-linux VERSION=$GITHUB_REF_NAME
     - name: Build Windows
-      run: make build-windows VERSION=${{ env:GITHUB_REF_NAME }}
+      run: make build-windows VERSION=$GITHUB_REF_NAME
     - name: Build MacOS
-      run: make build-darwin-arm VERSION=${{ env:GITHUB_REF_NAME }}
+      run: make build-darwin-arm VERSION=$GITHUB_REF_NAME
     - uses: "marvinpinto/action-automatic-releases@v1.2.1"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
