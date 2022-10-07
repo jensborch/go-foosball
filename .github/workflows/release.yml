@@ -8,7 +8,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:    
+    steps:
+    - name: Install dependencies for cross-compiling
+      run: |
+          sudo apt update 
+          sudo apt-get --no-install-recommends --yes install \
+            libc6-dev-arm64-cross
     - uses: actions/checkout@v2
     - uses: actions/setup-go@v2
       with:
