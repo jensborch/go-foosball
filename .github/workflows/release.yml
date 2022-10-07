@@ -9,11 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Install dependencies for cross-compiling
-      run: |
-          sudo apt update 
-          sudo apt-get --no-install-recommends --yes install \
-            libc6-dev-arm64-cross
     - uses: actions/checkout@v2
     - uses: actions/setup-go@v2
       with:
@@ -27,8 +22,6 @@ jobs:
       run: make build-linux VERSION=$GITHUB_REF_NAME
     - name: Build Windows
       run: make build-windows VERSION=$GITHUB_REF_NAME
-    - name: Build MacOS
-      run: make build-darwin-arm VERSION=$GITHUB_REF_NAME
     - uses: "marvinpinto/action-automatic-releases@v1.2.1"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
