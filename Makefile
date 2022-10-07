@@ -34,6 +34,9 @@ build-linux:
 build-windows:
 	GOOS=windows GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}.exe
 
+build-wm1:
+	GOOS=darwin GOARCH=arm64 go build ${LDFLAGS} -o ${BINARY}
+
 test:
 	go test -cover ./...
 
