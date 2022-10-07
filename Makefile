@@ -44,7 +44,7 @@ vet:
 	go vet ./...
 
 client:
-	cd client; yarn build
+	cd client; yarn install; yarn build
 	
 clean:
 	go clean
