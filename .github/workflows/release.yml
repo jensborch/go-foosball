@@ -9,6 +9,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Install dependencies for cross-compiling
+      run: |
+          sudo apt update 
+          sudo apt-get install crossbuild-essential-arm64
     - uses: actions/checkout@v2
     - uses: actions/setup-go@v3
       with:
