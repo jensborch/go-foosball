@@ -5,7 +5,6 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
-  LabelList,
   Tooltip,
   XAxis,
   YAxis,
