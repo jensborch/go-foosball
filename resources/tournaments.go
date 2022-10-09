@@ -259,7 +259,7 @@ func GetPlayerEvents(param string) func(c *gin.Context) {
 // @Accept   json
 // @Produce  json
 // @Param    id        path      string  true  "Tournament ID"
-// @Param    nickanme  path      string  true  "Player nickname"
+// @Param    nickname  path      string  true  "Player nickname"
 // @Param    from      query     string  true  "The RFC3339 date to get history from"  Format(date)
 // @Success  200       {array}   model.TournamentPlayerHistory
 // @Failure  404       {object}  ErrorResponse

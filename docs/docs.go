@@ -878,7 +878,7 @@ const docTemplate_swagger = `{
                     {
                         "type": "string",
                         "description": "Player nickname",
-                        "name": "nickanme",
+                        "name": "nickname",
                         "in": "path",
                         "required": true
                     },

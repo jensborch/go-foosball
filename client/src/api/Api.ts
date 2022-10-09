@@ -706,13 +706,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary Get player ranking history in tournament
      * @request GET:/tournaments/{id}/players/{nickname}/history
      */
-    playersHistoryDetail: (
-      id: string,
-      nickanme: string,
-      nickname: string,
-      query: { from: string },
-      params: RequestParams = {},
-    ) =>
+    playersHistoryDetail: (id: string, nickname: string, query: { from: string }, params: RequestParams = {}) =>
       this.request<TournamentPlayerHistory[], Error>({
         path: `/tournaments/${id}/players/${nickname}/history`,
         method: "GET",

@@ -12,6 +12,7 @@ export enum CacheKeys {
   TournamentTables = "TournamentTables",
   Tournaments = "Tournaments",
   TournamentHistory = "TournamentHistory",
+  TournamentPlayerHistory = "TournamentPlayerHistory",
 }
 
 export const usePlayers = (tournament?: number) => {
@@ -74,6 +75,20 @@ export const useTournamentHistory = (tournament: string) => {
     async (): Promise<Api.TournamentHistory[]> => {
       return api.tournaments
         .historyDetail(tournament, {
+          from: format(sub(new Date(), { months: 1 }), "yyyy-MM-dd"),
+        })
+        .then(handleErrors)
+        .then((r) => r.data);
+    }
+  );
+};
+
+export const usePlayerHistory = (tournament: string, nickname: string) => {
+  return useQuery<Api.TournamentPlayerHistory[], Error>(
+    [CacheKeys.TournamentPlayerHistory, tournament, nickname],
+    async (): Promise<Api.TournamentPlayerHistory[]> => {
+      return api.tournaments
+        .playersHistoryDetail(tournament, nickname, {
           from: format(sub(new Date(), { months: 1 }), "yyyy-MM-dd"),
         })
         .then(handleErrors)
