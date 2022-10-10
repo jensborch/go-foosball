@@ -3,13 +3,23 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
+  Slide,
   Typography,
 } from "@mui/material";
 import { ColorHex, CountdownCircleTimer } from "react-countdown-circle-timer";
 import { theme } from "./Theming";
 import Grid from "@mui/material/Grid";
-import { useEffect } from "react";
+import { forwardRef, useEffect } from "react";
+import { TransitionProps } from "react-transition-group/Transition";
+
+const Transition = forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 type TimerProps = {
   reset: number;
@@ -62,6 +72,7 @@ const Timer = ({ reset, timeout, open, setOpen }: TimerProps) => {
   const onComplete = (elapsed: number) => {
     const start = new Audio(`${process.env.PUBLIC_URL}/sounds/finish.wav`);
     start.play();
+    setTimeout(() => setOpen(false), 4000);
   };
   useEffect(() => {
     if (open) {
@@ -75,14 +86,17 @@ const Timer = ({ reset, timeout, open, setOpen }: TimerProps) => {
   }, [reset, open]);
 
   return (
-    <Dialog open={open} onClose={() => setOpen(false)}>
-      <DialogTitle>Timer</DialogTitle>
+    <Dialog
+      TransitionComponent={Transition}
+      open={open}
+      onClose={() => setOpen(false)}
+    >
       <DialogContent>
         <CountdownCircleTimer
           onComplete={onComplete}
           key={reset}
           isPlaying
-          duration={timeout}
+          duration={10}
           colors={[LIGHT, PRIMARY, DARK]}
           colorsTime={colorsTimes(timeout, 3)}
         >
