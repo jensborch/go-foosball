@@ -5,6 +5,7 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
+  Label,
   Tooltip,
   XAxis,
   YAxis,
@@ -66,14 +67,24 @@ const History = ({ tournament, nickname }: HistoryProps) => {
           </defs>
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip />
-          <XAxis dataKey="time" type="category"></XAxis>
-          <YAxis dataKey="value" type="number" offset={400}></YAxis>
+          <XAxis
+            padding={{ left: 20, right: 20 }}
+            dataKey="time"
+            type="category"
+            domain={["dataMin", "dataMax"]}
+          />
+          <YAxis
+            padding={{ top: 20, bottom: 20 }}
+            dataKey="value"
+            type="number"
+            domain={["dataMin", "dataMax"]}
+          />
           <Area
             dataKey="value"
-            stroke="#82ca9d"
+            stroke={`${theme.palette.primary.main}`}
             fillOpacity={1}
             fill="url(#color)"
-          ></Area>
+          />
         </AreaChart>
       ) : undefined}
     </>
