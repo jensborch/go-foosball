@@ -14,6 +14,8 @@ The application is using a REST service back-end written in Go and a front-end c
 
 ## Build
 
+Build the back-end using:
+
 ```sh
 make build
 ```
@@ -24,7 +26,26 @@ or
 go build -o go-foosball
 ```
 
+[Go](https://go.dev/) must be installed.
+
+Build the front-end using:
+
+```sh
+make client
+```
+
+or
+
+```sh
+cd client
+yarn build
+```
+
+[Node.js](https://nodejs.org/) version 14 or above and [Yarn](https://yarnpkg.com/) must be installed.
+
 ## Test
+
+Test the back-end using:
 
 ```sh
 make test
@@ -36,10 +57,40 @@ or
 go test -cover ./...
 ```
 
+Test the front-end using:
+
+```sh
+cd client
+yarn test
+```
+
 ## Run
+
+Start the application using:
 
 ```sh
 ./go-foosball
+```
+
+or on Windows:
+
+```bat
+go-foosball.exe
+```
+
+The GUI can then be accessed using [http://localhost:8080/]
+
+The front-end will be embed in the back-end executable when build using:
+
+```sh
+make client build
+```
+
+but back-end and front-end can also run separately. To only start the front-end use:
+
+```sh
+cd client
+yarn start
 ```
 
 ## Swagger
@@ -54,6 +105,4 @@ or
 $(go env GOPATH)/bin/swag init
 ```
 
-Swagger can be viewed using: 
-
-http://localhost:8080/swagger/index.html
+Swagger can be viewed using [http://localhost:8080/swagger/index.html]
