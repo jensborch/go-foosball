@@ -8,7 +8,6 @@ import RefreshRandomGames from "../components/RefreshRandomGames";
 import Start from "../components/Start";
 import TournamentPlayers from "../components/TournamentPlayers";
 import { DefaultGrid } from "../components/Styled";
-import HistoryChartDialog from "../components/HistoryChartDialog";
 
 function Tournament() {
   const { id } = useParams();
@@ -19,7 +18,6 @@ function Tournament() {
   return (
     <>
       <Menu title="Foosball">
-        <HistoryChartDialog tournament={id} />
         <AddSpeedDial tournament={id} />
         <RefreshRandomGames />
         <Start tournament={id} />

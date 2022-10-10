@@ -10,6 +10,7 @@ import {
   YAxis,
 } from "recharts";
 import { usePlayerHistory, useTournamentPlayers } from "../api/hooks";
+import { theme } from "./Theming";
 
 type PlayersProps = {
   tournament: string;
@@ -51,8 +52,16 @@ const History = ({ tournament, nickname }: HistoryProps) => {
         <AreaChart width={800} height={400} data={chart}>
           <defs>
             <linearGradient id="color" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+              <stop
+                offset="5%"
+                stopColor={`${theme.palette.secondary.main}`}
+                stopOpacity={0.8}
+              />
+              <stop
+                offset="95%"
+                stopColor={`${theme.palette.secondary.light}`}
+                stopOpacity={0}
+              />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" />

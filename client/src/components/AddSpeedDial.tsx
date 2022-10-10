@@ -1,9 +1,11 @@
-import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
-import { useState } from 'react';
-import PersonIcon from '@mui/icons-material/Person';
-import AddPlayersDialog from './AddPlayersDialog';
-import AddTableDialog from './AddTableDialog';
-import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
+import { useState } from "react";
+import PersonIcon from "@mui/icons-material/Person";
+import TimelineIcon from "@mui/icons-material/Timeline";
+import AddPlayersDialog from "./AddPlayersDialog";
+import AddTableDialog from "./AddTableDialog";
+import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
+import HistoryChartDialog from "./HistoryChartDialog";
 
 type AddSpeedDialProps = {
   tournament: string;
@@ -13,6 +15,7 @@ const AddSpeedDial = ({ tournament }: AddSpeedDialProps) => {
   const [open, setOpen] = useState(false);
   const [playersOpen, setPlayersOpen] = useState(false);
   const [tablesOpen, setTablesOpen] = useState(false);
+  const [chartOpen, setChartOpen] = useState(false);
   return (
     <>
       <SpeedDial
@@ -23,6 +26,14 @@ const AddSpeedDial = ({ tournament }: AddSpeedDialProps) => {
         direction="down"
         open={open}
       >
+        <SpeedDialAction
+          tooltipTitle="History chart"
+          icon={<TimelineIcon />}
+          onClick={() => {
+            setOpen(false);
+            setChartOpen(true);
+          }}
+        />
         <SpeedDialAction
           tooltipTitle="Add player"
           icon={<PersonIcon />}
@@ -48,6 +59,11 @@ const AddSpeedDial = ({ tournament }: AddSpeedDialProps) => {
       <AddTableDialog
         open={tablesOpen}
         setOpen={setTablesOpen}
+        tournament={tournament}
+      />
+      <HistoryChartDialog
+        open={chartOpen}
+        setOpen={setChartOpen}
         tournament={tournament}
       />
     </>
