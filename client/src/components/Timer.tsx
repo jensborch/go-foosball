@@ -96,7 +96,7 @@ const Timer = ({ reset, timeout, open, setOpen }: TimerProps) => {
           onComplete={onComplete}
           key={reset}
           isPlaying
-          duration={10}
+          duration={timeout}
           colors={[LIGHT, PRIMARY, DARK]}
           colorsTime={colorsTimes(timeout, 3)}
         >
