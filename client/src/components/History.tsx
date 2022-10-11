@@ -15,6 +15,7 @@ import {
   Tooltip,
   IconButton,
   Divider,
+  Box,
 } from "@mui/material";
 import { TournamentHistory } from "../api/Api";
 import isEqual from "date-fns/isEqual";
@@ -142,10 +143,20 @@ const History = ({ tournament }: HistoryProps) => {
           }
           title="History"
         />
-        {status === "loading" && <CircularProgress />}
-        {status === "error" && <Error msg={error?.message} />}
-        {status === "success" && (
-          <CardContent sx={{ overflow: "auto", maxHeight: "65vh" }}>
+        <CardContent sx={{ overflow: "auto", maxHeight: "65vh" }}>
+          {status === "loading" && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <CircularProgress color="secondary" />
+            </Box>
+          )}
+          {status === "error" && <Error msg={error?.message} />}
+          {status === "success" && (
             <List dense={false}>
               {diff.map((p) => (
                 <div key={p[0]}>
@@ -169,8 +180,9 @@ const History = ({ tournament }: HistoryProps) => {
                 </div>
               ))}
             </List>
-          </CardContent>
-        )}
+          )}
+        </CardContent>
+
         <Divider />
         <ByDuration setDuration={setDuration} duration={duration} />
       </StyledCard>

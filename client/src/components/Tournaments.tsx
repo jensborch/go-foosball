@@ -1,23 +1,24 @@
-import * as Api from '../api/Api';
-import { toLocaleDateString } from '../api/util';
-import { Error } from './Error';
+import * as Api from "../api/Api";
+import { toLocaleDateString } from "../api/util";
+import { Error } from "./Error";
 import {
   Avatar,
+  Box,
   CardContent,
   CardHeader,
   CircularProgress,
   Grid,
   Typography,
-} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { useTournaments } from '../api/hooks';
-import { DefaultGrid, StyledCard } from './Styled';
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useTournaments } from "../api/hooks";
+import { DefaultGrid, StyledCard } from "./Styled";
 
 const Tournament = ({ created, name, score, initial, id }: Api.Tournament) => {
   const navigate = useNavigate();
   return (
     <StyledCard
-      sx={{ minWidth: '275px', cursor: 'pointer' }}
+      sx={{ minWidth: "275px", cursor: "pointer" }}
       onClick={() => navigate(`./tournament/${id}`)}
     >
       <CardHeader
@@ -41,13 +42,36 @@ const Tournament = ({ created, name, score, initial, id }: Api.Tournament) => {
   );
 };
 
+const TournamentsError = ({ children }: { children?: React.ReactNode }) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        padding: 10,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {children}
+    </Box>
+  );
+};
+
 const Tournaments = () => {
   const { status, error, data } = useTournaments();
-  if (status === 'loading') {
-    return <CircularProgress />;
+  if (status === "loading") {
+    return (
+      <TournamentsError>
+        <CircularProgress size={100} />
+      </TournamentsError>
+    );
   }
-  if (status === 'error') {
-    return <Error msg={error?.message}></Error>;
+  if (status === "error") {
+    return (
+      <TournamentsError>
+        <Error msg={error?.message}></Error>
+      </TournamentsError>
+    );
   }
   return (
     <DefaultGrid container direction="row">

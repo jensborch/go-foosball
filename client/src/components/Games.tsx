@@ -1,6 +1,7 @@
 import * as Api from "../api/Api";
 import {
   Avatar,
+  Box,
   Button,
   Card,
   CardContent,
@@ -216,15 +217,26 @@ const Games = ({ tournament }: GamesProps) => {
 
   if (status === "loading") {
     return (
-      <Grid item>
-        <CircularProgress />
-      </Grid>
+      <Box
+        sx={{
+          display: "flex",
+          padding: 10,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CircularProgress color="secondary" size={100} />
+      </Box>
     );
   }
   if (status === "error") {
     return (
       <Grid item>
-        <Error msg={error?.message}></Error>
+        <StyledCard sx={{ minWidth: "300px" }}>
+          <CardContent>
+            <Error msg={error?.message} />
+          </CardContent>
+        </StyledCard>
       </Grid>
     );
   }
