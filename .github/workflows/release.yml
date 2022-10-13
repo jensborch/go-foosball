@@ -2,32 +2,40 @@ name: Release
 
 on:
   push:
-    tags:        
-      - 'v*'   
+    tags:
+      - "v*"
 
 jobs:
   build:
-    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-go@v3
-      with:
-          go-version: '1.19.2'
-    - uses: actions/setup-node@v2
-      with:
-        node-version: '16'
-    - name: Build client
-      run: make client
-    - name: Build MacOS
-      run: make build-darwin-arm VERSION=$GITHUB_REF_NAME
-    - name: Build Linux
-      run: make build-linux VERSION=$GITHUB_REF_NAME
-    - name: Build Windows
-      run: make build-windows VERSION=$GITHUB_REF_NAME
-    - uses: "marvinpinto/action-automatic-releases@v1.2.1"
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        prerelease: false
-        files: |
-            LICENSE
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v3
+        with:
+          go-version: "1.19.2"
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+      - name: Build client
+        run: make client
+      - name: Build
+        run: make build VERSION=$GITHUB_REF_NAME
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: go-foosball*
+          retention-days: 1
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+      - uses: "marvinpinto/action-automatic-releases@v1.2.1"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
             go-foosball*

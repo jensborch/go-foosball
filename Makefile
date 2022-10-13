@@ -14,9 +14,19 @@ endif
 LDFLAGS = -ldflags "-X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X main.BRANCH=${BRANCH}"
 
 ifeq ($(OS),Windows_NT)
+	GOOS=windows
 	BINARY = go-foosball.exe
 else
-	BINARY = go-foosball
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Linux)
+		GOOS=linux
+		BINARY = go-foosball-linux
+	endif
+	ifeq ($(UNAME_S),Darwin)
+		GOARCH=arm64
+		GOOS=darwin
+		BINARY = go-foosball-darwin
+	endif
 endif
 
 .PHONY: client clean
@@ -30,16 +40,7 @@ format:
 	$(GOPATH)/bin/swag fmt
 
 build:
-	go build ${LDFLAGS} -o ${BINARY}
-
-build-linux:
-	GOOS=linux GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}-linux
-
-build-windows:
-	GOOS=windows GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}.exe
-
-build-darwin-arm:
-	CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build ${LDFLAGS} -o ${BINARY}-darwin-arm
+	GOOS=${GOOS} GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}
 
 test:
 	go test -cover ./...
