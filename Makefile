@@ -40,7 +40,7 @@ format:
 	$(GOPATH)/bin/swag fmt
 
 build:
-	GOOS=${GOOS} GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}
+	CGO_ENABLED=1 GOOS=${GOOS} GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}
 
 test:
 	go test -cover ./...
