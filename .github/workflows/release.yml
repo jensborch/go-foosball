@@ -17,7 +17,8 @@ jobs:
           cache-dependency-path: client/yarn.lock
       - name: Build
         run: |
-          cd client 
+          cd client
+          yarn install
           yarn build
       - name: Upload client
         uses: actions/upload-artifact@v3
