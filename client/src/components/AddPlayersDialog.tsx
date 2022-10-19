@@ -74,12 +74,14 @@ const Player = ({ tournament, player }: PlayerProps) => {
 const NewPlayer = () => {
   const [nickname, setNickname] = useState("");
   const [realname, setRealname] = useState("");
+  const [rfid, setRfid] = useState("");
   const { mutate, error, isError } = usePlayerMutation();
 
   const onCreatePlayer = () => {
     mutate({
       nickname,
       realname,
+      rfid,
     });
     setNickname("");
     setRealname("");
@@ -97,7 +99,7 @@ const NewPlayer = () => {
           title="Create player"
         />
         <CardContent>
-          <Grid container direction="column">
+          <Grid container direction="column" spacing={2}>
             <Grid item>
               <TextField
                 helperText="Name"
@@ -112,6 +114,14 @@ const NewPlayer = () => {
                 value={nickname}
                 onChange={(event) => setNickname(event.target.value)}
                 label="Nickname"
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                helperText="RFID"
+                value={rfid}
+                onChange={(event) => setRfid(event.target.value)}
+                label="RFID"
               />
             </Grid>
           </Grid>
