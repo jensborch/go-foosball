@@ -29,6 +29,7 @@ import { useState } from "react";
 import sub from "date-fns/sub";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import PlayerAvatar from "./PlayerAvatar";
+import { responsiveTxt } from "../util/text";
 
 type HistoryProps = {
   tournament: string;
@@ -175,7 +176,7 @@ const History = ({ tournament }: HistoryProps) => {
                         <PlayerAvatar nickname={p[0]} />
                       </Badge>
                     </ListItemAvatar>
-                    <ListItemText primary={p[0]} />
+                    <ListItemText primary={responsiveTxt(p[0], 10)} />
                   </ListItem>
                 </div>
               ))}

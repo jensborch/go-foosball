@@ -1,5 +1,5 @@
 import * as Api from "../api/Api";
-import { toLocaleDateString } from "../api/util";
+import { toLocaleDateString } from "../util/text";
 import { Error } from "./Error";
 import {
   Avatar,

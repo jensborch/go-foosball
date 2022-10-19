@@ -33,6 +33,7 @@ import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined";
 import EmojiPeopleOutlinedIcon from "@mui/icons-material/EmojiPeopleOutlined";
 import { useState } from "react";
+import { responsiveTxt } from "../util/text";
 
 type PlayerProps = {
   tournament: string;
@@ -67,7 +68,10 @@ const Player = ({ tournament, player }: PlayerProps) => {
           deselectedComp={player.nickname.substring(0, 1).toUpperCase()}
         ></AnimatedAvatar>
       </ListItemAvatar>
-      <ListItemText primary={player.nickname} secondary={player.realname} />
+      <ListItemText
+        primary={responsiveTxt(player.nickname, 10)}
+        secondary={responsiveTxt(player.realname, 10)}
+      />
       <ListItemSecondaryAction>
         <Chip label={player.ranking} />
       </ListItemSecondaryAction>
