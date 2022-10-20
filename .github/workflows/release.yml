@@ -25,6 +25,7 @@ jobs:
         with:
           name: client
           path: client/build/**
+          retention-days: 1
   build:
     strategy:
       matrix:
