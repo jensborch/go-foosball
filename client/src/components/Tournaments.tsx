@@ -75,11 +75,13 @@ const Tournaments = () => {
   }
   return (
     <DefaultGrid container direction="row">
-      {data?.map((tournament) => (
-        <Grid item key={tournament.id}>
-          <Tournament {...tournament} />
-        </Grid>
-      ))}
+      {data &&
+        Array.isArray(data) &&
+        data.map((tournament) => (
+          <Grid item key={tournament.id}>
+            <Tournament {...tournament} />
+          </Grid>
+        ))}
     </DefaultGrid>
   );
 };

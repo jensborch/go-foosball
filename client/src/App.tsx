@@ -26,7 +26,7 @@ function App({ basename }: AppProps) {
             <Theming>
               <BrowserRouter basename={basename}>
                 <Routes>
-                  <Route path="/" element={<Index />} />
+                  <Route index element={<Index />} />
                   <Route path="/tournament/:id" element={<Tournament />} />
                 </Routes>
               </BrowserRouter>
