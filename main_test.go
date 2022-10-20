@@ -20,7 +20,7 @@ func startServer() (*httptest.Server, *gorm.DB) {
 	if err := os.Remove("test.db"); err != nil {
 		fmt.Println("Could not delete test DB", err)
 	}
-	engine, db := setupServer("test.db")
+	engine, db := setupServer("test.db", true)
 	return httptest.NewServer(engine), db
 }
 
