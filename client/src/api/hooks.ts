@@ -11,6 +11,7 @@ export enum CacheKeys {
   Tables = "Tables",
   TournamentTables = "TournamentTables",
   Tournaments = "Tournaments",
+  Tournament = "Tournament",
   TournamentHistory = "TournamentHistory",
   TournamentPlayerHistory = "TournamentPlayerHistory",
 }
@@ -44,7 +45,7 @@ export const useGames = (tournament: string) => {
 
 export const useRandomGames = (tournament: string) => {
   return useQuery<Api.Game[], Error>(
-    CacheKeys.RandomGames,
+    [CacheKeys.RandomGames, tournament],
     async (): Promise<Api.Game[]> => {
       return api.tournaments
         .gamesRandomDetail(tournament)
@@ -102,7 +103,7 @@ export const useTables = (tournament?: number) => {
     ...(tournament && { exclude: tournament }),
   };
   return useQuery<Api.Table[], Error>(
-    CacheKeys.Tables,
+    [CacheKeys.Tables, tournament],
     async (): Promise<Api.Table[]> => {
       return api.tables
         .tablesList(query)
@@ -114,7 +115,7 @@ export const useTables = (tournament?: number) => {
 
 export const useTournamentTables = (tournament: string) => {
   return useQuery<Api.TournamentTable[], Error>(
-    CacheKeys.TournamentTables,
+    [CacheKeys.TournamentTables, tournament],
     async (): Promise<Api.TournamentTable[]> => {
       return api.tournaments
         .tablesDetail(tournament)
@@ -138,7 +139,7 @@ export const useTournaments = () => {
 
 export const useTournament = (tournament: string) => {
   return useQuery<Api.Tournament, Error>(
-    CacheKeys.Tournaments,
+    [CacheKeys.Tournament, tournament],
     async (): Promise<Api.Tournament> => {
       return api.tournaments
         .tournamentsDetail(tournament)
@@ -156,7 +157,8 @@ export const useTournamentMutation = () => {
       api.tournaments.tournamentsCreate(trournament),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([CacheKeys.Tournaments]);
+        queryClient.invalidateQueries(CacheKeys.Tournaments);
+        queryClient.invalidateQueries(CacheKeys.Tournament);
       },
     }
   );

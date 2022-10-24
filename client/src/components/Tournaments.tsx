@@ -35,6 +35,7 @@ const Tournament = ({ created, name, score, initial, id }: Api.Tournament) => {
         subheader={toLocaleDateString(created)}
       />
       <CardContent>
+        <Typography variant="body1">Number: {id}</Typography>
         <Typography variant="body1">Score pr. game: {score}</Typography>
         <Typography variant="body1">Initial ranking: {initial}</Typography>
       </CardContent>
