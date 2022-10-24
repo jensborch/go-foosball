@@ -8936,10 +8936,10 @@ swagger-schema-official@2.0.0-bab6bed:
   resolved "https://registry.yarnpkg.com/swagger-schema-official/-/swagger-schema-official-2.0.0-bab6bed.tgz#70070468d6d2977ca5237b2e519ca7d06a2ea3fd"
   integrity sha512-rCC0NWGKr/IJhtRuPq/t37qvZHI/mH4I4sxflVM+qgVe5Z2uOCivzWaVbuioJaB61kvm5UvB7b49E+oBY0M8jA==
 
-swagger-typescript-api@^10.0.2:
-  version "10.0.2"
-  resolved "https://registry.yarnpkg.com/swagger-typescript-api/-/swagger-typescript-api-10.0.2.tgz#97c79a2edbbb1bc2f72484c1d9a0ba028dfb77e4"
-  integrity sha512-/4pVOwRMKLnqCOBwXYOGif6I5lufLdGQsWOeSHQMQ38zXoAWJr2jGIaBWhxO6snRSiZQWzVFYnNBsYbNtJIKrQ==
+swagger-typescript-api@^10.0.3:
+  version "10.0.3"
+  resolved "https://registry.yarnpkg.com/swagger-typescript-api/-/swagger-typescript-api-10.0.3.tgz#ed05da3e9893d892d4cfa93f95c5a3a7aec40715"
+  integrity sha512-2jyuLtDIMl43/YDXuX1g4MtymyhO22LFer3wWZWkDEQOCy29pdKeNIi9aDYkWUCsEYSzgSmZfhA2eSa3t4d/XA==
   dependencies:
     "@types/swagger-schema-official" "2.0.22"
     axios "0.27.2"
