@@ -15,7 +15,7 @@
     "@types/jest": "^29.2.0",
     "@types/node": "^18.11.4",
     "@types/react": "^18.0.22",
-    "@types/react-dom": "^18.0.6",
+    "@types/react-dom": "^18.0.7",
     "@types/react-transition-group": "^4.4.5",
     "date-fns": "^2.29.3",
     "react": "^18.2.0",
