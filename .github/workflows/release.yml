@@ -30,16 +30,20 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        include:
+        arch: [amd64, arm, arm64]
+        exclude:
           - os: ubuntu-latest
-            arch: amd64
+            arch: arm64
+          - os: macos-latest
+            arch: arm
+          - os: windows-latest
+            arch: arm
+          - os: windows-latest
+            arch: arm64
+        include:
           - os: ubuntu-latest
             arch: arm
             arm: 5
-          - os: macos-latest
-            arch: amd64
-          - os: macos-latest
-            arch: arm64
     runs-on: ${{ matrix.os }}
     needs: client
     steps:
@@ -56,9 +60,7 @@ jobs:
         run: sudo apt-get -y install gcc-arm-linux-gnueabi
         if: ${{ matrix.os == 'ubuntu-latest' }}
       - name: Build
-        run: make build VERSION=$GITHUB_REF_NAME GOARCH=$ARCH GOARM=${{ matrix.arm }}
-        env:
-          ARCH: ${{ matrix.arch }}
+        run: make build VERSION=$GITHUB_REF_NAME GOARCH=${{ matrix.arch }} GOARM=${{ matrix.arm }}
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
