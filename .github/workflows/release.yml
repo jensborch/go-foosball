@@ -56,7 +56,9 @@ jobs:
         run: sudo apt-get -y install gcc-arm-linux-gnueabi
         if: ${{ matrix.os == 'ubuntu-latest' }}
       - name: Build
-        run: make build VERSION=$GITHUB_REF_NAME GOARCH=${{ matrix.arch }} GOARM=${{ matrix.arm }}
+        run: make build VERSION=$GITHUB_REF_NAME GOARCH=$ARCH GOARM=${{ matrix.arm }}
+        env:
+          ARCH: ${{ matrix.arch }}
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
