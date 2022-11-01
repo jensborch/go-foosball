@@ -24,7 +24,9 @@ export interface Color {
 }
 
 export interface CreatePlayer {
+  /** @minLength 2 */
   nickname: string;
+  /** @minLength 2 */
   realname?: string;
   rfid?: string;
 }
@@ -57,7 +59,15 @@ export interface Game {
 }
 
 export interface GameResult {
+  /**
+   * @maxItems 2
+   * @minItems 1
+   */
   leftPlayers: string[];
+  /**
+   * @maxItems 2
+   * @minItems 1
+   */
   rightPlayers: string[];
   winner: "right" | "left" | "draw";
 }
@@ -292,8 +302,8 @@ export class HttpClient<SecurityDataType = unknown> {
     return this.customFetch(`${baseUrl || this.baseUrl || ""}${path}${queryString ? `?${queryString}` : ""}`, {
       ...requestParams,
       headers: {
-        ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
         ...(requestParams.headers || {}),
+        ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
       },
       signal: cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal,
       body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
@@ -381,7 +391,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary List players
      * @request GET:/players
      */
-    playersList: (query?: { exclude?: number }, params: RequestParams = {}) =>
+    playersList: (
+      query?: {
+        /** exlude tournament from list */
+        exclude?: number;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<Player[], any>({
         path: `/players`,
         method: "GET",
@@ -451,7 +467,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary Get all tables
      * @request GET:/tables
      */
-    tablesList: (query?: { exclude?: number }, params: RequestParams = {}) =>
+    tablesList: (
+      query?: {
+        /** exlude tournament from list */
+        exclude?: number;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<Table[], any>({
         path: `/tables`,
         method: "GET",
@@ -653,7 +675,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary Get ranking history for a tournament
      * @request GET:/tournaments/{id}/history
      */
-    historyDetail: (id: string, query: { from: string }, params: RequestParams = {}) =>
+    historyDetail: (
+      id: string,
+      query: {
+        /**
+         * The RFC3339 date to get history from
+         * @format date
+         */
+        from: string;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<TournamentHistory[], Error>({
         path: `/tournaments/${id}/history`,
         method: "GET",
@@ -706,7 +738,18 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary Get player ranking history in tournament
      * @request GET:/tournaments/{id}/players/{nickname}/history
      */
-    playersHistoryDetail: (id: string, nickname: string, query: { from: string }, params: RequestParams = {}) =>
+    playersHistoryDetail: (
+      id: string,
+      nickname: string,
+      query: {
+        /**
+         * The RFC3339 date to get history from
+         * @format date
+         */
+        from: string;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<TournamentPlayerHistory[], Error>({
         path: `/tournaments/${id}/players/${nickname}/history`,
         method: "GET",
