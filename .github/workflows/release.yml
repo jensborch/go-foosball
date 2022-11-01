@@ -30,6 +30,16 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            arch: amd64
+          - os: ubuntu-latest
+            arch: arm
+            arm: 5
+          - os: macos-latest
+            arch: amd64
+          - os: macos-latest
+            arch: arm64
     runs-on: ${{ matrix.os }}
     needs: client
     steps:
@@ -43,7 +53,7 @@ jobs:
           name: client
           path: client/build
       - name: Build
-        run: make build VERSION=$GITHUB_REF_NAME
+        run: make build VERSION=$GITHUB_REF_NAME GOARCH=${{ matrix.arch }} GOARM=${{ matrix.arm }}
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:

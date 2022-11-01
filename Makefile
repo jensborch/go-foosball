@@ -1,5 +1,3 @@
-GOARCH = amd64
-
 BIN = ~/go/bin
 
 VERSION ?= DEV
@@ -7,27 +5,34 @@ COMMIT=$(shell git rev-parse HEAD)
 BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 GOPATH=$(shell go env GOPATH)
 
-ifneq ($(VERSION),DEV)
-	export GIN_MODE := release
-endif
-
 LDFLAGS = -ldflags "-X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X main.BRANCH=${BRANCH}"
 
 ifeq ($(OS),Windows_NT)
-	GOOS=windows
+	GOOS = windows
 	BINARY = go-foosball.exe
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Linux)
-		GOOS=linux
+		GOOS = linux
 		BINARY = go-foosball-linux
 	endif
 	ifeq ($(UNAME_S),Darwin)
-		GOARCH=arm64
-		GOOS=darwin
+		GOOS = darwin
 		BINARY = go-foosball-darwin
 	endif
 endif
+
+ARCH_OPT = CGO_ENABLED=1 GOOS=${GOOS}
+
+ifneq ($(strip $(GOARCH)),) 
+	ARCH_OPT := ${ARCH_OPT} GOARCH=${GOARCH}
+	BINARY := ${BINARY}-${GOARCH}
+endif
+
+ifneq ($(strip $(GOARM)),) 
+	ARCH_OPT := ${ARCH_OPT} GOARM=${GOARM}
+endif
+
 
 .PHONY: client clean
 
@@ -40,7 +45,7 @@ format:
 	$(GOPATH)/bin/swag fmt
 
 build:
-	CGO_ENABLED=1 GOOS=${GOOS} GOARCH=${GOARCH} go build ${LDFLAGS} -o ${BINARY}
+	${ARCH_OPT} go build ${LDFLAGS} -o ${BINARY}
 
 test:
 	go test -cover ./...
