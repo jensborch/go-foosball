@@ -52,6 +52,9 @@ jobs:
         with:
           name: client
           path: client/build
+      - name: Install package
+        run: sudo apt-get -y install gcc-arm-linux-gnueabi
+        if: ${{ matrix.os != 'ubuntu-latest' }}
       - name: Build
         run: make build VERSION=$GITHUB_REF_NAME GOARCH=${{ matrix.arch }} GOARM=${{ matrix.arm }}
       - name: Upload artifact
