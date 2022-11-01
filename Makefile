@@ -30,7 +30,7 @@ ifneq ($(strip $(GOARCH)),)
 endif
 
 ifneq ($(strip $(GOARM)),) 
-	ARCH_OPT := ${ARCH_OPT} GOARM=${GOARM}
+	ARCH_OPT := ${ARCH_OPT} GOARM=${GOARM} CC=arm-linux-gnueabi-gcc
 endif
 
 
