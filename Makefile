@@ -6,33 +6,29 @@ BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 GOPATH=$(shell go env GOPATH)
 
 LDFLAGS = -ldflags "-X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X main.BRANCH=${BRANCH}"
+ARCH_OPT = CGO_ENABLED=1
 
 ifeq ($(OS),Windows_NT)
-	GOOS = windows
 	BINARY = go-foosball.exe
+	ARCH_OPT := ${ARCH_OPT} GOOS=windows
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Linux)
-		GOOS = linux
+		ARCH_OPT := ${ARCH_OPT} GOOS=linux
 		BINARY = go-foosball-linux
 	endif
 	ifeq ($(UNAME_S),Darwin)
-		GOOS = darwin
+		ARCH_OPT := ${ARCH_OPT} GOOS=darwin
 		BINARY = go-foosball-darwin
 	endif
+	ifneq ($(strip $(GOARCH)),)
+		ARCH_OPT := ${ARCH_OPT} GOARCH=${GOARCH} 
+		BINARY := ${BINARY}-${GOARCH}
+	endif
+	ifneq ($(strip $(GOARM)),) 
+		ARCH_OPT := ${ARCH_OPT} GOARM=${GOARM} CC=arm-linux-gnueabi-gcc
+	endif
 endif
-
-ARCH_OPT = CGO_ENABLED=1 GOOS=${GOOS}
-
-ifneq ($(strip $(GOARCH)),) 
-	ARCH_OPT := ${ARCH_OPT} GOARCH=${GOARCH}
-	BINARY := ${BINARY}-${GOARCH}
-endif
-
-ifneq ($(strip $(GOARM)),) 
-	ARCH_OPT := ${ARCH_OPT} GOARM=${GOARM} CC=arm-linux-gnueabi-gcc
-endif
-
 
 .PHONY: client clean
 
