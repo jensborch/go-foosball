@@ -8034,10 +8034,10 @@ react-transition-group@^4.4.4, react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-use-precision-timer@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/react-use-precision-timer/-/react-use-precision-timer-1.0.8.tgz#313fc5d8afef38169db3b0d9240642a018b1ccbf"
-  integrity sha512-XsfRN14A5DvarZIzPUdWKoiYfXG4t8GzDEbyMYtxe8xVmvyF9E3ho9ol/ublv6rL8NeuQAYvM7d2XdzWiZt1mQ==
+react-use-precision-timer@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-use-precision-timer/-/react-use-precision-timer-2.0.1.tgz#ce2b8492e16766c1894d6ec4b2a3be003cd42502"
+  integrity sha512-vad8QejyLrYaKe1gQl1gatfq1g9L3ht1p97sKXxxVKk09/P+99L94WaLtlqh4MH6Z755NN+sq2R4wuKkrDV1tg==
 
 react@^18.2.0:
   version "18.2.0"
