@@ -4,6 +4,7 @@ import (
 	"embed"
 	"flag"
 	"io/fs"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -46,7 +47,7 @@ func main() {
 	flag.StringVar(&dbfile, "db", "foosball.db", "the database file")
 	flag.BoolVar(&debug, "debug", false, "enable debug")
 	flag.Parse()
-
+	log.Printf("Starting go-foosball on port %d using database %s", port, dbfile)
 	engine, _ := setupServer(dbfile, debug)
 	engine.Run(":" + strconv.FormatUint(uint64(port), 10))
 }
@@ -58,12 +59,12 @@ func corsHandler() gin.HandlerFunc {
 }
 
 func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
-	var log logger.Interface
+	var gormlog logger.Interface
 	if !debug {
 		gin.SetMode(gin.ReleaseMode)
-		log = logger.Default.LogMode(logger.Warn)
+		gormlog = logger.Default.LogMode(logger.Warn)
 	} else {
-		log = logger.Default.LogMode(logger.Info)
+		gormlog = logger.Default.LogMode(logger.Info)
 	}
 
 	router := gin.Default()
@@ -76,7 +77,7 @@ func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
 	}
 
 	db, err := gorm.Open(sqlite.Open(dbfile), &gorm.Config{
-		Logger: log,
+		Logger: gormlog,
 	})
 	if err != nil {
 		panic("failed to connect database")

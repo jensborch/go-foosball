@@ -88,7 +88,7 @@ const WinnerButton = ({
 );
 
 const findColor = (color: string): string => {
-  switch (color) {
+  switch (color.toLowerCase()) {
     case "red":
       return red[400];
     case "pink":
