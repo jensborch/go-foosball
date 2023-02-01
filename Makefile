@@ -6,7 +6,7 @@ BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 GOPATH=$(shell go env GOPATH)
 
 LDFLAGS = -ldflags "-X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X main.BRANCH=${BRANCH}"
-ARCH_OPT = CGO_ENABLED=1
+ARCH_OPT = CGO_ENABLED=0
 
 ifeq ($(OS),Windows_NT)
 	BINARY = go-foosball.exe
@@ -26,7 +26,7 @@ else
 		BINARY := ${BINARY}-${GOARCH}
 	endif
 	ifneq ($(strip $(GOARM)),) 
-		ARCH_OPT := ${ARCH_OPT} GOARM=${GOARM} CC=arm-linux-gnueabi-gcc
+		ARCH_OPT := ${ARCH_OPT} GOARM=${GOARM}
 	endif
 endif
 

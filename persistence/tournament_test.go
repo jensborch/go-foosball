@@ -3,8 +3,8 @@ package persistence
 import (
 	"testing"
 
+	_ "github.com/glebarez/sqlite"
 	"github.com/jensborch/go-foosball/model"
-	_ "gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 

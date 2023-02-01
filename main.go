@@ -21,7 +21,7 @@ import (
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/resources"
 
-	"gorm.io/driver/sqlite"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
