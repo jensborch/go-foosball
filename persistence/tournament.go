@@ -174,7 +174,7 @@ func (r *tournamentRepository) UpdatePlayerRanking(tournamentId string, nickname
 		} else {
 			player.Ranking = 0
 		}
-		player.UpdatedAt = updated
+		player.Latest = &updated
 		if err := r.db.Save(player).Error; err != nil {
 			panic(err)
 		}

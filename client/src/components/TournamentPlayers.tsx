@@ -79,7 +79,7 @@ const Player = ({ tournament, player }: PlayerProps) => {
   );
 };
 
-type SortOrder = "alpha" | "winner" | "favorit";
+type SortOrder = "alpha" | "winner" | "favorites";
 
 type SortPlayersProps = {
   setOrder: (order: SortOrder) => void;
@@ -94,10 +94,11 @@ const sortPlayers =
         return p1.nickname.localeCompare(p2.nickname);
       case "winner":
         return p1.ranking && p2.ranking ? p2.ranking - p1.ranking : 0;
-      case "favorit":
-        return p1.latest && p2.latest
-          ? Date.parse(p2.latest).valueOf() - Date.parse(p1.latest).valueOf()
-          : 0;
+      case "favorites":
+        return (
+          Date.parse(p2.latest!).valueOf() - Date.parse(p1.latest!).valueOf() ||
+          p1.nickname.localeCompare(p2.nickname)
+        );
     }
   };
 
@@ -107,8 +108,8 @@ const SortPlayers = ({ setOrder, order }: SortPlayersProps) => {
       <Grid container justifyContent="space-around">
         <Grid item>
           <Tooltip title="Favorites">
-            <IconButton onClick={() => setOrder("favorit")}>
-              {order === "favorit" ? (
+            <IconButton onClick={() => setOrder("favorites")}>
+              {order === "favorites" ? (
                 <FavoriteIcon />
               ) : (
                 <FavoriteBorderOutlinedIcon />
@@ -147,6 +148,8 @@ type PlayersProps = {
   tournament: string;
 };
 
+const MIN_DATE: string = new Date(0).toISOString();
+
 const TournamentPlayers = ({ tournament }: PlayersProps) => {
   const [order, setOder] = useState<SortOrder>("winner");
   const { status, error, data } = useTournamentPlayers(tournament);
@@ -176,12 +179,15 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
           {status === "error" && <Error msg={error?.message} />}
           {status === "success" && (
             <List dense={true}>
-              {data?.sort(sortPlayers(order)).map((p, i) => (
-                <div key={p.nickname}>
-                  <Player player={p} tournament={tournament} />
-                  {i !== data.length - 1 ? <Divider /> : null}
-                </div>
-              ))}
+              {data
+                ?.map((p) => ({ latest: MIN_DATE, ...p }))
+                .sort(sortPlayers(order))
+                .map((p, i) => (
+                  <div key={p.nickname}>
+                    <Player player={p} tournament={tournament} />
+                    {i !== data.length - 1 ? <Divider /> : null}
+                  </div>
+                ))}
             </List>
           )}
         </CardContent>

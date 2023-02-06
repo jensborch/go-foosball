@@ -126,7 +126,7 @@ const Game = ({ tournament, game }: GameProps) => {
   useEffect(() => {
     setDisabled(false);
   }, [tournament, game]);
-  const { mutate } = useGameMutation();
+  const { mutate } = useGameMutation(tournament);
   function wins(winner: Winner) {
     mutate({
       tournament: tournament,

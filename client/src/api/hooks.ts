@@ -153,8 +153,8 @@ export const useTournamentMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (trournament: Api.CreateTournament) =>
-      api.tournaments.tournamentsCreate(trournament),
+    (tournament: Api.CreateTournament) =>
+      api.tournaments.tournamentsCreate(tournament),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(CacheKeys.Tournaments);
@@ -261,7 +261,7 @@ type GameMutationParams = {
   game: Api.GameResult;
 };
 
-export const useGameMutation = () => {
+export const useGameMutation = (tournament: string) => {
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -273,8 +273,8 @@ export const useGameMutation = () => {
       ),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(CacheKeys.TournamentPlayers);
-        queryClient.invalidateQueries(CacheKeys.TournamentHistory);
+        queryClient.invalidateQueries([CacheKeys.TournamentPlayers, tournament]);
+        queryClient.invalidateQueries([CacheKeys.TournamentHistory, tournament]);
       },
       onError: (error) => {
         //Do nothing

@@ -35,19 +35,29 @@ type HistoryProps = {
   tournament: string;
 };
 
+const findByNickname = (history: TournamentHistory[], nickname: string) => {
+  return history.filter((h) => h.nickname === nickname);
+};
+
 const findMin = (history: TournamentHistory[], nickname: string) => {
-  const date = history
-    .filter((h) => h.nickname === nickname)
-    .map((h) => new Date(h.updated))
-    .reduce((a, b) => (a < b ? a : b));
-  return history.find(
-    (h) => h.nickname === nickname && isEqual(new Date(h.updated), date)
-  );
+  const current = findByNickname(history, nickname);
+  if (current.length === 1) {
+    return {
+      nickname,
+      ranking: 0,
+    };
+  } else {
+    const date = current
+      .map((h) => new Date(h.updated))
+      .reduce((a, b) => (a < b ? a : b));
+    return history.find(
+      (h) => h.nickname === nickname && isEqual(new Date(h.updated), date)
+    );
+  }
 };
 
 const findMax = (history: TournamentHistory[], nickname: string) => {
-  const date = history
-    .filter((h) => h.nickname === nickname)
+  const date = findByNickname(history, nickname)
     .map((h) => new Date(h.updated))
     .reduce((a, b) => (a > b ? a : b));
   return history.find(
