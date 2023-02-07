@@ -16,6 +16,7 @@ jobs:
         with:
           node-version: "18"
           cache: "pnpm"
+          cache-dependency-path: client/pnpm-lock.yaml
       - name: Build and test
         run: |
           cd client
