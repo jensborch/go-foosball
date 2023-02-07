@@ -36,7 +36,8 @@
     "eject": "react-scripts eject",
     "test:ci": "CI=true react-scripts test --env=jsdom --coverage",
     "prettier": "prettier --write .",
-    "swagger": "swagger-typescript-api -p ../docs/swagger.json -o ./src/api -n Api.ts"
+    "swagger": "swagger-typescript-api -p ../docs/swagger.json -o ./src/api -n Api.ts",
+    "preinstall": "npx only-allow pnpm"
   },
   "jest": {
     "moduleNameMapper": {
@@ -63,6 +64,7 @@
     ]
   },
   "devDependencies": {
+    "@types/testing-library__jest-dom": "^5.14.5",
     "eslint-config-prettier": "^8.6.0",
     "prettier": "^2.8.3",
     "swagger-typescript-api": "^12.0.2"

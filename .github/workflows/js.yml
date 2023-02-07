@@ -12,10 +12,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
-          cache: "yarn"
-          cache-dependency-path: client/yarn.lock
+          cache: "pnpm"
+          cache-dependency-path: client/pnpm-lock.yaml
       - name: Build and test
         run: |
           cd client
-          yarn install
-          yarn test:ci
+          pnpm install
+          pnpm test:ci

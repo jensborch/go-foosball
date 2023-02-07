@@ -77,14 +77,14 @@ but back-end and front-end can also run separately. To only build the front-end 
 
 ```sh
 cd client
-yarn build
+pnpm build
 ```
 
 To only start the front-end use:
 
 ```sh
 cd client
-yarn start
+pnpm start
 ```
 
 [Node.js](https://nodejs.org/) version 14 or above and [Yarn](https://yarnpkg.com/) must be installed.
@@ -107,7 +107,7 @@ Test the front-end using:
 
 ```sh
 cd client
-yarn test
+pnpm test
 ```
 
 ## Swagger

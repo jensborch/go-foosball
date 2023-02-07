@@ -13,13 +13,13 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
-          cache: "yarn"
-          cache-dependency-path: client/yarn.lock
+          cache: "pnpm"
+          cache-dependency-path: client/pnpm.lock
       - name: Build
         run: |
           cd client
-          yarn install
-          yarn build
+          pnpm install
+          pnpm build
       - name: Upload client
         uses: actions/upload-artifact@v3
         with:

@@ -50,7 +50,7 @@ vet:
 	go vet ./...
 
 client:
-	cd client; yarn install; yarn build
+	cd client; pnpm install; pnpm build
 	
 clean:
 	go clean
