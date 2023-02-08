@@ -740,6 +740,31 @@ paths:
       tags:
       - tournament
   /tournaments/{id}/players:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Remove all players from tournament
+      tags:
+      - tournament
     get:
       consumes:
       - application/json

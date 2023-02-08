@@ -63,6 +63,7 @@ type TournamentRepository interface {
 	UpdatePlayerRanking(tournamentId string, nickname string, gameScore int, updated time.Time) (*TournamentPlayer, Found)
 	PlayerHistory(tournamentId string, nickname string, from time.Time) ([]*TournamentPlayerHistory, Found)
 	History(tournamentId string, from time.Time) ([]*TournamentPlayerHistory, Found)
+	DeactivatePlayers(tournamentId string) Found
 }
 
 // NewTournament creates a new tournament

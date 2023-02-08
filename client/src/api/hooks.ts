@@ -209,7 +209,29 @@ export const useTournamentPlayerDeleteMutation = (
   const queryClient = useQueryClient();
 
   return useMutation(
-    () => api.tournaments.playersDelete(tournament, nickname),
+    () => api.tournaments.playersDelete2(tournament, nickname),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([
+          CacheKeys.TournamentPlayers,
+          tournament,
+        ]);
+        queryClient.invalidateQueries(CacheKeys.RandomGames);
+      },
+      onError: (error) => {
+        //Do nothing
+      },
+    }
+  );
+};
+
+export const useTournamentPlayersDeleteMutation = (
+  tournament: string
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    () => api.tournaments.playersDelete(tournament),
     {
       onSuccess: () => {
         queryClient.invalidateQueries([

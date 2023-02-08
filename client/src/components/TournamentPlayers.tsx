@@ -20,6 +20,7 @@ import {
   useTournamentPlayers,
   useAddPlayer2Tournament,
   useRemovePlayerFromTournament,
+  useTournamentPlayersDeleteMutation,
 } from "../api/hooks";
 import { Error } from "./Error";
 import CheckIcon from "@mui/icons-material/Check";
@@ -32,17 +33,16 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined";
 import EmojiPeopleOutlinedIcon from "@mui/icons-material/EmojiPeopleOutlined";
-import DeselectIcon from "@mui/icons-material/Deselect";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { responsiveTxt } from "../util/text";
 
 type PlayerProps = {
   tournament: string;
   player: Api.TournamentPlayer;
-  deselect: boolean;
 };
 
-const Player = ({ tournament, player, deselect }: PlayerProps) => {
+const Player = ({ tournament, player }: PlayerProps) => {
   const add = useAddPlayer2Tournament({
     tournament,
     nickname: player.nickname,
@@ -54,11 +54,6 @@ const Player = ({ tournament, player, deselect }: PlayerProps) => {
   function setSelected(selected: boolean) {
     selected ? add() : remove();
   }
-  useEffect(() => {
-    if (deselect) {
-      remove();
-    }
-  }, [deselect, remove]);
   return (
     <ListItem disableGutters>
       <ListItemAvatar>
@@ -155,7 +150,8 @@ const MIN_DATE: string = new Date(0).toISOString();
 const TournamentPlayers = ({ tournament }: PlayersProps) => {
   const [order, setOder] = useState<SortOrder>("winner");
   const { status, error, data } = useTournamentPlayers(tournament);
-  const [deselectAll, setDeselectAll] = useState(false);
+  const { mutate: deselectAll } =
+    useTournamentPlayersDeleteMutation(tournament);
   return (
     <Grid item>
       <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>
@@ -166,11 +162,8 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
             </Avatar>
           }
           action={
-            <IconButton
-              aria-label="deselect"
-              onClick={() => setDeselectAll(true)}
-            >
-              <DeselectIcon />
+            <IconButton aria-label="deselect" onClick={() => deselectAll()}>
+              <RemoveCircleOutlineIcon />
             </IconButton>
           }
           title="Players"
@@ -195,11 +188,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
                 .sort(sortPlayers(order))
                 .map((p, i) => (
                   <div key={p.nickname}>
-                    <Player
-                      player={p}
-                      tournament={tournament}
-                      deselect={deselectAll}
-                    />
+                    <Player player={p} tournament={tournament} />
                     {i !== data.length - 1 ? <Divider /> : null}
                   </div>
                 ))}
