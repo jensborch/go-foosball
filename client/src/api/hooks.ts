@@ -164,6 +164,22 @@ export const useTournamentMutation = () => {
   );
 };
 
+export const useAddPlayer2Tournament = ({tournament, nickname}: {tournament: string; nickname: string}) => {
+  const { mutate } = useTournamentPlayerMutation(tournament);
+  return  () => mutate({
+    nickname,
+  });
+}
+
+export const useRemovePlayerFromTournament = ({tournament, nickname}: {tournament: string; nickname: string}) => {
+  const { mutate} = useTournamentPlayerDeleteMutation(
+    tournament,
+    nickname
+  );
+  return mutate;
+}
+
+
 export const useTournamentPlayerMutation = (tournament: string) => {
   const queryClient = useQueryClient();
 

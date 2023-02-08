@@ -18,8 +18,8 @@ import {
 } from "@mui/material";
 import {
   useTournamentPlayers,
-  useTournamentPlayerMutation,
-  useTournamentPlayerDeleteMutation,
+  useAddPlayer2Tournament,
+  useRemovePlayerFromTournament,
 } from "../api/hooks";
 import { Error } from "./Error";
 import CheckIcon from "@mui/icons-material/Check";
@@ -33,47 +33,38 @@ import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined";
 import EmojiPeopleOutlinedIcon from "@mui/icons-material/EmojiPeopleOutlined";
 import DeselectIcon from "@mui/icons-material/Deselect";
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { responsiveTxt } from "../util/text";
 
 type PlayerProps = {
   tournament: string;
   player: Api.TournamentPlayer;
-  setSelectedPlayer: (name: string, selected: boolean) => void;
-  selected: boolean;
+  deselect: boolean;
 };
 
-const Player = ({
-  tournament,
-  player,
-  setSelectedPlayer,
-  selected,
-}: PlayerProps) => {
-  const { mutate } = useTournamentPlayerMutation(tournament);
-  const { mutate: del } = useTournamentPlayerDeleteMutation(
+const Player = ({ tournament, player, deselect }: PlayerProps) => {
+  const add = useAddPlayer2Tournament({
     tournament,
-    player.nickname
-  );
-  function select() {
-    mutate({
-      nickname: player.nickname,
-    });
-    setSelectedPlayer(player.nickname, true);
-  }
-  function deselect() {
-    del();
-    setSelectedPlayer(player.nickname, false);
-  }
+    nickname: player.nickname,
+  });
+  const remove = useRemovePlayerFromTournament({
+    tournament,
+    nickname: player.nickname,
+  });
   function setSelected(selected: boolean) {
-    selected ? select() : deselect();
+    selected ? add() : remove();
   }
-  //setSelected(selected);
+  useEffect(() => {
+    if (deselect) {
+      remove();
+    }
+  }, [deselect, remove]);
   return (
     <ListItem disableGutters>
       <ListItemAvatar>
         <AnimatedAvatar
           avatar={player.nickname}
-          selected={selected}
+          selected={player.active}
           setSelected={setSelected}
           selectedComp={<CheckIcon />}
           deselectedComp={player.nickname.substring(0, 1).toUpperCase()}
@@ -164,13 +155,7 @@ const MIN_DATE: string = new Date(0).toISOString();
 const TournamentPlayers = ({ tournament }: PlayersProps) => {
   const [order, setOder] = useState<SortOrder>("winner");
   const { status, error, data } = useTournamentPlayers(tournament);
-  const [selectedPlayers, setSelectedPlayers] = useState(
-    new Set<string>(data?.filter((p) => p.active).map((p) => p.nickname))
-  );
-  const setSelectedPlayer = (name: string, selected: boolean) => {
-    selected ? selectedPlayers.add(name) : selectedPlayers.delete(name);
-    setSelectedPlayers(selectedPlayers);
-  };
+  const [deselectAll, setDeselectAll] = useState(false);
   return (
     <Grid item>
       <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>
@@ -183,7 +168,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
           action={
             <IconButton
               aria-label="deselect"
-              onClick={() => setSelectedPlayers(new Set<string>())}
+              onClick={() => setDeselectAll(true)}
             >
               <DeselectIcon />
             </IconButton>
@@ -213,8 +198,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
                     <Player
                       player={p}
                       tournament={tournament}
-                      selected={selectedPlayers.has(p.nickname)}
-                      setSelectedPlayer={setSelectedPlayer}
+                      deselect={deselectAll}
                     />
                     {i !== data.length - 1 ? <Divider /> : null}
                   </div>

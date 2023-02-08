@@ -82,6 +82,8 @@ func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
 	if err != nil {
 		panic("failed to connect database")
 	}
+	sqliteDb, _ := db.DB()
+	sqliteDb.SetMaxOpenConns(1)
 
 	db.AutoMigrate(&model.Tournament{},
 		&model.TournamentTable{},
