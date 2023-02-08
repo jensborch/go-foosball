@@ -32,15 +32,23 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined";
 import EmojiPeopleOutlinedIcon from "@mui/icons-material/EmojiPeopleOutlined";
-import { useState } from "react";
+import DeselectIcon from "@mui/icons-material/Deselect";
+import { useRef, useState } from "react";
 import { responsiveTxt } from "../util/text";
 
 type PlayerProps = {
   tournament: string;
   player: Api.TournamentPlayer;
+  setSelectedPlayer: (name: string, selected: boolean) => void;
+  selected: boolean;
 };
 
-const Player = ({ tournament, player }: PlayerProps) => {
+const Player = ({
+  tournament,
+  player,
+  setSelectedPlayer,
+  selected,
+}: PlayerProps) => {
   const { mutate } = useTournamentPlayerMutation(tournament);
   const { mutate: del } = useTournamentPlayerDeleteMutation(
     tournament,
@@ -50,19 +58,22 @@ const Player = ({ tournament, player }: PlayerProps) => {
     mutate({
       nickname: player.nickname,
     });
+    setSelectedPlayer(player.nickname, true);
   }
   function deselect() {
     del();
+    setSelectedPlayer(player.nickname, false);
   }
   function setSelected(selected: boolean) {
     selected ? select() : deselect();
   }
+  //setSelected(selected);
   return (
     <ListItem disableGutters>
       <ListItemAvatar>
         <AnimatedAvatar
           avatar={player.nickname}
-          selected={player.active}
+          selected={selected}
           setSelected={setSelected}
           selectedComp={<CheckIcon />}
           deselectedComp={player.nickname.substring(0, 1).toUpperCase()}
@@ -153,6 +164,13 @@ const MIN_DATE: string = new Date(0).toISOString();
 const TournamentPlayers = ({ tournament }: PlayersProps) => {
   const [order, setOder] = useState<SortOrder>("winner");
   const { status, error, data } = useTournamentPlayers(tournament);
+  const [selectedPlayers, setSelectedPlayers] = useState(
+    new Set<string>(data?.filter((p) => p.active).map((p) => p.nickname))
+  );
+  const setSelectedPlayer = (name: string, selected: boolean) => {
+    selected ? selectedPlayers.add(name) : selectedPlayers.delete(name);
+    setSelectedPlayers(selectedPlayers);
+  };
   return (
     <Grid item>
       <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>
@@ -161,6 +179,14 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
             <Avatar>
               <EmojiPeopleOutlinedIcon />
             </Avatar>
+          }
+          action={
+            <IconButton
+              aria-label="deselect"
+              onClick={() => setSelectedPlayers(new Set<string>())}
+            >
+              <DeselectIcon />
+            </IconButton>
           }
           title="Players"
         />
@@ -184,7 +210,12 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
                 .sort(sortPlayers(order))
                 .map((p, i) => (
                   <div key={p.nickname}>
-                    <Player player={p} tournament={tournament} />
+                    <Player
+                      player={p}
+                      tournament={tournament}
+                      selected={selectedPlayers.has(p.nickname)}
+                      setSelectedPlayer={setSelectedPlayer}
+                    />
                     {i !== data.length - 1 ? <Divider /> : null}
                   </div>
                 ))}
