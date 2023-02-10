@@ -18,7 +18,6 @@ import {
   Box,
 } from "@mui/material";
 import { TournamentHistory } from "../api/Api";
-import isEqual from "date-fns/isEqual";
 import TodayIcon from "@mui/icons-material/Today";
 import TodayOutlinedIcon from "@mui/icons-material/TodayOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -30,48 +29,20 @@ import sub from "date-fns/sub";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import PlayerAvatar from "./PlayerAvatar";
 import { responsiveTxt } from "../util/text";
+import { findMax, findMin } from "../api/util";
 
 type HistoryProps = {
   tournament: string;
 };
 
-const findByNickname = (history: TournamentHistory[], nickname: string) => {
-  return history.filter((h) => h.nickname === nickname);
-};
-
-const findMin = (history: TournamentHistory[], nickname: string) => {
-  const current = findByNickname(history, nickname);
-  if (current.length === 1) {
-    return {
-      nickname,
-      ranking: 0,
-    };
-  } else {
-    const date = current
-      .map((h) => new Date(h.updated))
-      .reduce((a, b) => (a < b ? a : b));
-    return history.find(
-      (h) => h.nickname === nickname && isEqual(new Date(h.updated), date)
-    );
-  }
-};
-
-const findMax = (history: TournamentHistory[], nickname: string) => {
-  const date = findByNickname(history, nickname)
-    .map((h) => new Date(h.updated))
-    .reduce((a, b) => (a > b ? a : b));
-  return history.find(
-    (h) => h.nickname === nickname && isEqual(new Date(h.updated), date)
-  );
-};
-
 const historyDiff = (period: Duration, history?: TournamentHistory[]) => {
-  history = history?.filter((h) => new Date(h.updated) > getFrom(period));
+  const from = getFrom(period);
   const names = new Set(history?.map((p) => p.nickname));
   const result: [nickname: string, diff: number][] = [];
   names.forEach((n) => {
-    const max = findMax(history!, n)?.ranking;
-    const min = findMin(history!, n)?.ranking;
+    const max = findMax(history!, from, n)?.ranking;
+    const min = findMin(history!, from, n)?.ranking;
+
     if (min && max) {
       result.push([n, max - min]);
     }
