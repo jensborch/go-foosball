@@ -27,7 +27,8 @@ const findByNickname = (history: TournamentHistory[], nickname: string) => {
 export const findMin = (
   history: TournamentHistory[],
   min: Date,
-  nickname: string
+  nickname: string,
+  initRanking: number
 ) => {
   const all = findByNickname(history, nickname).filter((h) =>
     isBefore(h.updated, min)
@@ -37,7 +38,8 @@ export const findMin = (
   } else {
     return {
       nickname,
-      ranking: 0,
+      ranking: initRanking,
+      updated: min,
     };
   }
 };

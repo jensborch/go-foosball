@@ -3,7 +3,7 @@ import { TournamentHistory } from "./Api";
 import { findMax, findMin } from "./util";
 
 test("min to be undefined", () => {
-  const min = findMin([], new Date(), "test");
+  const min = findMin([], new Date(), "test", 100);
   expect(min).toBeUndefined();
 });
 
@@ -31,7 +31,7 @@ test("min to be something", () => {
       updated: sub(now, { minutes: 1 }).toUTCString(),
     },
   ];
-  const min = findMin(history, now, "test");
+  const min = findMin(history, now, "test", 100);
   expect(min).not.toBeUndefined();
   expect(min?.ranking).toEqual(22);
 });

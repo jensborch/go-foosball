@@ -1,5 +1,9 @@
 import CircularProgress from "@mui/material/CircularProgress";
-import { useTournamentHistory } from "../api/hooks";
+import {
+  useTournament,
+  useTournamentHistory,
+  useTournamentPlayers,
+} from "../api/hooks";
 import { StyledCard, StyledCardHeader } from "./Styled";
 import { Error } from "./Error";
 import {
@@ -35,15 +39,20 @@ type HistoryProps = {
   tournament: string;
 };
 
-const historyDiff = (period: Duration, history?: TournamentHistory[]) => {
+const useHistoryDiff = (
+  tournament: string,
+  period: Duration,
+  history?: TournamentHistory[]
+) => {
+  const { data } = useTournament(tournament);
   const from = getFrom(period);
   const names = new Set(history?.map((p) => p.nickname));
   const result: [nickname: string, diff: number][] = [];
   names.forEach((n) => {
+    const ranking = data?.initial || 0;
     const max = findMax(history!, from, n)?.ranking;
-    const min = findMin(history!, from, n)?.ranking;
-
-    if (min && max) {
+    const min = findMin(history!, from, n, ranking).ranking;
+    if (max) {
       result.push([n, max - min]);
     }
   });
@@ -113,7 +122,7 @@ const ByDuration = ({ setDuration, duration }: ByDurationProps) => {
 const History = ({ tournament }: HistoryProps) => {
   const { status, error, data } = useTournamentHistory(tournament);
   const [duration, setDuration] = useState<Duration>("day");
-  const diff = historyDiff(duration, data);
+  const diff = useHistoryDiff(tournament, duration, data);
   return (
     <Grid item>
       <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>
