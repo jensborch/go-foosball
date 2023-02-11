@@ -1,9 +1,5 @@
 import CircularProgress from "@mui/material/CircularProgress";
-import {
-  useTournament,
-  useTournamentHistory,
-  useTournamentPlayers,
-} from "../api/hooks";
+import { useTournament, useTournamentHistory } from "../api/hooks";
 import { StyledCard, StyledCardHeader } from "./Styled";
 import { Error } from "./Error";
 import {
@@ -34,6 +30,7 @@ import TimelineIcon from "@mui/icons-material/Timeline";
 import PlayerAvatar from "./PlayerAvatar";
 import { responsiveTxt } from "../util/text";
 import { findMax, findMin } from "../api/util";
+import { setHours, setMinutes } from "date-fns";
 
 type HistoryProps = {
   tournament: string;
@@ -67,7 +64,7 @@ const getFrom = (period: Duration): Date => {
     case "month":
       return sub(now, { months: 1 });
     case "day":
-      return sub(now, { days: 1 });
+      return setHours(setMinutes(now, 0), 0);
   }
 };
 

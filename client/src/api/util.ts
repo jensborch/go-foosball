@@ -49,8 +49,8 @@ export const findMax = (
   max: Date,
   nickname: string
 ) => {
-  const all = findByNickname(history, nickname).filter(
-    (h) => isAfter(h.updated, max) || isEqual(h.updated, max)
+  const all = findByNickname(history, nickname).filter((h) =>
+    isAfter(h.updated, max)
   );
   if (all.length > 0) {
     return all.reduce((a, b) => (isAfter(a.updated, b.updated) ? a : b));
