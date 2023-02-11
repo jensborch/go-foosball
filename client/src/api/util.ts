@@ -1,4 +1,4 @@
-import { isAfter, isBefore, isEqual } from "date-fns";
+import { isAfter, isBefore } from "date-fns";
 import { Api, TournamentHistory } from "./Api";
 
 export function handleErrors<R extends Response>(response: R) {
