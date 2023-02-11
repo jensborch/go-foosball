@@ -4,7 +4,8 @@ import { findMax, findMin } from "./util";
 
 test("min to be undefined", () => {
   const min = findMin([], new Date(), "test", 100);
-  expect(min).toBeUndefined();
+  expect(min).not.toBeUndefined();
+  expect(min.ranking).toEqual(100);
 });
 
 test("min to be something", () => {
