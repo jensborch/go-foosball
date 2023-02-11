@@ -82,6 +82,8 @@ func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
 	if err != nil {
 		panic("failed to connect database")
 	}
+	sqliteDb, _ := db.DB()
+	sqliteDb.SetMaxOpenConns(1)
 
 	db.AutoMigrate(&model.Tournament{},
 		&model.TournamentTable{},
@@ -118,6 +120,7 @@ func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
 	tournaments.POST("/:id/players", resources.PostTournamentPlayer("id", db))
 	tournaments.POST("/:id/players/", resources.PostTournamentPlayer("id", db))
 	tournaments.DELETE("/:id/players/:name", resources.DeleteTournamentPlayer("id", "name", db))
+	tournaments.DELETE("/:id/players", resources.DeleteAllTournamentPlayers("id", db))
 	//tournaments.GET("/:id/players/:name", resources.GetTournamentPlayer("id", "name", db))
 	tournaments.GET("/:id/players/:name/history", resources.GetTournamentPlayeHistory("id", "name", db))
 	tournaments.GET("/:id/history", resources.GetTournamentHistory("id", db))

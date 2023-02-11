@@ -18,8 +18,9 @@ import {
 } from "@mui/material";
 import {
   useTournamentPlayers,
-  useTournamentPlayerMutation,
-  useTournamentPlayerDeleteMutation,
+  useAddPlayer2Tournament,
+  useRemovePlayerFromTournament,
+  useTournamentPlayersDeleteMutation,
 } from "../api/hooks";
 import { Error } from "./Error";
 import CheckIcon from "@mui/icons-material/Check";
@@ -33,6 +34,7 @@ import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined";
 import EmojiPeopleOutlinedIcon from "@mui/icons-material/EmojiPeopleOutlined";
 import { useState } from "react";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { responsiveTxt } from "../util/text";
 
 type PlayerProps = {
@@ -41,21 +43,16 @@ type PlayerProps = {
 };
 
 const Player = ({ tournament, player }: PlayerProps) => {
-  const { mutate } = useTournamentPlayerMutation(tournament);
-  const { mutate: del } = useTournamentPlayerDeleteMutation(
+  const add = useAddPlayer2Tournament({
     tournament,
-    player.nickname
-  );
-  function select() {
-    mutate({
-      nickname: player.nickname,
-    });
-  }
-  function deselect() {
-    del();
-  }
+    nickname: player.nickname,
+  });
+  const remove = useRemovePlayerFromTournament({
+    tournament,
+    nickname: player.nickname,
+  });
   function setSelected(selected: boolean) {
-    selected ? select() : deselect();
+    selected ? add() : remove();
   }
   return (
     <ListItem disableGutters>
@@ -153,6 +150,8 @@ const MIN_DATE: string = new Date(0).toISOString();
 const TournamentPlayers = ({ tournament }: PlayersProps) => {
   const [order, setOder] = useState<SortOrder>("winner");
   const { status, error, data } = useTournamentPlayers(tournament);
+  const { mutate: deselectAll } =
+    useTournamentPlayersDeleteMutation(tournament);
   return (
     <Grid item>
       <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>
@@ -161,6 +160,11 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
             <Avatar>
               <EmojiPeopleOutlinedIcon />
             </Avatar>
+          }
+          action={
+            <IconButton aria-label="deselect" onClick={() => deselectAll()}>
+              <RemoveCircleOutlineIcon />
+            </IconButton>
           }
           title="Players"
         />

@@ -1,5 +1,5 @@
 import CircularProgress from "@mui/material/CircularProgress";
-import { useTournamentHistory } from "../api/hooks";
+import { useTournament, useTournamentHistory } from "../api/hooks";
 import { StyledCard, StyledCardHeader } from "./Styled";
 import { Error } from "./Error";
 import {
@@ -18,7 +18,6 @@ import {
   Box,
 } from "@mui/material";
 import { TournamentHistory } from "../api/Api";
-import isEqual from "date-fns/isEqual";
 import TodayIcon from "@mui/icons-material/Today";
 import TodayOutlinedIcon from "@mui/icons-material/TodayOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -30,49 +29,27 @@ import sub from "date-fns/sub";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import PlayerAvatar from "./PlayerAvatar";
 import { responsiveTxt } from "../util/text";
+import { findMax, findMin } from "../api/util";
+import { setHours, setMinutes } from "date-fns";
 
 type HistoryProps = {
   tournament: string;
 };
 
-const findByNickname = (history: TournamentHistory[], nickname: string) => {
-  return history.filter((h) => h.nickname === nickname);
-};
-
-const findMin = (history: TournamentHistory[], nickname: string) => {
-  const current = findByNickname(history, nickname);
-  if (current.length === 1) {
-    return {
-      nickname,
-      ranking: 0,
-    };
-  } else {
-    const date = current
-      .map((h) => new Date(h.updated))
-      .reduce((a, b) => (a < b ? a : b));
-    return history.find(
-      (h) => h.nickname === nickname && isEqual(new Date(h.updated), date)
-    );
-  }
-};
-
-const findMax = (history: TournamentHistory[], nickname: string) => {
-  const date = findByNickname(history, nickname)
-    .map((h) => new Date(h.updated))
-    .reduce((a, b) => (a > b ? a : b));
-  return history.find(
-    (h) => h.nickname === nickname && isEqual(new Date(h.updated), date)
-  );
-};
-
-const historyDiff = (period: Duration, history?: TournamentHistory[]) => {
-  history = history?.filter((h) => new Date(h.updated) > getFrom(period));
+const useHistoryDiff = (
+  tournament: string,
+  period: Duration,
+  history?: TournamentHistory[]
+) => {
+  const { data } = useTournament(tournament);
+  const from = getFrom(period);
   const names = new Set(history?.map((p) => p.nickname));
   const result: [nickname: string, diff: number][] = [];
   names.forEach((n) => {
-    const max = findMax(history!, n)?.ranking;
-    const min = findMin(history!, n)?.ranking;
-    if (min && max) {
+    const ranking = data?.initial || 0;
+    const max = findMax(history!, from, n)?.ranking;
+    const min = findMin(history!, from, n, ranking).ranking;
+    if (max) {
       result.push([n, max - min]);
     }
   });
@@ -87,7 +64,7 @@ const getFrom = (period: Duration): Date => {
     case "month":
       return sub(now, { months: 1 });
     case "day":
-      return sub(now, { days: 1 });
+      return setHours(setMinutes(now, 0), 0);
   }
 };
 
@@ -142,7 +119,7 @@ const ByDuration = ({ setDuration, duration }: ByDurationProps) => {
 const History = ({ tournament }: HistoryProps) => {
   const { status, error, data } = useTournamentHistory(tournament);
   const [duration, setDuration] = useState<Duration>("day");
-  const diff = historyDiff(duration, data);
+  const diff = useHistoryDiff(tournament, duration, data);
   return (
     <Grid item>
       <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>

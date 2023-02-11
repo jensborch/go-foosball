@@ -143,6 +143,17 @@ func (r *tournamentRepository) ActivePlayers(tournamentId string) ([]*model.Tour
 	return sortPlayers(players), HasBeenFound(err)
 }
 
+func (r *tournamentRepository) DeactivatePlayers(tournamentId string) model.Found {
+	result := r.db.Model(&model.TournamentPlayer{}).
+		Where("tournament_id = ?", tournamentId).
+		Update("active", false)
+	if result.Error == nil {
+		return result.RowsAffected >= 1
+	} else {
+		panic(fmt.Errorf("error deactivating all players in tournament %s", tournamentId))
+	}
+}
+
 func (r *tournamentRepository) DeactivatePlayer(tournamentId string, nickname string) (*model.TournamentPlayer, model.Found) {
 	if player, found := r.FindPlayer(tournamentId, nickname); found {
 		player.Active = false

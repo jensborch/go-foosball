@@ -1,13 +1,16 @@
-import { styled } from '@mui/system';
-import CardHeader, { CardHeaderProps } from '@mui/material/CardHeader';
-import Card, { CardProps } from '@mui/material/Card';
-import Grid, { GridProps } from '@mui/material/Grid';
+import { styled } from "@mui/system";
+import CardHeader, { CardHeaderProps } from "@mui/material/CardHeader";
+import Card, { CardProps } from "@mui/material/Card";
+import Grid, { GridProps } from "@mui/material/Grid";
 
 export const StyledCardHeader = styled(CardHeader)<CardHeaderProps>(
   ({ theme }) => ({
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
-    '& .MuiCardHeader-subheader': {
+    "& .MuiCardHeader-subheader": {
+      color: theme.palette.primary.contrastText,
+    },
+    "& .MuiSvgIcon-root": {
       color: theme.palette.primary.contrastText,
     },
   })

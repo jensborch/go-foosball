@@ -736,6 +736,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags tournament
+     * @name PlayersDelete
+     * @summary Remove all players from tournament
+     * @request DELETE:/tournaments/{id}/players
+     */
+    playersDelete: (id: string, params: RequestParams = {}) =>
+      this.request<void, Error>({
+        path: `/tournaments/${id}/players`,
+        method: "DELETE",
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags tournament
      * @name PlayersHistoryDetail
      * @summary Get player ranking history in tournament
      * @request GET:/tournaments/{id}/players/{nickname}/history
@@ -765,11 +781,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags tournament
-     * @name PlayersDelete
+     * @name PlayersDelete2
      * @summary Remove player from tournament
      * @request DELETE:/tournaments/{id}/players/{player}
+     * @originalName playersDelete
+     * @duplicate
      */
-    playersDelete: (id: string, player: string, params: RequestParams = {}) =>
+    playersDelete2: (id: string, player: string, params: RequestParams = {}) =>
       this.request<void, Error>({
         path: `/tournaments/${id}/players/${player}`,
         method: "DELETE",

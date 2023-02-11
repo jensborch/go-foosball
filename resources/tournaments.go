@@ -240,6 +240,30 @@ func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm
 	}
 }
 
+// DeleteAllTournamentPlayers remove all players from a tournament
+// @Summary  Remove all players from tournament
+// @Tags     tournament
+// @Accept   json
+// @Produce  json
+// @Param    id      path  string  true  "Tournament ID"
+// @Success  204
+// @Failure  404  {object}  ErrorResponse
+// @Failure  500  {object}  ErrorResponse
+// @Router   /tournaments/{id}/players [delete]
+func DeleteAllTournamentPlayers(tournamentParam string, db *gorm.DB) func(*gin.Context) {
+	return func(c *gin.Context) {
+		id := c.Param(tournamentParam)
+		tx := db.Begin()
+		defer HandlePanicInTransaction(c, tx)
+		r := persistence.NewTournamentRepository(tx)
+		if found := r.DeactivatePlayers(id); !found {
+			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
+		} else {
+			c.Status(http.StatusNoContent)
+		}
+	}
+}
+
 var playerEventPublisher = NewEventPublisher()
 
 // GetPlayerEvents creats web socket with tournamnent player events
