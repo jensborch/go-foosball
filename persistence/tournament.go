@@ -224,12 +224,16 @@ func (r *tournamentRepository) ShuffleActivePlayersOld(tournamentId string) ([]*
 
 func (r *tournamentRepository) ShuffleActivePlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {
 	if players, found := r.ActivePlayers(tournamentId); found {
-		shuffles := [5][]*model.TournamentPlayer{}
-		for i := 0; i < 5; i++ {
+		const numberOfShuffles = 10
+		shuffles := [numberOfShuffles][]*model.TournamentPlayer{}
+		for i := 0; i < numberOfShuffles; i++ {
 			shuffles[i] = shufflePlayers(players)
 		}
 		previous := r.previousGames(tournamentId)
-		matches := make([]int, 5)
+		if len(previous) > len(players)/2 {
+			previous = previous[0 : len(players)/2]
+		}
+		matches := make([]int, numberOfShuffles)
 		for i, shuffle := range shuffles {
 			matches[i] = comparPairs(playerPairs(shuffle), previous)
 		}
