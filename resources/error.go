@@ -1,7 +1,9 @@
 package resources
 
 import (
+	"fmt"
 	"net/http"
+	"runtime/debug"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -19,7 +21,7 @@ type ErrorResponse struct {
 	Error string `json:"error" binding:"required"`
 } //@name Error
 
-//HandlePanicInTransaction provides a defer function to handle panics when a transaction has been started
+// HandlePanicInTransaction provides a defer function to handle panics when a transaction has been started
 func HandlePanicInTransaction(c *gin.Context, tx *gorm.DB) {
 	if r := recover(); r != nil {
 		switch r := r.(type) {
@@ -29,12 +31,14 @@ func HandlePanicInTransaction(c *gin.Context, tx *gorm.DB) {
 			c.JSON(http.StatusInternalServerError, NewErrorResponse("Unknown error"))
 		}
 		tx.Rollback()
+		fmt.Println("Panic occurred:", r)
+		debug.PrintStack()
 	} else {
 		tx.Commit()
 	}
 }
 
-//HandlePanic provides a defer function to handle panics
+// HandlePanic provides a defer function to handle panics
 func HandlePanic(c *gin.Context) {
 	if r := recover(); r != nil {
 		switch r := r.(type) {
@@ -43,5 +47,7 @@ func HandlePanic(c *gin.Context) {
 		default:
 			c.JSON(http.StatusInternalServerError, NewErrorResponse("Unknown error"))
 		}
+		fmt.Println("Panic occurred:", r)
+		debug.PrintStack()
 	}
 }

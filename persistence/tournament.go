@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
 	"reflect"
 	"sort"
@@ -253,11 +254,9 @@ func newPair(first *model.TournamentPlayer, second *model.TournamentPlayer) *pai
 
 func playerPairs(players []*model.TournamentPlayer) []*pair {
 	pairs := make([]*pair, len(players)/2)
-	for i := 0; i < len(players); i = i + 2 {
+	for i := 0; i < len(players)-1; i = i + 2 {
 		x := i / 2
-		if i != len(players)-1 {
-			pairs[x] = newPair(players[i], players[i+1])
-		}
+		pairs[x] = newPair(players[i], players[i+1])
 	}
 	return pairs
 }
@@ -275,8 +274,9 @@ func comparPairs(newPairs []*pair, oldPairs []*pair) int {
 func (r *tournamentRepository) previousGames(tournamentId string) []*pair {
 	gameRepo := NewGameRepository(r.db)
 	games := gameRepo.FindByTournament(tournamentId)
-	pairs := make([]*pair, 0, len(games)/2)
-	for i := 0; i < len(games); i = i + 2 {
+	log.Printf("Found %d old games", len(games))
+	pairs := make([]*pair, len(games)*2)
+	for i := 0; i < len(games); i++ {
 		p1 := newPair(&games[i].LeftPlayerOne, &games[i].LeftPlayerTwo)
 		p2 := newPair(&games[i].RightPlayerOne, &games[i].RightPlayerTwo)
 		pairs[i] = p1
