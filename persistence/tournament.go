@@ -2,9 +2,6 @@ package persistence
 
 import (
 	"fmt"
-	"log"
-	"math/rand"
-	"reflect"
 	"sort"
 	"time"
 
@@ -203,94 +200,11 @@ func (r *tournamentRepository) addHistory(player *model.TournamentPlayer) {
 	}
 }
 
-func shufflePlayers(players []*model.TournamentPlayer) []*model.TournamentPlayer {
-	rand.Shuffle(len(players), func(i, j int) {
-		players[i], players[j] = players[j], players[i]
-	})
-	length := len(players)
-	if length%2 != 0 {
-		players = players[:length-1]
-	}
-	return players
-}
-
-func (r *tournamentRepository) ShuffleActivePlayersOld(tournamentId string) ([]*model.TournamentPlayer, model.Found) {
-	if players, found := r.ActivePlayers(tournamentId); found {
-		return shufflePlayers(players), found
-	} else {
-		return []*model.TournamentPlayer{}, found
-	}
-}
-
-func (r *tournamentRepository) ShuffleActivePlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {
-	if players, found := r.ActivePlayers(tournamentId); found {
-		const numberOfShuffles = 10
-		shuffles := [numberOfShuffles][]*model.TournamentPlayer{}
-		for i := 0; i < numberOfShuffles; i++ {
-			shuffles[i] = shufflePlayers(players)
-		}
-		previous := r.previousGames(tournamentId)
-		if len(previous) > len(players)/2 {
-			previous = previous[0 : len(players)/2]
-		}
-		matches := make([]int, numberOfShuffles)
-		for i, shuffle := range shuffles {
-			matches[i] = comparPairs(playerPairs(shuffle), previous)
-		}
-		sort.Ints(matches)
-		minIndex := sort.SearchInts(matches, matches[0])
-		return shuffles[minIndex], found
-	} else {
-		return []*model.TournamentPlayer{}, found
-	}
-}
-
-type pair struct {
-	first, second *model.TournamentPlayer
-}
-
-func newPair(first *model.TournamentPlayer, second *model.TournamentPlayer) *pair {
-	return &pair{
-		first:  first,
-		second: second,
-	}
-}
-
-func playerPairs(players []*model.TournamentPlayer) []*pair {
-	pairs := make([]*pair, len(players)/2)
-	for i := 0; i < len(players)-1; i = i + 2 {
-		x := i / 2
-		pairs[x] = newPair(players[i], players[i+1])
-	}
-	return pairs
-}
-
-func comparPairs(newPairs []*pair, oldPairs []*pair) int {
-	var numberFound int
-	for _, pair := range newPairs {
-		numberFound += sort.Search(len(oldPairs), func(i int) bool {
-			return reflect.DeepEqual(oldPairs[i], pair)
-		})
-	}
-	return numberFound
-}
-
-func (r *tournamentRepository) previousGames(tournamentId string) []*pair {
-	gameRepo := NewGameRepository(r.db)
-	games := gameRepo.FindByTournament(tournamentId)
-	log.Printf("Found %d old games", len(games))
-	pairs := make([]*pair, len(games)*2)
-	for i := 0; i < len(games); i++ {
-		p1 := newPair(&games[i].LeftPlayerOne, &games[i].LeftPlayerTwo)
-		p2 := newPair(&games[i].RightPlayerOne, &games[i].RightPlayerTwo)
-		pairs[i] = p1
-		pairs[i+1] = p2
-	}
-	return pairs
-}
-
 func (r *tournamentRepository) RandomGames(tournamentId string) ([]*model.Game, model.Found) {
-	if players, found := r.ShuffleActivePlayers(tournamentId); found {
+	if players, found := r.ActivePlayers(tournamentId); found {
+		gameRepo := NewGameRepository(r.db)
+		previousGames := gameRepo.FindByTournament(tournamentId)
+		players = shuffleAndCompare(players, previousGames)
 		games := make([]*model.Game, 0, 2)
 		if len(players) >= 2 {
 			i := 0
@@ -310,13 +224,6 @@ func (r *tournamentRepository) RandomGames(tournamentId string) ([]*model.Game, 
 	} else {
 		return []*model.Game{}, found
 	}
-}
-
-func min(a, b int) int {
-	if a > b {
-		return b
-	}
-	return a
 }
 
 func (r *tournamentRepository) Update(t *model.Tournament) {
