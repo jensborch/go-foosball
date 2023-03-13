@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"log"
+	"math"
 	"math/rand"
 	"reflect"
 	"sort"
@@ -11,6 +12,18 @@ import (
 
 type pair struct {
 	first, second *model.TournamentPlayer
+}
+
+func (r *pair) equals(other *pair) bool {
+	if other == nil {
+		return false
+	}
+	return (equals(r.first, other.first) && equals(r.second, other.second)) ||
+		(equals(r.second, other.first) && equals(r.first, other.second))
+}
+
+func equals(first *model.TournamentPlayer, second *model.TournamentPlayer) bool {
+	return (first != nil && second != nil && reflect.DeepEqual(first, second)) || (first == nil && second == nil)
 }
 
 func shufflePlayers(players []*model.TournamentPlayer) []*model.TournamentPlayer {
@@ -24,6 +37,10 @@ func shufflePlayers(players []*model.TournamentPlayer) []*model.TournamentPlayer
 	return players
 }
 
+func tables(players []*model.TournamentPlayer) int {
+	return int(math.Ceil(float64(len(players)) / float64(4)))
+}
+
 func shuffleAndCompare(players []*model.TournamentPlayer, previous []*model.Game) []*model.TournamentPlayer {
 	const numberOfShuffles = 10
 	shuffles := [numberOfShuffles][]*model.TournamentPlayer{}
@@ -31,7 +48,7 @@ func shuffleAndCompare(players []*model.TournamentPlayer, previous []*model.Game
 		shuffles[i] = shufflePlayers(players)
 	}
 
-	if len(previous) > len(players)/2 {
+	if len(previous) > tables(players) {
 		previous = previous[0 : len(players)/2]
 	}
 	matches := make([]int, numberOfShuffles)
@@ -63,9 +80,16 @@ func playerPairs(players []*model.TournamentPlayer) []*pair {
 func comparPairs(newPairs []*pair, oldPairs []*pair) int {
 	var numberFound int
 	for _, pair := range newPairs {
-		numberFound += sort.Search(len(oldPairs), func(i int) bool {
-			return reflect.DeepEqual(oldPairs[i], pair)
-		})
+		count := 0
+		for i := 0; i < len(oldPairs); i++ {
+			//if reflect.DeepEqual(pair, oldPairs[i]) {
+			if pair.equals(oldPairs[i]) {
+				log.Printf("Found match:\n")
+				log.Printf("New pair %s:%s\n", pair.first.Player.Nickname, pair.second.Player.Nickname)
+				log.Printf("Old pair #%d %s:%s\n", i, oldPairs[i].first.Player.Nickname, oldPairs[i].second.Player.Nickname)
+				count++
+			}
+		}
 	}
 	return numberFound
 }
@@ -74,8 +98,8 @@ func games2Pairs(games []*model.Game) []*pair {
 	log.Printf("Found %d old games", len(games))
 	pairs := make([]*pair, len(games)*2)
 	for i := 0; i < len(games); i++ {
-		p1 := newPair(&games[i].LeftPlayerOne, &games[i].LeftPlayerTwo)
-		p2 := newPair(&games[i].RightPlayerOne, &games[i].RightPlayerTwo)
+		p1 := newPair(&games[i].RightPlayerOne, &games[i].RightPlayerTwo)
+		p2 := newPair(&games[i].LeftPlayerOne, &games[i].LeftPlayerTwo)
 		pairs[i] = p1
 		pairs[i+1] = p2
 	}
