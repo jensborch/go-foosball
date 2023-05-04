@@ -4,7 +4,6 @@ import (
 	"log"
 	"math"
 	"math/rand"
-	"reflect"
 	"sort"
 
 	"github.com/jensborch/go-foosball/model"
@@ -23,7 +22,7 @@ func (r *pair) equals(other *pair) bool {
 }
 
 func equals(first *model.TournamentPlayer, second *model.TournamentPlayer) bool {
-	return (first != nil && second != nil && reflect.DeepEqual(first, second)) || (first == nil && second == nil)
+	return (first != nil && second != nil && first.ID == second.ID) || (first == nil && second == nil)
 }
 
 func shufflePlayers(players []*model.TournamentPlayer) []*model.TournamentPlayer {
