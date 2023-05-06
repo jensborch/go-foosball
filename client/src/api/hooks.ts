@@ -164,21 +164,30 @@ export const useTournamentMutation = () => {
   );
 };
 
-export const useAddPlayer2Tournament = ({tournament, nickname}: {tournament: string; nickname: string}) => {
+export const useAddPlayer2Tournament = ({
+  tournament,
+  nickname,
+}: {
+  tournament: string;
+  nickname: string;
+}) => {
   const { mutate } = useTournamentPlayerMutation(tournament);
-  return  () => mutate({
-    nickname,
-  });
-}
+  return () =>
+    mutate({
+      nickname,
+    });
+};
 
-export const useRemovePlayerFromTournament = ({tournament, nickname}: {tournament: string; nickname: string}) => {
-  const { mutate} = useTournamentPlayerDeleteMutation(
-    tournament,
-    nickname
-  );
+export const useRemovePlayerFromTournament = ({
+  tournament,
+  nickname,
+}: {
+  tournament: string;
+  nickname: string;
+}) => {
+  const { mutate } = useTournamentPlayerDeleteMutation(tournament, nickname);
   return mutate;
-}
-
+};
 
 export const useTournamentPlayerMutation = (tournament: string) => {
   const queryClient = useQueryClient();
@@ -225,26 +234,18 @@ export const useTournamentPlayerDeleteMutation = (
   );
 };
 
-export const useTournamentPlayersDeleteMutation = (
-  tournament: string
-) => {
+export const useTournamentPlayersDeleteMutation = (tournament: string) => {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    () => api.tournaments.playersDelete(tournament),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([
-          CacheKeys.TournamentPlayers,
-          tournament,
-        ]);
-        queryClient.invalidateQueries(CacheKeys.RandomGames);
-      },
-      onError: (error) => {
-        //Do nothing
-      },
-    }
-  );
+  return useMutation(() => api.tournaments.playersDelete(tournament), {
+    onSuccess: () => {
+      queryClient.invalidateQueries([CacheKeys.TournamentPlayers, tournament]);
+      queryClient.invalidateQueries(CacheKeys.RandomGames);
+    },
+    onError: (error) => {
+      //Do nothing
+    },
+  });
 };
 
 export const useTournamentTableMutation = (tournament: string) => {
@@ -311,8 +312,14 @@ export const useGameMutation = (tournament: string) => {
       ),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([CacheKeys.TournamentPlayers, tournament]);
-        queryClient.invalidateQueries([CacheKeys.TournamentHistory, tournament]);
+        queryClient.invalidateQueries([
+          CacheKeys.TournamentPlayers,
+          tournament,
+        ]);
+        queryClient.invalidateQueries([
+          CacheKeys.TournamentHistory,
+          tournament,
+        ]);
       },
       onError: (error) => {
         //Do nothing

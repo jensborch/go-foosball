@@ -1,14 +1,10 @@
-import {
-  Button,
-  Grid,
-  TextField,
-} from '@mui/material';
-import { useState } from 'react';
+import { Button, Grid, TextField } from "@mui/material";
+import { useState } from "react";
 
 const AddTable = () => {
-  const [name, setName] = useState('');
-  const [leftColor, setLeftColor] = useState('');
-  const [rightColor, setRightColor] = useState('');
+  const [name, setName] = useState("");
+  const [leftColor, setLeftColor] = useState("");
+  const [rightColor, setRightColor] = useState("");
   function create(): void {}
   return (
     <Grid item container direction="column">

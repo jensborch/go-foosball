@@ -1,13 +1,12 @@
 import { useParams } from "react-router-dom";
-import AddSpeedDial from "../components/AddSpeedDial";
 import Menu from "../components/Menu";
 import Games from "../components/Games";
 import History from "../components/History";
 import { Error } from "../components/Error";
-import RefreshRandomGames from "../components/RefreshRandomGames";
-import Start from "../components/Start";
 import TournamentPlayers from "../components/TournamentPlayers";
-import { DefaultGrid } from "../components/Styled";
+import { DefaultGrid, MenuOffset } from "../components/Styled";
+import ActionDraw from "../components/ActionDraw";
+import { Box } from "@mui/material";
 
 function Tournament() {
   const { id } = useParams();
@@ -17,16 +16,18 @@ function Tournament() {
   }
   return (
     <>
-      <Menu title="Foosball">
-        <AddSpeedDial tournament={id} />
-        <RefreshRandomGames />
-        <Start tournament={id} />
-      </Menu>
-      <DefaultGrid container direction="row">
-        <TournamentPlayers tournament={id} />
-        <Games tournament={id} />
-        <History tournament={id} />
-      </DefaultGrid>
+      <Box sx={{ display: "flex" }}>
+        <Menu title="Foosball" />
+        <ActionDraw tournament={id} />
+        <Box component="main">
+          <MenuOffset />
+          <DefaultGrid container direction="row">
+            <TournamentPlayers tournament={id} />
+            <Games tournament={id} />
+            <History tournament={id} />
+          </DefaultGrid>
+        </Box>
+      </Box>
     </>
   );
 }

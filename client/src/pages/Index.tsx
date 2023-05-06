@@ -1,6 +1,7 @@
-import Tournaments from '../components/Tournaments';
-import Menu from '../components/Menu';
-import { CreateTournament } from '../components/CreateTournament';
+import Tournaments from "../components/Tournaments";
+import Menu from "../components/Menu";
+import { CreateTournament } from "../components/CreateTournament";
+import { MenuOffset } from "../components/Styled";
 
 function Index() {
   return (
@@ -8,6 +9,7 @@ function Index() {
       <Menu title="Foosball">
         <CreateTournament />
       </Menu>
+      <MenuOffset />
       <Tournaments />
     </>
   );

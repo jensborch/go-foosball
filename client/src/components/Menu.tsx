@@ -1,13 +1,7 @@
-import {
-  AppBar,
-  Grid,
-  IconButton,
-  Toolbar,
-  Typography,
-} from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
-import { Children } from 'react';
-import { Link } from 'react-router-dom';
+import { AppBar, Grid, IconButton, Toolbar, Typography } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+import { Children } from "react";
+import { Link } from "react-router-dom";
 
 type MenuProps = {
   title: string;
@@ -17,7 +11,10 @@ type MenuProps = {
 const Menu = ({ title, children }: MenuProps) => {
   const arrayChildren = Children.toArray(children);
   return (
-    <AppBar position="static">
+    <AppBar
+      position="fixed"
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    >
       <Toolbar>
         <IconButton
           to="/"
@@ -26,12 +23,12 @@ const Menu = ({ title, children }: MenuProps) => {
             marginLeft: (theme) => theme.spacing(-1),
             marginRight: (theme) => theme.spacing(2),
           }}
-          color="inherit" 
+          color="inherit"
           aria-label="Home"
         >
           <HomeIcon />
         </IconButton>
-        <Typography variant="h6" color="inherit" sx={{ display: 'flex' }}>
+        <Typography variant="h6" color="inherit" sx={{ display: "flex" }}>
           {title}
         </Typography>
         <Grid
@@ -39,8 +36,8 @@ const Menu = ({ title, children }: MenuProps) => {
           container
           direction="row-reverse"
           sx={{
-            position: 'absolute',
-            width: '30%',
+            position: "absolute",
+            width: "30%",
             top: (theme) => theme.spacing(3.5),
             right: (theme) => theme.spacing(5),
           }}

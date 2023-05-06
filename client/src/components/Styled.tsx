@@ -1,7 +1,9 @@
-import { styled } from "@mui/system";
+import { styled } from "@mui/material/styles";
 import CardHeader, { CardHeaderProps } from "@mui/material/CardHeader";
 import Card, { CardProps } from "@mui/material/Card";
 import Grid, { GridProps } from "@mui/material/Grid";
+
+export const MenuOffset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
 export const StyledCardHeader = styled(CardHeader)<CardHeaderProps>(
   ({ theme }) => ({

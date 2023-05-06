@@ -25,15 +25,15 @@
         let id = document.getElementById(element).value;
         let c = new WebSocket(url instanceof Function ? url(id) : url);
         element = document.getElementById(output);
-        element.innerHTML = '';
+        element.innerHTML = "";
 
         c.onmessage = function (msg) {
-          element.innerHTML += new Date() + ' <== ' + msg.data;
+          element.innerHTML += new Date() + " <== " + msg.data;
           console.log(msg);
         };
 
         c.onerror = function (error) {
-          console.error('WebSocket Error ' + error);
+          console.error("WebSocket Error " + error);
         };
       }
     </script>

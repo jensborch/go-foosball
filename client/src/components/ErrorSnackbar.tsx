@@ -1,7 +1,7 @@
-import Stack from '@mui/material/Stack';
-import Snackbar from '@mui/material/Snackbar';
-import Alert, { AlertColor } from '@mui/material/Alert';
-import { useState } from 'react';
+import Stack from "@mui/material/Stack";
+import Snackbar from "@mui/material/Snackbar";
+import Alert, { AlertColor } from "@mui/material/Alert";
+import { useState } from "react";
 
 export interface ErrorSnakbarProps {
   msg?: string;
@@ -11,7 +11,7 @@ export interface ErrorSnakbarProps {
 
 const ErrorSnackbar = ({
   msg,
-  severity = 'error',
+  severity = "error",
   autoHideDuration = 6000,
 }: ErrorSnakbarProps) => {
   const [open, setOpen] = useState(true);
@@ -20,7 +20,7 @@ const ErrorSnackbar = ({
     _event?: React.SyntheticEvent | Event,
     reason?: string
   ) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -28,13 +28,13 @@ const ErrorSnackbar = ({
   };
 
   return (
-    <Stack spacing={2} sx={{ width: '100%' }}>
+    <Stack spacing={2} sx={{ width: "100%" }}>
       <Snackbar
         open={open}
         autoHideDuration={autoHideDuration}
         onClose={handleClose}
       >
-        <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+        <Alert onClose={handleClose} severity={severity} sx={{ width: "100%" }}>
           {msg}
         </Alert>
       </Snackbar>

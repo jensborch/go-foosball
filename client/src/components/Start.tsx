@@ -1,4 +1,3 @@
-import { Fab } from "@mui/material";
 import { useEffect, useState } from "react";
 import Timer from "./Timer";
 import TimerIcon from "@mui/icons-material/Timer";
@@ -7,7 +6,7 @@ import { useTournament } from "../api/hooks";
 
 const Start = ({ tournament }: { tournament: string }) => {
   const [open, setOpen] = useState(false);
-  const [reste, setReset] = useState(0);
+  const [reset, setReset] = useState(0);
   const { data, error } = useTournament(tournament);
   const timeout = !error && data ? data.timeout : 120;
 
@@ -31,10 +30,8 @@ const Start = ({ tournament }: { tournament: string }) => {
 
   return (
     <>
-      <Fab onClick={() => setOpen(true)} color="default" aria-label="Start">
-        <TimerIcon />
-      </Fab>
-      <Timer reset={reste} timeout={timeout} open={open} setOpen={setOpen} />
+      <TimerIcon fontSize="large" onClick={() => setOpen(true)} />
+      <Timer reset={reset} timeout={timeout} open={open} setOpen={setOpen} />
     </>
   );
 };

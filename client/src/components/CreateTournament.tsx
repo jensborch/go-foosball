@@ -1,8 +1,8 @@
-import { Fab } from '@mui/material';
+import { Fab } from "@mui/material";
 
-import AddIcon from '@mui/icons-material/Add';
-import { useState } from 'react';
-import CreateTournamentDialog from './CreateTournamentDialog';
+import AddIcon from "@mui/icons-material/Add";
+import { useState } from "react";
+import CreateTournamentDialog from "./CreateTournamentDialog";
 
 export const CreateTournament = () => {
   const [open, setOpen] = useState(false);
