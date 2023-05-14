@@ -70,16 +70,23 @@ const DARK = theme.palette.secondary.dark as ColorHex;
 
 const Timer = ({ reset, timeout, open, setOpen }: TimerProps) => {
   const onComplete = (elapsed: number) => {
-    const start = new Audio(`${process.env.PUBLIC_URL}/sounds/finish.wav`);
-    start.play();
+    new Audio(`${process.env.PUBLIC_URL}/sounds/finish.wav`).play();
     setTimeout(() => setOpen(false), 4000);
   };
+  const onUpdate = (remaining: number) => {
+    if (remaining === 30) {
+      new Audio(`${process.env.PUBLIC_URL}/sounds/30seconds.wav`).play();
+    } else if (remaining === 15) {
+      new Audio(`${process.env.PUBLIC_URL}/sounds/15seconds.wav`).play();
+    }
+  };
+
   useEffect(() => {
     if (open) {
       const start = new Audio(
-        `${process.env.PUBLIC_URL}/sounds/duke/${Math.floor(
-          Math.random() * 8
-        )}.wav`
+        `${process.env.PUBLIC_URL}/sounds/duke/${
+          Math.floor(Math.random() * 7) + 1
+        }.wav`
       );
       start.play();
     }
@@ -94,6 +101,7 @@ const Timer = ({ reset, timeout, open, setOpen }: TimerProps) => {
       <DialogContent>
         <CountdownCircleTimer
           onComplete={onComplete}
+          onUpdate={onUpdate}
           key={reset}
           isPlaying
           duration={timeout}

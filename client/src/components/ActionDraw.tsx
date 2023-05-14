@@ -5,6 +5,7 @@ import {
   ListItemIcon as MuiListItemIcon,
   styled,
   Divider,
+  Tooltip,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import PersonIcon from "@mui/icons-material/Person";
@@ -50,52 +51,62 @@ const ActionDraw = ({ tournament }: ActionDrawProps) => {
           }}
         >
           <MenuOffset />
-          <ListItemButton>
-            <ListItemIcon>
-              <Start tournament={tournament} />
-            </ListItemIcon>
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <RefreshIcon
-                onClick={() =>
-                  queryClient.invalidateQueries(CacheKeys.RandomGames)
-                }
-                fontSize="large"
-              />
-            </ListItemIcon>
-          </ListItemButton>
+          <Tooltip title="Start game">
+            <ListItemButton>
+              <ListItemIcon>
+                <Start tournament={tournament} />
+              </ListItemIcon>
+            </ListItemButton>
+          </Tooltip>
+          <Tooltip title="New game">
+            <ListItemButton>
+              <ListItemIcon>
+                <RefreshIcon
+                  onClick={() =>
+                    queryClient.invalidateQueries(CacheKeys.RandomGames)
+                  }
+                  fontSize="large"
+                />
+              </ListItemIcon>
+            </ListItemButton>
+          </Tooltip>
           <Divider />
-          <ListItemButton>
-            <ListItemIcon>
-              <TimelineIcon
-                onClick={() => {
-                  setChartOpen(true);
-                }}
-                fontSize="large"
-              />
-            </ListItemIcon>
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <PersonIcon
-                onClick={() => {
-                  setPlayersOpen(true);
-                }}
-                fontSize="large"
-              />
-            </ListItemIcon>
-          </ListItemButton>
-          <ListItemButton>
-            <ListItemIcon>
-              <TableRestaurantIcon
-                onClick={() => {
-                  setTablesOpen(true);
-                }}
-                fontSize="large"
-              />
-            </ListItemIcon>
-          </ListItemButton>
+          <Tooltip title="Statistics">
+            <ListItemButton>
+              <ListItemIcon>
+                <TimelineIcon
+                  onClick={() => {
+                    setChartOpen(true);
+                  }}
+                  fontSize="large"
+                />
+              </ListItemIcon>
+            </ListItemButton>
+          </Tooltip>
+          <Tooltip title="Add players">
+            <ListItemButton>
+              <ListItemIcon>
+                <PersonIcon
+                  onClick={() => {
+                    setPlayersOpen(true);
+                  }}
+                  fontSize="large"
+                />
+              </ListItemIcon>
+            </ListItemButton>
+          </Tooltip>
+          <Tooltip title="Add table">
+            <ListItemButton>
+              <ListItemIcon>
+                <TableRestaurantIcon
+                  onClick={() => {
+                    setTablesOpen(true);
+                  }}
+                  fontSize="large"
+                />
+              </ListItemIcon>
+            </ListItemButton>
+          </Tooltip>
         </List>
       </Drawer>
       <AddPlayersDialog
