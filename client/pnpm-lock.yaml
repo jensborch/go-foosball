@@ -77,8 +77,8 @@ dependencies:
     specifier: 4.7.4
     version: 4.7.4
   web-vitals:
-    specifier: ^3.1.1
-    version: 3.1.1
+    specifier: ^3.3.2
+    version: 3.3.2
 
 devDependencies:
   '@types/testing-library__jest-dom':
@@ -10652,8 +10652,8 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
-  /web-vitals@3.1.1:
-    resolution: {integrity: sha512-qvllU+ZeQChqzBhZ1oyXmWsjJ8a2jHYpH8AMaVuf29yscOPZfTQTjQFRX6+eADTdsDE8IanOZ0cetweHMs8/2A==}
+  /web-vitals@3.3.2:
+    resolution: {integrity: sha512-qRkpmSeKfEWAzNhtX541xA8gCJ+pqCqBmUlDVkVDSCSYUvfvNqF+k9g8I+uyreRcDBdfiJrd0/aLbTy5ydo49Q==}
     dev: false
 
   /webidl-conversions@3.0.1:
