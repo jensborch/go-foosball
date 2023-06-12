@@ -53,8 +53,8 @@ dependencies:
     specifier: ^18.2.0
     version: 18.2.0
   react-countdown-circle-timer:
-    specifier: ^3.1.0
-    version: 3.1.0(react@18.2.0)
+    specifier: ^3.2.1
+    version: 3.2.1(react@18.2.0)
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
@@ -8974,8 +8974,8 @@ packages:
       whatwg-fetch: 3.6.2
     dev: false
 
-  /react-countdown-circle-timer@3.1.0(react@18.2.0):
-    resolution: {integrity: sha512-vU3fQ+Te7abhSmvTT5N0+4aOJhXAg6wVWvpEd5snkB7lFrAlEBl5dqzLSGnPZDI4MWbp7ayMDkcLWALWE+flQQ==}
+  /react-countdown-circle-timer@3.2.1(react@18.2.0):
+    resolution: {integrity: sha512-yBAy/9ILXOiFbLBM+3jS72TW5LeRcH8wkRC9NNqMpUkCXkGjSnaeRbJMsR9lsYF0oVXjSDbJaRbCuVMT+9HnKA==}
     peerDependencies:
       react: '>=16.8.0'
     dependencies:
