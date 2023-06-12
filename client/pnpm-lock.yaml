@@ -14,8 +14,8 @@ dependencies:
     specifier: ^4.5.8
     version: 4.5.8
   '@mui/icons-material':
-    specifier: ^5.11.0
-    version: 5.11.0(@mui/material@5.11.8)(@types/react@18.2.11)(react@18.2.0)
+    specifier: ^5.11.16
+    version: 5.11.16(@mui/material@5.11.8)(@types/react@18.2.11)(react@18.2.0)
   '@mui/material':
     specifier: ^5.11.7
     version: 5.11.8(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.11)(react-dom@18.2.0)(react@18.2.0)
@@ -2147,8 +2147,8 @@ packages:
     resolution: {integrity: sha512-n/uJRIwZAaJaROaOA4VzycxDo27cusnrRzfycnAkAP5gBndwOJQ1CXjd1Y7hJe5eorj/ukixC7IZD+qCClMCMg==}
     dev: false
 
-  /@mui/icons-material@5.11.0(@mui/material@5.11.8)(@types/react@18.2.11)(react@18.2.0):
-    resolution: {integrity: sha512-I2LaOKqO8a0xcLGtIozC9xoXjZAto5G5gh0FYUMAlbsIHNHIjn4Xrw9rvjY20vZonyiGrZNMAlAXYkY6JvhF6A==}
+  /@mui/icons-material@5.11.16(@mui/material@5.11.8)(@types/react@18.2.11)(react@18.2.0):
+    resolution: {integrity: sha512-oKkx9z9Kwg40NtcIajF9uOXhxiyTZrrm9nmIJ4UjkU2IdHpd4QVLbCc/5hZN/y0C6qzi2Zlxyr9TGddQx2vx2A==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@mui/material': ^5.0.0
@@ -2158,7 +2158,7 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/runtime': 7.20.13
+      '@babel/runtime': 7.22.5
       '@mui/material': 5.11.8(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(@types/react@18.2.11)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.11
       react: 18.2.0
