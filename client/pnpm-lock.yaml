@@ -44,8 +44,8 @@ dependencies:
     specifier: ^18.0.10
     version: 18.0.10
   '@types/react-transition-group':
-    specifier: ^4.4.5
-    version: 4.4.5
+    specifier: ^4.4.6
+    version: 4.4.6
   date-fns:
     specifier: ^2.30.0
     version: 2.30.0
@@ -2190,7 +2190,7 @@ packages:
       '@mui/types': 7.2.3(@types/react@18.2.11)
       '@mui/utils': 5.11.7(react@18.2.0)
       '@types/react': 18.2.11
-      '@types/react-transition-group': 4.4.5
+      '@types/react-transition-group': 4.4.6
       clsx: 1.2.1
       csstype: 3.1.1
       prop-types: 15.8.1
@@ -2884,8 +2884,8 @@ packages:
       '@types/react': 18.2.11
     dev: false
 
-  /@types/react-transition-group@4.4.5:
-    resolution: {integrity: sha512-juKD/eiSM3/xZYzjuzH6ZwpP+/lejltmiS3QEzV/vmb/Q8+HfDmxu+Baga8UEMGBqV88Nbg4l2hY/K2DkyaLLA==}
+  /@types/react-transition-group@4.4.6:
+    resolution: {integrity: sha512-VnCdSxfcm08KjsJVQcfBmhEQAPnLB8G08hAxn39azX1qYBQ/5RVQuoHuKIcfKOdncuaUvEpFKFzEvbtIMsfVew==}
     dependencies:
       '@types/react': 18.2.11
     dev: false
