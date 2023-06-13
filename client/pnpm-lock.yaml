@@ -35,8 +35,8 @@ dependencies:
     specifier: ^29.5.2
     version: 29.5.2
   '@types/node':
-    specifier: ^18.11.19
-    version: 18.13.0
+    specifier: ^20.3.1
+    version: 20.3.1
   '@types/react':
     specifier: ^18.2.11
     version: 18.2.11
@@ -2842,6 +2842,10 @@ packages:
 
   /@types/node@18.13.0:
     resolution: {integrity: sha512-gC3TazRzGoOnoKAhUx+Q0t8S9Tzs74z7m0ipwGpSqQrleP14hKxP4/JUeEQcD3W1/aIpnWl8pHowI7WokuZpXg==}
+
+  /@types/node@20.3.1:
+    resolution: {integrity: sha512-EhcH/wvidPy1WeML3TtYFGR83UzjxeWRen9V402T8aUGYsCHOmfoisV3ZSg03gAFIbLq8TnWOJ0f4cALtnSEUg==}
+    dev: false
 
   /@types/parse-json@4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
