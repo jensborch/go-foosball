@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
-    "@fontsource/roboto": "^4.5.8",
+    "@fontsource/roboto": "^5.1.0",
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
     "@mui/system": "^5.16.7",
