@@ -121,9 +121,9 @@ func (g *Game) UpdateScore() error {
 		g.LeftScore = int(left)
 		return nil
 	case DRAW:
-		score := g.TournamentTable.Tournament.GameScore / 2
-		g.RightScore = int(score)
-		g.LeftScore = int(score)
+		right, left := g.GameScore()
+		g.RightScore = int(right / 2)
+		g.LeftScore = int(left / 2)
 		return nil
 	default:
 		return errors.New("no winner in this game")
