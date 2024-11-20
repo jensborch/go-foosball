@@ -51,7 +51,7 @@ jobs:
     needs: client
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@v5
         with:
           go-version: "1.19.2"
       - name: Download client
