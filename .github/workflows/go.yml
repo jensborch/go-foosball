@@ -15,4 +15,4 @@ jobs:
       - name: Build and analyze
         run: make
       - name: Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v5
