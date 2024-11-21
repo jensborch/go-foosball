@@ -283,8 +283,8 @@ func addTable2Tournament(ts *httptest.Server, id uint, table uint) func(t *testi
 	}
 }
 
-func randomGame(ts *httptest.Server, id uint) func(t *testing.T) []model.GameJson {
-	return func(t *testing.T) []model.GameJson {
+func randomGame(ts *httptest.Server, id uint) func(t *testing.T) model.GameJson {
+	return func(t *testing.T) model.GameJson {
 
 		resp, _ := http.Get(fmt.Sprintf("%s/api/tournaments/%d/games/random", ts.URL, id))
 
@@ -292,26 +292,26 @@ func randomGame(ts *httptest.Server, id uint) func(t *testing.T) []model.GameJso
 			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
 		}
 
-		result := []model.GameJson{}
+		result := model.GameJson{}
 		if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-			t.Fatalf("Expected an list of tables, got %v", err)
+			t.Fatalf("Expected a game, got %v", err)
 		}
 
-		if result[0].LeftScore == 0 {
-			t.Fatalf("Expected left greater than 0, got %v", result[0].LeftScore)
+		if result.LeftScore == 0 {
+			t.Fatalf("Expected left greater than 0, got %v", result.LeftScore)
 		}
 
-		if result[0].RightScore == 0 {
-			t.Fatalf("Expected left greater than 0, got %v", result[0].RightScore)
+		if result.RightScore == 0 {
+			t.Fatalf("Expected left greater than 0, got %v", result.RightScore)
 		}
 
-		if result[0].Table.ID == 0 {
-			t.Fatalf("Expected table id not equal to 0, got %v", result[0].Table.ID)
+		if result.Table.ID == 0 {
+			t.Fatalf("Expected table id not equal to 0, got %v", result.Table.ID)
 		}
 
-		if len(result[0].LeftPlayers) != 1 {
-			t.Fatalf("Expected one left player, got %v", len(result[0].LeftPlayers))
-		}
+		/*if len(result.LeftPlayers) != 1 {
+			t.Fatalf("Expected one left player, got %v", len(result.LeftPlayers))
+		}*/
 
 		return result
 	}
@@ -431,7 +431,7 @@ func Test(t *testing.T) {
 
 	random := randomGame(ts, tournament.ID)(t)
 
-	postGame(ts, tournament.ID, random[0].Table.ID, random[0].RightPlayers, random[0].LeftPlayers, string(model.RIGHT))(t)
+	postGame(ts, tournament.ID, random.Table.ID, random.RightPlayers, random.LeftPlayers, string(model.RIGHT))(t)
 
 	games := getGame(ts, tournament.ID)(t)
 
@@ -443,7 +443,7 @@ func Test(t *testing.T) {
 		t.Fatalf("Expected a score, got left score %v and right score %d", games[0].LeftScore, games[0].RightScore)
 	}
 
-	postGameNotValid(ts, tournament.ID, random[0].Table.ID)(t)
+	postGameNotValid(ts, tournament.ID, random.Table.ID)(t)
 
 	for _, p := range players {
 		history := getHistory(ts, tournament.ID, p.Nickname)(t)

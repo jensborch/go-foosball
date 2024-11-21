@@ -28,7 +28,7 @@ func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-// GetRandomGames for a tournament
+// GetRandomGame for a tournament
 // @Summary  Get random game for a tournament
 // @Tags     actions
 // @Accept   json
@@ -43,10 +43,10 @@ func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
 		defer HandlePanic(c)
 		id := c.Param(param)
 		r := persistence.NewTournamentRepository(db)
-		if games, found := r.RandomGames(id); !found {
+		if game, found := r.RandomGame(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 		} else {
-			c.JSON(http.StatusOK, games)
+			c.JSON(http.StatusOK, game)
 		}
 	}
 }

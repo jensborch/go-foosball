@@ -59,7 +59,7 @@ type TournamentRepository interface {
 	FindPlayer(tournamentId string, nickname string) (*TournamentPlayer, Found)
 	DeactivatePlayer(tournamentId string, nickname string) (*TournamentPlayer, Found)
 	ActivatePlayer(tournamentId string, nickname string) (*TournamentPlayer, Found)
-	RandomGames(id string) ([]*Game, Found)
+	RandomGame(id string) (*Game, Found)
 	UpdatePlayerRanking(tournamentId string, nickname string, gameScore int, updated time.Time) (*TournamentPlayer, Found)
 	PlayerHistory(tournamentId string, nickname string, from time.Time) ([]*TournamentPlayerHistory, Found)
 	History(tournamentId string, from time.Time) ([]*TournamentPlayerHistory, Found)
