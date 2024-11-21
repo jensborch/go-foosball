@@ -29,11 +29,14 @@ func GetGameCombinationsInstance() *GameCombinations {
 func (c *GameCombinations) Next() *model.Game {
 	c.Lock()
 	defer c.Unlock()
-	result := c.games[c.current]
-	if c.current == len(c.games)-1 {
-		c.current++
-	} else {
-		c.current = 0
+	var result *model.Game
+	if len(c.games) != 0 {
+		result = c.games[c.current]
+		if c.current == len(c.games)-1 {
+			c.current++
+		} else {
+			c.current = 0
+		}
 	}
 	return result
 }
@@ -91,7 +94,7 @@ func generatePlayerPairsCombinations(players []*model.TournamentPlayer) [][][]*m
 
 	for i := 0; i < n-1; i++ {
 		for j := i + 1; j < n; j++ {
-			if !overlaps(pairs[i], pairs[j]) {
+			if n < 4 || !overlaps(pairs[i], pairs[j]) {
 				combination := [][]*model.TournamentPlayer{
 					{pairs[i][0], pairs[i][1]},
 					{pairs[j][0], pairs[j][1]},
