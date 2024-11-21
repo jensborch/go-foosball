@@ -146,7 +146,7 @@ func TestRandomGame(t *testing.T) {
 	if games, found := tourRepo.RandomGames(tournament.IdAsString()); !found {
 		t.Errorf("Failed to generate random games, got %t", found)
 	} else if len(games) != 1 {
-		t.Errorf("Should genrate 1 random games, got %d", len(games))
+		t.Errorf("Should generate 1 random games, got %d", len(games))
 	}
 }
 
