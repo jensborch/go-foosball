@@ -200,12 +200,16 @@ func (r *tournamentRepository) addHistory(player *model.TournamentPlayer) {
 	}
 }
 
-func (r *tournamentRepository) RandomGame(tournamentId string) (*model.Game, model.Found) {
+func (r *tournamentRepository) RandomGames(tournamentId string) ([]*model.Game, model.Found) {
 	if players, found := r.ActivePlayers(tournamentId); found {
 		if tables, found := r.FindAllTables(tournamentId); found {
 			gameCombinations := GetGameCombinationsInstance()
 			gameCombinations.Update(players, tables)
-			return gameCombinations.Next(), true
+			games := make([]*model.Game, 0, len(tables))
+			for t := 0; t < len(tables); t++ {
+				games = append(games, gameCombinations.Next())
+			}
+			return games, true
 		} else {
 			return nil, false
 		}

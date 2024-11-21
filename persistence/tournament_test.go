@@ -143,15 +143,11 @@ func TestRandomGame(t *testing.T) {
 
 	tourRepo.AddTables(tournament.IdAsString(), table)
 
-	if game, found := tourRepo.RandomGame(tournament.IdAsString()); !found {
-		t.Errorf("Failed to generate random game, got %t", found)
-	} else if game == nil {
-		t.Errorf("Failed to generate random game, got nil")
+	if games, found := tourRepo.RandomGames(tournament.IdAsString()); !found {
+		t.Errorf("Failed to generate random games, got %t", found)
+	} else if len(games) != 1 {
+		t.Errorf("Should generate 1 random games, got %d", len(games))
 	}
-
-	/*else if len(games) != 1 {
-		t.Errorf("Should genrate 1 random games, got %d", len(games))
-	}*/
 }
 
 func TestSaveGame(t *testing.T) {
