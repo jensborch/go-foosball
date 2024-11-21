@@ -14,7 +14,7 @@ var (
 
 type GameCombinations struct {
 	sync.Mutex
-	current uint
+	current int
 	games   []*model.Game
 	players []*model.TournamentPlayer
 }
@@ -30,7 +30,7 @@ func (c *GameCombinations) Next() *model.Game {
 	c.Lock()
 	defer c.Unlock()
 	result := c.games[c.current]
-	if c.current == uint(len(c.games)-1) {
+	if c.current == len(c.games)-1 {
 		c.current++
 	} else {
 		c.current = 0
@@ -85,18 +85,33 @@ func generatePlayerPairs(players []*model.TournamentPlayer) [][]*model.Tournamen
 }
 
 func generatePlayerPairsCombinations(players []*model.TournamentPlayer) [][][]*model.TournamentPlayer {
-	playerCombinations := generatePlayerPairs(players)
-	n := len(playerCombinations)
+	pairs := generatePlayerPairs(players)
+	n := len(pairs)
+	combinations := make([][][]*model.TournamentPlayer, 0)
 
-	combinations := make([][][]*model.TournamentPlayer, 0, n*(n-1)/2) // Preallocate for efficiency
-
-	for c := 0; c < n-1; c++ {
-		for i := c; i < n; i++ {
-			combination := [][]*model.TournamentPlayer{playerCombinations[c], playerCombinations[i]}
-			combinations = append(combinations, combination)
+	for i := 0; i < n-1; i++ {
+		for j := i + 1; j < n; j++ {
+			if !overlaps(pairs[i], pairs[j]) {
+				combination := [][]*model.TournamentPlayer{
+					{pairs[i][0], pairs[i][1]},
+					{pairs[j][0], pairs[j][1]},
+				}
+				combinations = append(combinations, combination)
+			}
 		}
 	}
 	return combinations
+}
+
+func overlaps(pair1, pair2 []*model.TournamentPlayer) bool {
+	for _, p1 := range pair1 {
+		for _, p2 := range pair2 {
+			if p1.Player.Nickname == p2.Player.Nickname {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func allGamePlayerCombinations(players []*model.TournamentPlayer, tables []*model.TournamentTable) []*model.Game {

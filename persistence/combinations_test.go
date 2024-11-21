@@ -69,4 +69,20 @@ func TestGameCombinationsNext(t *testing.T) {
 	if game == nil {
 		t.Error("Expected non-nil game")
 	}
+
+	if game != nil && game.RightPlayerOne.Player.Nickname != "P1" {
+		t.Errorf("Expected right player 1 nickname to be P1, but got %s", game.RightPlayerOne.Player.Nickname)
+	}
+
+	if game != nil && game.RightPlayerTwo.Player.Nickname != "P2" {
+		t.Errorf("Expected right player 2 nickname to be P2, but got %s", game.RightPlayerTwo.Player.Nickname)
+	}
+
+	if game != nil && game.LeftPlayerOne.Player.Nickname != "P3" {
+		t.Errorf("Expected left player 1 nickname to be P3, but got %s", game.LeftPlayerOne.Player.Nickname)
+	}
+
+	if game != nil && game.LeftPlayerTwo.Player.Nickname != "P4" {
+		t.Errorf("Expected left player 2 nickname to be P3, but got %s", game.LeftPlayerTwo.Player.Nickname)
+	}
 }
