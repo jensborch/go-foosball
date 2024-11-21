@@ -10,7 +10,7 @@ import { ColorHex, CountdownCircleTimer } from "react-countdown-circle-timer";
 import { theme } from "./Theming";
 import Grid from "@mui/material/Grid";
 import { forwardRef, useEffect } from "react";
-import { TransitionProps } from "react-transition-group/Transition";
+import { TransitionProps } from "@mui/material/transitions";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
