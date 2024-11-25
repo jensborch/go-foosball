@@ -29,14 +29,13 @@ func GetGameCombinationsInstance() *GameCombinations {
 func (c *GameCombinations) Next() *model.Game {
 	c.Lock()
 	defer c.Unlock()
-	var result *model.Game
+	var result *model.Game = nil
 	if len(c.games) != 0 {
-		result = c.games[c.current]
-		if c.current == len(c.games)-1 {
-			c.current++
-		} else {
+		if c.current >= len(c.games) {
 			c.current = 0
 		}
+		result = c.games[c.current]
+		c.current++
 	}
 	return result
 }
@@ -92,15 +91,24 @@ func generatePlayerPairsCombinations(players []*model.TournamentPlayer) [][][]*m
 	n := len(pairs)
 	combinations := make([][][]*model.TournamentPlayer, 0)
 
-	for i := 0; i < n-1; i++ {
-		for j := i + 1; j < n; j++ {
-			if n < 4 || !overlaps(pairs[i], pairs[j]) {
-				combination := [][]*model.TournamentPlayer{
-					{pairs[i][0], pairs[i][1]},
-					{pairs[j][0], pairs[j][1]},
+	if n > 3 {
+		for i := 0; i < n-1; i++ {
+			for j := i + 1; j < n; j++ {
+				if !overlaps(pairs[i], pairs[j]) {
+					combination := [][]*model.TournamentPlayer{
+						{pairs[i][0], pairs[i][1]},
+						{pairs[j][0], pairs[j][1]},
+					}
+					combinations = append(combinations, combination)
 				}
-				combinations = append(combinations, combination)
 			}
+		}
+	} else {
+		for i := 0; i < n; i++ {
+			combination := [][]*model.TournamentPlayer{
+				{pairs[i][0], pairs[i][1]},
+			}
+			combinations = append(combinations, combination)
 		}
 	}
 	return combinations
@@ -122,29 +130,30 @@ func allGamePlayerCombinations(players []*model.TournamentPlayer, tables []*mode
 
 	playerCombinations := generatePlayerPairsCombinations(players)
 	n := len(playerCombinations)
+	t := 0
 
-	for c := 0; c < n-1; c = c + 4 {
-		for t := 0; t < len(tables); t++ {
-			tableSize := len(playerCombinations[c+t])
-			if tableSize == 2 {
-				game := model.Game{
-					TournamentTable: *tables[t],
-					RightPlayerOne:  *playerCombinations[c+t][0][0],
-					RightPlayerTwo:  *playerCombinations[c+t][0][1],
-					LeftPlayerOne:   *playerCombinations[c+t][1][0],
-					LeftPlayerTwo:   *playerCombinations[c+t][1][1],
-				}
-				games = append(games, &game)
-			} else {
-				game := model.Game{
-					TournamentTable: *tables[t],
-					RightPlayerOne:  *playerCombinations[c+t][0][0],
-					LeftPlayerOne:   *playerCombinations[c+t][0][1],
-				}
-				games = append(games, &game)
+	for c := 0; c < n; c++ {
+		if t >= len(tables) {
+			t = 0
+		}
+		tableSize := len(playerCombinations[c])
+		if tableSize == 2 {
+			game := model.Game{
+				TournamentTable: *tables[t],
+				RightPlayerOne:  *playerCombinations[c+t][0][0],
+				RightPlayerTwo:  *playerCombinations[c+t][0][1],
+				LeftPlayerOne:   *playerCombinations[c+t][1][0],
+				LeftPlayerTwo:   *playerCombinations[c+t][1][1],
 			}
+			games = append(games, &game)
+		} else {
+			game := model.Game{
+				TournamentTable: *tables[t],
+				RightPlayerOne:  *playerCombinations[c+t][0][0],
+				LeftPlayerOne:   *playerCombinations[c+t][0][1],
+			}
+			games = append(games, &game)
 		}
 	}
-
 	return games
 }

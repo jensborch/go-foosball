@@ -309,8 +309,7 @@ func randomGame(ts *httptest.Server, id uint) func(t *testing.T) []model.GameJso
 			t.Fatalf("Expected table id not equal to 0, got %v", result[0].Table.ID)
 		}
 
-		//TODO: Fix this
-		if len(result[0].LeftPlayers) != 2 {
+		if len(result[0].LeftPlayers) != 1 {
 			t.Fatalf("Expected one left player, got %v", len(result[0].LeftPlayers))
 		}
 
