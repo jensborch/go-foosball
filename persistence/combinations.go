@@ -15,7 +15,7 @@ var (
 type GameCombinations struct {
 	sync.Mutex
 	current int
-	games   []*model.Game
+	games   [][]*model.Game
 	players []*model.TournamentPlayer
 }
 
@@ -26,10 +26,10 @@ func GetGameCombinationsInstance() *GameCombinations {
 	return instance
 }
 
-func (c *GameCombinations) Next() *model.Game {
+func (c *GameCombinations) Next() []*model.Game {
 	c.Lock()
 	defer c.Unlock()
-	var result *model.Game = nil
+	var result []*model.Game = nil
 	if len(c.games) != 0 {
 		if c.current >= len(c.games) {
 			c.current = 0
@@ -125,35 +125,41 @@ func overlaps(pair1, pair2 []*model.TournamentPlayer) bool {
 	return false
 }
 
-func allGamePlayerCombinations(players []*model.TournamentPlayer, tables []*model.TournamentTable) []*model.Game {
-	var games []*model.Game
+func allGamePlayerCombinations(players []*model.TournamentPlayer, tables []*model.TournamentTable) [][]*model.Game {
+	var games [][]*model.Game
 
 	playerCombinations := generatePlayerPairsCombinations(players)
 	n := len(playerCombinations)
-	t := 0
+	//tablesCount := int(math.Floor(float64(len(tables)*4) / float64(len(players))))
 
 	for c := 0; c < n; c++ {
-		if t >= len(tables) {
-			t = 0
-		}
-		tableSize := len(playerCombinations[c])
-		if tableSize == 2 {
-			game := model.Game{
-				TournamentTable: *tables[t],
-				RightPlayerOne:  *playerCombinations[c+t][0][0],
-				RightPlayerTwo:  *playerCombinations[c+t][0][1],
-				LeftPlayerOne:   *playerCombinations[c+t][1][0],
-				LeftPlayerTwo:   *playerCombinations[c+t][1][1],
+		round := make([]*model.Game, 0)
+		for t, table := range tables {
+			tableSize := len(playerCombinations[c])
+			i := c + t
+			if i >= n {
+				break
 			}
-			games = append(games, &game)
-		} else {
-			game := model.Game{
-				TournamentTable: *tables[t],
-				RightPlayerOne:  *playerCombinations[c+t][0][0],
-				LeftPlayerOne:   *playerCombinations[c+t][0][1],
+
+			if tableSize == 2 {
+				game := model.Game{
+					TournamentTable: *table,
+					RightPlayerOne:  *playerCombinations[i][0][0],
+					RightPlayerTwo:  *playerCombinations[i][0][1],
+					LeftPlayerOne:   *playerCombinations[i][1][0],
+					LeftPlayerTwo:   *playerCombinations[i][1][1],
+				}
+				round = append(round, &game)
+			} else {
+				game := model.Game{
+					TournamentTable: *table,
+					RightPlayerOne:  *playerCombinations[i][0][0],
+					LeftPlayerOne:   *playerCombinations[i][0][1],
+				}
+				round = append(round, &game)
 			}
-			games = append(games, &game)
 		}
+		games = append(games, round)
 	}
 	return games
 }
