@@ -207,7 +207,8 @@ func (r *tournamentRepository) RandomGames(tournamentId string) ([]*model.Game, 
 			gameCombinations.Update(players, tables)
 			games := make([]*model.Game, 0, len(tables))
 			for t := 0; t < len(tables); t++ {
-				games = append(games, gameCombinations.Next())
+				//TODO
+				games = append(games, gameCombinations.Next()[0])
 			}
 			return games, true
 		} else {
