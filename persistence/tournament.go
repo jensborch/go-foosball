@@ -202,27 +202,20 @@ func (r *tournamentRepository) addHistory(player *model.TournamentPlayer) {
 
 func (r *tournamentRepository) RandomGames(tournamentId string) ([]*model.Game, model.Found) {
 	if players, found := r.ActivePlayers(tournamentId); found {
-		gameRepo := NewGameRepository(r.db)
-		previousGames := gameRepo.FindByTournament(tournamentId)
-		players = shuffleAndCompare(players, previousGames)
-		games := make([]*model.Game, 0, 2)
-		if len(players) >= 2 {
-			i := 0
-			tables, _ := r.FindAllTables(tournamentId)
-			for _, table := range tables {
-				g := model.NewGame(table)
-				playersInGameIndex := min(i+4, len(players))
-				if playersInGameIndex-i > 1 {
-					for ; i < playersInGameIndex; i++ {
-						g.AddTournamentPlayer(players[i])
-					}
-					games = append(games, g)
-				}
+		if tables, found := r.FindAllTables(tournamentId); found {
+			gameCombinations := GetGameCombinationsInstance()
+			gameCombinations.Update(players, tables)
+			games := make([]*model.Game, 0, len(tables))
+			for t := 0; t < len(tables); t++ {
+				//TODO
+				games = append(games, gameCombinations.Next()[0])
 			}
+			return games, true
+		} else {
+			return nil, false
 		}
-		return games, found
 	} else {
-		return []*model.Game{}, found
+		return nil, found
 	}
 }
 
