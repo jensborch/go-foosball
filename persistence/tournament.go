@@ -203,7 +203,7 @@ func (r *tournamentRepository) addHistory(player *model.TournamentPlayer) {
 func (r *tournamentRepository) RandomGames(tournamentId string) ([]*model.Game, model.Found) {
 	if players, found := r.ActivePlayers(tournamentId); found {
 		if tables, found := r.FindAllTables(tournamentId); found {
-			gameCombinations := GetGameCombinationsInstance()
+			gameCombinations := GetGameCombinationsInstance(tournamentId)
 			gameCombinations.Update(players, tables)
 			games := make([]*model.Game, 0, len(tables))
 			for t := 0; t < len(tables); t++ {

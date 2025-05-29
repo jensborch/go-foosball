@@ -9,7 +9,7 @@ import (
 
 func TestGetGameCombinationsInstance(t *testing.T) {
 	var wg sync.WaitGroup
-	instance1 := GetGameCombinationsInstance()
+	instance1 := GetGameCombinationsInstance("test")
 	if instance1 == nil {
 		t.Error("Expected non-nil instance")
 	}
@@ -19,7 +19,7 @@ func TestGetGameCombinationsInstance(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			instance2 := GetGameCombinationsInstance()
+			instance2 := GetGameCombinationsInstance("test")
 			if instance1 != instance2 {
 				t.Error("Expected the same instance")
 			}
@@ -31,7 +31,7 @@ func TestGetGameCombinationsInstance(t *testing.T) {
 func TestGameCombinationsEven(t *testing.T) {
 	tables, players := testData([]string{"P1", "P2", "P3", "P4"}, []string{"T1"})
 
-	gameCombinations := GetGameCombinationsInstance()
+	gameCombinations := GetGameCombinationsInstance("test")
 
 	gameCombinations.Update(players, tables)
 
@@ -79,7 +79,7 @@ func TestGameCombinationsEven(t *testing.T) {
 func TestGameCombinationsUnevenSmall(t *testing.T) {
 	tables, players := testData([]string{"P1", "P2", "P3"}, []string{"T1"})
 
-	gameCombinations := GetGameCombinationsInstance()
+	gameCombinations := GetGameCombinationsInstance("test")
 
 	gameCombinations.Update(players, tables)
 
@@ -125,43 +125,61 @@ func TestGameCombinationsUnevenSmall(t *testing.T) {
 func TestGameCombinationsMultiTables(t *testing.T) {
 	tables, players := testData([]string{"P1", "P2", "P3", "P4", "P5", "P6", "P7"}, []string{"T1", "T2", "T3"})
 
-	gameCombinations := GetGameCombinationsInstance()
+	gameCombinations := GetGameCombinationsInstance("test")
 
 	gameCombinations.Update(players, tables)
 
 	tests := []struct {
 		want [][]string
 	}{
-		{want: [][]string{{"P1", "P2", "P3", "P4"}, {"P6", "", "P7", ""}}},
+		//{want: [][]string{{"P1", "P2", "P3", "P4"}, {"P5", "", "P6", ""}}},
+		{want: [][]string{{"P1", "P2", "P3", "P4"}}},
+		{want: [][]string{{"P1", "P2", "P3", "P5"}, {"P4", "", "P6", ""}}},
+		{want: [][]string{{"P1", "P2", "P3", "P6"}, {"P4", "", "P5", ""}}},
 	}
+	for testIndex, test := range tests {
+		gameRound := gameCombinations.Next()
+		for tableIndex, table := range test.want {
 
-	for i, tc := range tests {
-		for j := range tc.want {
-			game := gameCombinations.Next()
+			if gameRound[tableIndex].TournamentTable.Table.Name != tables[tableIndex].Table.Name {
+				t.Errorf("Test %d:%d: Expected game to have table %s, but got %s",
+					testIndex+1, tableIndex+1,
+					tables[tableIndex].Table.Name,
+					gameRound[tableIndex].TournamentTable.Table.Name)
+			}
 
-			for tableNumber, g := range game {
+			if gameRound[tableIndex].RightPlayerOne.Player.Nickname != table[0] {
+				t.Errorf("Test %d:%d: Expected right player 1 nickname to be %s, but got %s",
+					testIndex+1,
+					tableIndex+1,
+					table[0],
+					gameRound[tableIndex].RightPlayerOne.Player.Nickname)
+			}
 
-				if g.TournamentTable.Table.Name != tables[tableNumber].Table.Name {
-					t.Errorf("Test %d:%d: Expected game to have table %s, but got %s", i+1, j+1, tables[tableNumber].Table.Name, g.TournamentTable.Table.Name)
-				}
+			if gameRound[tableIndex].RightPlayerTwo.Player.Nickname != table[1] {
+				t.Errorf("Test %d:%d: Expected right player 2 nickname to be %s, but got %s",
+					testIndex+1, tableIndex+1,
+					table[1],
+					gameRound[tableIndex].RightPlayerTwo.Player.Nickname)
+			}
 
-				/*if g.RightPlayerOne.Player.Nickname != p[0] {
-					t.Errorf("Test %d:%d: Expected right player 1 nickname to be %s, but got %s", i+1, j+1, p[0], g.RightPlayerOne.Player.Nickname)
-				}
+			if gameRound[tableIndex].LeftPlayerOne.Player.Nickname != table[2] {
+				t.Errorf("Test %d:%d: Expected left player 1 nickname to be %s, but got %s",
+					testIndex+1,
+					tableIndex+1,
+					table[2],
+					gameRound[tableIndex].LeftPlayerOne.Player.Nickname)
+			}
 
-				if g.RightPlayerTwo.Player.Nickname != p[1] {
-					t.Errorf("Test %d:%d: Expected right player 2 nickname to be %s, but got %s", i+1, j+1, p[1], g.RightPlayerTwo.Player.Nickname)
-				}
-
-				if g.LeftPlayerOne.Player.Nickname != p[2] {
-					t.Errorf("Test %d:%d: Expected left player 1 nickname to be %s, but got %s", i+1, j+1, p[2], g.LeftPlayerOne.Player.Nickname)
-				}
-
-				if g.LeftPlayerTwo.Player.Nickname != p[3] {
-					t.Errorf("Test %d:%d: Expected left player 2 nickname to be %s, but got %s", i+1, j+1, p[3], g.LeftPlayerTwo.Player.Nickname)
-				}*/
+			if gameRound[tableIndex].LeftPlayerTwo.Player.Nickname != table[3] {
+				t.Errorf("Test %d:%d: Expected left player 2 nickname to be %s, but got %s",
+					testIndex+1,
+					tableIndex+1,
+					table[3],
+					gameRound[tableIndex].LeftPlayerTwo.Player.Nickname)
 			}
 		}
+		//}
 	}
 }
 

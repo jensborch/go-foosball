@@ -8,8 +8,9 @@ import (
 )
 
 var (
-	once     sync.Once
-	instance *GameCombinations
+	once         sync.Once
+	instance     map[string]*GameCombinations
+	instanceLock sync.Mutex
 )
 
 type GameCombinations struct {
@@ -19,11 +20,19 @@ type GameCombinations struct {
 	players []*model.TournamentPlayer
 }
 
-func GetGameCombinationsInstance() *GameCombinations {
+func GetGameCombinationsInstance(tournamentId string) *GameCombinations {
 	once.Do(func() {
-		instance = &GameCombinations{}
+		instance = make(map[string]*GameCombinations)
 	})
-	return instance
+	instanceLock.Lock()
+	defer instanceLock.Unlock()
+
+	g, ok := instance[tournamentId]
+	if !ok {
+		g = &GameCombinations{}
+		instance[tournamentId] = g
+	}
+	return g
 }
 
 func (c *GameCombinations) Next() []*model.Game {
@@ -128,38 +137,56 @@ func overlaps(pair1, pair2 []*model.TournamentPlayer) bool {
 func allGamePlayerCombinations(players []*model.TournamentPlayer, tables []*model.TournamentTable) [][]*model.Game {
 	var games [][]*model.Game
 
-	playerCombinations := generatePlayerPairsCombinations(players)
-	n := len(playerCombinations)
+	combinations := generatePlayerPairsCombinations(players)
+	numberOfCombinations := len(combinations)
 	//tablesCount := int(math.Floor(float64(len(tables)*4) / float64(len(players))))
 
-	for c := 0; c < n; c++ {
+	for combinationIndex := 0; combinationIndex < numberOfCombinations; combinationIndex++ {
 		round := make([]*model.Game, 0)
 		for t, table := range tables {
-			tableSize := len(playerCombinations[c])
-			i := c + t
-			if i >= n {
+			playersLeft := len(players) - 4*t
+			if playersLeft < 2 {
 				break
 			}
+			for nextIndex := combinationIndex; nextIndex < numberOfCombinations; nextIndex++ {
+				var game model.Game
+				if playersLeft >= 4 {
+					game = model.Game{
+						TournamentTable: *table,
+						RightPlayerOne:  *combinations[nextIndex][0][0],
+						RightPlayerTwo:  *combinations[nextIndex][0][1],
+						LeftPlayerOne:   *combinations[nextIndex][1][0],
+						LeftPlayerTwo:   *combinations[nextIndex][1][1],
+					}
 
-			if tableSize == 2 {
-				game := model.Game{
-					TournamentTable: *table,
-					RightPlayerOne:  *playerCombinations[i][0][0],
-					RightPlayerTwo:  *playerCombinations[i][0][1],
-					LeftPlayerOne:   *playerCombinations[i][1][0],
-					LeftPlayerTwo:   *playerCombinations[i][1][1],
+				} else {
+					game = model.Game{
+						TournamentTable: *table,
+						RightPlayerOne:  *combinations[nextIndex][0][0],
+						LeftPlayerOne:   *combinations[nextIndex][0][1],
+					}
 				}
-				round = append(round, &game)
-			} else {
-				game := model.Game{
-					TournamentTable: *table,
-					RightPlayerOne:  *playerCombinations[i][0][0],
-					LeftPlayerOne:   *playerCombinations[i][0][1],
+				if !hasSamePlayers(&game, round) {
+					round = append(round, &game)
+					break
 				}
-				round = append(round, &game)
 			}
+
 		}
 		games = append(games, round)
 	}
 	return games
+}
+
+func hasSamePlayers(game *model.Game, round []*model.Game) bool {
+	for _, gameInRound := range round {
+		for _, playerInRound := range gameInRound.AllPlayers() {
+			for _, player := range game.AllPlayers() {
+				if playerInRound.Nickname == player.Nickname {
+					return true
+				}
+			}
+		}
+	}
+	return false
 }

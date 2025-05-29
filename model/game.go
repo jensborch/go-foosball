@@ -130,7 +130,7 @@ func (g *Game) UpdateScore() error {
 	}
 }
 
-// Right return right playes
+// Right return right players
 func (g Game) Right() []Player {
 	var players []Player
 	if isEmptyPlayer(g.RightPlayerTwo) {
@@ -174,6 +174,10 @@ func (g Game) LeftPlayerNames() []string {
 		result = append(result, n.Nickname)
 	}
 	return result
+}
+
+func (g Game) AllPlayers() []Player {
+	return append(g.Right(), g.Left()...)
 }
 
 func isEmptyPlayer(p TournamentPlayer) bool {
