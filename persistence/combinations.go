@@ -149,23 +149,7 @@ func allGamePlayerCombinations(players []*model.TournamentPlayer, tables []*mode
 				break
 			}
 			for nextIndex := combinationIndex; nextIndex < numberOfCombinations; nextIndex++ {
-				var game model.Game
-				if playersLeft >= 4 {
-					game = model.Game{
-						TournamentTable: *table,
-						RightPlayerOne:  *combinations[nextIndex][0][0],
-						RightPlayerTwo:  *combinations[nextIndex][0][1],
-						LeftPlayerOne:   *combinations[nextIndex][1][0],
-						LeftPlayerTwo:   *combinations[nextIndex][1][1],
-					}
-
-				} else {
-					game = model.Game{
-						TournamentTable: *table,
-						RightPlayerOne:  *combinations[nextIndex][0][0],
-						LeftPlayerOne:   *combinations[nextIndex][0][1],
-					}
-				}
+				game := createGame(playersLeft, table, combinations[nextIndex])
 				if !hasSamePlayers(&game, round) {
 					round = append(round, &game)
 					break
@@ -176,6 +160,27 @@ func allGamePlayerCombinations(players []*model.TournamentPlayer, tables []*mode
 		games = append(games, round)
 	}
 	return games
+}
+
+func createGame(playersLeft int, table *model.TournamentTable, combination [][]*model.TournamentPlayer) model.Game {
+	var game model.Game
+	if playersLeft >= 4 {
+		game = model.Game{
+			TournamentTable: *table,
+			RightPlayerOne:  *combination[0][0],
+			RightPlayerTwo:  *combination[0][1],
+			LeftPlayerOne:   *combination[1][0],
+			LeftPlayerTwo:   *combination[1][1],
+		}
+
+	} else {
+		game = model.Game{
+			TournamentTable: *table,
+			RightPlayerOne:  *combination[0][0],
+			LeftPlayerOne:   *combination[0][1],
+		}
+	}
+	return game
 }
 
 func hasSamePlayers(game *model.Game, round []*model.Game) bool {
