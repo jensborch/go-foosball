@@ -41,9 +41,9 @@ func TestGameCombinationsEven(t *testing.T) {
 		{want: []string{"P1", "P2", "P3", "P4"}},
 		{want: []string{"P1", "P3", "P2", "P4"}},
 		{want: []string{"P1", "P4", "P2", "P3"}},
-		{want: []string{"P1", "P2", "P3", "P4"}},
-		{want: []string{"P1", "P3", "P2", "P4"}},
-		{want: []string{"P1", "P4", "P2", "P3"}},
+		{want: []string{"P2", "P3", "P1", "P4"}},
+		{want: []string{"P2", "P4", "P1", "P3"}},
+		{want: []string{"P3", "P4", "P1", "P2"}},
 	}
 
 	for i, tc := range tests {
@@ -132,8 +132,7 @@ func TestGameCombinationsMultiTables(t *testing.T) {
 	tests := []struct {
 		want [][]string
 	}{
-		//{want: [][]string{{"P1", "P2", "P3", "P4"}, {"P5", "", "P6", ""}}},
-		{want: [][]string{{"P1", "P2", "P3", "P4"}}},
+		{want: [][]string{{"P1", "P2", "P3", "P4"}, {"P5", "", "P6", ""}}},
 		{want: [][]string{{"P1", "P2", "P3", "P5"}, {"P4", "", "P6", ""}}},
 		{want: [][]string{{"P1", "P2", "P3", "P6"}, {"P4", "", "P5", ""}}},
 	}
@@ -179,7 +178,6 @@ func TestGameCombinationsMultiTables(t *testing.T) {
 					gameRound[tableIndex].LeftPlayerTwo.Player.Nickname)
 			}
 		}
-		//}
 	}
 }
 

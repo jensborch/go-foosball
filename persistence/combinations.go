@@ -101,8 +101,8 @@ func generatePlayerPairsCombinations(players []*model.TournamentPlayer) [][][]*m
 	combinations := make([][][]*model.TournamentPlayer, 0)
 
 	if n > 3 {
-		for i := 0; i < n-1; i++ {
-			for j := i + 1; j < n; j++ {
+		for i := 0; i < n; i++ {
+			for j := 0; j < n; j++ {
 				if !overlaps(pairs[i], pairs[j]) {
 					combination := [][]*model.TournamentPlayer{
 						{pairs[i][0], pairs[i][1]},
