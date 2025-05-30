@@ -122,6 +122,21 @@ func TestGameCombinationsUnevenSmall(t *testing.T) {
 	}
 }
 
+func TestGameCombinationsComplete(t *testing.T) {
+	tables, players := testData([]string{"P1", "P2", "P3", "P4", "P5", "P6", "P7"}, []string{"T1", "T2", "T3"})
+	gameCombinations := GetGameCombinationsInstance("test")
+
+	rounds := gameCombinations.Update(players, tables)
+
+	for i := 0; i < rounds; i++ {
+		gameRound := gameCombinations.Next()
+		if len(gameRound) != 2 {
+			t.Errorf("Expected 2 games in round %d", i+1)
+		}
+
+	}
+}
+
 func TestGameCombinationsMultiTables(t *testing.T) {
 	tables, players := testData([]string{"P1", "P2", "P3", "P4", "P5", "P6", "P7"}, []string{"T1", "T2", "T3"})
 

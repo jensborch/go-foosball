@@ -100,12 +100,14 @@ func (r *tournamentRepository) FindAllActivePlayers(tournamentId string) ([]*mod
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Where("tournaments.ID = ?", tournamentId).
 		Find(&players).Error
-	return sortPlayers(players), HasBeenFound(err)
+	return sortPlayersByNickname(players), HasBeenFound(err)
 }
 
-func sortPlayers(players []*model.TournamentPlayer) []*model.TournamentPlayer {
+func sortPlayersByNickname(players []*model.TournamentPlayer) []*model.TournamentPlayer {
 	if players != nil {
-		sort.Slice(players, func(p, q int) bool {
+		result := make([]*model.TournamentPlayer, len(players))
+		copy(result, players)
+		sort.Slice(result, func(p, q int) bool {
 			return players[p].Player.Nickname < players[q].Player.Nickname
 		})
 	}
@@ -139,7 +141,7 @@ func (r *tournamentRepository) ActivePlayers(tournamentId string) ([]*model.Tour
 		Where("tournament_players.active = ?", true).
 		Where("tournaments.ID = ?", tournamentId).
 		Find(&players).Error
-	return sortPlayers(players), HasBeenFound(err)
+	return sortPlayersByNickname(players), HasBeenFound(err)
 }
 
 func (r *tournamentRepository) DeactivatePlayers(tournamentId string) model.Found {
@@ -178,7 +180,6 @@ func (r *tournamentRepository) ActivatePlayer(tournamentId string, nickname stri
 func (r *tournamentRepository) UpdatePlayerRanking(tournamentId string, nickname string, gameScore int, updated time.Time) (*model.TournamentPlayer, model.Found) {
 	if player, found := r.FindPlayer(tournamentId, nickname); found {
 		tmp := int(player.Ranking) + gameScore
-		println(tmp)
 		if tmp >= 0 {
 			player.Ranking = uint(tmp)
 		} else {
@@ -204,12 +205,10 @@ func (r *tournamentRepository) RandomGames(tournamentId string) ([]*model.Game, 
 	if players, found := r.ActivePlayers(tournamentId); found {
 		if tables, found := r.FindAllTables(tournamentId); found {
 			gameCombinations := GetGameCombinationsInstance(tournamentId)
-			gameCombinations.Update(players, tables)
-			games := make([]*model.Game, 0, len(tables))
-			for t := 0; t < len(tables); t++ {
-				//TODO
-				games = append(games, gameCombinations.Next()[0])
+			if gameCombinations.Update(players, tables) > 0 {
+				gameCombinations.Randomize()
 			}
+			games := gameCombinations.Next()
 			return games, true
 		} else {
 			return nil, false
