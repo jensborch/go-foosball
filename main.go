@@ -34,7 +34,7 @@ import (
 
 // React client static web server content.
 //
-//go:embed client/build
+//go:embed client/dist
 var client embed.FS
 
 func main() {
@@ -161,7 +161,7 @@ func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
 		c.Redirect(http.StatusMovedPermanently, "/client")
 	})
 
-	subfs := subFs(client, "/client/", "client/build")
+	subfs := subFs(client, "/client/", "client/dist")
 	router.GET("/client/*any", func(c *gin.Context) {
 		serveStatic(c, subfs, "/client/")
 	})
