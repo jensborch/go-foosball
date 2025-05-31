@@ -56,5 +56,5 @@ clean:
 	go clean
 	go mod tidy
 
-$(shell if [ ! -d "./client/build" ]; then mkdir -p  ./client/build; fi)
-$(shell if [ ! -f "./client/build/test.html" ]; then touch  ./client/build/test.html; fi)
+$(shell if [ ! -d "./client/dist" ]; then mkdir -p  ./client/dist; fi)
+$(shell if [ ! -f "./client/dist/test.html" ]; then touch  ./client/dist/test.html; fi)
