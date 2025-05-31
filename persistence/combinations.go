@@ -3,7 +3,6 @@ package persistence
 import (
 	"fmt"
 	"math/rand/v2"
-	"sort"
 	"sync"
 
 	"github.com/jensborch/go-foosball/model"
@@ -80,15 +79,6 @@ func (c *GameCombinations) Update(players []*model.TournamentPlayer, tables []*m
 	return 0
 }
 
-func sortPlayersById(players []*model.TournamentPlayer) []*model.TournamentPlayer {
-	result := make([]*model.TournamentPlayer, len(players))
-	copy(result, players)
-	sort.Slice(result, func(i, j int) bool {
-		return players[i].ID < players[j].ID
-	})
-	return result
-}
-
 func isSamePlayers(players1, players2 []*model.TournamentPlayer) bool {
 	if len(players1) != len(players2) {
 		return false
@@ -145,7 +135,6 @@ func generatePlayerPairsCombinations(players []*model.TournamentPlayer) [][][]*m
 			combinations = append(combinations, combination)
 		}
 	}
-	fmt.Println("hej")
 	return combinations
 }
 
@@ -173,17 +162,14 @@ func allGamePlayerCombinations(players []*model.TournamentPlayer, tables []*mode
 			if playersLeft < 2 {
 				break
 			}
-			for nextIndex := combinationIndex; ; nextIndex++ {
-				if nextIndex == numberOfCombinations {
-					nextIndex = 0
-				}
-				game := createGame(playersLeft, table, combinations[nextIndex])
+			for nextIndex := combinationIndex; nextIndex < combinationIndex+numberOfCombinations; nextIndex++ {
+				currentIndex := nextIndex % numberOfCombinations
+				game := createGame(playersLeft, table, combinations[currentIndex])
 				if !hasSamePlayers(&game, round) {
 					round = append(round, &game)
 					break
 				}
 			}
-
 		}
 		games = append(games, round)
 	}
