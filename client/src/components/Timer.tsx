@@ -12,6 +12,8 @@ import Grid from "@mui/material/Grid";
 import { forwardRef, useEffect } from "react";
 import { TransitionProps } from "@mui/material/transitions";
 
+const BASE_URL = import.meta.env.BASE_URL ?? "";
+
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
@@ -70,23 +72,21 @@ const DARK = theme.palette.secondary.dark as ColorHex;
 
 const Timer = ({ reset, timeout, open, setOpen }: TimerProps) => {
   const onComplete = (elapsed: number) => {
-    new Audio(`${process.env.PUBLIC_URL}/sounds/finish.wav`).play();
+    new Audio(`${BASE_URL}/sounds/finish.wav`).play();
     setTimeout(() => setOpen(false), 4000);
   };
   const onUpdate = (remaining: number) => {
     if (remaining === 30) {
-      new Audio(`${process.env.PUBLIC_URL}/sounds/30seconds.wav`).play();
+      new Audio(`${BASE_URL}/sounds/30seconds.wav`).play();
     } else if (remaining === 15) {
-      new Audio(`${process.env.PUBLIC_URL}/sounds/15seconds.wav`).play();
+      new Audio(`${BASE_URL}/sounds/15seconds.wav`).play();
     }
   };
 
   useEffect(() => {
     if (open) {
       const start = new Audio(
-        `${process.env.PUBLIC_URL}/sounds/duke/${
-          Math.floor(Math.random() * 7) + 1
-        }.wav`
+        `${BASE_URL}/sounds/duke/${Math.floor(Math.random() * 7) + 1}.wav`
       );
       start.play();
     }
