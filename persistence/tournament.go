@@ -100,12 +100,14 @@ func (r *tournamentRepository) FindAllActivePlayers(tournamentId string) ([]*mod
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Where("tournaments.ID = ?", tournamentId).
 		Find(&players).Error
-	return sortPlayers(players), HasBeenFound(err)
+	return sortPlayersByNickname(players), HasBeenFound(err)
 }
 
-func sortPlayers(players []*model.TournamentPlayer) []*model.TournamentPlayer {
+func sortPlayersByNickname(players []*model.TournamentPlayer) []*model.TournamentPlayer {
 	if players != nil {
-		sort.Slice(players, func(p, q int) bool {
+		result := make([]*model.TournamentPlayer, len(players))
+		copy(result, players)
+		sort.Slice(result, func(p, q int) bool {
 			return players[p].Player.Nickname < players[q].Player.Nickname
 		})
 	}
@@ -139,7 +141,7 @@ func (r *tournamentRepository) ActivePlayers(tournamentId string) ([]*model.Tour
 		Where("tournament_players.active = ?", true).
 		Where("tournaments.ID = ?", tournamentId).
 		Find(&players).Error
-	return sortPlayers(players), HasBeenFound(err)
+	return sortPlayersByNickname(players), HasBeenFound(err)
 }
 
 func (r *tournamentRepository) DeactivatePlayers(tournamentId string) model.Found {
@@ -178,7 +180,6 @@ func (r *tournamentRepository) ActivatePlayer(tournamentId string, nickname stri
 func (r *tournamentRepository) UpdatePlayerRanking(tournamentId string, nickname string, gameScore int, updated time.Time) (*model.TournamentPlayer, model.Found) {
 	if player, found := r.FindPlayer(tournamentId, nickname); found {
 		tmp := int(player.Ranking) + gameScore
-		println(tmp)
 		if tmp >= 0 {
 			player.Ranking = uint(tmp)
 		} else {
@@ -202,27 +203,18 @@ func (r *tournamentRepository) addHistory(player *model.TournamentPlayer) {
 
 func (r *tournamentRepository) RandomGames(tournamentId string) ([]*model.Game, model.Found) {
 	if players, found := r.ActivePlayers(tournamentId); found {
-		gameRepo := NewGameRepository(r.db)
-		previousGames := gameRepo.FindByTournament(tournamentId)
-		players = shuffleAndCompare(players, previousGames)
-		games := make([]*model.Game, 0, 2)
-		if len(players) >= 2 {
-			i := 0
-			tables, _ := r.FindAllTables(tournamentId)
-			for _, table := range tables {
-				g := model.NewGame(table)
-				playersInGameIndex := min(i+4, len(players))
-				if playersInGameIndex-i > 1 {
-					for ; i < playersInGameIndex; i++ {
-						g.AddTournamentPlayer(players[i])
-					}
-					games = append(games, g)
-				}
+		if tables, found := r.FindAllTables(tournamentId); found {
+			gameCombinations := GetGameCombinationsInstance(tournamentId)
+			if gameCombinations.Update(players, tables) > 0 {
+				gameCombinations.Randomize()
 			}
+			games := gameCombinations.Next()
+			return games, true
+		} else {
+			return nil, false
 		}
-		return games, found
 	} else {
-		return []*model.Game{}, found
+		return nil, found
 	}
 }
 
