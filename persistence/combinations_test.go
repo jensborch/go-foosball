@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"reflect"
 	"sync"
 	"testing"
 
@@ -216,4 +217,37 @@ func testData(names []string, tablesName []string) ([]*model.TournamentTable, []
 	}
 
 	return tables, players
+}
+
+func TestGameCombinations_Randomize(t *testing.T) {
+	tables, players := testData([]string{"P1", "P2", "P3", "P4"}, []string{"T1"})
+	gameCombos := GetGameCombinationsInstance("test")
+
+	gameCombos.Update(players, tables)
+	initial := deepCopy(gameCombos.rounds)
+
+	gameCombos.Randomize()
+	if reflect.DeepEqual(initial, gameCombos.rounds) {
+		t.Error("Randomize did not change round order")
+	}
+
+	for _, round := range gameCombos.rounds {
+		for _, game := range round {
+			if game == nil {
+				t.Error("Found nil games after randomization")
+			}
+		}
+	}
+}
+
+func deepCopy(games [][]*model.Game) [][]*model.Game {
+	copy := make([][]*model.Game, len(games))
+	for i, round := range games {
+		copy[i] = make([]*model.Game, len(round))
+		for j, game := range round {
+			tmp := *game
+			copy[i][j] = &tmp
+		}
+	}
+	return copy
 }

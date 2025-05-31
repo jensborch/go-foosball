@@ -23,11 +23,12 @@ type GameCombinations struct {
 
 func GetGameCombinationsInstance(tournamentId string) *GameCombinations {
 	fmt.Printf("Getting combinations instance for tournament %s\n", tournamentId)
+	instanceLock.Lock()
+	defer instanceLock.Unlock()
+
 	once.Do(func() {
 		instance = make(map[string]*GameCombinations)
 	})
-	instanceLock.Lock()
-	defer instanceLock.Unlock()
 
 	g, ok := instance[tournamentId]
 	if !ok {
@@ -60,7 +61,7 @@ func (c *GameCombinations) Randomize() {
 		result := make([][]*model.Game, len(c.rounds))
 		perm := rand.Perm(len(c.rounds))
 		for i, v := range perm {
-			result[v] = c.rounds[i]
+			result[i] = c.rounds[v]
 		}
 		c.rounds = result
 	}
