@@ -29,7 +29,7 @@ func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
 }
 
 // GetRandomGames for a tournament
-// @Summary  Get random game for a tournament
+// @Summary  Get random games for a tournament
 // @Tags     actions
 // @Accept   json
 // @Produce  json

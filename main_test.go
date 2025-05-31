@@ -313,6 +313,10 @@ func randomGame(ts *httptest.Server, id uint) func(t *testing.T) []model.GameJso
 			t.Fatalf("Expected one left player, got %v", len(result[0].LeftPlayers))
 		}
 
+		if len(result[0].RightPlayers) != 1 {
+			t.Fatalf("Expected one right player, got %v", len(result[0].LeftPlayers))
+		}
+
 		return result
 	}
 }
