@@ -60,7 +60,7 @@ const TournamentsError = ({ children }: { children?: React.ReactNode }) => {
 
 const Tournaments = () => {
   const { status, error, data } = useTournaments();
-  if (status === "loading") {
+  if (status === "pending") {
     return (
       <TournamentsError>
         <CircularProgress size={100} />

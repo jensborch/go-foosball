@@ -3,6 +3,6 @@ import App from "./App";
 
 test("renders learn react link", () => {
   render(<App basename="/" />);
-  const progressbar = screen.getByRole("progressbar");
+  const progressbar = screen.getByLabelText("Home");
   expect(progressbar).toBeInTheDocument();
 });

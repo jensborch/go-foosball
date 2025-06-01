@@ -215,7 +215,7 @@ type GamesProps = {
 const Games = ({ tournament }: GamesProps) => {
   const { status, error, data } = useRandomGames(tournament);
 
-  if (status === "loading") {
+  if (status === "pending") {
     return (
       <Box
         sx={{

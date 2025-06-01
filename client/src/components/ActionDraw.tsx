@@ -16,7 +16,7 @@ import { useState } from "react";
 import AddPlayersDialog from "./AddPlayersDialog";
 import AddTableDialog from "./AddTableDialog";
 import HistoryChartDialog from "./HistoryChartDialog";
-import { useQueryClient } from "react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { CacheKeys } from "../api/hooks";
 import Start from "./Start";
 
@@ -63,7 +63,9 @@ const ActionDraw = ({ tournament }: ActionDrawProps) => {
               <ListItemIcon>
                 <RefreshIcon
                   onClick={() =>
-                    queryClient.invalidateQueries(CacheKeys.RandomGames)
+                    queryClient.invalidateQueries({
+                      queryKey: [CacheKeys.RandomGames],
+                    })
                   }
                   fontSize="large"
                 />

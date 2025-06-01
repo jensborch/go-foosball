@@ -173,7 +173,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
           title="Players"
         />
         <CardContent sx={{ overflow: "auto", maxHeight: "65vh" }}>
-          {status === "loading" && (
+          {status === "pending" && (
             <Box
               sx={{
                 display: "flex",
