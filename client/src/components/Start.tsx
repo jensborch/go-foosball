@@ -15,7 +15,7 @@ const Start = ({ tournament }: { tournament: string }) => {
       `ws://${conf.host}/api/tournaments/${tournament}/events/game`
     );
 
-    websocket.onmessage = (msg) => {
+    websocket.onmessage = () => {
       if (open) {
         setReset((r) => r + 1);
       } else {

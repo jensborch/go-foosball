@@ -151,7 +151,7 @@ const AddPlayersDialog = ({ tournament, open, setOpen }: AddPlayersProps) => {
       {status === "success" && (
         <Grid container direction="row">
           <DefaultGrid item container direction="row">
-            {data?.map((player, _) => (
+            {data?.map((player) => (
               <Grid item key={player.nickname}>
                 <Player player={player} tournament={tournament} />
               </Grid>

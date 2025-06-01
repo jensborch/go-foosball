@@ -33,7 +33,7 @@ const Drawer = styled(MuiDrawer, {
 
 const ListItemIcon = styled(MuiListItemIcon, {
   shouldForwardProp: (prop) => prop !== "open",
-})(({ theme }) => ({
+})(() => ({
   minWidth: 0,
 }));
 

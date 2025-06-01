@@ -40,23 +40,23 @@
     "test:ci": "vitest --coverage",
     "prettier": "prettier --write .",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "pnpm lint --fix",
     "swagger": "swagger-typescript-api -p ../docs/swagger.json -o ./src/api -n Api.ts",
     "preinstall": "npx only-allow pnpm"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "prettier"
-    ]
-  },
   "devDependencies": {
+    "@eslint/js": "^9.28.0",
     "@types/testing-library__jest-dom": "^5.14.9",
     "@vitest/coverage-v8": "^3.1.4",
+    "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.1.5",
-    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-prettier": "^5.4.1",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.2.0",
     "jsdom": "^26.1.0",
     "prettier": "^2.8.8",
     "swagger-typescript-api": "^12.0.4",
+    "typescript-eslint": "^8.33.0",
     "vitest": "^3.1.4"
   },
   "resolutions": {

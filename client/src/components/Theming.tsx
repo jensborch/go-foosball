@@ -18,7 +18,7 @@ export const theme = createTheme({
 });
 
 export interface Props {
-  children: any;
+  children: React.ReactNode;
 }
 
 function Theming(props: Props) {

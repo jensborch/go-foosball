@@ -12,6 +12,8 @@ const flip = keyframes`
   }
 `;
 
+type SrcProp = { src?: string };
+
 type AnimatedAvatarProps = {
   selected: boolean;
   setSelected: (selected: boolean) => void;
@@ -33,13 +35,14 @@ const AnimatedAvatar = ({
   timeout = 500,
   avatar,
 }: AnimatedAvatarProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const nodeRef = useRef<any>();
   return (
     <Transition in={selected} timeout={timeout} nodeRef={nodeRef}>
       {(state: TransitionStatus) => {
         switch (state) {
           case "entering":
-          case "exiting":
+          case "exiting": {
             return (
               <Avatar
                 ref={nodeRef}
@@ -48,14 +51,16 @@ const AnimatedAvatar = ({
                 {" "}
               </Avatar>
             );
-          case "entered":
+          }
+          case "entered": {
             return (
               <Avatar ref={nodeRef} sx={sx} onClick={() => setSelected(false)}>
                 {selectedComp}
               </Avatar>
             );
-          case "exited":
-            const src: any = {};
+          }
+          case "exited": {
+            const src: SrcProp = {};
             if (avatar) {
               src.src = `${conf.baseUrl()}/avatars/${avatar}.jpg`;
             }
@@ -64,6 +69,7 @@ const AnimatedAvatar = ({
                 {deselectedComp}
               </Avatar>
             );
+          }
         }
       }}
     </Transition>

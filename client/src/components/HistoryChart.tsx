@@ -24,7 +24,9 @@ const Players = ({ tournament, nickname, setNickname }: PlayersProps) => {
   return (
     <Autocomplete
       value={nickname}
-      onChange={(event: any, newValue: string | null) => setNickname(newValue)}
+      onChange={(event: unknown, newValue: string | null) =>
+        setNickname(newValue)
+      }
       options={players}
       sx={{ width: 300, padding: 2 }}
       renderInput={(params) => <TextField {...params} label="Players" />}
