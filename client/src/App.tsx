@@ -32,7 +32,6 @@ function App({ basename }: AppProps) {
               </BrowserRouter>
             </Theming>
           </CssBaseline>
-          '
         </QueryClientProvider>
       </ErrorBoundary>
     </React.StrictMode>

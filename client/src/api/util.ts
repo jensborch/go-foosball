@@ -8,7 +8,12 @@ export function handleErrors<R extends Response>(response: R) {
   return response;
 }
 
-export const conf: any = {
+export type Conf = {
+  host: string;
+  baseUrl: () => string;
+};
+
+export const conf: Conf = {
   host: "localhost:8080",
   baseUrl: () => `http://${conf.host}`,
 };

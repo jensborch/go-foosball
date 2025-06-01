@@ -204,7 +204,7 @@ export const useTournamentPlayerMutation = (tournament: string) => {
         queryClient.invalidateQueries(CacheKeys.RandomGames);
         queryClient.invalidateQueries(CacheKeys.Players);
       },
-      onError: (error) => {
+      onError: () => {
         //Do nothing
       },
     }
@@ -227,7 +227,7 @@ export const useTournamentPlayerDeleteMutation = (
         ]);
         queryClient.invalidateQueries(CacheKeys.RandomGames);
       },
-      onError: (error) => {
+      onError: () => {
         //Do nothing
       },
     }
@@ -242,7 +242,7 @@ export const useTournamentPlayersDeleteMutation = (tournament: string) => {
       queryClient.invalidateQueries([CacheKeys.TournamentPlayers, tournament]);
       queryClient.invalidateQueries(CacheKeys.RandomGames);
     },
-    onError: (error) => {
+    onError: () => {
       //Do nothing
     },
   });
@@ -259,7 +259,7 @@ export const useTournamentTableMutation = (tournament: string) => {
         queryClient.invalidateQueries(CacheKeys.RandomGames);
         queryClient.invalidateQueries(CacheKeys.Tables);
       },
-      onError: (error) => {
+      onError: () => {
         //Do nothing
       },
     }
@@ -273,7 +273,7 @@ export const usePlayerMutation = () => {
     (player: Api.CreatePlayer) => api.players.playersCreate(player),
     {
       onSuccess: () => queryClient.invalidateQueries(CacheKeys.Players),
-      onError: (error) => {
+      onError: () => {
         //Do nothing
       },
     }
@@ -287,7 +287,7 @@ export const useTableMutation = () => {
     (table: Api.CreateTable) => api.tables.tablesCreate(table),
     {
       onSuccess: () => queryClient.invalidateQueries(CacheKeys.Tables),
-      onError: (error) => {
+      onError: () => {
         //Do nothing
       },
     }
@@ -321,7 +321,7 @@ export const useGameMutation = (tournament: string) => {
           tournament,
         ]);
       },
-      onError: (error) => {
+      onError: () => {
         //Do nothing
       },
     }

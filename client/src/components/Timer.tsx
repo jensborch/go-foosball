@@ -16,7 +16,7 @@ const BASE_URL = import.meta.env.BASE_URL ?? "";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
-    children: React.ReactElement<any, any>;
+    children: React.ReactNode;
   },
   ref: React.Ref<unknown>
 ) {
@@ -40,19 +40,17 @@ const renderTime = ({ remainingTime }: RenderTimeProps) => {
   }
 
   return (
-    <>
-      <Grid container direction="column" alignItems="center">
-        <Grid item>
-          <Typography variant="caption">Remaining</Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="h2">{remainingTime}</Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="caption">seconds</Typography>
-        </Grid>
+    <Grid container direction="column" alignItems="center">
+      <Grid item>
+        <Typography variant="caption">Remaining</Typography>
       </Grid>
-    </>
+      <Grid item>
+        <Typography variant="h2">{remainingTime}</Typography>
+      </Grid>
+      <Grid item>
+        <Typography variant="caption">seconds</Typography>
+      </Grid>
+    </Grid>
   );
 };
 
@@ -71,7 +69,7 @@ const LIGHT = theme.palette.secondary.light as ColorHex;
 const DARK = theme.palette.secondary.dark as ColorHex;
 
 const Timer = ({ reset, timeout, open, setOpen }: TimerProps) => {
-  const onComplete = (elapsed: number) => {
+  const onComplete = () => {
     new Audio(`${BASE_URL}/sounds/finish.wav`).play();
     setTimeout(() => setOpen(false), 4000);
   };

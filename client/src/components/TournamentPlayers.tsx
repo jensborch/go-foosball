@@ -52,7 +52,11 @@ const Player = ({ tournament, player }: PlayerProps) => {
     nickname: player.nickname,
   });
   function setSelected(selected: boolean) {
-    selected ? add() : remove();
+    if (selected) {
+      add();
+    } else {
+      remove();
+    }
   }
   return (
     <ListItem disableGutters>
