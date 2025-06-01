@@ -79,14 +79,14 @@ const ByDuration = ({ setDuration, duration }: ByDurationProps) => {
   return (
     <CardActions>
       <Grid container justifyContent="space-around">
-        <Grid item>
+        <Grid>
           <Tooltip title="Day">
             <IconButton onClick={() => setDuration("day")}>
               {duration === "day" ? <TodayIcon /> : <TodayOutlinedIcon />}
             </IconButton>
           </Tooltip>
         </Grid>
-        <Grid item>
+        <Grid>
           <Tooltip title="Week">
             <IconButton
               aria-label="Winners"
@@ -100,7 +100,7 @@ const ByDuration = ({ setDuration, duration }: ByDurationProps) => {
             </IconButton>
           </Tooltip>
         </Grid>
-        <Grid item>
+        <Grid>
           <Tooltip title="Month">
             <IconButton aria-label="Alpha" onClick={() => setDuration("month")}>
               {duration === "month" ? (
@@ -121,7 +121,7 @@ const History = ({ tournament }: HistoryProps) => {
   const [duration, setDuration] = useState<Duration>("day");
   const diff = useHistoryDiff(tournament, duration, data);
   return (
-    <Grid item>
+    <Grid>
       <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>
         <StyledCardHeader
           avatar={

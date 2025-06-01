@@ -100,7 +100,7 @@ const HistoryChart = ({ tournament }: ChartProps) => {
   const [nickname, setNickname] = useState<string | null>(null);
   return (
     <Grid container spacing={2} direction="column">
-      <Grid item>
+      <Grid>
         <Players
           nickname={nickname}
           setNickname={setNickname}
@@ -108,7 +108,7 @@ const HistoryChart = ({ tournament }: ChartProps) => {
         />
       </Grid>
       {nickname ? (
-        <Grid item>
+        <Grid>
           <History tournament={tournament} nickname={nickname} />
         </Grid>
       ) : undefined}

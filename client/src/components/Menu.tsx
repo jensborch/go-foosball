@@ -44,7 +44,7 @@ const Menu = ({ title, children }: MenuProps) => {
         >
           {Children.map(arrayChildren, (child, index) => {
             return (
-              <Grid item key={index}>
+              <Grid key={index}>
                 {child}
               </Grid>
             );

@@ -107,7 +107,7 @@ const SortPlayers = ({ setOrder, order }: SortPlayersProps) => {
   return (
     <CardActions>
       <Grid container justifyContent="space-around">
-        <Grid item>
+        <Grid>
           <Tooltip title="Favorites">
             <IconButton onClick={() => setOrder("favorites")}>
               {order === "favorites" ? (
@@ -118,7 +118,7 @@ const SortPlayers = ({ setOrder, order }: SortPlayersProps) => {
             </IconButton>
           </Tooltip>
         </Grid>
-        <Grid item>
+        <Grid>
           <Tooltip title="Winner">
             <IconButton aria-label="Winners" onClick={() => setOrder("winner")}>
               {order === "winner" ? (
@@ -129,7 +129,7 @@ const SortPlayers = ({ setOrder, order }: SortPlayersProps) => {
             </IconButton>
           </Tooltip>
         </Grid>
-        <Grid item>
+        <Grid>
           <Tooltip title="Alphabetic">
             <IconButton aria-label="Alpha" onClick={() => setOrder("alpha")}>
               {order === "alpha" ? (
@@ -157,7 +157,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
   const { mutate: deselectAll } =
     useTournamentPlayersDeleteMutation(tournament);
   return (
-    <Grid item>
+    <Grid>
       <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>
         <StyledCardHeader
           avatar={

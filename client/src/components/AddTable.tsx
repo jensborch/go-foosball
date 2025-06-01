@@ -7,29 +7,29 @@ const AddTable = () => {
   const [rightColor, setRightColor] = useState("");
   function create(): void {}
   return (
-    <Grid item container direction="column">
-      <Grid item>
+    <Grid container direction="column">
+      <Grid>
         <TextField
           helperText="Name"
           value={name}
           onChange={(event) => setName(event.target.value)}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <TextField
           helperText="Right Color"
           value={rightColor}
           onChange={(event) => setRightColor(event.target.value)}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <TextField
           helperText="Left Color"
           value={leftColor}
           onChange={(event) => setLeftColor(event.target.value)}
         />
       </Grid>
-      <Grid item>
+      <Grid>
         <Button variant="outlined" onClick={create}>
           Create
         </Button>

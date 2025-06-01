@@ -35,11 +35,11 @@ const CreateTournamentDialog = ({ open, setOpen }: CreateTournamentProps) => {
   return (
     <FullScreenDialog setOpen={setOpen} open={open} title="Create tournament">
       <DefaultGrid container direction="row">
-        <Grid item>
+        <Grid>
           <StyledCard>
             <CardContent>
-              <Grid item container direction="column">
-                <Grid item>
+              <Grid container direction="column">
+                <Grid>
                   <TextField
                     type="text"
                     value={name}
@@ -49,7 +49,7 @@ const CreateTournamentDialog = ({ open, setOpen }: CreateTournamentProps) => {
                     margin="dense"
                   />
                 </Grid>
-                <Grid item>
+                <Grid>
                   <TextField
                     type="number"
                     value={initial}
@@ -59,7 +59,7 @@ const CreateTournamentDialog = ({ open, setOpen }: CreateTournamentProps) => {
                     margin="dense"
                   />
                 </Grid>
-                <Grid item>
+                <Grid>
                   <TextField
                     type="number"
                     value={score}
@@ -69,7 +69,7 @@ const CreateTournamentDialog = ({ open, setOpen }: CreateTournamentProps) => {
                     margin="dense"
                   />
                 </Grid>
-                <Grid item>
+                <Grid>
                   <TextField
                     type="number"
                     value={timeout}

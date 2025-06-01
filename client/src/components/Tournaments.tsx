@@ -79,7 +79,7 @@ const Tournaments = () => {
       {data &&
         Array.isArray(data) &&
         data.map((tournament) => (
-          <Grid item key={tournament.id}>
+          <Grid key={tournament.id}>
             <Tournament {...tournament} />
           </Grid>
         ))}
