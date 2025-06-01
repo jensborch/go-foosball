@@ -15,7 +15,7 @@ export const StyledCardHeader = styled(CardHeader)<CardHeaderProps>(
     "& .MuiSvgIcon-root": {
       color: theme.palette.primary.contrastText,
     },
-  }),
+  })
 );
 
 export const StyledCard = styled((props: CardProps) => (

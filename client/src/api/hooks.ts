@@ -200,7 +200,7 @@ export const useTournamentPlayerMutation = (tournament: string) => {
 
 export const useTournamentPlayerDeleteMutation = (
   tournament: string,
-  nickname: string,
+  nickname: string
 ) => {
   const queryClient = useQueryClient();
 
@@ -295,7 +295,7 @@ export const useGameMutation = (tournament: string) => {
       api.tournaments.tablesGamesCreate(
         result.tournament,
         result.table,
-        result.game,
+        result.game
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({
