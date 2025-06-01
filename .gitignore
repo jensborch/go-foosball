@@ -5,3 +5,4 @@
 !.vscode/launch.json
 .DS_Store
 dist
+coverage.out
