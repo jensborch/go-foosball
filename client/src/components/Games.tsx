@@ -32,16 +32,9 @@ import PlayerAvatar from "./PlayerAvatar";
 
 const Players = ({ players }: { players: string[] }) => {
   return (
-    <Grid
-      container
-      item
-      columns={2}
-      spacing={2}
-      direction="row"
-      justifyContent="center"
-    >
+    <Grid container columns={2} spacing={2} direction="row" justifyContent="center">
       {players?.map((player) => (
-        <Grid item key={player}>
+        <Grid key={player}>
           <Player nickname={player} />
         </Grid>
       ))}
@@ -153,10 +146,10 @@ const Game = ({ tournament, game }: GameProps) => {
       <CardContent>
         <Grid container spacing={2} columns={3} direction="column">
           <Players players={game.rightPlayers} />
-          <Grid item>
+          <Grid>
             <Score first={game.rightScore} second={game.leftScore} />
           </Grid>
-          <Grid container item columns={1} direction="column">
+          <Grid container columns={1} direction="column">
             <WinnerButton
               color={game.table.color.right}
               score={game.rightScore}
@@ -165,7 +158,7 @@ const Game = ({ tournament, game }: GameProps) => {
               onClick={wins}
             />
           </Grid>
-          <Grid container item columns={1} direction="column">
+          <Grid container columns={1} direction="column">
             <Button
               variant="outlined"
               disabled={disabled}
@@ -174,7 +167,7 @@ const Game = ({ tournament, game }: GameProps) => {
               Draw
             </Button>
           </Grid>
-          <Grid container item columns={1} direction="column">
+          <Grid container columns={1} direction="column">
             <WinnerButton
               color={game.table.color.left}
               score={game.leftScore}
@@ -183,7 +176,7 @@ const Game = ({ tournament, game }: GameProps) => {
               onClick={wins}
             />
           </Grid>
-          <Grid item>
+          <Grid>
             <Score first={game.leftScore} second={game.rightScore} />
           </Grid>
           <Players players={game.leftPlayers} />
@@ -231,7 +224,7 @@ const Games = ({ tournament }: GamesProps) => {
   }
   if (status === "error") {
     return (
-      <Grid item>
+      <Grid>
         <StyledCard sx={{ minWidth: "300px" }}>
           <CardContent>
             <Error msg={error?.message} />
@@ -243,7 +236,7 @@ const Games = ({ tournament }: GamesProps) => {
   return (
     <>
       {data?.map((game) => (
-        <Grid item key={game.table.id}>
+        <Grid key={game.table.id}>
           <Game tournament={tournament} game={game} />
         </Grid>
       ))}

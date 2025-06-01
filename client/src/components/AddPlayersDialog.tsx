@@ -100,7 +100,7 @@ const NewPlayer = () => {
         />
         <CardContent>
           <Grid container direction="column" spacing={2}>
-            <Grid item>
+            <Grid>
               <TextField
                 helperText="Name"
                 value={realname}
@@ -108,7 +108,7 @@ const NewPlayer = () => {
                 label="Name"
               />
             </Grid>
-            <Grid item>
+            <Grid>
               <TextField
                 helperText="Nickname"
                 value={nickname}
@@ -116,7 +116,7 @@ const NewPlayer = () => {
                 label="Nickname"
               />
             </Grid>
-            <Grid item>
+            <Grid>
               <TextField
                 helperText="RFID"
                 value={rfid}
@@ -150,15 +150,15 @@ const AddPlayersDialog = ({ tournament, open, setOpen }: AddPlayersProps) => {
       {status === "error" && <Error msg={error?.message}></Error>}
       {status === "success" && (
         <Grid container direction="row">
-          <DefaultGrid item container direction="row">
+          <DefaultGrid container direction="row">
             {data?.map((player) => (
-              <Grid item key={player.nickname}>
+              <Grid key={player.nickname}>
                 <Player player={player} tournament={tournament} />
               </Grid>
             ))}
           </DefaultGrid>
-          <DefaultGrid item container direction="row">
-            <Grid item>
+          <DefaultGrid container direction="row">
+            <Grid>
               <NewPlayer />
             </Grid>
           </DefaultGrid>

@@ -4,6 +4,7 @@ import {
   IconButton,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   ListSubheader,
@@ -67,9 +68,8 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
       {status === "success" && (
         <List>
           {data?.map((table) => (
-            <ListItem
+            <ListItemButton
               key={table.id}
-              button
               onClick={() => handleSelect(table.id)}
             >
               <ListItemIcon>
@@ -81,7 +81,7 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
                 primary={table.name}
                 secondary={`${table.color.right}/${table.color.left}`}
               />
-            </ListItem>
+            </ListItemButton>
           ))}
           {(data ? data.length > 0 : false) && <Divider />}
           <ListSubheader>

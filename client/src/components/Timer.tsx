@@ -42,13 +42,13 @@ const renderTime = ({ remainingTime }: RenderTimeProps) => {
 
   return (
     <Grid container direction="column" alignItems="center">
-      <Grid item>
+      <Grid>
         <Typography variant="caption">Remaining</Typography>
       </Grid>
-      <Grid item>
+      <Grid>
         <Typography variant="h2">{remainingTime}</Typography>
       </Grid>
-      <Grid item>
+      <Grid>
         <Typography variant="caption">seconds</Typography>
       </Grid>
     </Grid>
