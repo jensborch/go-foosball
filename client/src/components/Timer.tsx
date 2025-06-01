@@ -9,14 +9,15 @@ import {
 import { ColorHex, CountdownCircleTimer } from "react-countdown-circle-timer";
 import { theme } from "./Theming";
 import Grid from "@mui/material/Grid";
-import { forwardRef, useEffect } from "react";
+import { forwardRef, ReactElement, useEffect } from "react";
 import { TransitionProps } from "@mui/material/transitions";
 
 const BASE_URL = import.meta.env.BASE_URL ?? "";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
-    children: React.ReactNode;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    children: ReactElement<any, any>;
   },
   ref: React.Ref<unknown>,
 ) {

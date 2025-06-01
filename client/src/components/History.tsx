@@ -25,7 +25,7 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import DateRangeOutlinedIcon from "@mui/icons-material/DateRangeOutlined";
 import { useState } from "react";
-import sub from "date-fns/sub";
+import { sub } from "date-fns/sub";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import PlayerAvatar from "./PlayerAvatar";
 import { responsiveTxt } from "../util/text";
@@ -46,7 +46,7 @@ const useHistoryDiff = (
   const names = new Set(history?.map((p) => p.nickname));
   const result: [nickname: string, diff: number][] = [];
   names.forEach((n) => {
-    const ranking = data?.initial || 0;
+    const ranking = data?.initial ?? 0;
     const max = findMax(history!, from, n)?.ranking;
     const min = findMin(history!, from, n, ranking).ranking;
     if (max) {
