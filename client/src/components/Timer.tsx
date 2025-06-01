@@ -18,7 +18,7 @@ const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactNode;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -61,6 +61,7 @@ const colorsTimes = (timeout: number, colors: number): ColorsTimesType => {
   for (let i = 0; i < colors; i++) {
     result.push((timeout / colors) * i);
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return [timeout, ...result, 0] as any;
 };
 
@@ -84,7 +85,7 @@ const Timer = ({ reset, timeout, open, setOpen }: TimerProps) => {
   useEffect(() => {
     if (open) {
       const start = new Audio(
-        `${BASE_URL}/sounds/duke/${Math.floor(Math.random() * 7) + 1}.wav`
+        `${BASE_URL}/sounds/duke/${Math.floor(Math.random() * 7) + 1}.wav`,
       );
       start.play();
     }

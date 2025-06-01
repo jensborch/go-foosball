@@ -39,7 +39,7 @@ type HistoryProps = {
 const useHistoryDiff = (
   tournament: string,
   period: Duration,
-  history?: TournamentHistory[]
+  history?: TournamentHistory[],
 ) => {
   const { data } = useTournament(tournament);
   const from = getFrom(period);
@@ -132,7 +132,7 @@ const History = ({ tournament }: HistoryProps) => {
           title="History"
         />
         <CardContent sx={{ overflow: "auto", maxHeight: "65vh" }}>
-          {status === "loading" && (
+          {status === "pending" && (
             <Box
               sx={{
                 display: "flex",

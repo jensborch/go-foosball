@@ -60,13 +60,9 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
   }
   return (
     <FullScreenDialog setOpen={setOpen} open={open} title="Add table">
-      {isMutateError && (
-        <ErrorSnackbar msg={(mutateError as any)?.error.error} />
-      )}
-      {isMutateTourError && (
-        <ErrorSnackbar msg={(mutateTourError as any)?.error.error} />
-      )}
-      {status === "loading" && <CircularProgress />}
+      {isMutateError && <ErrorSnackbar msg={mutateError.message} />}
+      {isMutateTourError && <ErrorSnackbar msg={mutateTourError.message} />}
+      {status === "pending" && <CircularProgress />}
       {status === "error" && <Error msg={error?.message} />}
       {status === "success" && (
         <List>

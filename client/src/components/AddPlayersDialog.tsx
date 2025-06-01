@@ -38,7 +38,7 @@ const Player = ({ tournament, player }: PlayerProps) => {
 
   return (
     <>
-      {isError && <ErrorSnackbar msg={(error as any)?.error.error} />}
+      {isError && <ErrorSnackbar msg={error.message} />}
       <StyledCard key={player.nickname}>
         <StyledCardHeader
           avatar={
@@ -88,7 +88,7 @@ const NewPlayer = () => {
   };
   return (
     <>
-      {isError && <ErrorSnackbar msg={(error as any)?.error.error} />}
+      {isError && <ErrorSnackbar msg={error.message} />}
       <StyledCard>
         <StyledCardHeader
           avatar={
@@ -146,7 +146,7 @@ const AddPlayersDialog = ({ tournament, open, setOpen }: AddPlayersProps) => {
   const { status, error, data } = usePlayers(Number.parseInt(tournament));
   return (
     <FullScreenDialog open={open} setOpen={setOpen}>
-      {status === "loading" && <CircularProgress />}
+      {status === "pending" && <CircularProgress />}
       {status === "error" && <Error msg={error?.message}></Error>}
       {status === "success" && (
         <Grid container direction="row">
