@@ -39,7 +39,7 @@ type HistoryProps = {
 const useHistoryDiff = (
   tournament: string,
   period: Duration,
-  history?: TournamentHistory[],
+  history?: TournamentHistory[]
 ) => {
   const { data } = useTournament(tournament);
   const from = getFrom(period);

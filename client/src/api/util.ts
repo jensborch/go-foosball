@@ -33,10 +33,10 @@ export const findMin = (
   history: TournamentHistory[],
   min: Date,
   nickname: string,
-  initRanking: number,
+  initRanking: number
 ) => {
   const all = findByNickname(history, nickname).filter((h) =>
-    isBefore(h.updated, min),
+    isBefore(h.updated, min)
   );
   if (all.length > 0) {
     return all.reduce((a, b) => (isAfter(a.updated, b.updated) ? a : b));
@@ -52,10 +52,10 @@ export const findMin = (
 export const findMax = (
   history: TournamentHistory[],
   max: Date,
-  nickname: string,
+  nickname: string
 ) => {
   const all = findByNickname(history, nickname).filter((h) =>
-    isAfter(h.updated, max),
+    isAfter(h.updated, max)
   );
   if (all.length > 0) {
     return all.reduce((a, b) => (isAfter(a.updated, b.updated) ? a : b));

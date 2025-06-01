@@ -19,7 +19,7 @@ const Transition = forwardRef(function Transition(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     children: ReactElement<any, any>;
   },
-  ref: React.Ref<unknown>,
+  ref: React.Ref<unknown>
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -86,7 +86,7 @@ const Timer = ({ reset, timeout, open, setOpen }: TimerProps) => {
   useEffect(() => {
     if (open) {
       const start = new Audio(
-        `${BASE_URL}/sounds/duke/${Math.floor(Math.random() * 7) + 1}.wav`,
+        `${BASE_URL}/sounds/duke/${Math.floor(Math.random() * 7) + 1}.wav`
       );
       start.play();
     }
