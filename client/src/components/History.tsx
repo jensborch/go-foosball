@@ -36,19 +36,21 @@ type HistoryProps = {
   tournament: string;
 };
 
-const useHistoryDiff = (
+export const useHistoryDiff = (
   tournament: string,
   period: Duration,
-  history?: TournamentHistory[]
+  history: TournamentHistory[]
 ) => {
   const { data } = useTournament(tournament);
   const from = getFrom(period);
-  const names = new Set(history?.map((p) => p.nickname));
+  const names = history
+    ? new Set(history.map((p) => p.nickname))
+    : new Set<string>();
   const result: [nickname: string, diff: number][] = [];
   names.forEach((n) => {
     const ranking = data?.initial ?? 0;
-    const max = findMax(history!, from, n)?.ranking;
-    const min = findMin(history!, from, n, ranking).ranking;
+    const max = findMax(history, from, n)?.ranking;
+    const min = findMin(history, from, n, ranking).ranking;
     if (max) {
       result.push([n, max - min]);
     }
@@ -56,7 +58,7 @@ const useHistoryDiff = (
   return result.sort((a, b) => b[1] - a[1]);
 };
 
-const getFrom = (period: Duration): Date => {
+export const getFrom = (period: Duration): Date => {
   const now = new Date();
   switch (period) {
     case "week":
@@ -119,7 +121,7 @@ const ByDuration = ({ setDuration, duration }: ByDurationProps) => {
 const History = ({ tournament }: HistoryProps) => {
   const { status, error, data } = useTournamentHistory(tournament);
   const [duration, setDuration] = useState<Duration>("day");
-  const diff = useHistoryDiff(tournament, duration, data);
+  const diff = useHistoryDiff(tournament, duration, data ?? []);
   return (
     <Grid>
       <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>

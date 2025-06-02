@@ -43,11 +43,7 @@ const Menu = ({ title, children }: MenuProps) => {
           }}
         >
           {Children.map(arrayChildren, (child, index) => {
-            return (
-              <Grid key={index}>
-                {child}
-              </Grid>
-            );
+            return <Grid key={index}>{child}</Grid>;
           })}
         </Grid>
       </Toolbar>
