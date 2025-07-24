@@ -11,7 +11,7 @@ require (
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.5
-	gorm.io/gorm v1.30.0
+	gorm.io/gorm v1.30.1
 )
 
 require (
