@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	"flag"
+	"fmt"
 	"io/fs"
 	"log"
 	"net/http"
@@ -48,7 +49,10 @@ func main() {
 	flag.BoolVar(&debug, "debug", false, "enable debug")
 	flag.Parse()
 	log.Printf("Starting go-foosball on port %d using database %s", port, dbfile)
-	engine, _ := setupServer(dbfile, debug)
+	engine, err := setupServer(dbfile, debug)
+	if err != nil {
+		log.Fatalf("Failed to set up server: %v", err)
+	}
 	engine.Run(":" + strconv.FormatUint(uint64(port), 10))
 }
 
@@ -58,7 +62,7 @@ func corsHandler() gin.HandlerFunc {
 	return cors.New(config)
 }
 
-func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
+func setupServer(dbfile string, debug bool) (*gin.Engine, error) {
 	var gormlog logger.Interface
 	if !debug {
 		gin.SetMode(gin.ReleaseMode)
@@ -73,17 +77,17 @@ func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("gamewinner", resources.GameWinnerValidator)
 	} else {
-		panic("failed to add validator")
+		return nil, fmt.Errorf("failed to add validator")
 	}
 
 	db, err := gorm.Open(sqlite.Open(dbfile), &gorm.Config{
 		Logger: gormlog,
 	})
 	if err != nil {
-		panic("failed to connect database")
+		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
 	sqliteDb, _ := db.DB()
-	sqliteDb.SetMaxOpenConns(1)
+	sqliteDb.SetMaxOpenConns(10) // Allow up to 10 connections for better concurrency
 
 	db.AutoMigrate(&model.Tournament{},
 		&model.TournamentTable{},
@@ -98,39 +102,31 @@ func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
 	players := api.Group("/players")
 	players.GET("", resources.GetPlayers(db))
 	players.POST("", resources.PostPlayer(db))
-	players.POST("/", resources.PostPlayer(db))
 	players.GET("/:name", resources.GetPlayer("name", db))
 	players.DELETE("/:name", resources.DeletePlayer("name", db))
 
 	tables := api.Group("/tables")
 	tables.GET("", resources.GetTables(db))
 	tables.POST("", resources.PostTable(db))
-	tables.POST("/", resources.PostTable(db))
 	tables.GET("/:id", resources.GetTable("id", db))
-	//tables.DELETE("/:id", resources.DeleteTable("id", db))
 
 	tournaments := api.Group("/tournaments")
 	tournaments.GET("", resources.GetTournaments(db))
 	tournaments.POST("", resources.PostTournament(db))
-	tournaments.POST("/", resources.PostTournament(db))
 	tournaments.GET("/:id", resources.GetTournament("id", db))
 	tournaments.DELETE("/:id", resources.DeleteTournament("id", db))
 
 	tournaments.GET("/:id/players", resources.GetTournamentPlayes("id", db))
 	tournaments.POST("/:id/players", resources.PostTournamentPlayer("id", db))
-	tournaments.POST("/:id/players/", resources.PostTournamentPlayer("id", db))
 	tournaments.DELETE("/:id/players/:name", resources.DeleteTournamentPlayer("id", "name", db))
 	tournaments.DELETE("/:id/players", resources.DeleteAllTournamentPlayers("id", db))
-	//tournaments.GET("/:id/players/:name", resources.GetTournamentPlayer("id", "name", db))
 	tournaments.GET("/:id/players/:name/history", resources.GetTournamentPlayeHistory("id", "name", db))
 	tournaments.GET("/:id/history", resources.GetTournamentHistory("id", db))
 
 	tournaments.GET("/:id/tables", resources.GetTournamentTables("id", db))
 	tournaments.POST("/:id/tables", resources.PostTournamentTables("id", db))
-	tournaments.POST("/:id/tables/", resources.PostTournamentTables("id", db))
 	tournaments.DELETE("/:id/tables/:table", resources.DeleteTournamentTable("id", "table", db))
 	tournaments.POST("/:id/tables/:table/games", resources.PostGame("id", "table", db))
-	tournaments.POST("/:id/tables/:table/games/", resources.PostGame("id", "table", db))
 	tournaments.GET("/:id/games", resources.GetGamesInTournament("id", db))
 
 	//Actions
@@ -150,7 +146,7 @@ func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
 	if os.IsNotExist(err) {
 		err = os.Mkdir(avatars, 0755)
 		if err != nil {
-			panic("unable to create avatars foler")
+			return nil, fmt.Errorf("unable to create avatars folder: %w", err)
 		}
 	}
 	router.Static("/avatars", avatars)
@@ -165,11 +161,11 @@ func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
 	router.GET("/client/*any", func(c *gin.Context) {
 		serveStatic(c, subfs, "/client/")
 	})
-	return router, db
+	return router, nil
 }
 
 func serveStatic(c *gin.Context, f fs.FS, prefix string) {
-	p := c.Request.URL.Path[len(prefix):len(c.Request.URL.Path)]
+	p := c.Request.URL.Path[len(prefix):]
 	if _, error := f.Open(p); error == nil {
 		c.FileFromFS(p, http.FS(f))
 	} else {
