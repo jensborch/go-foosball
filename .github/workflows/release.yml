@@ -24,7 +24,7 @@ jobs:
           pnpm install
           pnpm build
       - name: Upload client
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: client
           path: client/dist/**
@@ -65,7 +65,7 @@ jobs:
       - name: Build
         run: make build VERSION=$GITHUB_REF_NAME GOARCH=${{ matrix.arch }} GOARM=${{ matrix.arm }}
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: go-foosball-${{ matrix.os }}-${{ matrix.arch }}
           path: go-foosball*
