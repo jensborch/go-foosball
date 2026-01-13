@@ -114,9 +114,13 @@ r.db.Preload("RightPlayerOne.Player").
 
 ### Testing Approach
 
+### Testing Approach
+
 - **Integration tests**: Use `httptest.Server` with real database in `main_test.go`
 - **Test helpers**: Functions returning `func(t *testing.T)` for reusable test logic
 - **No mocking**: Tests use actual SQLite in-memory database
+- **Test database cleanup**: `startServer()` removes `test.db` before each run
+- **HTTP testing patterns**: Direct HTTP calls to test endpoints end-to-end
 
 ### Frontend Patterns
 
@@ -227,6 +231,8 @@ cd client && pnpm swagger
 1. **Tournament creation** → Players/tables assignment → Game generation → Real-time updates
 2. **Elo rating system** implemented in `model/player.go` for competitive scoring
 3. **Round-robin logic** in `persistence/combinations.go` manages fair game scheduling
+4. **Game scoring**: Winners gain points, losers lose points based on rating differential
+5. **History tracking**: Player ranking changes saved automatically in `TournamentPlayerHistory`
 
 ## Key Files for Understanding
 
