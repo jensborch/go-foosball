@@ -1,5 +1,5 @@
 import { Button, Grid, TextField } from "@mui/material";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 
 const AddTable = () => {
   const [name, setName] = useState("");
@@ -12,21 +12,27 @@ const AddTable = () => {
         <TextField
           helperText="Name"
           value={name}
-          onChange={(event) => setName(event.target.value)}
+          onChange={(event: { target: { value: SetStateAction<string> } }) =>
+            setName(event.target.value)
+          }
         />
       </Grid>
       <Grid>
         <TextField
           helperText="Right Color"
           value={rightColor}
-          onChange={(event) => setRightColor(event.target.value)}
+          onChange={(event: { target: { value: SetStateAction<string> } }) =>
+            setRightColor(event.target.value)
+          }
         />
       </Grid>
       <Grid>
         <TextField
           helperText="Left Color"
           value={leftColor}
-          onChange={(event) => setLeftColor(event.target.value)}
+          onChange={(event: { target: { value: SetStateAction<string> } }) =>
+            setLeftColor(event.target.value)
+          }
         />
       </Grid>
       <Grid>

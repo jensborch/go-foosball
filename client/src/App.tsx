@@ -16,7 +16,7 @@ import "@fontsource/roboto/700.css";
 type AppProps = {
   basename: string;
 };
-function App({ basename }: AppProps) {
+function App({ basename }: Readonly<AppProps>) {
   return (
     <React.StrictMode>
       <ErrorBoundary>

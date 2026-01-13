@@ -1,5 +1,6 @@
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
@@ -176,6 +177,7 @@ type CancelToken = Symbol | string | number;
 
 export enum ContentType {
   Json = "application/json",
+  JsonApi = "application/vnd.api+json",
   FormData = "multipart/form-data",
   UrlEncoded = "application/x-www-form-urlencoded",
   Text = "text/plain",
@@ -239,6 +241,10 @@ export class HttpClient<SecurityDataType = unknown> {
 
   private contentFormatters: Record<ContentType, (input: any) => any> = {
     [ContentType.Json]: (input: any) =>
+      input !== null && (typeof input === "object" || typeof input === "string")
+        ? JSON.stringify(input)
+        : input,
+    [ContentType.JsonApi]: (input: any) =>
       input !== null && (typeof input === "object" || typeof input === "string")
         ? JSON.stringify(input)
         : input,
@@ -344,7 +350,7 @@ export class HttpClient<SecurityDataType = unknown> {
             : payloadFormatter(body),
       }
     ).then(async (response) => {
-      const r = response as HttpResponse<T, E>;
+      const r = response.clone() as HttpResponse<T, E>;
       r.data = null as unknown as T;
       r.error = null as unknown as E;
 
@@ -632,11 +638,11 @@ export class Api<
      * No description
      *
      * @tags events
-     * @name EventsGameDetail
+     * @name EventsGameList
      * @summary Opens a web socket for tournamnent game start events
      * @request GET:/tournaments/{id}/events/game
      */
-    eventsGameDetail: (id: string, params: RequestParams = {}) =>
+    eventsGameList: (id: string, params: RequestParams = {}) =>
       this.request<GameStartEvent, any>({
         path: `/tournaments/${id}/events/game`,
         method: "GET",
@@ -647,11 +653,11 @@ export class Api<
      * No description
      *
      * @tags events
-     * @name EventsPlayerDetail
+     * @name EventsPlayerList
      * @summary Opens a web socket for tournamnent player events
      * @request GET:/tournaments/{id}/events/player
      */
-    eventsPlayerDetail: (id: string, params: RequestParams = {}) =>
+    eventsPlayerList: (id: string, params: RequestParams = {}) =>
       this.request<TournamentPlayer, any>({
         path: `/tournaments/${id}/events/player`,
         method: "GET",
@@ -662,11 +668,11 @@ export class Api<
      * No description
      *
      * @tags tournament
-     * @name GamesDetail
+     * @name GamesList
      * @summary Get all games in a tournament
      * @request GET:/tournaments/{id}/games
      */
-    gamesDetail: (id: string, params: RequestParams = {}) =>
+    gamesList: (id: string, params: RequestParams = {}) =>
       this.request<Game[], any>({
         path: `/tournaments/${id}/games`,
         method: "GET",
@@ -679,11 +685,11 @@ export class Api<
      * No description
      *
      * @tags actions
-     * @name GamesRandomDetail
+     * @name GamesRandomList
      * @summary Get random game for a tournament
      * @request GET:/tournaments/{id}/games/random
      */
-    gamesRandomDetail: (id: string, params: RequestParams = {}) =>
+    gamesRandomList: (id: string, params: RequestParams = {}) =>
       this.request<Game[], Error>({
         path: `/tournaments/${id}/games/random`,
         method: "GET",
@@ -696,11 +702,11 @@ export class Api<
      * No description
      *
      * @tags actions
-     * @name GamesStartDetail
+     * @name GamesStartList
      * @summary Publishes a game start event
      * @request GET:/tournaments/{id}/games/start
      */
-    gamesStartDetail: (id: string, params: RequestParams = {}) =>
+    gamesStartList: (id: string, params: RequestParams = {}) =>
       this.request<void, Error>({
         path: `/tournaments/${id}/games/start`,
         method: "GET",
@@ -712,11 +718,11 @@ export class Api<
      * No description
      *
      * @tags tournament
-     * @name HistoryDetail
+     * @name HistoryList
      * @summary Get ranking history for a tournament
      * @request GET:/tournaments/{id}/history
      */
-    historyDetail: (
+    historyList: (
       id: string,
       query: {
         /**
@@ -740,11 +746,11 @@ export class Api<
      * No description
      *
      * @tags tournament
-     * @name PlayersDetail
+     * @name PlayersList
      * @summary Get players in tournament
      * @request GET:/tournaments/{id}/players
      */
-    playersDetail: (id: string, params: RequestParams = {}) =>
+    playersList: (id: string, params: RequestParams = {}) =>
       this.request<TournamentPlayer[], Error>({
         path: `/tournaments/${id}/players`,
         method: "GET",
@@ -795,11 +801,11 @@ export class Api<
      * No description
      *
      * @tags tournament
-     * @name PlayersHistoryDetail
+     * @name PlayersHistoryList
      * @summary Get player ranking history in tournament
      * @request GET:/tournaments/{id}/players/{nickname}/history
      */
-    playersHistoryDetail: (
+    playersHistoryList: (
       id: string,
       nickname: string,
       query: {
@@ -842,11 +848,11 @@ export class Api<
      * No description
      *
      * @tags tournament
-     * @name TablesDetail
+     * @name TablesList
      * @summary Get tables in a tournament
      * @request GET:/tournaments/{id}/tables
      */
-    tablesDetail: (id: string, params: RequestParams = {}) =>
+    tablesList: (id: string, params: RequestParams = {}) =>
       this.request<TournamentTable[], Error>({
         path: `/tournaments/${id}/tables`,
         method: "GET",

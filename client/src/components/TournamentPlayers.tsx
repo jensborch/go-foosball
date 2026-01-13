@@ -152,7 +152,7 @@ type PlayersProps = {
 const MIN_DATE: string = new Date(0).toISOString();
 
 const TournamentPlayers = ({ tournament }: PlayersProps) => {
-  const [order, setOder] = useState<SortOrder>("winner");
+  const [order, setOrder] = useState<SortOrder>("winner");
   const { status, error, data } = useTournamentPlayers(tournament);
   const { mutate: deselectAll } =
     useTournamentPlayersDeleteMutation(tournament);
@@ -193,14 +193,14 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
                 .map((p, i) => (
                   <div key={p.nickname}>
                     <Player player={p} tournament={tournament} />
-                    {i !== data.length - 1 ? <Divider /> : null}
+                    {i === data.length - 1 ? null : <Divider />}
                   </div>
                 ))}
             </List>
           )}
         </CardContent>
         <Divider />
-        <SortPlayers setOrder={setOder} order={order} />
+        <SortPlayers setOrder={setOrder} order={order} />
       </StyledCard>
     </Grid>
   );

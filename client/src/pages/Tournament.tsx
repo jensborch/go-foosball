@@ -15,20 +15,18 @@ function Tournament() {
     return <Error msg="Tournament ID is not defined"></Error>;
   }
   return (
-    <>
-      <Box sx={{ display: "flex" }}>
-        <Menu title="Foosball" />
-        <ActionDraw tournament={id} />
-        <Box component="main">
-          <MenuOffset />
-          <DefaultGrid container direction="row">
-            <TournamentPlayers tournament={id} />
-            <Games tournament={id} />
-            <History tournament={id} />
-          </DefaultGrid>
-        </Box>
+    <Box sx={{ display: "flex" }}>
+      <Menu title="Foosball" />
+      <ActionDraw tournament={id} />
+      <Box component="main">
+        <MenuOffset />
+        <DefaultGrid container direction="row">
+          <TournamentPlayers tournament={id} />
+          <Games tournament={id} />
+          <History tournament={id} />
+        </DefaultGrid>
       </Box>
-    </>
+    </Box>
   );
 }
 
