@@ -33,7 +33,7 @@
     "prettier": "prettier --write .",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "pnpm lint --fix",
-    "swagger": "swagger-typescript-api -p ../docs/swagger.json -o ./src/api -n Api.ts",
+    "swagger": "swagger-typescript-api generate -p ../docs/swagger.json -o ./src/api -n Api.ts",
     "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {

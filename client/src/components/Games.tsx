@@ -32,7 +32,13 @@ import PlayerAvatar from "./PlayerAvatar";
 
 const Players = ({ players }: { players: string[] }) => {
   return (
-    <Grid container columns={2} spacing={2} direction="row" justifyContent="center">
+    <Grid
+      container
+      columns={2}
+      spacing={2}
+      direction="row"
+      justifyContent="center"
+    >
       {players?.map((player) => (
         <Grid key={player}>
           <Player nickname={player} />
@@ -235,7 +241,7 @@ const Games = ({ tournament }: GamesProps) => {
   }
   return (
     <>
-      {data?.map((game) => (
+      {data?.map((game: Api.Game) => (
         <Grid key={game.table.id}>
           <Game tournament={tournament} game={game} />
         </Grid>

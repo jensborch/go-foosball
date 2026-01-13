@@ -21,6 +21,7 @@ import FullScreenDialog from "./FullScreenDialog";
 import { ChangeEvent, useState } from "react";
 import ErrorSnackbar from "./ErrorSnackbar";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
+import * as Api from "../api/Api";
 
 type AddTableProps = {
   tournament: string;
@@ -67,7 +68,7 @@ const AddTableDialog = ({ tournament, open, setOpen }: AddTableProps) => {
       {status === "error" && <Error msg={error?.message} />}
       {status === "success" && (
         <List>
-          {data?.map((table) => (
+          {data?.map((table: Api.Table) => (
             <ListItemButton
               key={table.id}
               onClick={() => handleSelect(table.id)}

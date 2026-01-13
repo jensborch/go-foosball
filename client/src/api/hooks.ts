@@ -34,7 +34,7 @@ export const useGames = (tournament: string) => {
     queryKey: [CacheKeys.TournamentsGames, tournament],
     queryFn: async () => {
       return api.tournaments
-        .gamesDetail(tournament)
+        .gamesList(tournament)
         .then(handleErrors)
         .then((r) => r.data);
     },
@@ -46,7 +46,7 @@ export const useRandomGames = (tournament: string) => {
     queryKey: [CacheKeys.RandomGames, tournament],
     queryFn: async () => {
       return api.tournaments
-        .gamesRandomDetail(tournament)
+        .gamesRandomList(tournament)
         .then(handleErrors)
         .then((r) => r.data);
     },
@@ -59,7 +59,7 @@ export const useTournamentPlayers = (tournament: string) => {
     queryKey: [CacheKeys.TournamentPlayers, tournament],
     queryFn: async (): Promise<Api.TournamentPlayer[]> => {
       return api.tournaments
-        .playersDetail(tournament)
+        .playersList(tournament)
         .then(handleErrors)
         .then((r) => r.data);
     },
@@ -71,7 +71,7 @@ export const useTournamentHistory = (tournament: string) => {
     queryKey: [CacheKeys.TournamentHistory, tournament],
     queryFn: async (): Promise<Api.TournamentHistory[]> => {
       return api.tournaments
-        .historyDetail(tournament, {
+        .historyList(tournament, {
           from: format(sub(new Date(), { months: 1 }), "yyyy-MM-dd"),
         })
         .then(handleErrors)
@@ -85,7 +85,7 @@ export const usePlayerHistory = (tournament: string, nickname: string) => {
     queryKey: [CacheKeys.TournamentPlayerHistory, tournament, nickname],
     queryFn: async (): Promise<Api.TournamentPlayerHistory[]> => {
       return api.tournaments
-        .playersHistoryDetail(tournament, nickname, {
+        .playersHistoryList(tournament, nickname, {
           from: format(sub(new Date(), { months: 1 }), "yyyy-MM-dd"),
         })
         .then(handleErrors)
@@ -114,7 +114,7 @@ export const useTournamentTables = (tournament: string) => {
     queryKey: [CacheKeys.TournamentTables, tournament],
     queryFn: async (): Promise<Api.TournamentTable[]> => {
       return api.tournaments
-        .tablesDetail(tournament)
+        .tablesList(tournament)
         .then(handleErrors)
         .then((r) => r.data);
     },

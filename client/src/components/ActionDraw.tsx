@@ -3,7 +3,6 @@ import {
   List,
   ListItemButton,
   ListItemIcon as MuiListItemIcon,
-  styled,
   Divider,
   Tooltip,
 } from "@mui/material";
@@ -24,15 +23,17 @@ type ActionDrawProps = {
   tournament: string;
 };
 
+import { styled, type Theme } from "@mui/material/styles";
+
 const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme }) => ({
+  shouldForwardProp: (prop: string) => prop !== "open",
+})(({ theme }: { theme: Theme }) => ({
   width: theme.spacing(10),
   boxSizing: "border-box",
 }));
 
 const ListItemIcon = styled(MuiListItemIcon, {
-  shouldForwardProp: (prop) => prop !== "open",
+  shouldForwardProp: (prop: string) => prop !== "open",
 })(() => ({
   minWidth: 0,
 }));
