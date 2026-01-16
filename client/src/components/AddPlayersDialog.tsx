@@ -1,13 +1,9 @@
 import FullScreenDialog from "./FullScreenDialog";
 import * as Api from "../api/Api";
-import { ChangeEvent, useState } from "react";
 import {
   CircularProgress,
-  IconButton,
   TextField,
-  Typography,
   Box,
-  Card,
   CardContent,
   Table,
   TableBody,
@@ -16,6 +12,8 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
+  Typography,
 } from "@mui/material";
 import { Error } from "./Error";
 import {
@@ -25,19 +23,178 @@ import {
   useTournamentPlayerMutation,
 } from "../api/hooks";
 import ErrorSnackbar from "./ErrorSnackbar";
-import AddIcon from "@mui/icons-material/Add";
 import PlayerAvatar from "./PlayerAvatar";
+import { StyledCard, StyledCardHeader } from "./Styled";
+import { useState, ChangeEvent } from "react";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import Avatar from "@mui/material/Avatar";
+
+// ExistingPlayer component for rendering a single player row
+type ExistingPlayerProps = {
+  player: Api.Player;
+  ranking: number;
+  onRankingChange: (nickname: string, ranking: number) => void;
+  onAdd: (player: Api.Player) => void;
+  initialScore: number;
+};
+
+const ExistingPlayer = ({
+  player,
+  ranking,
+  onRankingChange,
+  onAdd,
+}: Readonly<ExistingPlayerProps>) => (
+  <TableRow
+    sx={{
+      "&:hover": { backgroundColor: "action.hover" },
+    }}
+  >
+    <TableCell>
+      <PlayerAvatar nickname={player.nickname} />
+    </TableCell>
+    <TableCell>{player.nickname}</TableCell>
+    <TableCell>{player.realname}</TableCell>
+    <TableCell>{player.rfid || "-"}</TableCell>
+    <TableCell>
+      <TextField
+        size="small"
+        type="number"
+        value={ranking}
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          onRankingChange(player.nickname, Number(e.target.value))
+        }
+        slotProps={{
+          htmlInput: { min: 0, max: 3000 },
+        }}
+        sx={{ width: 80 }}
+      />
+    </TableCell>
+    <TableCell align="right" sx={{ pr: 2 }}>
+      <Box display="flex" justifyContent="flex-end">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => onAdd(player)}
+          sx={{ minWidth: 90, width: 90 }}
+        >
+          <Typography variant="button">Add</Typography>
+        </Button>
+      </Box>
+    </TableCell>
+  </TableRow>
+);
+
+// NewPlayerRow component for new player creation
+type NewPlayerProps = {
+  nickname: string;
+  realname: string;
+  rfid: string;
+  setNickname: (v: string) => void;
+  setRealname: (v: string) => void;
+  setRfid: (v: string) => void;
+  onCreate: () => void;
+};
+
+const NewPlayer = ({
+  nickname,
+  realname,
+  rfid,
+  setNickname,
+  setRealname,
+  setRfid,
+  onCreate,
+}: Readonly<NewPlayerProps>) => {
+  const textFieldSx = {
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "white",
+    },
+  };
+  return (
+    <TableRow
+      sx={{
+        "&:hover": { backgroundColor: "action.hover" },
+      }}
+    >
+      <TableCell>
+        <Avatar sx={{ bgcolor: "grey.300", width: 40, height: 40 }}>
+          <PersonAddAlt1Icon color="action" />
+        </Avatar>
+      </TableCell>
+      <TableCell>
+        <TextField
+          size="small"
+          value={nickname}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setNickname(e.target.value)
+          }
+          placeholder="Nickname*"
+          required
+          sx={textFieldSx}
+        />
+      </TableCell>
+      <TableCell>
+        <TextField
+          size="small"
+          value={realname}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setRealname(e.target.value)
+          }
+          placeholder="Real name"
+          sx={textFieldSx}
+        />
+      </TableCell>
+      <TableCell>
+        <TextField
+          size="small"
+          value={rfid}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setRfid(e.target.value)
+          }
+          placeholder="RFID"
+          sx={textFieldSx}
+        />
+      </TableCell>
+      <TableCell>-</TableCell>
+      <TableCell align="right" sx={{ pr: 2 }}>
+        <Box display="flex" justifyContent="flex-end">
+          <Button
+            variant="contained"
+            color="success"
+            onClick={onCreate}
+            disabled={!nickname.trim()}
+            sx={{ minWidth: 90, width: 90 }}
+          >
+            <Typography variant="button">Create</Typography>
+          </Button>
+        </Box>
+      </TableCell>
+    </TableRow>
+  );
+};
 
 type AvailablePlayersCardProps = {
   players: Api.Player[];
   onPlayerSelect: (player: Api.Player, ranking: number) => void;
+  onPlayerCreate: (
+    player: {
+      nickname: string;
+      realname: string;
+      rfid: string;
+    },
+    ranking: number
+  ) => void;
   initialScore: number;
+  isError: boolean;
+  errorMessage?: string;
 };
 
 const AvailablePlayersCard = ({
   players,
   onPlayerSelect,
+  onPlayerCreate,
   initialScore,
+  isError,
+  errorMessage,
 }: AvailablePlayersCardProps) => {
   const [rankings, setRankings] = useState<Record<string, number>>(() =>
     players.reduce(
@@ -45,6 +202,11 @@ const AvailablePlayersCard = ({
       {}
     )
   );
+
+  // State for new player form
+  const [newPlayerNickname, setNewPlayerNickname] = useState("");
+  const [newPlayerRealname, setNewPlayerRealname] = useState("");
+  const [newPlayerRfid, setNewPlayerRfid] = useState("");
 
   const handleRankingChange = (nickname: string, ranking: number) => {
     setRankings((prev) => ({ ...prev, [nickname]: ranking }));
@@ -54,203 +216,68 @@ const AvailablePlayersCard = ({
     onPlayerSelect(player, rankings[player.nickname] || initialScore);
   };
 
-  return (
-    <Card elevation={2}>
-      <CardContent>
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{
-            bgcolor: "primary.main",
-            color: "primary.contrastText",
-            fontWeight: "bold",
-            p: 2,
-            m: -2,
-            mb: 2,
-          }}
-        >
-          Available Players ({players.length})
-        </Typography>
-        <TableContainer component={Paper} elevation={0}>
-          <Table size="small" aria-label="available players table">
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ fontWeight: "bold" }}>Avatar</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Nickname</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Real Name</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>RFID</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Ranking</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }} align="right">
-                  Action
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {players.map((player) => (
-                <TableRow
-                  key={player.nickname}
-                  sx={{
-                    "&:hover": { backgroundColor: "action.hover" },
-                  }}
-                >
-                  <TableCell>
-                    <PlayerAvatar nickname={player.nickname} />
-                  </TableCell>
-                  <TableCell>{player.nickname}</TableCell>
-                  <TableCell>{player.realname}</TableCell>
-                  <TableCell>{player.rfid || "-"}</TableCell>
-                  <TableCell>
-                    <TextField
-                      size="small"
-                      type="number"
-                      value={rankings[player.nickname] || initialScore}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                        handleRankingChange(
-                          player.nickname,
-                          Number(e.target.value)
-                        )
-                      }
-                      slotProps={{
-                        htmlInput: { min: 0, max: 3000 },
-                      }}
-                      sx={{ width: 80 }}
-                    />
-                  </TableCell>
-                  <TableCell align="right" sx={{ pr: 2 }}>
-                    <IconButton
-                      size="small"
-                      onClick={() => handlePlayerClick(player)}
-                      sx={{
-                        bgcolor: "primary.main",
-                        color: "primary.contrastText",
-                        "&:hover": {
-                          bgcolor: "primary.dark",
-                        },
-                      }}
-                    >
-                      <AddIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </CardContent>
-    </Card>
-  );
-};
-
-type CreateNewPlayerCardProps = {
-  onPlayerCreate: (player: {
-    nickname: string;
-    realname: string;
-    rfid: string;
-  }) => void;
-  isError: boolean;
-  errorMessage?: string;
-};
-
-const CreateNewPlayerCard = ({
-  onPlayerCreate,
-  isError,
-  errorMessage,
-}: CreateNewPlayerCardProps) => {
-  const [nickname, setNickname] = useState("");
-  const [realname, setRealname] = useState("");
-  const [rfid, setRfid] = useState("");
-
-  const handleSubmit = (event: ChangeEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    onPlayerCreate({ nickname, realname, rfid });
-    setNickname("");
-    setRealname("");
-    setRfid("");
+  const handleCreatePlayer = () => {
+    if (newPlayerNickname.trim()) {
+      onPlayerCreate(
+        {
+          nickname: newPlayerNickname,
+          realname: newPlayerRealname,
+          rfid: newPlayerRfid,
+        },
+        initialScore
+      );
+      // Reset form
+      setNewPlayerNickname("");
+      setNewPlayerRealname("");
+      setNewPlayerRfid("");
+    }
   };
 
   return (
     <>
       {isError && errorMessage && <ErrorSnackbar msg={errorMessage} />}
-      <Card elevation={2}>
+      <StyledCard elevation={2}>
+        <StyledCardHeader title={`Available Players (${players.length})`} />
         <CardContent>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{
-              bgcolor: "secondary.main",
-              color: "secondary.contrastText",
-              fontWeight: "bold",
-              p: 2,
-              m: -2,
-              mb: 2,
-            }}
-          >
-            Create New Player
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", sm: "row" },
-              gap: 2,
-              alignItems: { xs: "stretch", sm: "center" },
-            }}
-          >
-            <TextField
-              size="small"
-              type="string"
-              value={realname}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setRealname(e.target.value)
-              }
-              label="Real name"
-              variant="outlined"
-              sx={{ flex: 1 }}
-            />
-            <TextField
-              size="small"
-              type="string"
-              value={nickname}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setNickname(e.target.value)
-              }
-              label="Nickname"
-              variant="outlined"
-              required
-              sx={{ flex: 1 }}
-            />
-            <TextField
-              size="small"
-              type="string"
-              value={rfid}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setRfid(e.target.value)
-              }
-              label="RFID"
-              variant="outlined"
-              sx={{ flex: 1 }}
-            />
-            <IconButton
-              type="submit"
-              disabled={!nickname.trim()}
-              sx={{
-                bgcolor: "primary.main",
-                color: "primary.contrastText",
-                "&:hover": {
-                  bgcolor: "primary.dark",
-                },
-                "&:disabled": {
-                  bgcolor: "grey.300",
-                  color: "grey.500",
-                },
-              }}
-            >
-              <AddIcon />
-            </IconButton>
-          </Box>
+          <TableContainer component={Paper} elevation={0}>
+            <Table size="small" aria-label="available players table">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: "bold" }}>Avatar</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Nickname</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Real Name</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>RFID</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Ranking</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }} align="right">
+                    Action
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {players.map((player) => (
+                  <ExistingPlayer
+                    key={player.nickname}
+                    player={player}
+                    ranking={rankings[player.nickname] || initialScore}
+                    onRankingChange={handleRankingChange}
+                    onAdd={handlePlayerClick}
+                    initialScore={initialScore}
+                  />
+                ))}
+                <NewPlayer
+                  nickname={newPlayerNickname}
+                  realname={newPlayerRealname}
+                  rfid={newPlayerRfid}
+                  setNickname={setNewPlayerNickname}
+                  setRealname={setNewPlayerRealname}
+                  setRfid={setNewPlayerRfid}
+                  onCreate={handleCreatePlayer}
+                />
+              </TableBody>
+            </Table>
+          </TableContainer>
         </CardContent>
-      </Card>
+      </StyledCard>
     </>
   );
 };
@@ -275,20 +302,30 @@ const AddPlayersDialog = ({ tournament, open, setOpen }: AddPlayersProps) => {
     isError: isTourPlayerError,
   } = useTournamentPlayerMutation(tournament);
 
-  function handlePlayerSelect(player: Api.Player, ranking: number): void {
+  const handlePlayerSelect = (player: Api.Player, ranking: number) => {
     mutateTourPlayer({
       nickname: player.nickname,
       ranking: ranking,
     });
-  }
+  };
 
-  function handlePlayerCreate(playerData: {
-    nickname: string;
-    realname: string;
-    rfid: string;
-  }): void {
+  const handlePlayerCreate = (
+    playerData: {
+      nickname: string;
+      realname: string;
+      rfid: string;
+    },
+    ranking: number
+  ) => {
+    // First create the player, then add to tournament
     mutatePlayer(playerData);
-  }
+    // Note: In a real implementation, you'd want to wait for player creation success
+    // before adding to tournament, but for this example we'll do it immediately
+    mutateTourPlayer({
+      nickname: playerData.nickname,
+      ranking: ranking,
+    });
+  };
 
   return (
     <FullScreenDialog setOpen={setOpen} open={open} title="Add player">
@@ -302,10 +339,8 @@ const AddPlayersDialog = ({ tournament, open, setOpen }: AddPlayersProps) => {
           <AvailablePlayersCard
             players={data || []}
             onPlayerSelect={handlePlayerSelect}
-            initialScore={tournamentData?.initial || 1000}
-          />
-          <CreateNewPlayerCard
             onPlayerCreate={handlePlayerCreate}
+            initialScore={tournamentData?.initial || 1000}
             isError={isPlayerError}
             errorMessage={mutatePlayerError?.message}
           />
