@@ -36,12 +36,14 @@ type ExistingPlayerProps = {
   tournament: string;
   player: Api.Player;
   initialScore: number;
+  tournamentPlayer?: Api.TournamentPlayer;
 };
 
 const ExistingPlayer = ({
   tournament,
   player,
   initialScore,
+  tournamentPlayer,
 }: Readonly<ExistingPlayerProps>) => {
   const [ranking, setRanking] = useState<number>(initialScore);
   const {
@@ -62,6 +64,9 @@ const ExistingPlayer = ({
     });
   };
 
+  const isInTournament = !!tournamentPlayer;
+  const displayRanking = isInTournament ? tournamentPlayer.ranking : ranking;
+
   return (
     <>
       {isError && <ErrorSnackbar msg={error?.message} />}
@@ -77,18 +82,22 @@ const ExistingPlayer = ({
         <TableCell>{player.realname}</TableCell>
         <TableCell>{player.rfid || "-"}</TableCell>
         <TableCell>
-          <TextField
-            size="small"
-            type="number"
-            value={ranking}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setRanking(Number.parseInt(e.target.value))
-            }
-            slotProps={{
-              htmlInput: { min: 0, max: 3000 },
-            }}
-            sx={{ width: 80 }}
-          />
+          {isInTournament ? (
+            <Typography variant="body2">{displayRanking}</Typography>
+          ) : (
+            <TextField
+              size="small"
+              type="number"
+              value={ranking}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setRanking(Number.parseInt(e.target.value))
+              }
+              slotProps={{
+                htmlInput: { min: 0, max: 3000 },
+              }}
+              sx={{ width: 80 }}
+            />
+          )}
         </TableCell>
         <TableCell align="right" sx={{ pr: 2 }}>
           <Box display="flex" justifyContent="flex-end">
@@ -310,21 +319,29 @@ const AvailablePlayersCard = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {tournamentPlayers?.map((player) => (
-                  <RemovePlayer
-                    key={player.nickname}
-                    tournament={tournament}
-                    player={player}
-                  />
-                ))}
-                {players?.map((player) => (
-                  <ExistingPlayer
-                    key={player.nickname}
-                    tournament={tournament}
-                    player={player}
-                    initialScore={initialScore}
-                  />
-                ))}
+                {tournamentPlayers
+                  ?.filter((player) => player.active)
+                  .map((player) => (
+                    <RemovePlayer
+                      key={player.nickname}
+                      tournament={tournament}
+                      player={player}
+                    />
+                  ))}
+                {players?.map((player) => {
+                  const tournamentPlayer = tournamentPlayers?.find(
+                    (tp) => tp.nickname === player.nickname
+                  );
+                  return (
+                    <ExistingPlayer
+                      key={player.nickname}
+                      tournament={tournament}
+                      player={player}
+                      initialScore={initialScore}
+                      tournamentPlayer={tournamentPlayer}
+                    />
+                  );
+                })}
                 <NewPlayer />
               </TableBody>
             </Table>

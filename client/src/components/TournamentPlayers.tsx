@@ -188,7 +188,8 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
           {status === "success" && (
             <List dense={true}>
               {data
-                ?.map((p) => ({ latest: MIN_DATE, ...p }))
+                ?.filter((p) => p.active)
+                .map((p) => ({ latest: MIN_DATE, ...p }))
                 .sort(sortPlayers(order))
                 .map((p, i) => (
                   <div key={p.nickname}>

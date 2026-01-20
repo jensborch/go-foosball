@@ -84,7 +84,7 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
 		id := c.Param(param)
-		if players, found := persistence.NewTournamentRepository(db).FindAllActivePlayers(id); found {
+		if players, found := persistence.NewTournamentRepository(db).FindAllPlayers(id); found {
 			result := make([]TournamentPlayerRepresenatation, len(players))
 			for i, p := range players {
 				result[i] = NewPlayerRepresentation(p)
