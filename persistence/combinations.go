@@ -19,6 +19,7 @@ type GameCombinations struct {
 	current int
 	rounds  [][]*model.Game
 	players []*model.TournamentPlayer
+	tables  []*model.TournamentTable
 }
 
 func GetGameCombinationsInstance(tournamentId string) *GameCombinations {
@@ -70,11 +71,12 @@ func (c *GameCombinations) Randomize() {
 func (c *GameCombinations) Update(players []*model.TournamentPlayer, tables []*model.TournamentTable) int {
 	c.Lock()
 	defer c.Unlock()
-	if !isSamePlayers(c.players, players) {
+	if !isSamePlayers(c.players, players) || !isSameTables(c.tables, tables) {
 		c.players = players
+		c.tables = tables
 		c.rounds = allGamePlayerCombinations(players, tables)
 		c.current = 0
-		fmt.Printf("Created new set of %d rounds from %d players\n", len(c.rounds), len(c.players))
+		fmt.Printf("Created new set of %d rounds from %d players and %d tables\n", len(c.rounds), len(c.players), len(c.tables))
 		return len(c.rounds)
 	}
 	return 0
@@ -90,6 +92,26 @@ func isSamePlayers(players1, players2 []*model.TournamentPlayer) bool {
 
 	for i := range sortedPlayers1 {
 		if sortedPlayers1[i].Player.Nickname != sortedPlayers2[i].Player.Nickname {
+			return false
+		}
+	}
+
+	return true
+}
+
+func isSameTables(tables1, tables2 []*model.TournamentTable) bool {
+	if len(tables1) != len(tables2) {
+		return false
+	}
+
+	// Create maps for comparison
+	map1 := make(map[uint]bool)
+	for _, t := range tables1 {
+		map1[t.TableID] = true
+	}
+
+	for _, t := range tables2 {
+		if !map1[t.TableID] {
 			return false
 		}
 	}
