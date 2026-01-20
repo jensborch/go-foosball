@@ -18,7 +18,7 @@ export enum CacheKeys {
 
 export const usePlayers = (tournament: number) => {
   return useQuery<Api.Player[], Error>({
-    queryKey: [CacheKeys.Players, tournament],
+    queryKey: [CacheKeys.Players],
     queryFn: async () => {
       const query = { exclude: tournament };
       return api.players
@@ -190,7 +190,9 @@ export const useTournamentPlayerMutation = (tournament: string) => {
         queryKey: [CacheKeys.TournamentPlayers, tournament],
       });
       queryClient.invalidateQueries({ queryKey: [CacheKeys.RandomGames] });
-      queryClient.invalidateQueries({ queryKey: [CacheKeys.Players] });
+      queryClient.invalidateQueries({
+        queryKey: [CacheKeys.Players],
+      });
     },
     onError: () => {
       //Do nothing
@@ -211,6 +213,9 @@ export const useTournamentPlayerDeleteMutation = (
         queryKey: [CacheKeys.TournamentPlayers, tournament],
       });
       queryClient.invalidateQueries({ queryKey: [CacheKeys.RandomGames] });
+      queryClient.invalidateQueries({
+        queryKey: [CacheKeys.Players],
+      });
     },
     onError: () => {
       //Do nothing

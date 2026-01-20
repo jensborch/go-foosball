@@ -21,6 +21,8 @@ import {
   usePlayers,
   useTournament,
   useTournamentPlayerMutation,
+  useTournamentPlayerDeleteMutation,
+  useTournamentPlayers,
 } from "../api/hooks";
 import ErrorSnackbar from "./ErrorSnackbar";
 import PlayerAvatar from "./PlayerAvatar";
@@ -98,6 +100,57 @@ const ExistingPlayer = ({
               sx={{ minWidth: 90, width: 90 }}
             >
               <Typography variant="button">Add</Typography>
+            </Button>
+          </Box>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};
+
+// RemovePlayer component for removing a single player from a tournament
+type RemovePlayerProps = {
+  tournament: string;
+  player: Api.TournamentPlayer;
+};
+
+const RemovePlayer = ({ tournament, player }: Readonly<RemovePlayerProps>) => {
+  const {
+    mutate: removePlayer,
+    error,
+    isError,
+    isPending,
+  } = useTournamentPlayerDeleteMutation(tournament, player.nickname);
+
+  const handlePlayerRemove = () => {
+    removePlayer();
+  };
+
+  return (
+    <>
+      {isError && <ErrorSnackbar msg={error?.message} />}
+      <TableRow
+        sx={{
+          "&:hover": { backgroundColor: "action.hover" },
+        }}
+      >
+        <TableCell>
+          <PlayerAvatar nickname={player.nickname} />
+        </TableCell>
+        <TableCell>{player.nickname}</TableCell>
+        <TableCell>{player.realname}</TableCell>
+        <TableCell>{player.rfid || "-"}</TableCell>
+        <TableCell>{player.ranking}</TableCell>
+        <TableCell align="right" sx={{ pr: 2 }}>
+          <Box display="flex" justifyContent="flex-end">
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handlePlayerRemove}
+              disabled={isPending}
+              sx={{ minWidth: 90, width: 90 }}
+            >
+              <Typography variant="button">Remove</Typography>
             </Button>
           </Box>
         </TableCell>
@@ -206,45 +259,77 @@ const NewPlayer = () => {
 type AvailablePlayersCardProps = {
   tournament: string;
   initialScore: number;
-  players: Api.Player[];
 };
 
 const AvailablePlayersCard = ({
-  players,
   tournament,
   initialScore,
 }: AvailablePlayersCardProps) => {
+  const {
+    data: players,
+    status: playersStatus,
+    error: playersError,
+  } = usePlayers(Number.parseInt(tournament));
+  const {
+    data: tournamentPlayers,
+    status: tournamentPlayersStatus,
+    error: tournamentPlayersError,
+  } = useTournamentPlayers(tournament);
+
+  const isLoading =
+    playersStatus === "pending" || tournamentPlayersStatus === "pending";
+  const isError =
+    playersStatus === "error" || tournamentPlayersStatus === "error";
+  const errorMessage = playersError?.message || tournamentPlayersError?.message;
+
   return (
     <StyledCard elevation={2}>
-      <StyledCardHeader title={`Available Players (${players.length})`} />
+      <StyledCardHeader
+        title={`Available Players ${"(" + players?.length + ")"}`}
+      />
       <CardContent>
-        <TableContainer component={Paper} elevation={0}>
-          <Table size="small" aria-label="available players table">
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ fontWeight: "bold" }}>Avatar</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Nickname</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Real Name</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>RFID</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Ranking</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }} align="right">
-                  Action
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {players.map((player) => (
-                <ExistingPlayer
-                  key={player.nickname}
-                  tournament={tournament}
-                  player={player}
-                  initialScore={initialScore}
-                />
-              ))}
-              <NewPlayer />
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {isLoading && (
+          <Box display="flex" justifyContent="center" p={3}>
+            <CircularProgress />
+          </Box>
+        )}
+        {isError && <Error msg={errorMessage} />}
+        {!isLoading && !isError && (
+          <TableContainer component={Paper} elevation={0}>
+            <Table size="small" aria-label="available players table">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: "bold" }}>Avatar</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Nickname</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Real Name</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>RFID</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Ranking</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }} align="right">
+                    Action
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {tournamentPlayers?.map((player) => (
+                  <RemovePlayer
+                    key={player.nickname}
+                    tournament={tournament}
+                    player={player}
+                  />
+                ))}
+                {players?.map((player) => (
+                  <ExistingPlayer
+                    key={player.nickname}
+                    tournament={tournament}
+                    player={player}
+                    initialScore={initialScore}
+                  />
+                ))}
+                <NewPlayer />
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </CardContent>
     </StyledCard>
   );
@@ -257,8 +342,7 @@ type AddPlayersProps = {
 };
 
 const AddPlayersDialog = ({ tournament, open, setOpen }: AddPlayersProps) => {
-  const { status, error, data } = usePlayers(Number.parseInt(tournament));
-  const { data: tourData } = useTournament(tournament);
+  const { data, status, error } = useTournament(tournament);
 
   return (
     <FullScreenDialog setOpen={setOpen} open={open} title="Add player">
@@ -268,8 +352,7 @@ const AddPlayersDialog = ({ tournament, open, setOpen }: AddPlayersProps) => {
         <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 3 }}>
           <AvailablePlayersCard
             tournament={tournament}
-            players={data || []}
-            initialScore={tourData?.initial || 1000}
+            initialScore={data?.initial || 1000}
           />
         </Box>
       )}
