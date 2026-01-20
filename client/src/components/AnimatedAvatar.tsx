@@ -36,7 +36,7 @@ const AnimatedAvatar = ({
   avatar,
 }: AnimatedAvatarProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const nodeRef = useRef<any>();
+  const nodeRef = useRef<any>(null);
   return (
     <Transition in={selected} timeout={timeout} nodeRef={nodeRef}>
       {(state: TransitionStatus) => {
