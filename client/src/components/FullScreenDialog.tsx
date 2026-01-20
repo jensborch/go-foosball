@@ -9,14 +9,14 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useEffect } from "react";
 
-const Transition = React.forwardRef(function Transition(
+const Transition = function Transition(
   props: TransitionProps & {
     children: React.ReactElement;
-  },
-  ref: React.Ref<unknown>
+    ref?: React.Ref<unknown>;
+  }
 ) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+  return <Slide direction="up" ref={props.ref} {...props} />;
+};
 
 type FullScreenDialogProps = {
   title?: string;
@@ -42,7 +42,7 @@ const FullScreenDialog = ({
       fullScreen
       open={open}
       onClose={handleClose}
-      TransitionComponent={Transition}
+      slots={{ transition: Transition }}
     >
       <AppBar sx={{ position: "relative" }}>
         <Toolbar>
