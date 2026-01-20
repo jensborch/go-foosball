@@ -93,7 +93,7 @@ func (r *tournamentRepository) AddPlayer(id string, p *model.Player) (*model.Tou
 	}
 }
 
-func (r *tournamentRepository) FindAllActivePlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {
+func (r *tournamentRepository) FindAllPlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {
 	var players []*model.TournamentPlayer
 	err := r.db.Model(&model.TournamentPlayer{}).
 		Preload(clause.Associations).
@@ -132,7 +132,7 @@ func (r *tournamentRepository) FindPlayer(tournamentId string, nickname string) 
 	}
 }
 
-func (r *tournamentRepository) ActivePlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {
+func (r *tournamentRepository) FindAllActivePlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {
 	var players []*model.TournamentPlayer
 	err := r.db.Model(&model.TournamentPlayer{}).
 		Preload(clause.Associations).
@@ -202,7 +202,7 @@ func (r *tournamentRepository) addHistory(player *model.TournamentPlayer) {
 }
 
 func (r *tournamentRepository) RandomGames(tournamentId string) ([]*model.Game, model.Found) {
-	if players, found := r.ActivePlayers(tournamentId); found {
+	if players, found := r.FindAllActivePlayers(tournamentId); found {
 		if tables, found := r.FindAllTables(tournamentId); found {
 			gameCombinations := GetGameCombinationsInstance(tournamentId)
 			if gameCombinations.Update(players, tables) > 0 {
