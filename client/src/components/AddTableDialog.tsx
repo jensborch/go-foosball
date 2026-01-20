@@ -27,7 +27,6 @@ import {
 import ErrorSnackbar from "./ErrorSnackbar";
 import { StyledCard, StyledCardHeader } from "./Styled";
 import { useState, ChangeEvent, useEffect } from "react";
-import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 
 type ExistingTableProps = {
   tournament: string;
@@ -55,9 +54,6 @@ const ExistingTable = ({ tournament, table }: Readonly<ExistingTableProps>) => {
           "&:hover": { backgroundColor: "action.hover" },
         }}
       >
-        <TableCell>
-          <TableRestaurantIcon color="action" />
-        </TableCell>
         <TableCell>{table.name}</TableCell>
         <TableCell>{table.color.right}</TableCell>
         <TableCell>{table.color.left}</TableCell>
@@ -104,9 +100,6 @@ const RemoveTable = ({ tournament, table }: Readonly<RemoveTableProps>) => {
           "&:hover": { backgroundColor: "action.hover" },
         }}
       >
-        <TableCell>
-          <TableRestaurantIcon color="action" />
-        </TableCell>
         <TableCell>{table.table.name}</TableCell>
         <TableCell>{table.table.color.right}</TableCell>
         <TableCell>{table.table.color.left}</TableCell>
@@ -169,9 +162,6 @@ const NewTable = () => {
           "&:hover": { backgroundColor: "action.hover" },
         }}
       >
-        <TableCell>
-          <TableRestaurantIcon color="action" />
-        </TableCell>
         <TableCell>
           <TextField
             size="small"
@@ -267,11 +257,6 @@ const AvailableTablesCard = ({ tournament }: AvailableTablesCardProps) => {
             <Table size="small" aria-label="available tables table">
               <TableHead>
                 <TableRow>
-                  <TableCell>
-                    <Typography variant="body2" fontWeight="bold">
-                      Icon
-                    </Typography>
-                  </TableCell>
                   <TableCell>
                     <Typography variant="body2" fontWeight="bold">
                       Name
