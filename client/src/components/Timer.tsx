@@ -9,20 +9,20 @@ import {
 import { ColorHex, CountdownCircleTimer } from "react-countdown-circle-timer";
 import { theme } from "./Theming";
 import Grid from "@mui/material/Grid";
-import { forwardRef, ReactElement, useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 import { TransitionProps } from "@mui/material/transitions";
 
 const BASE_URL = import.meta.env.BASE_URL ?? "";
 
-const Transition = forwardRef(function Transition(
+const Transition = function Transition(
   props: TransitionProps & {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     children: ReactElement<any, any>;
-  },
-  ref: React.Ref<unknown>
+    ref?: React.Ref<unknown>;
+  }
 ) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+  return <Slide direction="up" ref={props.ref} {...props} />;
+};
 
 type TimerProps = {
   reset: number;
@@ -94,7 +94,7 @@ const Timer = ({ reset, timeout, open, setOpen }: TimerProps) => {
 
   return (
     <Dialog
-      TransitionComponent={Transition}
+      slots={{ transition: Transition }}
       open={open}
       onClose={() => setOpen(false)}
     >

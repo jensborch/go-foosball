@@ -12,7 +12,6 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemSecondaryAction,
   ListItemText,
   Tooltip,
 } from "@mui/material";
@@ -59,7 +58,10 @@ const Player = ({ tournament, player }: PlayerProps) => {
     }
   }
   return (
-    <ListItem disableGutters>
+    <ListItem
+      disableGutters
+      secondaryAction={<Chip label={player.ranking} />}
+    >
       <ListItemAvatar>
         <AnimatedAvatar
           avatar={player.nickname}
@@ -73,9 +75,6 @@ const Player = ({ tournament, player }: PlayerProps) => {
         primary={responsiveTxt(player.nickname, 10)}
         secondary={responsiveTxt(player.realname, 10)}
       />
-      <ListItemSecondaryAction>
-        <Chip label={player.ranking} />
-      </ListItemSecondaryAction>
     </ListItem>
   );
 };
