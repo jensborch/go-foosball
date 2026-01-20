@@ -58,10 +58,7 @@ const Player = ({ tournament, player }: PlayerProps) => {
     }
   }
   return (
-    <ListItem
-      disableGutters
-      secondaryAction={<Chip label={player.ranking} />}
-    >
+    <ListItem disableGutters secondaryAction={<Chip label={player.ranking} />}>
       <ListItemAvatar>
         <AnimatedAvatar
           avatar={player.nickname}
