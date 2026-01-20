@@ -259,6 +259,29 @@ export const useTournamentTableMutation = (tournament: string) => {
   });
 };
 
+export const useTournamentTableDeleteMutation = (
+  tournament: string,
+  tableId: string
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => api.tournaments.tablesDelete(tournament, tableId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [CacheKeys.TournamentTables, tournament],
+      });
+      queryClient.invalidateQueries({ queryKey: [CacheKeys.RandomGames] });
+      queryClient.invalidateQueries({
+        queryKey: [CacheKeys.Tables],
+      });
+    },
+    onError: () => {
+      //Do nothing
+    },
+  });
+};
+
 export const usePlayerMutation = () => {
   const queryClient = useQueryClient();
 
