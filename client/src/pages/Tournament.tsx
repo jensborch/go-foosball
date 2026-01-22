@@ -4,9 +4,10 @@ import Games from "../components/Games";
 import History from "../components/History";
 import { Error } from "../components/Error";
 import TournamentPlayers from "../components/TournamentPlayers";
-import { DefaultGrid, MenuOffset } from "../components/Styled";
+import { MenuOffset } from "../components/Styled";
 import ActionDraw from "../components/ActionDraw";
-import { Box } from "@mui/material";
+import Start from "../components/Start";
+import { Box, Grid } from "@mui/material";
 
 function Tournament() {
   const { id } = useParams();
@@ -18,13 +19,27 @@ function Tournament() {
     <Box sx={{ display: "flex" }}>
       <Menu title="Foosball" />
       <ActionDraw tournament={id} />
-      <Box component="main">
+      <Box component="main" sx={{ width: "100%" }}>
         <MenuOffset />
-        <DefaultGrid container direction="row">
-          <TournamentPlayers tournament={id} />
-          <Games tournament={id} />
-          <History tournament={id} />
-        </DefaultGrid>
+        <Box sx={{ m: 1 }}>
+          <Grid container spacing={3}>
+            <Grid size={12}>
+              <Start tournament={id} />
+            </Grid>
+            <Grid>
+              <TournamentPlayers tournament={id} />
+            </Grid>
+            <Grid
+              size="grow"
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <Games tournament={id} />
+            </Grid>
+            <Grid>
+              <History tournament={id} />
+            </Grid>
+          </Grid>
+        </Box>
       </Box>
     </Box>
   );

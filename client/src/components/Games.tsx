@@ -29,6 +29,7 @@ import {
   yellow,
 } from "@mui/material/colors";
 import PlayerAvatar from "./PlayerAvatar";
+import { width } from "@mui/system";
 
 const Players = ({ players }: { players: string[] }) => {
   return (
@@ -230,23 +231,29 @@ const Games = ({ tournament }: GamesProps) => {
   }
   if (status === "error") {
     return (
-      <Grid>
-        <StyledCard sx={{ minWidth: "300px" }}>
-          <CardContent>
-            <Error msg={error?.message} />
-          </CardContent>
-        </StyledCard>
-      </Grid>
+      <StyledCard sx={{ minWidth: "300px" }}>
+        <CardContent>
+          <Error msg={error?.message} />
+        </CardContent>
+      </StyledCard>
     );
   }
   return (
-    <>
+    <Grid
+      container
+      spacing={2}
+      direction="row"
+      width="100%"
+      sx={{
+        justifyContent: "space-evenly",
+      }}
+    >
       {data?.map((game: Api.Game) => (
         <Grid key={game.table.id}>
           <Game tournament={tournament} game={game} />
         </Grid>
       ))}
-    </>
+    </Grid>
   );
 };
 

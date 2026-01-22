@@ -121,60 +121,58 @@ const History = ({ tournament }: HistoryProps) => {
   const [duration, setDuration] = useState<Duration>("day");
   const diff = useHistoryDiff(tournament, duration, data);
   return (
-    <Grid>
-      <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>
-        <StyledCardHeader
-          avatar={
-            <Avatar>
-              <TimelineIcon />
-            </Avatar>
-          }
-          title="History"
-        />
-        <CardContent sx={{ overflow: "auto", maxHeight: "65vh" }}>
-          {status === "pending" && (
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <CircularProgress color="secondary" />
-            </Box>
-          )}
-          {status === "error" && <Error msg={error?.message} />}
-          {status === "success" && (
-            <List dense={false}>
-              {diff.map((p) => (
-                <div key={p[0]}>
-                  <ListItem disableGutters>
-                    <ListItemAvatar>
-                      <Badge
-                        max={9999}
-                        color="secondary"
-                        anchorOrigin={{
-                          vertical: "top",
-                          horizontal: "right",
-                        }}
-                        showZero
-                        badgeContent={p[1]}
-                      >
-                        <PlayerAvatar nickname={p[0]} />
-                      </Badge>
-                    </ListItemAvatar>
-                    <ListItemText primary={responsiveTxt(p[0], 10)} />
-                  </ListItem>
-                </div>
-              ))}
-            </List>
-          )}
-        </CardContent>
+    <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>
+      <StyledCardHeader
+        avatar={
+          <Avatar>
+            <TimelineIcon />
+          </Avatar>
+        }
+        title="History"
+      />
+      <CardContent sx={{ overflow: "auto", maxHeight: "65vh" }}>
+        {status === "pending" && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <CircularProgress color="secondary" />
+          </Box>
+        )}
+        {status === "error" && <Error msg={error?.message} />}
+        {status === "success" && (
+          <List dense={false}>
+            {diff.map((p) => (
+              <div key={p[0]}>
+                <ListItem disableGutters>
+                  <ListItemAvatar>
+                    <Badge
+                      max={9999}
+                      color="secondary"
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      showZero
+                      badgeContent={p[1]}
+                    >
+                      <PlayerAvatar nickname={p[0]} />
+                    </Badge>
+                  </ListItemAvatar>
+                  <ListItemText primary={responsiveTxt(p[0], 10)} />
+                </ListItem>
+              </div>
+            ))}
+          </List>
+        )}
+      </CardContent>
 
-        <Divider />
-        <ByDuration setDuration={setDuration} duration={duration} />
-      </StyledCard>
-    </Grid>
+      <Divider />
+      <ByDuration setDuration={setDuration} duration={duration} />
+    </StyledCard>
   );
 };
 

@@ -102,7 +102,14 @@ const sortPlayers =
 const SortPlayers = ({ setOrder, order }: SortPlayersProps) => {
   return (
     <CardActions>
-      <Grid container justifyContent="space-around">
+      <Grid
+        container
+        sx={{
+          width: "100%",
+          justifyContent: "space-evenly",
+          alignItems: "center",
+        }}
+      >
         <Grid>
           <Tooltip title="Favorites">
             <IconButton onClick={() => setOrder("favorites")}>
@@ -153,53 +160,50 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
   const { mutate: deselectAll } =
     useTournamentPlayersDeleteMutation(tournament);
   return (
-    <Grid>
-      <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>
-        <StyledCardHeader
-          avatar={
-            <Avatar>
-              <EmojiPeopleOutlinedIcon />
-            </Avatar>
-          }
-          action={
-            <IconButton aria-label="deselect" onClick={() => deselectAll()}>
-              <RemoveCircleOutlineIcon />
-            </IconButton>
-          }
-          title="Players"
-        />
-        <CardContent sx={{ overflow: "auto", maxHeight: "65vh" }}>
-          {status === "pending" && (
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <CircularProgress color="secondary" />
-            </Box>
-          )}
-          {status === "error" && <Error msg={error?.message} />}
-          {status === "success" && (
-            <List dense={true}>
-              {data
-                ?.filter((p) => p.active)
-                .map((p) => ({ latest: MIN_DATE, ...p }))
-                .sort(sortPlayers(order))
-                .map((p, i) => (
-                  <div key={p.nickname}>
-                    <Player player={p} tournament={tournament} />
-                    {i === data.length - 1 ? null : <Divider />}
-                  </div>
-                ))}
-            </List>
-          )}
-        </CardContent>
-        <Divider />
-        <SortPlayers setOrder={setOrder} order={order} />
-      </StyledCard>
-    </Grid>
+    <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>
+      <StyledCardHeader
+        avatar={
+          <Avatar>
+            <EmojiPeopleOutlinedIcon />
+          </Avatar>
+        }
+        action={
+          <IconButton aria-label="deselect" onClick={() => deselectAll()}>
+            <RemoveCircleOutlineIcon />
+          </IconButton>
+        }
+        title="Players"
+      />
+      <CardContent sx={{ overflow: "auto", maxHeight: "65vh" }}>
+        {status === "pending" && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <CircularProgress color="secondary" />
+          </Box>
+        )}
+        {status === "error" && <Error msg={error?.message} />}
+        {status === "success" && (
+          <List dense={true}>
+            {data
+              .map((p) => ({ latest: MIN_DATE, ...p }))
+              .sort(sortPlayers(order))
+              .map((p, i) => (
+                <div key={p.nickname}>
+                  <Player player={p} tournament={tournament} />
+                  {i === data.length - 1 ? null : <Divider />}
+                </div>
+              ))}
+          </List>
+        )}
+      </CardContent>
+      <Divider />
+      <SortPlayers setOrder={setOrder} order={order} />
+    </StyledCard>
   );
 };
 
