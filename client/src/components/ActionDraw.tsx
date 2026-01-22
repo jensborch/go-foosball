@@ -3,10 +3,8 @@ import {
   List,
   ListItemButton,
   ListItemIcon as MuiListItemIcon,
-  Divider,
   Tooltip,
 } from "@mui/material";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import PersonIcon from "@mui/icons-material/Person";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
@@ -15,9 +13,6 @@ import { useState } from "react";
 import AddPlayersDialog from "./AddPlayersDialog";
 import AddTableDialog from "./AddTableDialog";
 import HistoryChartDialog from "./HistoryChartDialog";
-import { useQueryClient } from "@tanstack/react-query";
-import { CacheKeys } from "../api/hooks";
-import Start from "./Start";
 
 type ActionDrawProps = {
   tournament: string;
@@ -39,7 +34,6 @@ const ListItemIcon = styled(MuiListItemIcon, {
 }));
 
 const ActionDraw = ({ tournament }: ActionDrawProps) => {
-  const queryClient = useQueryClient();
   const [playersOpen, setPlayersOpen] = useState(false);
   const [tablesOpen, setTablesOpen] = useState(false);
   const [chartOpen, setChartOpen] = useState(false);
@@ -52,28 +46,6 @@ const ActionDraw = ({ tournament }: ActionDrawProps) => {
           }}
         >
           <MenuOffset />
-          <Tooltip title="Start game">
-            <ListItemButton>
-              <ListItemIcon>
-                <Start tournament={tournament} />
-              </ListItemIcon>
-            </ListItemButton>
-          </Tooltip>
-          <Tooltip title="New game">
-            <ListItemButton>
-              <ListItemIcon>
-                <RefreshIcon
-                  onClick={() =>
-                    queryClient.invalidateQueries({
-                      queryKey: [CacheKeys.RandomGames],
-                    })
-                  }
-                  fontSize="large"
-                />
-              </ListItemIcon>
-            </ListItemButton>
-          </Tooltip>
-          <Divider />
           <Tooltip title="Statistics">
             <ListItemButton>
               <ListItemIcon>
