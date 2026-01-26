@@ -138,7 +138,7 @@ func (r *tournamentRepository) FindAllActivePlayers(tournamentId string) ([]*mod
 		Preload(clause.Associations).
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Joins("inner join players on tournament_players.player_id = players.id").
-		Where("tournament_players.active = ?", true).
+		Where("tournament_players.status = ?", model.ACTIVE).
 		Where("tournaments.ID = ?", tournamentId).
 		Find(&players).Error
 	return sortPlayersByNickname(players), HasBeenFound(err)
@@ -147,7 +147,7 @@ func (r *tournamentRepository) FindAllActivePlayers(tournamentId string) ([]*mod
 func (r *tournamentRepository) DeactivatePlayers(tournamentId string) model.Found {
 	result := r.db.Model(&model.TournamentPlayer{}).
 		Where("tournament_id = ?", tournamentId).
-		Update("active", false)
+		Update("status", model.INACTIVE)
 	if result.Error == nil {
 		return result.RowsAffected >= 1
 	} else {
@@ -155,9 +155,20 @@ func (r *tournamentRepository) DeactivatePlayers(tournamentId string) model.Foun
 	}
 }
 
+func (r *tournamentRepository) UpdatePlayerStatus(tournamentId string, nickname string, status model.Status) (*model.TournamentPlayer, model.Found) {
+	if player, found := r.FindPlayer(tournamentId, nickname); found {
+		player.Status = status
+		if err := r.db.Save(player).Error; err != nil {
+			panic(err)
+		}
+		return player, true
+	}
+	return nil, false
+}
+
 func (r *tournamentRepository) DeactivatePlayer(tournamentId string, nickname string) (*model.TournamentPlayer, model.Found) {
 	if player, found := r.FindPlayer(tournamentId, nickname); found {
-		player.Active = false
+		player.Status = model.INACTIVE
 		if err := r.db.Save(player).Error; err != nil {
 			panic(err)
 		}
@@ -168,7 +179,7 @@ func (r *tournamentRepository) DeactivatePlayer(tournamentId string, nickname st
 
 func (r *tournamentRepository) ActivatePlayer(tournamentId string, nickname string) (*model.TournamentPlayer, model.Found) {
 	if player, found := r.FindPlayer(tournamentId, nickname); found {
-		player.Active = true
+		player.Status = model.ACTIVE
 		if err := r.db.Save(player).Error; err != nil {
 			panic(err)
 		}

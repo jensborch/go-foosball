@@ -92,7 +92,7 @@ definitions:
       updated:
         type: string
       winner:
-        type: string
+        $ref: '#/definitions/model.Winner'
     required:
     - created
     - leftPlayers
@@ -117,11 +117,12 @@ definitions:
         minItems: 1
         type: array
       winner:
+        allOf:
+        - $ref: '#/definitions/model.Winner'
         enum:
         - right
         - left
         - draw
-        type: string
     required:
     - leftPlayers
     - rightPlayers
@@ -238,6 +239,18 @@ definitions:
     - ranking
     - updated
     type: object
+  TournamentPlayerStatus:
+    properties:
+      status:
+        allOf:
+        - $ref: '#/definitions/model.Status'
+        enum:
+        - active
+        - inactive
+        - deleted
+    required:
+    - status
+    type: object
   TournamentTable:
     properties:
       created:
@@ -254,6 +267,18 @@ definitions:
     - table
     - updated
     type: object
+  model.Status:
+    enum:
+    - active
+    type: string
+    x-enum-varnames:
+    - ACTIVE
+  model.Winner:
+    enum:
+    - right
+    type: string
+    x-enum-varnames:
+    - RIGHT
 info:
   contact: {}
   description: Foosball tournament REST service.
@@ -371,7 +396,7 @@ paths:
       - application/json
       responses:
         "204":
-          description: ""
+          description: No Content
         "404":
           description: Not Found
           schema:
@@ -550,7 +575,7 @@ paths:
       - application/json
       responses:
         "204":
-          description: ""
+          description: No Content
         "404":
           description: Not Found
           schema:
@@ -674,7 +699,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/Error'
-      summary: Get random game for a tournament
+      summary: Get random games for a tournament
       tags:
       - actions
   /tournaments/{id}/games/start:
@@ -691,7 +716,7 @@ paths:
       - application/json
       responses:
         "204":
-          description: ""
+          description: No Content
         "404":
           description: Not Found
           schema:
@@ -753,7 +778,7 @@ paths:
       - application/json
       responses:
         "204":
-          description: ""
+          description: No Content
         "404":
           description: Not Found
           schema:
@@ -873,7 +898,7 @@ paths:
       tags:
       - tournament
   /tournaments/{id}/players/{player}:
-    delete:
+    put:
       consumes:
       - application/json
       parameters:
@@ -887,11 +912,19 @@ paths:
         name: player
         required: true
         type: string
+      - description: Tournament player status
+        in: body
+        name: status
+        required: true
+        schema:
+          $ref: '#/definitions/TournamentPlayerStatus'
       produces:
       - application/json
       responses:
-        "204":
-          description: ""
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/TournamentPlayer'
         "404":
           description: Not Found
           schema:
@@ -900,7 +933,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/Error'
-      summary: Remove player from tournament
+      summary: Changes player status in tournament
       tags:
       - tournament
   /tournaments/{id}/tables:
@@ -1032,7 +1065,7 @@ paths:
       - application/json
       responses:
         "204":
-          description: ""
+          description: No Content
         "404":
           description: Not Found
           schema:

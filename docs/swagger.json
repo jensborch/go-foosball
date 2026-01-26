@@ -222,7 +222,7 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": ""
+                        "description": "No Content"
                     },
                     "404": {
                         "description": "Not Found",
@@ -498,7 +498,7 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": ""
+                        "description": "No Content"
                     },
                     "404": {
                         "description": "Not Found",
@@ -616,7 +616,7 @@
                 "tags": [
                     "actions"
                 ],
-                "summary": "Get random game for a tournament",
+                "summary": "Get random games for a tournament",
                 "parameters": [
                     {
                         "type": "string",
@@ -674,7 +674,7 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": ""
+                        "description": "No Content"
                     },
                     "404": {
                         "description": "Not Found",
@@ -868,7 +868,7 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": ""
+                        "description": "No Content"
                     },
                     "404": {
                         "description": "Not Found",
@@ -947,7 +947,7 @@
             }
         },
         "/tournaments/{id}/players/{player}": {
-            "delete": {
+            "put": {
                 "consumes": [
                     "application/json"
                 ],
@@ -957,7 +957,7 @@
                 "tags": [
                     "tournament"
                 ],
-                "summary": "Remove player from tournament",
+                "summary": "Changes player status in tournament",
                 "parameters": [
                     {
                         "type": "string",
@@ -972,11 +972,23 @@
                         "name": "player",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "Tournament player status",
+                        "name": "status",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TournamentPlayerStatus"
+                        }
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": ""
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/TournamentPlayer"
+                        }
                     },
                     "404": {
                         "description": "Not Found",
@@ -1125,7 +1137,7 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": ""
+                        "description": "No Content"
                     },
                     "404": {
                         "description": "Not Found",
@@ -1356,7 +1368,7 @@
                     "type": "string"
                 },
                 "winner": {
-                    "type": "string"
+                    "$ref": "#/definitions/model.Winner"
                 }
             }
         },
@@ -1385,11 +1397,15 @@
                     }
                 },
                 "winner": {
-                    "type": "string",
                     "enum": [
                         "right",
                         "left",
                         "draw"
+                    ],
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.Winner"
+                        }
                     ]
                 }
             }
@@ -1556,6 +1572,26 @@
                 }
             }
         },
+        "TournamentPlayerStatus": {
+            "type": "object",
+            "required": [
+                "status"
+            ],
+            "properties": {
+                "status": {
+                    "enum": [
+                        "active",
+                        "inactive",
+                        "deleted"
+                    ],
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.Status"
+                        }
+                    ]
+                }
+            }
+        },
         "TournamentTable": {
             "type": "object",
             "required": [
@@ -1578,6 +1614,24 @@
                     "type": "string"
                 }
             }
+        },
+        "model.Status": {
+            "type": "string",
+            "enum": [
+                "active"
+            ],
+            "x-enum-varnames": [
+                "ACTIVE"
+            ]
+        },
+        "model.Winner": {
+            "type": "string",
+            "enum": [
+                "right"
+            ],
+            "x-enum-varnames": [
+                "RIGHT"
+            ]
         }
     }
 }

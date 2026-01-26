@@ -43,6 +43,6 @@ func NewTournamentPlayerWithRanking(player *Player, tournament *Tournament, rank
 		Tournament: *tournament,
 		Player:     *player,
 		Ranking:    ranking,
-		Active:     true,
+		Status:     ACTIVE,
 	}
 }
