@@ -207,7 +207,7 @@ func TestActivatePlayer(t *testing.T) {
 		}
 	}
 
-	if player, _ := tourRepo.FindPlayer(tournament.IdAsString(), player1.Nickname); player.Active {
+	if player, _ := tourRepo.FindPlayer(tournament.IdAsString(), player1.Nickname); player.Status != model.INACTIVE {
 		t.Errorf("Deactivated player should not be active")
 	}
 
@@ -222,7 +222,7 @@ func TestActivatePlayer(t *testing.T) {
 		}
 	}
 
-	if player, _ := tourRepo.FindPlayer(tournament.IdAsString(), player1.Nickname); !player.Active {
+	if player, _ := tourRepo.FindPlayer(tournament.IdAsString(), player1.Nickname); player.Status != model.ACTIVE {
 		t.Errorf("Activated player should be active")
 	}
 }

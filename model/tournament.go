@@ -30,9 +30,18 @@ type TournamentPlayer struct {
 	TournamentID uint       `json:"-" gorm:"index:player_tournament,unique;not null"`
 	Tournament   Tournament `json:"-"`
 	Ranking      uint       `json:"ranking" binding:"required"`
-	Active       bool       `json:"active" binding:"required"`
+	Status       Status     `json:"status,required" gorm:"type:varchar(10);not null;default:'active'"`
 	Latest       *time.Time `json:"latest"`
 } //@name TournamentPlayer
+
+// Status of a player in tournament
+type Status string
+
+const (
+	ACTIVE   Status = "active"
+	INACTIVE        = "inactive"
+	DELETED         = "deleted"
+)
 
 type TournamentPlayerHistory struct {
 	UpdatedAt          time.Time        `json:"updated" binding:"required" gorm:"not null"`
@@ -59,6 +68,7 @@ type TournamentRepository interface {
 	FindAllPlayers(tournamentId string) ([]*TournamentPlayer, Found)
 	FindPlayer(tournamentId string, nickname string) (*TournamentPlayer, Found)
 	DeactivatePlayer(tournamentId string, nickname string) (*TournamentPlayer, Found)
+	UpdatePlayerStatus(tournamentId string, nickname string, status Status) (*TournamentPlayer, Found)
 	ActivatePlayer(tournamentId string, nickname string) (*TournamentPlayer, Found)
 	RandomGames(id string) ([]*Game, Found)
 	UpdatePlayerRanking(tournamentId string, nickname string, gameScore int, updated time.Time) (*TournamentPlayer, Found)
@@ -91,7 +101,7 @@ func NewTournamentPlayer(player *Player, tournament *Tournament) *TournamentPlay
 		Tournament: *tournament,
 		Player:     *player,
 		Ranking:    tournament.InitialRanking,
-		Active:     true,
+		Status:     ACTIVE,
 	}
 }
 
