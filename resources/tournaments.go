@@ -49,8 +49,8 @@ func GetTournaments(db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-// TournamentPlayerRepresenatation represents a player in a tournament
-type TournamentPlayerRepresenatation struct {
+// TournamentPlayerRepresentation represents a player in a tournament
+type TournamentPlayerRepresentation struct {
 	Nickname string     `json:"nickname" binding:"required"`
 	RealName string     `json:"realname"`
 	RFID     string     `json:"rfid,omitempty"`
@@ -59,12 +59,11 @@ type TournamentPlayerRepresenatation struct {
 	Latest   *time.Time `json:"latest,omitempty"`
 } //@name TournamentPlayer
 
-func NewPlayerRepresentation(tp *model.TournamentPlayer) TournamentPlayerRepresenatation {
-	return TournamentPlayerRepresenatation{
+func NewPlayerRepresentation(tp *model.TournamentPlayer) TournamentPlayerRepresentation {
+	return TournamentPlayerRepresentation{
 		Nickname: tp.Player.Nickname,
 		RealName: tp.Player.RealName,
 		RFID:     tp.Player.RFID,
-		Active:   tp.Active,
 		Ranking:  tp.Ranking,
 		Latest:   tp.Latest,
 	}
@@ -76,7 +75,7 @@ func NewPlayerRepresentation(tp *model.TournamentPlayer) TournamentPlayerReprese
 // @Accept   json
 // @Produce  json
 // @Param    id   path      string  true  "Tournament ID"
-// @Success  200  {array}   TournamentPlayerRepresenatation
+// @Success  200  {array}   TournamentPlayerRepresentation
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
 // @Router   /tournaments/{id}/players [get]
@@ -85,7 +84,7 @@ func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
 		defer HandlePanic(c)
 		id := c.Param(param)
 		if players, found := persistence.NewTournamentRepository(db).FindAllPlayers(id); found {
-			result := make([]TournamentPlayerRepresenatation, len(players))
+			result := make([]TournamentPlayerRepresentation, len(players))
 			for i, p := range players {
 				result[i] = NewPlayerRepresentation(p)
 			}
@@ -144,7 +143,7 @@ type AddPlayerRequest struct {
 // @Produce  json
 // @Param    id      path      string            true  "Tournament ID"
 // @Param    player  body      AddPlayerRequest  true  "The tournament"
-// @Success  200     {object}  TournamentPlayerRepresenatation
+// @Success  200     {object}  TournamentPlayerRepresentation
 // @Failure  400     {object}  ErrorResponse
 // @Failure  404     {object}  ErrorResponse
 // @Failure  500     {object}  ErrorResponse
@@ -212,30 +211,40 @@ func DeleteTournament(tournamentParam string, db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-// DeleteTournamentPlayer removes player from a tournament
-// @Summary  Remove player from tournament
+type TournamentPlayerStatusRequest struct {
+	Status model.Status `json:"status" binding:"required" enums:"active,inactive,deleted"`
+} //@name TournamentPlayerStatus
+
+// UpdateTournamentPlayerStatus removes player from a tournament
+// @Summary  Changes player status in tournament
 // @Tags     tournament
 // @Accept   json
 // @Produce  json
 // @Param    id      path  string  true  "Tournament ID"
 // @Param    player  path  string  true  "Player ID"
-// @Success  204
+// @Param    status  body      TournamentPlayerStatusRequest  true  "Tournament player status"
+// @Success  200     {object}  TournamentPlayerRepresentation
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
-// @Router   /tournaments/{id}/players/{player} [delete]
-func DeleteTournamentPlayer(tournamentParam string, playerParam string, db *gorm.DB) func(*gin.Context) {
+// @Router   /tournaments/{id}/players/{player} [put]
+func UpdateTournamentPlayerStatus(tournamentParam string, playerParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		var status TournamentPlayerStatusRequest
+		if err := c.ShouldBindJSON(&status); err != nil {
+			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+			return
+		}
 		id := c.Param(tournamentParam)
 		nickname := c.Param(playerParam)
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewTournamentRepository(tx)
-		if tp, found := r.DeactivatePlayer(id, nickname); !found {
+		if tp, found := r.UpdatePlayerStatus(id, nickname, status.Status); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 		} else {
 			pr := NewPlayerRepresentation(tp)
 			playerEventPublisher.Publish(id, pr)
-			c.Status(http.StatusNoContent)
+			c.JSON(http.StatusOK, pr)
 		}
 	}
 }
@@ -271,7 +280,7 @@ var playerEventPublisher = NewEventPublisher()
 // @Tags     events
 // @Produce  json-stream
 // @Param    id   path      string  true  "Tournament ID"
-// @Success  200  {object}  TournamentPlayerRepresenatation
+// @Success  200  {object}  TournamentPlayerRepresentation
 // @Router   /tournaments/{id}/events/player [get]
 func GetPlayerEvents(param string) func(c *gin.Context) {
 	return playerEventPublisher.Get(param)
