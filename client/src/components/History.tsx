@@ -10,12 +10,11 @@ import {
   ListItemAvatar,
   ListItemText,
   Badge,
-  Grid,
   CardActions,
   Tooltip,
   IconButton,
   Divider,
-  Box,
+  Stack,
 } from "@mui/material";
 import { TournamentHistory } from "../api/Api";
 import TodayIcon from "@mui/icons-material/Today";
@@ -78,40 +77,36 @@ type ByDurationProps = {
 const ByDuration = ({ setDuration, duration }: ByDurationProps) => {
   return (
     <CardActions>
-      <Grid container justifyContent="space-around">
-        <Grid>
-          <Tooltip title="Day">
-            <IconButton onClick={() => setDuration("day")}>
-              {duration === "day" ? <TodayIcon /> : <TodayOutlinedIcon />}
-            </IconButton>
-          </Tooltip>
-        </Grid>
-        <Grid>
-          <Tooltip title="Week">
-            <IconButton
-              aria-label="Winners"
-              onClick={() => setDuration("week")}
-            >
-              {duration === "week" ? (
-                <DateRangeIcon />
-              ) : (
-                <DateRangeOutlinedIcon />
-              )}
-            </IconButton>
-          </Tooltip>
-        </Grid>
-        <Grid>
-          <Tooltip title="Month">
-            <IconButton aria-label="Alpha" onClick={() => setDuration("month")}>
-              {duration === "month" ? (
-                <CalendarMonthIcon />
-              ) : (
-                <CalendarMonthOutlinedIcon />
-              )}
-            </IconButton>
-          </Tooltip>
-        </Grid>
-      </Grid>
+      <Stack
+        direction="row"
+        spacing={2}
+        width="100%"
+        justifyContent="space-around"
+      >
+        <Tooltip title="Day">
+          <IconButton onClick={() => setDuration("day")}>
+            {duration === "day" ? <TodayIcon /> : <TodayOutlinedIcon />}
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Week">
+          <IconButton onClick={() => setDuration("week")}>
+            {duration === "week" ? (
+              <DateRangeIcon />
+            ) : (
+              <DateRangeOutlinedIcon />
+            )}
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Month">
+          <IconButton onClick={() => setDuration("month")}>
+            {duration === "month" ? (
+              <CalendarMonthIcon />
+            ) : (
+              <CalendarMonthOutlinedIcon />
+            )}
+          </IconButton>
+        </Tooltip>
+      </Stack>
     </CardActions>
   );
 };
@@ -132,15 +127,9 @@ const History = ({ tournament }: HistoryProps) => {
       />
       <CardContent sx={{ overflow: "auto", maxHeight: "65vh" }}>
         {status === "pending" && (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <Stack alignItems="center" justifyContent="center">
             <CircularProgress color="secondary" />
-          </Box>
+          </Stack>
         )}
         {status === "error" && <Error msg={error?.message} />}
         {status === "success" && (

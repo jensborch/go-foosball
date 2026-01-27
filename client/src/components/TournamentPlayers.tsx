@@ -1,18 +1,17 @@
 import * as Api from "../api/Api";
 import {
   Avatar,
-  Box,
   CardActions,
   CardContent,
   Chip,
   CircularProgress,
   Divider,
-  Grid,
   IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Stack,
   Tooltip,
 } from "@mui/material";
 import {
@@ -93,48 +92,41 @@ const sortPlayers =
 const SortPlayers = ({ setOrder, order }: SortPlayersProps) => {
   return (
     <CardActions>
-      <Grid
-        container
-        sx={{
-          width: "100%",
-          justifyContent: "space-evenly",
-          alignItems: "center",
-        }}
+      <Stack
+        direction="row"
+        spacing={2}
+        width="100%"
+        justifyContent="space-evenly"
+        alignItems="center"
       >
-        <Grid>
-          <Tooltip title="Favorites">
-            <IconButton onClick={() => setOrder("favorites")}>
-              {order === "favorites" ? (
-                <FavoriteIcon />
-              ) : (
-                <FavoriteBorderOutlinedIcon />
-              )}
-            </IconButton>
-          </Tooltip>
-        </Grid>
-        <Grid>
-          <Tooltip title="Winner">
-            <IconButton aria-label="Winners" onClick={() => setOrder("winner")}>
-              {order === "winner" ? (
-                <EmojiEventsIcon />
-              ) : (
-                <EmojiEventsOutlinedIcon />
-              )}
-            </IconButton>
-          </Tooltip>
-        </Grid>
-        <Grid>
-          <Tooltip title="Alphabetic">
-            <IconButton aria-label="Alpha" onClick={() => setOrder("alpha")}>
-              {order === "alpha" ? (
-                <EmojiEmotionsIcon />
-              ) : (
-                <EmojiEmotionsOutlinedIcon />
-              )}
-            </IconButton>
-          </Tooltip>
-        </Grid>
-      </Grid>
+        <Tooltip title="Favorites">
+          <IconButton onClick={() => setOrder("favorites")}>
+            {order === "favorites" ? (
+              <FavoriteIcon />
+            ) : (
+              <FavoriteBorderOutlinedIcon />
+            )}
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Winner">
+          <IconButton aria-label="Winners" onClick={() => setOrder("winner")}>
+            {order === "winner" ? (
+              <EmojiEventsIcon />
+            ) : (
+              <EmojiEventsOutlinedIcon />
+            )}
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Alphabetic">
+          <IconButton aria-label="Alpha" onClick={() => setOrder("alpha")}>
+            {order === "alpha" ? (
+              <EmojiEmotionsIcon />
+            ) : (
+              <EmojiEmotionsOutlinedIcon />
+            )}
+          </IconButton>
+        </Tooltip>
+      </Stack>
     </CardActions>
   );
 };
@@ -167,15 +159,9 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
       />
       <CardContent sx={{ overflow: "auto", maxHeight: "65vh" }}>
         {status === "pending" && (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <Stack alignItems="center" justifyContent="center">
             <CircularProgress color="secondary" />
-          </Box>
+          </Stack>
         )}
         {status === "error" && <Error msg={error?.message} />}
         {status === "success" && (
