@@ -21,8 +21,8 @@ func (r *tableRepository) Remove(id string) model.Found {
 
 func (r *tableRepository) Find(id string) (*model.Table, model.Found) {
 	var t model.Table
-	rersult := r.db.Where("ID = ?", id).First(&t)
-	return &t, HasBeenFound(rersult.Error)
+	result := r.db.Where("ID = ?", id).First(&t)
+	return &t, HasBeenFound(result.Error)
 }
 
 func (r *tableRepository) FindAll() []*model.Table {

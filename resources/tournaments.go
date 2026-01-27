@@ -115,6 +115,7 @@ type CreateTournamentRequest struct {
 // @Router   /tournaments [post]
 func PostTournament(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		var tournament CreateTournamentRequest
 		if err := c.ShouldBindJSON(&tournament); err != nil {
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
@@ -151,6 +152,7 @@ type AddPlayerRequest struct {
 // @Router   /tournaments/{id}/players [post]
 func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		id := c.Param(param)
 		var pr AddPlayerRequest
 		if err := c.ShouldBindJSON(&pr); err != nil {
@@ -200,6 +202,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 // @Router   /tournaments/{id} [delete]
 func DeleteTournament(tournamentParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		id := c.Param(tournamentParam)
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)
@@ -230,6 +233,7 @@ type TournamentPlayerStatusRequest struct {
 // @Router   /tournaments/{id}/players/{player} [put]
 func UpdateTournamentPlayerStatus(tournamentParam string, playerParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		var status TournamentPlayerStatusRequest
 		if err := c.ShouldBindJSON(&status); err != nil {
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
@@ -262,6 +266,7 @@ func UpdateTournamentPlayerStatus(tournamentParam string, playerParam string, db
 // @Router   /tournaments/{id}/players [delete]
 func DeleteAllTournamentPlayers(tournamentParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		id := c.Param(tournamentParam)
 		tx := db.Begin()
 		defer HandlePanicInTransaction(c, tx)

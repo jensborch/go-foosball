@@ -100,6 +100,7 @@ func addPlayers(tourId string, players []string, repo model.TournamentRepository
 // @Router   /tournaments/{id}/tables/{table}/games [post]
 func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		tourId := c.Param(tournamentParam)
 		tableId := c.Param(tableParam)
 		var gr GameResultRequest
