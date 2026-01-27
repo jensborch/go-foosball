@@ -30,7 +30,7 @@ type TournamentPlayer struct {
 	TournamentID uint       `json:"-" gorm:"index:player_tournament,unique;not null"`
 	Tournament   Tournament `json:"-"`
 	Ranking      uint       `json:"ranking" binding:"required"`
-	Status       Status     `json:"status,required" gorm:"type:varchar(10);not null;default:'active'"`
+	Status       Status     `json:"status" gorm:"type:varchar(10);not null;default:'active'" binding:"required" enums:"active,inactive,deleted"`
 	Latest       *time.Time `json:"latest"`
 } //@name TournamentPlayer
 
@@ -39,8 +39,8 @@ type Status string
 
 const (
 	ACTIVE   Status = "active"
-	INACTIVE        = "inactive"
-	DELETED         = "deleted"
+	INACTIVE Status = "inactive"
+	DELETED  Status = "deleted"
 )
 
 type TournamentPlayerHistory struct {

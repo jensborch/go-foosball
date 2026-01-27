@@ -10,6 +10,16 @@
  * ---------------------------------------------------------------
  */
 
+export enum ModelWinner {
+  RIGHT = "right",
+}
+
+export enum ModelStatus {
+  ACTIVE = "active",
+  INACTIVE = "inactive",
+  DELETED = "deleted",
+}
+
 export interface AddPlayer {
   nickname: string;
   ranking?: number;
@@ -56,7 +66,7 @@ export interface Game {
   rightScore: number;
   table: Table;
   updated: string;
-  winner?: string;
+  winner?: ModelWinner;
 }
 
 export interface GameResult {
@@ -111,17 +121,21 @@ export interface TournamentHistory {
 }
 
 export interface TournamentPlayer {
-  active: boolean;
   latest?: string;
   nickname: string;
   ranking?: number;
   realname?: string;
   rfid?: string;
+  status: "active" | "inactive" | "deleted";
 }
 
 export interface TournamentPlayerHistory {
   ranking: number;
   updated: string;
+}
+
+export interface TournamentPlayerStatus {
+  status: "active" | "inactive" | "deleted";
 }
 
 export interface TournamentTable {
@@ -162,7 +176,7 @@ export interface ApiConfig<SecurityDataType = unknown> {
   baseUrl?: string;
   baseApiParams?: Omit<RequestParams, "baseUrl" | "cancelToken" | "signal">;
   securityWorker?: (
-    securityData: SecurityDataType | null
+    securityData: SecurityDataType | null,
   ) => Promise<RequestParams | void> | RequestParams | void;
   customFetch?: typeof fetch;
 }
@@ -223,13 +237,13 @@ export class HttpClient<SecurityDataType = unknown> {
   protected toQueryString(rawQuery?: QueryParamsType): string {
     const query = rawQuery || {};
     const keys = Object.keys(query).filter(
-      (key) => "undefined" !== typeof query[key]
+      (key) => "undefined" !== typeof query[key],
     );
     return keys
       .map((key) =>
         Array.isArray(query[key])
           ? this.addArrayQueryParam(query, key)
-          : this.addQueryParam(query, key)
+          : this.addQueryParam(query, key),
       )
       .join("&");
   }
@@ -252,8 +266,12 @@ export class HttpClient<SecurityDataType = unknown> {
       input !== null && typeof input !== "string"
         ? JSON.stringify(input)
         : input,
-    [ContentType.FormData]: (input: any) =>
-      Object.keys(input || {}).reduce((formData, key) => {
+    [ContentType.FormData]: (input: any) => {
+      if (input instanceof FormData) {
+        return input;
+      }
+
+      return Object.keys(input || {}).reduce((formData, key) => {
         const property = input[key];
         formData.append(
           key,
@@ -261,16 +279,17 @@ export class HttpClient<SecurityDataType = unknown> {
             ? property
             : typeof property === "object" && property !== null
               ? JSON.stringify(property)
-              : `${property}`
+              : `${property}`,
         );
         return formData;
-      }, new FormData()),
+      }, new FormData());
+    },
     [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
   };
 
   protected mergeRequestParams(
     params1: RequestParams,
-    params2?: RequestParams
+    params2?: RequestParams,
   ): RequestParams {
     return {
       ...this.baseApiParams,
@@ -285,7 +304,7 @@ export class HttpClient<SecurityDataType = unknown> {
   }
 
   protected createAbortSignal = (
-    cancelToken: CancelToken
+    cancelToken: CancelToken,
   ): AbortSignal | undefined => {
     if (this.abortControllers.has(cancelToken)) {
       const abortController = this.abortControllers.get(cancelToken);
@@ -348,15 +367,16 @@ export class HttpClient<SecurityDataType = unknown> {
           typeof body === "undefined" || body === null
             ? null
             : payloadFormatter(body),
-      }
+      },
     ).then(async (response) => {
-      const r = response.clone() as HttpResponse<T, E>;
+      const r = response as HttpResponse<T, E>;
       r.data = null as unknown as T;
       r.error = null as unknown as E;
 
+      const responseToParse = responseFormat ? response.clone() : response;
       const data = !responseFormat
         ? r
-        : await response[responseFormat]()
+        : await responseToParse[responseFormat]()
             .then((data) => {
               if (r.ok) {
                 r.data = data;
@@ -440,7 +460,7 @@ export class Api<
         /** exlude tournament from list */
         exclude?: number;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<Player[], any>({
         path: `/players`,
@@ -516,7 +536,7 @@ export class Api<
         /** exlude tournament from list */
         exclude?: number;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<Table[], any>({
         path: `/tables`,
@@ -590,7 +610,7 @@ export class Api<
      */
     tournamentsCreate: (
       tournament: CreateTournament,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<Tournament, Error>({
         path: `/tournaments`,
@@ -686,7 +706,7 @@ export class Api<
      *
      * @tags actions
      * @name GamesRandomList
-     * @summary Get random game for a tournament
+     * @summary Get random games for a tournament
      * @request GET:/tournaments/{id}/games/random
      */
     gamesRandomList: (id: string, params: RequestParams = {}) =>
@@ -731,7 +751,7 @@ export class Api<
          */
         from: string;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<TournamentHistory[], Error>({
         path: `/tournaments/${id}/history`,
@@ -770,7 +790,7 @@ export class Api<
     playersCreate: (
       id: string,
       player: AddPlayer,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<TournamentPlayer, Error>({
         path: `/tournaments/${id}/players`,
@@ -815,7 +835,7 @@ export class Api<
          */
         from: string;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<TournamentPlayerHistory[], Error>({
         path: `/tournaments/${id}/players/${nickname}/history`,
@@ -830,17 +850,22 @@ export class Api<
      * No description
      *
      * @tags tournament
-     * @name PlayersDelete2
-     * @summary Remove player from tournament
-     * @request DELETE:/tournaments/{id}/players/{player}
-     * @originalName playersDelete
-     * @duplicate
+     * @name PlayersUpdate
+     * @summary Changes player status in tournament
+     * @request PUT:/tournaments/{id}/players/{player}
      */
-    playersDelete2: (id: string, player: string, params: RequestParams = {}) =>
-      this.request<void, Error>({
+    playersUpdate: (
+      id: string,
+      player: string,
+      status: TournamentPlayerStatus,
+      params: RequestParams = {},
+    ) =>
+      this.request<TournamentPlayer, Error>({
         path: `/tournaments/${id}/players/${player}`,
-        method: "DELETE",
+        method: "PUT",
+        body: status,
         type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
@@ -907,7 +932,7 @@ export class Api<
       id: string,
       table: string,
       game: GameResult,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<Game, Error>({
         path: `/tournaments/${id}/tables/${table}/games`,

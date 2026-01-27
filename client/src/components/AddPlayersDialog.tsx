@@ -21,7 +21,7 @@ import {
   usePlayers,
   useTournament,
   useTournamentPlayerMutation,
-  useTournamentPlayerDeleteMutation,
+  useTournamentPlayerStatusMutation,
   useTournamentPlayers,
 } from "../api/hooks";
 import ErrorSnackbar from "./ErrorSnackbar";
@@ -129,10 +129,10 @@ const RemovePlayer = ({ tournament, player }: Readonly<RemovePlayerProps>) => {
     error,
     isError,
     isPending,
-  } = useTournamentPlayerDeleteMutation(tournament, player.nickname);
+  } = useTournamentPlayerStatusMutation(tournament, player.nickname);
 
   const handlePlayerRemove = () => {
-    removePlayer();
+    removePlayer({ status: "deleted" });
   };
 
   return (
@@ -291,10 +291,21 @@ const AvailablePlayersCard = ({
     playersStatus === "error" || tournamentPlayersStatus === "error";
   const errorMessage = playersError?.message || tournamentPlayersError?.message;
 
+  // Get all player nicknames already in tournament (regardless of status)
+  const tournamentPlayerNicknames = new Set(
+    tournamentPlayers?.map((tp) => tp.nickname) || []
+  );
+
+  // Filter out players already in tournament from the general players list
+  const availablePlayers =
+    players?.filter(
+      (player) => !tournamentPlayerNicknames.has(player.nickname)
+    ) || [];
+
   return (
     <StyledCard elevation={2}>
       <StyledCardHeader
-        title={`Available Players ${"(" + players?.length + ")"}`}
+        title={`Available Players ${"(" + (players?.length || 0) + ")"}`}
       />
       <CardContent>
         {isLoading && (
@@ -320,7 +331,10 @@ const AvailablePlayersCard = ({
               </TableHead>
               <TableBody>
                 {tournamentPlayers
-                  ?.filter((player) => player.active)
+                  ?.filter(
+                    (player) =>
+                      player.status === "active" || player.status === "inactive"
+                  )
                   .map((player) => (
                     <RemovePlayer
                       key={player.nickname}
@@ -328,20 +342,32 @@ const AvailablePlayersCard = ({
                       player={player}
                     />
                   ))}
-                {players?.map((player) => {
-                  const tournamentPlayer = tournamentPlayers?.find(
-                    (tp) => tp.nickname === player.nickname
-                  );
-                  return (
+                {tournamentPlayers
+                  ?.filter((player) => player.status === "deleted")
+                  .map((player) => (
                     <ExistingPlayer
                       key={player.nickname}
                       tournament={tournament}
-                      player={player}
+                      player={{
+                        nickname: player.nickname,
+                        realname: player.realname || "",
+                        rfid: player.rfid || "",
+                        created: "",
+                        updated: "",
+                      }}
                       initialScore={initialScore}
-                      tournamentPlayer={tournamentPlayer}
+                      tournamentPlayer={player}
                     />
-                  );
-                })}
+                  ))}
+                {availablePlayers.map((player) => (
+                  <ExistingPlayer
+                    key={player.nickname}
+                    tournament={tournament}
+                    player={player}
+                    initialScore={initialScore}
+                    tournamentPlayer={undefined}
+                  />
+                ))}
                 <NewPlayer />
               </TableBody>
             </Table>
