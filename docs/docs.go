@@ -1540,13 +1540,10 @@ const docTemplate = `{
         "TournamentPlayer": {
             "type": "object",
             "required": [
-                "active",
-                "nickname"
+                "nickname",
+                "status"
             ],
             "properties": {
-                "active": {
-                    "type": "boolean"
-                },
                 "latest": {
                     "type": "string"
                 },
@@ -1561,6 +1558,18 @@ const docTemplate = `{
                 },
                 "rfid": {
                     "type": "string"
+                },
+                "status": {
+                    "enum": [
+                        "active",
+                        "inactive",
+                        "deleted"
+                    ],
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.Status"
+                        }
+                    ]
                 }
             }
         },
@@ -1625,10 +1634,14 @@ const docTemplate = `{
         "model.Status": {
             "type": "string",
             "enum": [
-                "active"
+                "active",
+                "inactive",
+                "deleted"
             ],
             "x-enum-varnames": [
-                "ACTIVE"
+                "ACTIVE",
+                "INACTIVE",
+                "DELETED"
             ]
         },
         "model.Winner": {
