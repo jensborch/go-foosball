@@ -1533,13 +1533,10 @@
         "TournamentPlayer": {
             "type": "object",
             "required": [
-                "active",
-                "nickname"
+                "nickname",
+                "status"
             ],
             "properties": {
-                "active": {
-                    "type": "boolean"
-                },
                 "latest": {
                     "type": "string"
                 },
@@ -1554,6 +1551,18 @@
                 },
                 "rfid": {
                     "type": "string"
+                },
+                "status": {
+                    "enum": [
+                        "active",
+                        "inactive",
+                        "deleted"
+                    ],
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/model.Status"
+                        }
+                    ]
                 }
             }
         },
@@ -1618,10 +1627,14 @@
         "model.Status": {
             "type": "string",
             "enum": [
-                "active"
+                "active",
+                "inactive",
+                "deleted"
             ],
             "x-enum-varnames": [
-                "ACTIVE"
+                "ACTIVE",
+                "INACTIVE",
+                "DELETED"
             ]
         },
         "model.Winner": {

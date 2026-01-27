@@ -157,28 +157,6 @@ export const useTournamentMutation = () => {
   });
 };
 
-export const useAddPlayer2Tournament = ({
-  tournament,
-  nickname,
-}: {
-  tournament: string;
-  nickname: string;
-}) => {
-  const { mutate } = useTournamentPlayerMutation(tournament);
-  return () => mutate({ nickname });
-};
-
-export const useRemovePlayerFromTournament = ({
-  tournament,
-  nickname,
-}: {
-  tournament: string;
-  nickname: string;
-}) => {
-  const { mutate } = useTournamentPlayerDeleteMutation(tournament, nickname);
-  return mutate;
-};
-
 export const useTournamentPlayerMutation = (tournament: string) => {
   const queryClient = useQueryClient();
 
@@ -200,14 +178,15 @@ export const useTournamentPlayerMutation = (tournament: string) => {
   });
 };
 
-export const useTournamentPlayerDeleteMutation = (
+export const useTournamentPlayerStatusMutation = (
   tournament: string,
   nickname: string
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => api.tournaments.playersDelete2(tournament, nickname),
+    mutationFn: (status: Api.TournamentPlayerStatus) =>
+      api.tournaments.playersUpdate(tournament, nickname, status),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [CacheKeys.TournamentPlayers, tournament],

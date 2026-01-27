@@ -67,7 +67,7 @@ func (r *playerRepository) FindAllNotInTournament(id string) []*model.Player {
 	var players []*model.Player
 	sub := r.db.Select("player_id").
 		Where("tournament_id = ?", id).
-		Where("active = ?", true).
+		Where("status = ?", "active").
 		Table("tournament_players")
 	r.db.Model(&model.Player{}).
 		Where("players.id NOT IN (?)", sub).

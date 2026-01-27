@@ -17,8 +17,7 @@ import {
 } from "@mui/material";
 import {
   useTournamentPlayers,
-  useAddPlayer2Tournament,
-  useRemovePlayerFromTournament,
+  useTournamentPlayerStatusMutation,
   useTournamentPlayersDeleteMutation,
 } from "../api/hooks";
 import { Error } from "./Error";
@@ -42,27 +41,19 @@ type PlayerProps = {
 };
 
 const Player = ({ tournament, player }: PlayerProps) => {
-  const add = useAddPlayer2Tournament({
+  const { mutate } = useTournamentPlayerStatusMutation(
     tournament,
-    nickname: player.nickname,
-  });
-  const remove = useRemovePlayerFromTournament({
-    tournament,
-    nickname: player.nickname,
-  });
+    player.nickname
+  );
   function setSelected(selected: boolean) {
-    if (selected) {
-      add();
-    } else {
-      remove();
-    }
+    mutate({ status: selected ? "active" : "inactive" });
   }
   return (
     <ListItem disableGutters secondaryAction={<Chip label={player.ranking} />}>
       <ListItemAvatar>
         <AnimatedAvatar
           avatar={player.nickname}
-          selected={player.active}
+          selected={player.status === "active"}
           setSelected={setSelected}
           selectedComp={<CheckIcon />}
           deselectedComp={player.nickname.substring(0, 1).toUpperCase()}
@@ -192,6 +183,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
             {data
               .map((p) => ({ latest: MIN_DATE, ...p }))
               .sort(sortPlayers(order))
+              .filter((p) => p.status !== "deleted")
               .map((p, i) => (
                 <div key={p.nickname}>
                   <Player player={p} tournament={tournament} />

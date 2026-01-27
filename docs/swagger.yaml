@@ -213,8 +213,6 @@ definitions:
     type: object
   TournamentPlayer:
     properties:
-      active:
-        type: boolean
       latest:
         type: string
       nickname:
@@ -225,9 +223,16 @@ definitions:
         type: string
       rfid:
         type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/model.Status'
+        enum:
+        - active
+        - inactive
+        - deleted
     required:
-    - active
     - nickname
+    - status
     type: object
   TournamentPlayerHistory:
     properties:
@@ -270,9 +275,13 @@ definitions:
   model.Status:
     enum:
     - active
+    - inactive
+    - deleted
     type: string
     x-enum-varnames:
     - ACTIVE
+    - INACTIVE
+    - DELETED
   model.Winner:
     enum:
     - right
