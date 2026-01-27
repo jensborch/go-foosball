@@ -1,4 +1,4 @@
-import { Autocomplete, Grid, TextField } from "@mui/material";
+import { Autocomplete, Stack, TextField } from "@mui/material";
 import { format } from "date-fns";
 import { useState } from "react";
 import {
@@ -99,20 +99,14 @@ type ChartProps = {
 const HistoryChart = ({ tournament }: ChartProps) => {
   const [nickname, setNickname] = useState<string | null>(null);
   return (
-    <Grid container spacing={2} direction="column">
-      <Grid>
-        <Players
-          nickname={nickname}
-          setNickname={setNickname}
-          tournament={tournament}
-        />
-      </Grid>
-      {nickname ? (
-        <Grid>
-          <History tournament={tournament} nickname={nickname} />
-        </Grid>
-      ) : undefined}
-    </Grid>
+    <Stack spacing={2}>
+      <Players
+        nickname={nickname}
+        setNickname={setNickname}
+        tournament={tournament}
+      />
+      {nickname && <History tournament={tournament} nickname={nickname} />}
+    </Stack>
   );
 };
 
