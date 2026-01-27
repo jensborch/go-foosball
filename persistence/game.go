@@ -62,9 +62,9 @@ func (r *gameRepository) FindByTournament(id string) []*model.Game {
 		Preload("LeftPlayerOne.Player").
 		Preload("LeftPlayerTwo.Player").
 		Preload(clause.Associations).
-		Joins("inner join tournament_tables on games.tournament_table_id == tournament_tables.id").
+		Joins("inner join tournament_tables on games.tournament_table_id = tournament_tables.id").
 		Joins("inner join tables on tournament_tables.table_id = tables.id").
-		Joins("inner join tournaments on tournaments.id == tournament_tables.tournament_id").
+		Joins("inner join tournaments on tournaments.id = tournament_tables.tournament_id").
 		Where("tournaments.ID = ?", id).
 		Order("games.created_at").
 		Find(&games).Error; err != nil {

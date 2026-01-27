@@ -104,14 +104,15 @@ func (r *tournamentRepository) FindAllPlayers(tournamentId string) ([]*model.Tou
 }
 
 func sortPlayersByNickname(players []*model.TournamentPlayer) []*model.TournamentPlayer {
-	if players != nil {
-		result := make([]*model.TournamentPlayer, len(players))
-		copy(result, players)
-		sort.Slice(result, func(p, q int) bool {
-			return players[p].Player.Nickname < players[q].Player.Nickname
-		})
+	if players == nil {
+		return nil
 	}
-	return players
+	result := make([]*model.TournamentPlayer, len(players))
+	copy(result, players)
+	sort.Slice(result, func(p, q int) bool {
+		return result[p].Player.Nickname < result[q].Player.Nickname
+	})
+	return result
 }
 
 func (r *tournamentRepository) FindPlayer(tournamentId string, nickname string) (*model.TournamentPlayer, model.Found) {

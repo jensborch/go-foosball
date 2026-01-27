@@ -65,7 +65,7 @@ const (
 	DRAW = "draw"
 )
 
-// GetOrCalculateRightScore returns game score for saven games or calcukates new score
+// GetOrCalculateRightScore returns game score for saved games or calculates new score
 func (g *Game) GetOrCalculateRightScore() int {
 	if g.RightScore == 0 {
 		right, _ := g.GameScore()
@@ -74,7 +74,7 @@ func (g *Game) GetOrCalculateRightScore() int {
 	return g.RightScore
 }
 
-// GetOrCalculateLeftScore returns game score for saven games or calculates new score
+// GetOrCalculateLeftScore returns game score for saved games or calculates new score
 func (g *Game) GetOrCalculateLeftScore() int {
 	if g.LeftScore == 0 {
 		_, left := g.GameScore()
@@ -83,7 +83,7 @@ func (g *Game) GetOrCalculateLeftScore() int {
 	return g.LeftScore
 }
 
-func (g *Game) calculateRightRaning() float64 {
+func (g *Game) calculateRightRanking() float64 {
 	r := float64(g.RightPlayerOne.Ranking+g.RightPlayerTwo.Ranking) / float64(len(g.Right()))
 	return r
 }
@@ -94,7 +94,7 @@ func (g *Game) calculateLeftRanking() float64 {
 }
 
 func (g *Game) gameLeftScoreFactor() float64 {
-	return 1 / (math.Pow(10, ((g.calculateLeftRanking()-g.calculateRightRaning())/1000)) + 1)
+	return 1 / (math.Pow(10, ((g.calculateLeftRanking()-g.calculateRightRanking())/1000)) + 1)
 }
 
 func round(f float64) uint {

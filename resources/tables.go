@@ -71,6 +71,7 @@ type CreateTableRequest struct {
 // @Router   /tables/ [post]
 func PostTable(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		var table CreateTableRequest
 		if err := c.ShouldBindJSON(&table); err != nil {
 			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
@@ -125,6 +126,7 @@ type AddTableRequest struct {
 // @Router   /tournaments/{id}/tables [post]
 func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		id := c.Param(param)
 		var representation AddTableRequest
 		if err := c.ShouldBindJSON(&representation); err != nil {
@@ -157,6 +159,7 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 // @Router   /tournaments/{id}/tables/{tableId} [delete]
 func DeleteTournamentTable(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
+		defer HandlePanic(c)
 		tourId := c.Param(tournamentParam)
 		tableId := c.Param(tableParam)
 		tx := db.Begin()
