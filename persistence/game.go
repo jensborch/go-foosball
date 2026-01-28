@@ -73,7 +73,7 @@ func (r *gameRepository) FindByTournament(id string) []*model.Game {
 	return games
 }
 
-// NewGameRepository creats new repository
+// NewGameRepository creates a new GameRepository instance.
 func NewGameRepository(db *gorm.DB) model.GameRepository {
 	return &gameRepository{
 		db: db,

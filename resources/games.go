@@ -85,8 +85,8 @@ func addPlayers(tourId string, players []string, repo model.TournamentRepository
 	return found
 }
 
-// PostGame saves a played game
-// @Summary  Submit gamne results
+// PostGame saves a played game result.
+// @Summary  Submit game results
 // @Tags     tournament
 // @Accept   json
 // @Produce  json
@@ -128,8 +128,8 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 	}
 }
 
-// GetGame returns a game played
-// @Summary  Get gamne results
+// GetGame returns a game by ID.
+// @Summary  Get game results
 // @Tags     game
 // @Accept   json
 // @Produce  json
@@ -150,8 +150,8 @@ func GetGame(param string, db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-// GetGames returns all games
-// @Summary  Get all gamne results
+// GetGames returns all games played.
+// @Summary  Get all game results
 // @Tags     game
 // @Accept   json
 // @Produce  json
@@ -193,8 +193,8 @@ func GetGameStart(param string, db *gorm.DB) func(*gin.Context) {
 	}
 }
 
-// GetGameEvents creats web socket with tournamnent game events
-// @Summary  Opens a web socket for tournamnent game start events
+// GetGameEvents creates a WebSocket connection for tournament game events.
+// @Summary  Opens a WebSocket for tournament game start events
 // @Tags     events
 // @Produce  json-stream
 // @Param    id   path      string  true  "Tournament ID"

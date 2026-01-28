@@ -76,7 +76,7 @@ func (r *playerRepository) FindAllNotInTournament(id string) []*model.Player {
 	return players
 }
 
-// NewPlayerRepository creats new repository
+// NewPlayerRepository creates a new PlayerRepository instance.
 func NewPlayerRepository(db *gorm.DB) model.PlayerRepository {
 	return &playerRepository{
 		db: db,

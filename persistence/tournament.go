@@ -278,7 +278,7 @@ func (r *tournamentRepository) History(tournamentId string, from time.Time) ([]*
 	return nil, false
 }
 
-// NewTournamentRepository creats new repository
+// NewTournamentRepository creates a new TournamentRepository instance.
 func NewTournamentRepository(db *gorm.DB) model.TournamentRepository {
 	return &tournamentRepository{
 		db: db,

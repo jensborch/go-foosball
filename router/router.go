@@ -44,11 +44,11 @@ func setupTournamentRoutes(api *gin.RouterGroup, db *gorm.DB) {
 	tournaments.DELETE("/:id", resources.DeleteTournament("id", db))
 
 	// Tournament players
-	tournaments.GET("/:id/players", resources.GetTournamentPlayes("id", db))
+	tournaments.GET("/:id/players", resources.GetTournamentPlayers("id", db))
 	tournaments.POST("/:id/players", resources.PostTournamentPlayer("id", db))
 	tournaments.PUT("/:id/players/:name", resources.UpdateTournamentPlayerStatus("id", "name", db))
 	tournaments.DELETE("/:id/players", resources.DeleteAllTournamentPlayers("id", db))
-	tournaments.GET("/:id/players/:name/history", resources.GetTournamentPlayeHistory("id", "name", db))
+	tournaments.GET("/:id/players/:name/history", resources.GetTournamentPlayerHistory("id", "name", db))
 	tournaments.GET("/:id/history", resources.GetTournamentHistory("id", db))
 
 	// Tournament tables
