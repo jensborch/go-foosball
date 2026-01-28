@@ -67,13 +67,12 @@ export const useTournamentPlayers = (tournament: string) => {
 };
 
 export const useTournamentHistory = (tournament: string) => {
+  const fromDate = format(sub(new Date(), { months: 1 }), "yyyy-MM-dd");
   return useQuery<Api.TournamentHistory[], Error>({
-    queryKey: [CacheKeys.TournamentHistory, tournament],
+    queryKey: [CacheKeys.TournamentHistory, tournament, fromDate],
     queryFn: async (): Promise<Api.TournamentHistory[]> => {
       return api.tournaments
-        .historyList(tournament, {
-          from: format(sub(new Date(), { months: 1 }), "yyyy-MM-dd"),
-        })
+        .historyList(tournament, { from: fromDate })
         .then(handleErrors)
         .then((r) => r.data);
     },
