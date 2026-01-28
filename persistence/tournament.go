@@ -50,13 +50,19 @@ func (r *tournamentRepository) AddTables(tournamentId string, table *model.Table
 }
 
 func (r *tournamentRepository) FindAllTables(id string) ([]*model.TournamentTable, model.Found) {
+	if _, found := r.Find(id); !found {
+		return nil, false
+	}
 	var tables []*model.TournamentTable
 	err := r.db.Model(&model.TournamentTable{}).
 		Preload(clause.Associations).
 		Joins("join tournaments on tournament_tables.tournament_id = tournaments.id").
 		Where("tournaments.ID = ?", id).
 		Find(&tables).Error
-	return tables, HasBeenFound(err)
+	if err != nil {
+		panic(err)
+	}
+	return tables, true
 }
 
 func (r *tournamentRepository) FindTable(tournamentId string, tableId string) (*model.TournamentTable, model.Found) {
@@ -67,7 +73,7 @@ func (r *tournamentRepository) FindTable(tournamentId string, tableId string) (*
 		Joins("inner join tables on tournament_tables.table_id = tables.id").
 		Where("tables.ID = ?", tableId).
 		Where("tournaments.ID = ?", tournamentId).
-		Find(&table).Error
+		First(&table).Error
 	return &table, HasBeenFound(err)
 }
 
@@ -98,13 +104,19 @@ func (r *tournamentRepository) AddPlayer(id string, p *model.Player) (*model.Tou
 }
 
 func (r *tournamentRepository) FindAllPlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {
+	if _, found := r.Find(tournamentId); !found {
+		return nil, false
+	}
 	var players []*model.TournamentPlayer
 	err := r.db.Model(&model.TournamentPlayer{}).
 		Preload(clause.Associations).
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Where("tournaments.ID = ?", tournamentId).
 		Find(&players).Error
-	return service.SortPlayersByNickname(players), HasBeenFound(err)
+	if err != nil {
+		panic(err)
+	}
+	return service.SortPlayersByNickname(players), true
 }
 
 func (r *tournamentRepository) FindPlayer(tournamentId string, nickname string) (*model.TournamentPlayer, model.Found) {
@@ -126,6 +138,9 @@ func (r *tournamentRepository) FindPlayer(tournamentId string, nickname string) 
 }
 
 func (r *tournamentRepository) FindAllActivePlayers(tournamentId string) ([]*model.TournamentPlayer, model.Found) {
+	if _, found := r.Find(tournamentId); !found {
+		return nil, false
+	}
 	var players []*model.TournamentPlayer
 	err := r.db.Model(&model.TournamentPlayer{}).
 		Preload(clause.Associations).
@@ -134,7 +149,10 @@ func (r *tournamentRepository) FindAllActivePlayers(tournamentId string) ([]*mod
 		Where("tournament_players.status = ?", model.ACTIVE).
 		Where("tournaments.ID = ?", tournamentId).
 		Find(&players).Error
-	return service.SortPlayersByNickname(players), HasBeenFound(err)
+	if err != nil {
+		panic(err)
+	}
+	return service.SortPlayersByNickname(players), true
 }
 
 func (r *tournamentRepository) DeactivatePlayers(tournamentId string) model.Found {
