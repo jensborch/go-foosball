@@ -117,8 +117,7 @@ func PostTournament(db *gorm.DB) func(*gin.Context) {
 			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
-		tx := db.Begin()
-		defer commitOrRollback(c, tx)
+		tx := GetTx(c)
 		r := persistence.NewTournamentRepository(tx)
 		t := model.NewTournament(tournament.Name)
 		t.GameScore = tournament.GameScore
@@ -154,8 +153,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
-		tx := db.Begin()
-		defer commitOrRollback(c, tx)
+		tx := GetTx(c)
 		tourRepo := persistence.NewTournamentRepository(tx)
 		playerRepo := persistence.NewPlayerRepository(tx)
 		p, found := playerRepo.Find(pr.Nickname)
@@ -196,8 +194,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 func DeleteTournament(tournamentParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(tournamentParam)
-		tx := db.Begin()
-		defer commitOrRollback(c, tx)
+		tx := GetTx(c)
 		r := persistence.NewTournamentRepository(tx)
 		if found := r.Remove(id); found {
 			service.ClearGameRoundGenerator(id)
@@ -233,8 +230,7 @@ func UpdateTournamentPlayerStatus(tournamentParam string, playerParam string, db
 		}
 		id := c.Param(tournamentParam)
 		nickname := c.Param(playerParam)
-		tx := db.Begin()
-		defer commitOrRollback(c, tx)
+		tx := GetTx(c)
 		r := persistence.NewTournamentRepository(tx)
 		if tp, found := r.UpdatePlayerStatus(id, nickname, status.Status); found {
 			service.ClearGameRoundGenerator(id)
@@ -260,8 +256,7 @@ func UpdateTournamentPlayerStatus(tournamentParam string, playerParam string, db
 func DeleteAllTournamentPlayers(tournamentParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(tournamentParam)
-		tx := db.Begin()
-		defer commitOrRollback(c, tx)
+		tx := GetTx(c)
 		r := persistence.NewTournamentRepository(tx)
 		if found := r.DeactivatePlayers(id); found {
 			service.ClearGameRoundGenerator(id)

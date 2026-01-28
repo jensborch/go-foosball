@@ -67,15 +67,23 @@ func ErrorHandlerMiddleware() gin.HandlerFunc {
 	}
 }
 
-// TransactionMiddleware wraps handlers with database transaction management
+// TransactionMiddleware wraps handlers with database transaction management.
+// Only creates transactions for write operations (POST, PUT, DELETE, PATCH).
 func TransactionMiddleware(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// Skip transaction for read operations
+		if c.Request.Method == "GET" || c.Request.Method == "HEAD" || c.Request.Method == "OPTIONS" {
+			c.Set("db", db)
+			c.Next()
+			return
+		}
+
 		tx := db.Begin()
 		c.Set("tx", tx)
 
 		c.Next()
 
-		if len(c.Errors) > 0 || c.Writer.Status() >= 400 {
+		if len(c.Errors) > 0 || c.Writer.Status() >= 400 || c.IsAborted() {
 			tx.Rollback()
 		} else {
 			tx.Commit()
@@ -83,10 +91,14 @@ func TransactionMiddleware(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-// GetTx retrieves the transaction from context
+// GetTx retrieves the transaction from context for write operations,
+// or the database connection for read operations.
 func GetTx(c *gin.Context) *gorm.DB {
 	if tx, exists := c.Get("tx"); exists {
 		return tx.(*gorm.DB)
+	}
+	if db, exists := c.Get("db"); exists {
+		return db.(*gorm.DB)
 	}
 	return nil
 }

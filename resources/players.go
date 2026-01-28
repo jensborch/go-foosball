@@ -74,8 +74,7 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
-		tx := db.Begin()
-		defer commitOrRollback(c, tx)
+		tx := GetTx(c)
 		r := persistence.NewPlayerRepository(tx)
 		if _, found := r.Find(player.Nickname); found {
 			Abort(c, ConflictError("Player %s already exists", player.Nickname))
@@ -100,21 +99,12 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 func DeletePlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		name := c.Param(param)
-		tx := db.Begin()
-		defer commitOrRollback(c, tx)
+		tx := GetTx(c)
 		r := persistence.NewPlayerRepository(tx)
 		if found := r.Remove(name); found {
 			c.Status(http.StatusNoContent)
 		} else {
 			Abort(c, NotFoundError("Could not find %s", name))
 		}
-	}
-}
-
-func commitOrRollback(c *gin.Context, tx *gorm.DB) {
-	if len(c.Errors) > 0 || c.IsAborted() {
-		tx.Rollback()
-	} else {
-		tx.Commit()
 	}
 }

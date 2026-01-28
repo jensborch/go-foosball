@@ -105,8 +105,7 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
-		tx := db.Begin()
-		defer commitOrRollback(c, tx)
+		tx := GetTx(c)
 		tourRepo := persistence.NewTournamentRepository(tx)
 		table, found := tourRepo.FindTable(tourId, tableId)
 		if !found {
