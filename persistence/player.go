@@ -48,18 +48,22 @@ func (r *playerRepository) Find(nickname string) (*model.Player, model.Found) {
 
 func (r *playerRepository) FindByTournament(id string) []*model.Player {
 	var players []*model.Player
-	r.db.Joins("LEFT JOIN tournament_players ON tournament_players.player_id = players.id ").
+	if err := r.db.Joins("LEFT JOIN tournament_players ON tournament_players.player_id = players.id ").
 		Joins("LEFT JOIN tournaments ON tournament_players.tournament_id = tournaments.id").
 		Preload("TournamentPlayers").
 		Where("tournaments.ID = ?", id).
 		Order("nickname").
-		Find(&players)
+		Find(&players).Error; err != nil {
+		panic(err)
+	}
 	return players
 }
 
 func (r *playerRepository) FindAll() []*model.Player {
 	var players []*model.Player
-	r.db.Order("nickname").Find(&players)
+	if err := r.db.Order("nickname").Find(&players).Error; err != nil {
+		panic(err)
+	}
 	return players
 }
 
@@ -69,10 +73,12 @@ func (r *playerRepository) FindAllNotInTournament(id string) []*model.Player {
 		Where("tournament_id = ?", id).
 		Where("status = ?", "active").
 		Table("tournament_players")
-	r.db.Model(&model.Player{}).
+	if err := r.db.Model(&model.Player{}).
 		Where("players.id NOT IN (?)", sub).
 		Order("nickname").
-		Find(&players)
+		Find(&players).Error; err != nil {
+		panic(err)
+	}
 	return players
 }
 

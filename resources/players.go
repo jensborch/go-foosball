@@ -1,7 +1,6 @@
 package resources
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,13 +21,12 @@ import (
 // @Router   /players/{id} [get]
 func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		defer HandlePanic(c)
 		name := c.Param(param)
 		r := persistence.NewPlayerRepository(db)
 		if p, found := r.Find(name); found {
 			c.JSON(http.StatusOK, p)
 		} else {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", name)))
+			Abort(c, NotFoundError("Could not find %s", name))
 		}
 	}
 }
@@ -43,7 +41,6 @@ func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 // @Router   /players [get]
 func GetPlayers(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		defer HandlePanic(c)
 		r := persistence.NewPlayerRepository(db)
 		if exclude, found := c.GetQuery("exclude"); found {
 			c.JSON(http.StatusOK, r.FindAllNotInTournament(exclude))
@@ -72,17 +69,16 @@ type CreatePlayerRequest struct {
 // @Router   /players [post]
 func PostPlayer(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		defer HandlePanic(c)
 		var player CreatePlayerRequest
 		if err := c.ShouldBindJSON(&player); err != nil {
-			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
 		tx := db.Begin()
-		defer HandlePanicInTransaction(c, tx)
+		defer commitOrRollback(c, tx)
 		r := persistence.NewPlayerRepository(tx)
 		if _, found := r.Find(player.Nickname); found {
-			c.JSON(http.StatusConflict, NewErrorResponse(fmt.Sprintf("Player %s already exists", player.Nickname)))
+			Abort(c, ConflictError("Player %s already exists", player.Nickname))
 			return
 		}
 		p := model.NewPlayer(player.Nickname, player.RealName, player.RFID)
@@ -103,15 +99,22 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 // @Router   /players/{id} [delete]
 func DeletePlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		defer HandlePanic(c)
 		name := c.Param(param)
 		tx := db.Begin()
-		defer HandlePanicInTransaction(c, tx)
+		defer commitOrRollback(c, tx)
 		r := persistence.NewPlayerRepository(tx)
 		if found := r.Remove(name); found {
 			c.Status(http.StatusNoContent)
 		} else {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", name)))
+			Abort(c, NotFoundError("Could not find %s", name))
 		}
+	}
+}
+
+func commitOrRollback(c *gin.Context, tx *gorm.DB) {
+	if len(c.Errors) > 0 || c.IsAborted() {
+		tx.Rollback()
+	} else {
+		tx.Commit()
 	}
 }

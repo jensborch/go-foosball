@@ -3,13 +3,12 @@ package resources
 import (
 	"fmt"
 	"net/http"
-	"runtime/debug"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-// NewError creates an new error response
+// NewErrorResponse creates a new error response
 func NewErrorResponse(error string) *ErrorResponse {
 	return &ErrorResponse{
 		Error: error,
@@ -21,33 +20,73 @@ type ErrorResponse struct {
 	Error string `json:"error" binding:"required"`
 } //@name Error
 
-// HandlePanicInTransaction provides a defer function to handle panics when a transaction has been started
-func HandlePanicInTransaction(c *gin.Context, tx *gorm.DB) {
-	if r := recover(); r != nil {
-		switch r := r.(type) {
-		case error:
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(r.Error()))
-		default:
-			c.JSON(http.StatusInternalServerError, NewErrorResponse("Unknown error"))
+// HTTPError represents an error with an associated HTTP status code
+type HTTPError struct {
+	Status  int
+	Message string
+}
+
+func (e *HTTPError) Error() string {
+	return e.Message
+}
+
+// NotFoundError creates a 404 error
+func NotFoundError(format string, args ...interface{}) *HTTPError {
+	return &HTTPError{Status: http.StatusNotFound, Message: fmt.Sprintf(format, args...)}
+}
+
+// BadRequestError creates a 400 error
+func BadRequestError(format string, args ...interface{}) *HTTPError {
+	return &HTTPError{Status: http.StatusBadRequest, Message: fmt.Sprintf(format, args...)}
+}
+
+// ConflictError creates a 409 error
+func ConflictError(format string, args ...interface{}) *HTTPError {
+	return &HTTPError{Status: http.StatusConflict, Message: fmt.Sprintf(format, args...)}
+}
+
+// Abort adds an HTTPError to context and aborts the request
+func Abort(c *gin.Context, err *HTTPError) {
+	_ = c.Error(err)
+	c.Abort()
+}
+
+// ErrorHandlerMiddleware processes errors added via c.Error() and returns consistent JSON responses
+func ErrorHandlerMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Next()
+
+		if len(c.Errors) > 0 {
+			err := c.Errors.Last().Err
+			if httpErr, ok := err.(*HTTPError); ok {
+				c.JSON(httpErr.Status, NewErrorResponse(httpErr.Message))
+			} else {
+				c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
+			}
 		}
-		tx.Rollback()
-		fmt.Println("Panic occurred:", r)
-		debug.PrintStack()
-	} else {
-		tx.Commit()
 	}
 }
 
-// HandlePanic provides a defer function to handle panics
-func HandlePanic(c *gin.Context) {
-	if r := recover(); r != nil {
-		switch r := r.(type) {
-		case error:
-			c.JSON(http.StatusInternalServerError, NewErrorResponse(r.Error()))
-		default:
-			c.JSON(http.StatusInternalServerError, NewErrorResponse("Unknown error"))
+// TransactionMiddleware wraps handlers with database transaction management
+func TransactionMiddleware(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		tx := db.Begin()
+		c.Set("tx", tx)
+
+		c.Next()
+
+		if len(c.Errors) > 0 || c.Writer.Status() >= 400 {
+			tx.Rollback()
+		} else {
+			tx.Commit()
 		}
-		fmt.Println("Panic occurred:", r)
-		debug.PrintStack()
 	}
+}
+
+// GetTx retrieves the transaction from context
+func GetTx(c *gin.Context) *gorm.DB {
+	if tx, exists := c.Get("tx"); exists {
+		return tx.(*gorm.DB)
+	}
+	return nil
 }
