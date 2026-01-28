@@ -162,8 +162,9 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			return
 		}
 		if tp, found := tourRepo.ActivatePlayer(id, p.Nickname); found {
-			c.JSON(http.StatusCreated, tp)
-			playerEventPublisher.Publish(id, NewPlayerRepresentation(tp))
+			pr := NewPlayerRepresentation(tp)
+			c.JSON(http.StatusCreated, pr)
+			playerEventPublisher.Publish(id, pr)
 			return
 		}
 		addPlayer := func() (*model.TournamentPlayer, model.Found) {
@@ -173,8 +174,9 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			return tourRepo.AddPlayerWithRanking(id, p, pr.Ranking)
 		}
 		if tp, found := addPlayer(); found {
-			c.JSON(http.StatusCreated, tp)
-			playerEventPublisher.Publish(id, NewPlayerRepresentation(tp))
+			pr := NewPlayerRepresentation(tp)
+			c.JSON(http.StatusCreated, pr)
+			playerEventPublisher.Publish(id, pr)
 		} else {
 			Abort(c, NotFoundError("Could not find tournament %s", id))
 		}
@@ -314,15 +316,15 @@ func GetTournamentPlayerHistory(tournamentParam string, playerParam string, db *
 	}
 }
 
-type TournamentHistoryRepresenatation struct {
+type TournamentHistoryRepresentation struct {
 	UpdatedAt time.Time `json:"updated" binding:"required"`
 	Nickname  string    `json:"nickname" binding:"required"`
 	RealName  string    `json:"realname"`
 	Ranking   uint      `json:"ranking" binding:"required"`
 } //@name TournamentHistory
 
-func newTournamentHistory(history *model.TournamentPlayerHistory) *TournamentHistoryRepresenatation {
-	return &TournamentHistoryRepresenatation{
+func newTournamentHistory(history *model.TournamentPlayerHistory) *TournamentHistoryRepresentation {
+	return &TournamentHistoryRepresentation{
 		UpdatedAt: history.UpdatedAt,
 		Nickname:  history.TournamentPlayer.Player.Nickname,
 		RealName:  history.TournamentPlayer.Player.RealName,
@@ -337,7 +339,7 @@ func newTournamentHistory(history *model.TournamentPlayerHistory) *TournamentHis
 // @Produce  json
 // @Param    id        path      string  true  "Tournament ID"
 // @Param    from      query     string  true  "The RFC3339 date to get history from"  Format(date)
-// @Success  200       {array}   TournamentHistoryRepresenatation
+// @Success  200       {array}   TournamentHistoryRepresentation
 // @Failure  404       {object}  ErrorResponse
 // @Failure  500       {object}  ErrorResponse
 // @Router   /tournaments/{id}/history [get]
@@ -355,7 +357,7 @@ func GetTournamentHistory(tournamentParam string, db *gorm.DB) func(*gin.Context
 			return
 		}
 		if history, found := persistence.NewTournamentRepository(db).History(id, parsedTime); found {
-			result := make([]TournamentHistoryRepresenatation, len(history))
+			result := make([]TournamentHistoryRepresentation, len(history))
 			for i, h := range history {
 				result[i] = *newTournamentHistory(h)
 			}

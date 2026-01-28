@@ -14,11 +14,11 @@ import (
 // @Tags     player
 // @Accept   json
 // @Produce  json
-// @Param    id   path      string  true  "Player ID"
-// @Success  200  {object}  model.Player
-// @Failure  404  {object}  ErrorResponse
-// @Failure  500  {object}  ErrorResponse
-// @Router   /players/{id} [get]
+// @Param    name  path      string  true  "Player nickname"
+// @Success  200   {object}  model.Player
+// @Failure  404   {object}  ErrorResponse
+// @Failure  500   {object}  ErrorResponse
+// @Router   /players/{name} [get]
 func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		name := c.Param(param)
@@ -91,11 +91,11 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 // @Tags     player
 // @Accept   json
 // @Produce  json
-// @Param    id  path  string  true  "Player ID"
+// @Param    name  path  string  true  "Player nickname"
 // @Success  204
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
-// @Router   /players/{id} [delete]
+// @Router   /players/{name} [delete]
 func DeletePlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		name := c.Param(param)

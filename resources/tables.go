@@ -114,7 +114,7 @@ type AddTableRequest struct {
 // @Produce  json
 // @Param    id     path      string           true  "Tournament ID"
 // @Param    table  body      AddTableRequest  true  "The table"
-// @Success  201    {object}  model.TournamentTable
+// @Success  201    {object}  model.Table
 // @Failure  400    {object}  ErrorResponse
 // @Failure  404    {object}  ErrorResponse
 // @Failure  500    {object}  ErrorResponse
@@ -147,12 +147,12 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 // @Tags     tournament
 // @Accept   json
 // @Produce  json
-// @Param    id       path  string  true  "Tournament ID"
-// @Param    tableId  path  string  true  "Table ID"
+// @Param    id     path  string  true  "Tournament ID"
+// @Param    table  path  string  true  "Table ID"
 // @Success  204
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
-// @Router   /tournaments/{id}/tables/{tableId} [delete]
+// @Router   /tournaments/{id}/tables/{table} [delete]
 func DeleteTournamentTable(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		tourId := c.Param(tournamentParam)

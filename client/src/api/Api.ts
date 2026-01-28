@@ -495,11 +495,11 @@ export class Api<
      * @tags player
      * @name PlayersDetail
      * @summary Get player
-     * @request GET:/players/{id}
+     * @request GET:/players/{name}
      */
-    playersDetail: (id: string, params: RequestParams = {}) =>
+    playersDetail: (name: string, params: RequestParams = {}) =>
       this.request<Player, Error>({
-        path: `/players/${id}`,
+        path: `/players/${name}`,
         method: "GET",
         type: ContentType.Json,
         format: "json",
@@ -512,11 +512,11 @@ export class Api<
      * @tags player
      * @name PlayersDelete
      * @summary Delete player
-     * @request DELETE:/players/{id}
+     * @request DELETE:/players/{name}
      */
-    playersDelete: (id: string, params: RequestParams = {}) =>
+    playersDelete: (name: string, params: RequestParams = {}) =>
       this.request<void, Error>({
-        path: `/players/${id}`,
+        path: `/players/${name}`,
         method: "DELETE",
         type: ContentType.Json,
         ...params,
@@ -895,7 +895,7 @@ export class Api<
      * @request POST:/tournaments/{id}/tables
      */
     tablesCreate: (id: string, table: AddTable, params: RequestParams = {}) =>
-      this.request<TournamentTable, Error>({
+      this.request<Table, Error>({
         path: `/tournaments/${id}/tables`,
         method: "POST",
         body: table,
@@ -910,11 +910,11 @@ export class Api<
      * @tags tournament
      * @name TablesDelete
      * @summary Remove table from tournament
-     * @request DELETE:/tournaments/{id}/tables/{tableId}
+     * @request DELETE:/tournaments/{id}/tables/{table}
      */
-    tablesDelete: (id: string, tableId: string, params: RequestParams = {}) =>
+    tablesDelete: (id: string, table: string, params: RequestParams = {}) =>
       this.request<void, Error>({
-        path: `/tournaments/${id}/tables/${tableId}`,
+        path: `/tournaments/${id}/tables/${table}`,
         method: "DELETE",
         type: ContentType.Json,
         ...params,
