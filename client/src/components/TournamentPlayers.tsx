@@ -36,7 +36,7 @@ import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined";
 import EmojiPeopleOutlinedIcon from "@mui/icons-material/EmojiPeopleOutlined";
 import { useState } from "react";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import ClearAllIcon from "@mui/icons-material/ClearAll";
 
 type PlayerProps = {
   tournament: string;
@@ -165,9 +165,11 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
           </Avatar>
         }
         action={
-          <IconButton aria-label="deselect" onClick={() => deselectAll()}>
-            <RemoveCircleOutlineIcon />
-          </IconButton>
+          <Tooltip title="Deselect all players" arrow>
+            <IconButton aria-label="deselect" onClick={() => deselectAll()}>
+              <ClearAllIcon />
+            </IconButton>
+          </Tooltip>
         }
         title="Players"
       />
