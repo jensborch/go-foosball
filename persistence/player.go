@@ -19,13 +19,11 @@ func (r *playerRepository) Store(player *model.Player) {
 }
 
 func (r *playerRepository) Remove(nickname string) model.Found {
-	found := false
-	if _, found = r.Find(nickname); found {
-		if err := r.db.Where("nickname = ?", nickname).Delete(&model.Player{}).Error; err != nil {
-			panic(err)
-		}
+	result := r.db.Where("nickname = ?", nickname).Delete(&model.Player{})
+	if result.Error != nil {
+		panic(result.Error)
 	}
-	return found
+	return result.RowsAffected > 0
 }
 
 func (r *playerRepository) Update(player *model.Player) {
