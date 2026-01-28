@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { CardContent, Button, Typography, Box, Tooltip } from "@mui/material";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import { CardContent, Typography, Box, Tooltip } from "@mui/material";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import StopIcon from "@mui/icons-material/Stop";
+import CasinoIcon from "@mui/icons-material/Casino";
+import TimerOffIcon from "@mui/icons-material/TimerOff";
 import { conf } from "../api/util";
 import { useTournament, CacheKeys } from "../api/hooks";
-import { StyledCard } from "./Styled";
+import { StyledCard, ActionButton, ActionIcon } from "./Styled";
 import { ColorHex, CountdownCircleTimer } from "react-countdown-circle-timer";
 import { theme } from "./Theming";
 import { useQueryClient } from "@tanstack/react-query";
@@ -124,29 +126,27 @@ const Start = ({ tournament }: { tournament: string }) => {
             sx={{ transform: "translateY(-50%)" }}
           >
             {!isPlaying && (
-              <Button
+              <ActionButton
                 variant="contained"
                 color="primary"
                 onClick={handleStart}
-                size="large"
-                sx={{ minWidth: 150 }}
+                startIcon={<ActionIcon as={PlayArrowIcon} />}
               >
-                Start
-              </Button>
+                Start Game
+              </ActionButton>
             )}
             {isPlaying && (
-              <Button
+              <ActionButton
                 variant="contained"
                 color="secondary"
                 onClick={handleStop}
-                size="large"
-                sx={{ minWidth: 150 }}
+                startIcon={<ActionIcon as={StopIcon} />}
               >
                 Stop
-              </Button>
+              </ActionButton>
             )}
-            <Tooltip title="Generate new games" arrow>
-              <Button
+            <Tooltip title="Shuffle and generate new random games" arrow>
+              <ActionButton
                 variant="outlined"
                 color="primary"
                 onClick={() =>
@@ -154,21 +154,21 @@ const Start = ({ tournament }: { tournament: string }) => {
                     queryKey: [CacheKeys.RandomGames],
                   })
                 }
-                size="large"
+                startIcon={<ActionIcon as={CasinoIcon} />}
               >
-                <RefreshIcon />
-              </Button>
+                Shuffle
+              </ActionButton>
             </Tooltip>
             {!isPlaying && startTime && (
-              <Tooltip title="Reset timer" arrow>
-                <Button
+              <Tooltip title="Reset timer to start over" arrow>
+                <ActionButton
                   variant="outlined"
                   color="secondary"
                   onClick={handleReset}
-                  size="large"
+                  startIcon={<ActionIcon as={TimerOffIcon} />}
                 >
-                  <RestartAltIcon />
-                </Button>
+                  Reset
+                </ActionButton>
               </Tooltip>
             )}
           </Box>

@@ -191,7 +191,6 @@ export const useTournamentPlayerStatusMutation = (
       queryClient.invalidateQueries({
         queryKey: [CacheKeys.TournamentPlayers, tournament],
       });
-      queryClient.invalidateQueries({ queryKey: [CacheKeys.RandomGames] });
       queryClient.invalidateQueries({
         queryKey: [CacheKeys.Players],
       });
