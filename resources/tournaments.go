@@ -249,6 +249,7 @@ func UpdateTournamentPlayerStatus(tournamentParam string, playerParam string, db
 		if tp, found := r.UpdatePlayerStatus(id, nickname, status.Status); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 		} else {
+			service.ClearGameRoundGenerator(id)
 			pr := NewPlayerRepresentation(tp)
 			playerEventPublisher.Publish(id, pr)
 			c.JSON(http.StatusOK, pr)
