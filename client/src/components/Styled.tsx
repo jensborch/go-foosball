@@ -1,14 +1,36 @@
 import { styled } from "@mui/material/styles";
 import CardHeader from "@mui/material/CardHeader";
 import Card from "@mui/material/Card";
-import type { CardProps, GridProps } from "@mui/material";
+import Button from "@mui/material/Button";
+import SvgIcon from "@mui/material/SvgIcon";
+import type {
+  CardProps,
+  GridProps,
+  ButtonProps,
+  SvgIconProps,
+} from "@mui/material";
 import Grid from "@mui/material/Grid";
+import type { Theme } from "@mui/material/styles";
 
 export const MenuOffset = styled("div")(
   ({ theme }: { theme: Theme }) => theme.mixins.toolbar
 );
 
-import type { Theme } from "@mui/material/styles";
+export const ActionButton = styled((props: ButtonProps) => (
+  <Button size="large" {...props} />
+))(({ theme }: { theme: Theme }) => ({
+  minWidth: 160,
+  paddingTop: theme.spacing(1.5),
+  paddingBottom: theme.spacing(1.5),
+  fontWeight: theme.typography.fontWeightBold,
+}));
+
+export const ActionIcon = styled((props: SvgIconProps) => (
+  <SvgIcon {...props} />
+))({
+  width: 24,
+  height: 24,
+});
 
 export const StyledCardHeader = styled(CardHeader)(
   ({ theme }: { theme: Theme }) => ({
