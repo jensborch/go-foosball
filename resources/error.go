@@ -51,10 +51,16 @@ func Abort(c *gin.Context, err *HTTPError) {
 	c.Abort()
 }
 
-// ErrorHandlerMiddleware processes errors added via c.Error() and returns consistent JSON responses
+// ErrorHandlerMiddleware processes errors added via c.Error() and returns consistent JSON responses.
+// It checks if a response has already been written (e.g., by gin.Recovery()) to avoid double writes.
 func ErrorHandlerMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
+
+		// Skip if response already written (e.g., by gin.Recovery() after panic)
+		if c.Writer.Written() {
+			return
+		}
 
 		if len(c.Errors) > 0 {
 			err := c.Errors.Last().Err
