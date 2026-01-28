@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
+	"github.com/jensborch/go-foosball/service"
 	"gorm.io/gorm"
 )
 
@@ -166,6 +167,7 @@ func DeleteTournamentTable(tournamentParam string, tableParam string, db *gorm.D
 		defer HandlePanicInTransaction(c, tx)
 		r := persistence.NewTournamentRepository(tx)
 		if found := r.RemoveTable(tourId, tableId); found {
+			service.ClearGameRoundGenerator(tourId)
 			c.Status(http.StatusNoContent)
 		} else {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s or table %s", tourId, tableId)))
