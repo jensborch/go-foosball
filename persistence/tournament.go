@@ -2,7 +2,6 @@ package persistence
 
 import (
 	"fmt"
-	"sort"
 	"time"
 
 	"github.com/jensborch/go-foosball/model"
@@ -101,19 +100,7 @@ func (r *tournamentRepository) FindAllPlayers(tournamentId string) ([]*model.Tou
 		Joins("inner join tournaments on tournament_players.tournament_id = tournaments.id").
 		Where("tournaments.ID = ?", tournamentId).
 		Find(&players).Error
-	return sortPlayersByNickname(players), HasBeenFound(err)
-}
-
-func sortPlayersByNickname(players []*model.TournamentPlayer) []*model.TournamentPlayer {
-	if players == nil {
-		return nil
-	}
-	result := make([]*model.TournamentPlayer, len(players))
-	copy(result, players)
-	sort.Slice(result, func(p, q int) bool {
-		return result[p].Player.Nickname < result[q].Player.Nickname
-	})
-	return result
+	return service.SortPlayersByNickname(players), HasBeenFound(err)
 }
 
 func (r *tournamentRepository) FindPlayer(tournamentId string, nickname string) (*model.TournamentPlayer, model.Found) {
@@ -143,7 +130,7 @@ func (r *tournamentRepository) FindAllActivePlayers(tournamentId string) ([]*mod
 		Where("tournament_players.status = ?", model.ACTIVE).
 		Where("tournaments.ID = ?", tournamentId).
 		Find(&players).Error
-	return sortPlayersByNickname(players), HasBeenFound(err)
+	return service.SortPlayersByNickname(players), HasBeenFound(err)
 }
 
 func (r *tournamentRepository) DeactivatePlayers(tournamentId string) model.Found {

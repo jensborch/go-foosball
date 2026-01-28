@@ -105,7 +105,9 @@ func DeletePlayer(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
 		name := c.Param(param)
-		r := persistence.NewPlayerRepository(db)
+		tx := db.Begin()
+		defer HandlePanicInTransaction(c, tx)
+		r := persistence.NewPlayerRepository(tx)
 		if found := r.Remove(name); found {
 			c.Status(http.StatusNoContent)
 		} else {
