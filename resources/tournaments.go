@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
+	"github.com/jensborch/go-foosball/service"
 	"gorm.io/gorm"
 )
 
@@ -210,6 +211,7 @@ func DeleteTournament(tournamentParam string, db *gorm.DB) func(*gin.Context) {
 		if found := r.Remove(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 		} else {
+			service.ClearGameRoundGenerator(id)
 			c.Status(http.StatusNoContent)
 		}
 	}
@@ -274,6 +276,7 @@ func DeleteAllTournamentPlayers(tournamentParam string, db *gorm.DB) func(*gin.C
 		if found := r.DeactivatePlayers(id); !found {
 			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 		} else {
+			service.ClearGameRoundGenerator(id)
 			c.Status(http.StatusNoContent)
 		}
 	}
