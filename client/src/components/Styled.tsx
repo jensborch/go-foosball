@@ -49,6 +49,10 @@ export const StyledCard = styled((props: CardProps) => (
   <Card elevation={4} {...props} />
 ))``;
 
+export const ActionButtonGroup = styled((props: GridProps) => (
+  <Grid container spacing={2} alignItems="center" {...props} />
+))``;
+
 export const DefaultGrid = styled((props: GridProps) => (
   <Grid spacing={3} {...props} />
 ))(({ theme }: { theme: Theme }) => ({

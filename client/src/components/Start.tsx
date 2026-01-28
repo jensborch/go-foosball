@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
-import { CardContent, Typography, Box, Tooltip } from "@mui/material";
+import { CardContent, Typography, Tooltip, Grid } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
 import CasinoIcon from "@mui/icons-material/Casino";
 import TimerOffIcon from "@mui/icons-material/TimerOff";
 import { conf } from "../api/util";
 import { useTournament, CacheKeys } from "../api/hooks";
-import { StyledCard, ActionButton, ActionIcon } from "./Styled";
+import {
+  StyledCard,
+  ActionButton,
+  ActionIcon,
+  ActionButtonGroup,
+} from "./Styled";
 import { ColorHex, CountdownCircleTimer } from "react-countdown-circle-timer";
 import { theme } from "./Theming";
 import { useQueryClient } from "@tanstack/react-query";
@@ -27,9 +32,9 @@ const renderTime = ({ remainingTime }: RenderTimeProps) => {
   }
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
+    <Grid container direction="column" alignItems="center">
       <Typography variant="h3">{remainingTime}</Typography>
-    </Box>
+    </Grid>
   );
 };
 
@@ -115,64 +120,50 @@ const Start = ({ tournament }: { tournament: string }) => {
   return (
     <StyledCard>
       <CardContent>
-        <Box position="relative" display="flex" justifyContent="center">
-          <Box
-            position="absolute"
-            left={0}
-            top="50%"
-            display="flex"
-            gap={2}
-            alignItems="center"
-            sx={{ transform: "translateY(-50%)" }}
-          >
-            {!isPlaying && (
-              <ActionButton
-                variant="contained"
-                color="primary"
-                onClick={handleStart}
-                startIcon={<ActionIcon as={PlayArrowIcon} />}
-              >
-                Start Game
-              </ActionButton>
-            )}
-            {isPlaying && (
-              <ActionButton
-                variant="contained"
-                color="secondary"
-                onClick={handleStop}
-                startIcon={<ActionIcon as={StopIcon} />}
-              >
-                Stop
-              </ActionButton>
-            )}
-            <Tooltip title="Shuffle and generate new random games" arrow>
-              <ActionButton
-                variant="outlined"
-                color="primary"
-                onClick={() =>
-                  queryClient.invalidateQueries({
-                    queryKey: [CacheKeys.RandomGames],
-                  })
-                }
-                startIcon={<ActionIcon as={CasinoIcon} />}
-              >
-                Shuffle
-              </ActionButton>
-            </Tooltip>
-            {!isPlaying && startTime && (
-              <Tooltip title="Reset timer to start over" arrow>
-                <ActionButton
-                  variant="outlined"
-                  color="secondary"
-                  onClick={handleReset}
-                  startIcon={<ActionIcon as={TimerOffIcon} />}
-                >
-                  Reset
-                </ActionButton>
-              </Tooltip>
-            )}
-          </Box>
-          <Box>
+        <Grid container alignItems="center">
+          <Grid size={4}>
+            <ActionButtonGroup>
+              <Grid>
+                {!isPlaying && (
+                  <ActionButton
+                    variant="contained"
+                    color="primary"
+                    onClick={handleStart}
+                    startIcon={<ActionIcon as={PlayArrowIcon} />}
+                  >
+                    Start Game
+                  </ActionButton>
+                )}
+                {isPlaying && (
+                  <ActionButton
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleStop}
+                    startIcon={<ActionIcon as={StopIcon} />}
+                  >
+                    Stop
+                  </ActionButton>
+                )}
+              </Grid>
+              <Grid>
+                <Tooltip title="Shuffle and generate new random games" arrow>
+                  <ActionButton
+                    variant="outlined"
+                    color="primary"
+                    onClick={() =>
+                      queryClient.invalidateQueries({
+                        queryKey: [CacheKeys.RandomGames],
+                      })
+                    }
+                    startIcon={<ActionIcon as={CasinoIcon} />}
+                  >
+                    Shuffle
+                  </ActionButton>
+                </Tooltip>
+              </Grid>
+            </ActionButtonGroup>
+          </Grid>
+          <Grid size={4} display="flex" justifyContent="center">
             <CountdownCircleTimer
               onComplete={onComplete}
               onUpdate={onUpdate}
@@ -185,8 +176,22 @@ const Start = ({ tournament }: { tournament: string }) => {
             >
               {renderTime}
             </CountdownCircleTimer>
-          </Box>
-        </Box>
+          </Grid>
+          <Grid size={4} display="flex" justifyContent="flex-end">
+            {!isPlaying && startTime && (
+              <Tooltip title="Reset timer to start over" arrow>
+                <ActionButton
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handleReset}
+                  startIcon={<ActionIcon as={TimerOffIcon} />}
+                >
+                  Reset
+                </ActionButton>
+              </Tooltip>
+            )}
+          </Grid>
+        </Grid>
       </CardContent>
     </StyledCard>
   );
