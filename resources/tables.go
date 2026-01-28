@@ -8,7 +8,6 @@ import (
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
 	"github.com/jensborch/go-foosball/service"
-	"gorm.io/gorm"
 )
 
 // GetTable get info about a table
@@ -21,10 +20,10 @@ import (
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
 // @Router   /tables/{id} [get]
-func GetTable(param string, db *gorm.DB) func(*gin.Context) {
+func GetTable(param string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		if t, found := persistence.NewTableRepository(db).Find(id); found {
+		if t, found := persistence.NewTableRepository(GetDB(c)).Find(id); found {
 			c.JSON(http.StatusOK, t)
 		} else {
 			Abort(c, NotFoundError("Could not find %s", id))
@@ -40,9 +39,9 @@ func GetTable(param string, db *gorm.DB) func(*gin.Context) {
 // @Param    exclude  query    int  false  "exlude tournament from list"
 // @Success  200  {array}  model.Table
 // @Router   /tables [get]
-func GetTables(db *gorm.DB) func(*gin.Context) {
+func GetTables() func(*gin.Context) {
 	return func(c *gin.Context) {
-		r := persistence.NewTableRepository(db)
+		r := persistence.NewTableRepository(GetDB(c))
 		if exclude, found := c.GetQuery("exclude"); found {
 			c.JSON(http.StatusOK, r.FindAllNotInTournament(exclude))
 		} else {
@@ -67,16 +66,16 @@ type CreateTableRequest struct {
 // @Failure  404    {object}  ErrorResponse
 // @Failure  500    {object}  ErrorResponse
 // @Router   /tables/ [post]
-func PostTable(db *gorm.DB) func(*gin.Context) {
+func PostTable() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var table CreateTableRequest
 		if err := c.ShouldBindJSON(&table); err != nil {
 			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
-		tx := GetTx(c)
+		db := GetDB(c)
 		t := model.NewTable(table.Name, table.Color)
-		persistence.NewTableRepository(tx).Store(t)
+		persistence.NewTableRepository(db).Store(t)
 		c.JSON(http.StatusCreated, t)
 	}
 }
@@ -91,10 +90,10 @@ func PostTable(db *gorm.DB) func(*gin.Context) {
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
 // @Router   /tournaments/{id}/tables [get]
-func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
+func GetTournamentTables(param string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		tournamentRepo := persistence.NewTournamentRepository(db)
+		tournamentRepo := persistence.NewTournamentRepository(GetDB(c))
 		if tables, found := tournamentRepo.FindAllTables(id); found {
 			c.JSON(http.StatusOK, tables)
 		} else {
@@ -119,7 +118,7 @@ type AddTableRequest struct {
 // @Failure  404    {object}  ErrorResponse
 // @Failure  500    {object}  ErrorResponse
 // @Router   /tournaments/{id}/tables [post]
-func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
+func PostTournamentTables(param string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
 		var representation AddTableRequest
@@ -127,9 +126,9 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
-		tx := GetTx(c)
-		r := persistence.NewTournamentRepository(tx)
-		table, found := persistence.NewTableRepository(tx).Find(strconv.FormatUint(uint64(representation.ID), 10))
+		db := GetDB(c)
+		r := persistence.NewTournamentRepository(db)
+		table, found := persistence.NewTableRepository(db).Find(strconv.FormatUint(uint64(representation.ID), 10))
 		if !found {
 			Abort(c, NotFoundError("Could not find table %d", representation.ID))
 			return
@@ -153,12 +152,12 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
 // @Router   /tournaments/{id}/tables/{table} [delete]
-func DeleteTournamentTable(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.Context) {
+func DeleteTournamentTable(tournamentParam string, tableParam string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		tourId := c.Param(tournamentParam)
 		tableId := c.Param(tableParam)
-		tx := GetTx(c)
-		r := persistence.NewTournamentRepository(tx)
+		db := GetDB(c)
+		r := persistence.NewTournamentRepository(db)
 		if found := r.RemoveTable(tourId, tableId); found {
 			service.ClearGameRoundGenerator(tourId)
 			c.Status(http.StatusNoContent)

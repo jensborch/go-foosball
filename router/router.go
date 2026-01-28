@@ -11,59 +11,59 @@ func SetupAPIRoutes(router *gin.Engine, db *gorm.DB) {
 	api := router.Group("/api")
 	api.Use(gin.Recovery(), resources.ErrorHandlerMiddleware(), resources.TransactionMiddleware(db))
 
-	setupPlayerRoutes(api, db)
-	setupTableRoutes(api, db)
-	setupTournamentRoutes(api, db)
-	setupGameRoutes(api, db)
+	setupPlayerRoutes(api)
+	setupTableRoutes(api)
+	setupTournamentRoutes(api)
+	setupGameRoutes(api)
 }
 
 // setupPlayerRoutes configures routes for player management.
-func setupPlayerRoutes(api *gin.RouterGroup, db *gorm.DB) {
+func setupPlayerRoutes(api *gin.RouterGroup) {
 	players := api.Group("/players")
-	players.GET("", resources.GetPlayers(db))
-	players.POST("", resources.PostPlayer(db))
-	players.GET("/:name", resources.GetPlayer("name", db))
-	players.DELETE("/:name", resources.DeletePlayer("name", db))
+	players.GET("", resources.GetPlayers())
+	players.POST("", resources.PostPlayer())
+	players.GET("/:name", resources.GetPlayer("name"))
+	players.DELETE("/:name", resources.DeletePlayer("name"))
 }
 
 // setupTableRoutes configures routes for table management.
-func setupTableRoutes(api *gin.RouterGroup, db *gorm.DB) {
+func setupTableRoutes(api *gin.RouterGroup) {
 	tables := api.Group("/tables")
-	tables.GET("", resources.GetTables(db))
-	tables.POST("", resources.PostTable(db))
-	tables.GET("/:id", resources.GetTable("id", db))
+	tables.GET("", resources.GetTables())
+	tables.POST("", resources.PostTable())
+	tables.GET("/:id", resources.GetTable("id"))
 }
 
 // setupTournamentRoutes configures routes for tournament management.
-func setupTournamentRoutes(api *gin.RouterGroup, db *gorm.DB) {
+func setupTournamentRoutes(api *gin.RouterGroup) {
 	tournaments := api.Group("/tournaments")
 
 	// Tournament CRUD
-	tournaments.GET("", resources.GetTournaments(db))
-	tournaments.POST("", resources.PostTournament(db))
-	tournaments.GET("/:id", resources.GetTournament("id", db))
-	tournaments.DELETE("/:id", resources.DeleteTournament("id", db))
+	tournaments.GET("", resources.GetTournaments())
+	tournaments.POST("", resources.PostTournament())
+	tournaments.GET("/:id", resources.GetTournament("id"))
+	tournaments.DELETE("/:id", resources.DeleteTournament("id"))
 
 	// Tournament players
-	tournaments.GET("/:id/players", resources.GetTournamentPlayers("id", db))
-	tournaments.POST("/:id/players", resources.PostTournamentPlayer("id", db))
-	tournaments.PUT("/:id/players/:name", resources.UpdateTournamentPlayerStatus("id", "name", db))
-	tournaments.DELETE("/:id/players", resources.DeleteAllTournamentPlayers("id", db))
-	tournaments.GET("/:id/players/:name/history", resources.GetTournamentPlayerHistory("id", "name", db))
-	tournaments.GET("/:id/history", resources.GetTournamentHistory("id", db))
+	tournaments.GET("/:id/players", resources.GetTournamentPlayers("id"))
+	tournaments.POST("/:id/players", resources.PostTournamentPlayer("id"))
+	tournaments.PUT("/:id/players/:name", resources.UpdateTournamentPlayerStatus("id", "name"))
+	tournaments.DELETE("/:id/players", resources.DeleteAllTournamentPlayers("id"))
+	tournaments.GET("/:id/players/:name/history", resources.GetTournamentPlayerHistory("id", "name"))
+	tournaments.GET("/:id/history", resources.GetTournamentHistory("id"))
 
 	// Tournament tables
-	tournaments.GET("/:id/tables", resources.GetTournamentTables("id", db))
-	tournaments.POST("/:id/tables", resources.PostTournamentTables("id", db))
-	tournaments.DELETE("/:id/tables/:table", resources.DeleteTournamentTable("id", "table", db))
+	tournaments.GET("/:id/tables", resources.GetTournamentTables("id"))
+	tournaments.POST("/:id/tables", resources.PostTournamentTables("id"))
+	tournaments.DELETE("/:id/tables/:table", resources.DeleteTournamentTable("id", "table"))
 
 	// Tournament games
-	tournaments.POST("/:id/tables/:table/games", resources.PostGame("id", "table", db))
-	tournaments.GET("/:id/games", resources.GetGamesInTournament("id", db))
+	tournaments.POST("/:id/tables/:table/games", resources.PostGame("id", "table"))
+	tournaments.GET("/:id/games", resources.GetGamesInTournament("id"))
 
 	// Actions
-	tournaments.GET("/:id/games/random", resources.GetRandomGames("id", db))
-	tournaments.GET("/:id/games/start", resources.GetGameStart("id", db))
+	tournaments.GET("/:id/games/random", resources.GetRandomGames("id"))
+	tournaments.GET("/:id/games/start", resources.GetGameStart("id"))
 
 	// Events (WebSocket)
 	tournaments.GET("/:id/events/player", resources.GetPlayerEvents("id"))
@@ -71,8 +71,8 @@ func setupTournamentRoutes(api *gin.RouterGroup, db *gorm.DB) {
 }
 
 // setupGameRoutes configures routes for game queries.
-func setupGameRoutes(api *gin.RouterGroup, db *gorm.DB) {
+func setupGameRoutes(api *gin.RouterGroup) {
 	games := api.Group("/games")
-	games.GET("", resources.GetGames(db))
-	games.GET("/:id", resources.GetGame("id", db))
+	games.GET("", resources.GetGames())
+	games.GET("/:id", resources.GetGame("id"))
 }

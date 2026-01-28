@@ -8,7 +8,6 @@ import (
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
 	"github.com/jensborch/go-foosball/service"
-	"gorm.io/gorm"
 )
 
 // GetTournament gets info about a tournament
@@ -21,10 +20,10 @@ import (
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
 // @Router   /tournaments/{id} [get]
-func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
+func GetTournament(param string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		r := persistence.NewTournamentRepository(db)
+		r := persistence.NewTournamentRepository(GetDB(c))
 		if t, found := r.Find(id); found {
 			c.JSON(http.StatusOK, t)
 		} else {
@@ -40,9 +39,9 @@ func GetTournament(param string, db *gorm.DB) func(*gin.Context) {
 // @Produce  json
 // @Success  200  {array}  model.Tournament
 // @Router   /tournaments [get]
-func GetTournaments(db *gorm.DB) func(*gin.Context) {
+func GetTournaments() func(*gin.Context) {
 	return func(c *gin.Context) {
-		r := persistence.NewTournamentRepository(db)
+		r := persistence.NewTournamentRepository(GetDB(c))
 		c.JSON(http.StatusOK, r.FindAll())
 	}
 }
@@ -78,10 +77,10 @@ func NewPlayerRepresentation(tp *model.TournamentPlayer) TournamentPlayerReprese
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
 // @Router   /tournaments/{id}/players [get]
-func GetTournamentPlayers(param string, db *gorm.DB) func(*gin.Context) {
+func GetTournamentPlayers(param string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		if players, found := persistence.NewTournamentRepository(db).FindAllPlayers(id); found {
+		if players, found := persistence.NewTournamentRepository(GetDB(c)).FindAllPlayers(id); found {
 			result := make([]TournamentPlayerRepresentation, len(players))
 			for i, p := range players {
 				result[i] = NewPlayerRepresentation(p)
@@ -110,15 +109,15 @@ type CreateTournamentRequest struct {
 // @Failure  400         {object}  ErrorResponse
 // @Failure  500         {object}  ErrorResponse
 // @Router   /tournaments [post]
-func PostTournament(db *gorm.DB) func(*gin.Context) {
+func PostTournament() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var tournament CreateTournamentRequest
 		if err := c.ShouldBindJSON(&tournament); err != nil {
 			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
-		tx := GetTx(c)
-		r := persistence.NewTournamentRepository(tx)
+		db := GetDB(c)
+		r := persistence.NewTournamentRepository(db)
 		t := model.NewTournament(tournament.Name)
 		t.GameScore = tournament.GameScore
 		t.InitialRanking = tournament.InitialRanking
@@ -145,7 +144,7 @@ type AddPlayerRequest struct {
 // @Failure  404     {object}  ErrorResponse
 // @Failure  500     {object}  ErrorResponse
 // @Router   /tournaments/{id}/players [post]
-func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
+func PostTournamentPlayer(param string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
 		var pr AddPlayerRequest
@@ -153,9 +152,9 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
-		tx := GetTx(c)
-		tourRepo := persistence.NewTournamentRepository(tx)
-		playerRepo := persistence.NewPlayerRepository(tx)
+		db := GetDB(c)
+		tourRepo := persistence.NewTournamentRepository(db)
+		playerRepo := persistence.NewPlayerRepository(db)
 		p, found := playerRepo.Find(pr.Nickname)
 		if !found {
 			Abort(c, NotFoundError("Could not find player %s", pr.Nickname))
@@ -193,11 +192,11 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
 // @Router   /tournaments/{id} [delete]
-func DeleteTournament(tournamentParam string, db *gorm.DB) func(*gin.Context) {
+func DeleteTournament(tournamentParam string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(tournamentParam)
-		tx := GetTx(c)
-		r := persistence.NewTournamentRepository(tx)
+		db := GetDB(c)
+		r := persistence.NewTournamentRepository(db)
 		if found := r.Remove(id); found {
 			service.ClearGameRoundGenerator(id)
 			c.Status(http.StatusNoContent)
@@ -223,7 +222,7 @@ type TournamentPlayerStatusRequest struct {
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
 // @Router   /tournaments/{id}/players/{player} [put]
-func UpdateTournamentPlayerStatus(tournamentParam string, playerParam string, db *gorm.DB) func(*gin.Context) {
+func UpdateTournamentPlayerStatus(tournamentParam string, playerParam string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var status TournamentPlayerStatusRequest
 		if err := c.ShouldBindJSON(&status); err != nil {
@@ -232,8 +231,8 @@ func UpdateTournamentPlayerStatus(tournamentParam string, playerParam string, db
 		}
 		id := c.Param(tournamentParam)
 		nickname := c.Param(playerParam)
-		tx := GetTx(c)
-		r := persistence.NewTournamentRepository(tx)
+		db := GetDB(c)
+		r := persistence.NewTournamentRepository(db)
 		if tp, found := r.UpdatePlayerStatus(id, nickname, status.Status); found {
 			service.ClearGameRoundGenerator(id)
 			pr := NewPlayerRepresentation(tp)
@@ -255,11 +254,11 @@ func UpdateTournamentPlayerStatus(tournamentParam string, playerParam string, db
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
 // @Router   /tournaments/{id}/players [delete]
-func DeleteAllTournamentPlayers(tournamentParam string, db *gorm.DB) func(*gin.Context) {
+func DeleteAllTournamentPlayers(tournamentParam string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(tournamentParam)
-		tx := GetTx(c)
-		r := persistence.NewTournamentRepository(tx)
+		db := GetDB(c)
+		r := persistence.NewTournamentRepository(db)
 		if found := r.DeactivatePlayers(id); found {
 			service.ClearGameRoundGenerator(id)
 			c.Status(http.StatusNoContent)
@@ -294,7 +293,7 @@ func GetPlayerEvents(param string) func(c *gin.Context) {
 // @Failure  404       {object}  ErrorResponse
 // @Failure  500       {object}  ErrorResponse
 // @Router   /tournaments/{id}/players/{nickname}/history [get]
-func GetTournamentPlayerHistory(tournamentParam string, playerParam string, db *gorm.DB) func(*gin.Context) {
+func GetTournamentPlayerHistory(tournamentParam string, playerParam string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(tournamentParam)
 		nickname := c.Param(playerParam)
@@ -308,7 +307,7 @@ func GetTournamentPlayerHistory(tournamentParam string, playerParam string, db *
 			Abort(c, BadRequestError("Error parsing from date: %s", err))
 			return
 		}
-		if history, found := persistence.NewTournamentRepository(db).PlayerHistory(id, nickname, parsedTime); found {
+		if history, found := persistence.NewTournamentRepository(GetDB(c)).PlayerHistory(id, nickname, parsedTime); found {
 			c.JSON(http.StatusOK, history)
 		} else {
 			Abort(c, NotFoundError("Could not find tournament %s or player %s", id, nickname))
@@ -343,7 +342,7 @@ func newTournamentHistory(history *model.TournamentPlayerHistory) *TournamentHis
 // @Failure  404       {object}  ErrorResponse
 // @Failure  500       {object}  ErrorResponse
 // @Router   /tournaments/{id}/history [get]
-func GetTournamentHistory(tournamentParam string, db *gorm.DB) func(*gin.Context) {
+func GetTournamentHistory(tournamentParam string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(tournamentParam)
 		from, found := c.GetQuery("from")
@@ -356,7 +355,7 @@ func GetTournamentHistory(tournamentParam string, db *gorm.DB) func(*gin.Context
 			Abort(c, BadRequestError("Error parsing from date: %s", err))
 			return
 		}
-		if history, found := persistence.NewTournamentRepository(db).History(id, parsedTime); found {
+		if history, found := persistence.NewTournamentRepository(GetDB(c)).History(id, parsedTime); found {
 			result := make([]TournamentHistoryRepresentation, len(history))
 			for i, h := range history {
 				result[i] = *newTournamentHistory(h)

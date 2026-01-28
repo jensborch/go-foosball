@@ -8,7 +8,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jensborch/go-foosball/persistence"
-	"gorm.io/gorm"
 )
 
 // GetGamesInTournament find all games in tournament
@@ -19,10 +18,10 @@ import (
 // @Param    id   path     string  true  "Tournament ID"
 // @Success  200  {array}  model.GameJson
 // @Router   /tournaments/{id}/games [get]
-func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
+func GetGamesInTournament(param string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		c.JSON(http.StatusOK, persistence.NewGameRepository(db).FindByTournament(id))
+		c.JSON(http.StatusOK, persistence.NewGameRepository(GetDB(c)).FindByTournament(id))
 	}
 }
 
@@ -36,10 +35,10 @@ func GetGamesInTournament(param string, db *gorm.DB) func(*gin.Context) {
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
 // @Router   /tournaments/{id}/games/random [get]
-func GetRandomGames(param string, db *gorm.DB) func(*gin.Context) {
+func GetRandomGames(param string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		r := persistence.NewTournamentRepository(db)
+		r := persistence.NewTournamentRepository(GetDB(c))
 		if games, found := r.RandomGames(id); found {
 			c.JSON(http.StatusOK, games)
 		} else {
@@ -96,7 +95,7 @@ func addPlayers(tourId string, players []string, repo model.TournamentRepository
 // @Failure  404    {object}  ErrorResponse
 // @Failure  500    {object}  ErrorResponse
 // @Router   /tournaments/{id}/tables/{table}/games [post]
-func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.Context) {
+func PostGame(tournamentParam string, tableParam string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		tourId := c.Param(tournamentParam)
 		tableId := c.Param(tableParam)
@@ -105,8 +104,8 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
-		tx := GetTx(c)
-		tourRepo := persistence.NewTournamentRepository(tx)
+		db := GetDB(c)
+		tourRepo := persistence.NewTournamentRepository(db)
 		table, found := tourRepo.FindTable(tourId, tableId)
 		if !found {
 			Abort(c, NotFoundError("Could not find table %s or tournament %s", tableId, tourId))
@@ -120,7 +119,7 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 		}
 		game.Winner = gr.Winner
 		game.UpdateScore()
-		persistence.NewGameRepository(tx).Store(game)
+		persistence.NewGameRepository(db).Store(game)
 		c.JSON(http.StatusCreated, game)
 	}
 }
@@ -135,10 +134,10 @@ func PostGame(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
 // @Router   /games/{id} [get]
-func GetGame(param string, db *gorm.DB) func(*gin.Context) {
+func GetGame(param string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		if g, found := persistence.NewGameRepository(db).Find(id); found {
+		if g, found := persistence.NewGameRepository(GetDB(c)).Find(id); found {
 			c.JSON(http.StatusOK, g)
 		} else {
 			Abort(c, NotFoundError("Could not find game %s", id))
@@ -153,9 +152,9 @@ func GetGame(param string, db *gorm.DB) func(*gin.Context) {
 // @Produce  json
 // @Success  200  {array}  model.GameJson
 // @Router   /games [get]
-func GetGames(db *gorm.DB) func(*gin.Context) {
+func GetGames() func(*gin.Context) {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, persistence.NewGameRepository(db).FindAll())
+		c.JSON(http.StatusOK, persistence.NewGameRepository(GetDB(c)).FindAll())
 	}
 }
 
@@ -175,10 +174,10 @@ type GameStartEventRepresentation struct {
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
 // @Router   /tournaments/{id}/games/start [get]
-func GetGameStart(param string, db *gorm.DB) func(*gin.Context) {
+func GetGameStart(param string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param(param)
-		if _, found := persistence.NewTournamentRepository(db).Find(id); found {
+		if _, found := persistence.NewTournamentRepository(GetDB(c)).Find(id); found {
 			c.Status(http.StatusNoContent)
 			gameEventPublisher.Publish(id, &GameStartEventRepresentation{Id: id})
 		} else {
