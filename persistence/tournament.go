@@ -10,6 +10,9 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+// Note: service import is only needed for RandomGames which uses GameRoundGenerator.
+// This is a known architectural trade-off - ideally RandomGames would be in a service layer.
+
 type tournamentRepository struct {
 	db *gorm.DB
 }
@@ -116,7 +119,7 @@ func (r *tournamentRepository) FindAllPlayers(tournamentId string) ([]*model.Tou
 	if err != nil {
 		panic(err)
 	}
-	return service.SortPlayersByNickname(players), true
+	return model.SortPlayersByNickname(players), true
 }
 
 func (r *tournamentRepository) FindPlayer(tournamentId string, nickname string) (*model.TournamentPlayer, model.Found) {
@@ -152,7 +155,7 @@ func (r *tournamentRepository) FindAllActivePlayers(tournamentId string) ([]*mod
 	if err != nil {
 		panic(err)
 	}
-	return service.SortPlayersByNickname(players), true
+	return model.SortPlayersByNickname(players), true
 }
 
 func (r *tournamentRepository) DeactivatePlayers(tournamentId string) model.Found {

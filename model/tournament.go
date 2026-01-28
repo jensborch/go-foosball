@@ -1,6 +1,7 @@
 package model
 
 import (
+	"sort"
 	"time"
 
 	"gorm.io/gorm"
@@ -112,4 +113,18 @@ func NewTournamentPlayerHistory(player *TournamentPlayer) *TournamentPlayerHisto
 		Ranking:            player.Ranking,
 		UpdatedAt:          player.UpdatedAt,
 	}
+}
+
+// SortPlayersByNickname sorts tournament players alphabetically by nickname.
+// Returns a new slice with the sorted players (does not modify the original).
+func SortPlayersByNickname(players []*TournamentPlayer) []*TournamentPlayer {
+	if players == nil {
+		return nil
+	}
+	result := make([]*TournamentPlayer, len(players))
+	copy(result, players)
+	sort.Slice(result, func(p, q int) bool {
+		return result[p].Player.Nickname < result[q].Player.Nickname
+	})
+	return result
 }

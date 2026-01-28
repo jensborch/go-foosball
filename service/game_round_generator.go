@@ -1,10 +1,8 @@
-// Package service contains business logic services for the foosball application.
 package service
 
 import (
 	"log"
 	"math/rand/v2"
-	"sort"
 	"sync"
 
 	"github.com/jensborch/go-foosball/model"
@@ -108,27 +106,13 @@ func (g *GameRoundGenerator) Rounds() [][]*model.Game {
 	return g.rounds
 }
 
-// SortPlayersByNickname sorts tournament players alphabetically by nickname.
-// Returns a new slice with the sorted players (does not modify the original).
-func SortPlayersByNickname(players []*model.TournamentPlayer) []*model.TournamentPlayer {
-	if players == nil {
-		return nil
-	}
-	result := make([]*model.TournamentPlayer, len(players))
-	copy(result, players)
-	sort.Slice(result, func(p, q int) bool {
-		return result[p].Player.Nickname < result[q].Player.Nickname
-	})
-	return result
-}
-
 func isSamePlayers(players1, players2 []*model.TournamentPlayer) bool {
 	if len(players1) != len(players2) {
 		return false
 	}
 
-	sortedPlayers1 := SortPlayersByNickname(players1)
-	sortedPlayers2 := SortPlayersByNickname(players2)
+	sortedPlayers1 := model.SortPlayersByNickname(players1)
+	sortedPlayers2 := model.SortPlayersByNickname(players2)
 
 	for i := range sortedPlayers1 {
 		if sortedPlayers1[i].Player.Nickname != sortedPlayers2[i].Player.Nickname {
