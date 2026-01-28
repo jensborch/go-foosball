@@ -1,4 +1,4 @@
-package persistence
+package service
 
 import (
 	"reflect"
@@ -9,8 +9,11 @@ import (
 )
 
 func TestGetGameCombinationsInstance(t *testing.T) {
+	// Clean up before test
+	ClearInstance("test-singleton")
+
 	var wg sync.WaitGroup
-	instance1 := GetGameCombinationsInstance("test")
+	instance1 := GetGameCombinationsInstance("test-singleton")
 	if instance1 == nil {
 		t.Error("Expected non-nil instance")
 	}
@@ -20,7 +23,7 @@ func TestGetGameCombinationsInstance(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			instance2 := GetGameCombinationsInstance("test")
+			instance2 := GetGameCombinationsInstance("test-singleton")
 			if instance1 != instance2 {
 				t.Error("Expected the same instance")
 			}
@@ -30,9 +33,10 @@ func TestGetGameCombinationsInstance(t *testing.T) {
 }
 
 func TestGameCombinationsEven(t *testing.T) {
+	ClearInstance("test-even")
 	tables, players := testData([]string{"P1", "P2", "P3", "P4"}, []string{"T1"})
 
-	gameCombinations := GetGameCombinationsInstance("test")
+	gameCombinations := GetGameCombinationsInstance("test-even")
 
 	gameCombinations.Update(players, tables)
 
@@ -78,9 +82,10 @@ func TestGameCombinationsEven(t *testing.T) {
 }
 
 func TestGameCombinationsUnevenSmall(t *testing.T) {
+	ClearInstance("test-uneven")
 	tables, players := testData([]string{"P1", "P2", "P3"}, []string{"T1"})
 
-	gameCombinations := GetGameCombinationsInstance("test")
+	gameCombinations := GetGameCombinationsInstance("test-uneven")
 
 	gameCombinations.Update(players, tables)
 
@@ -124,8 +129,9 @@ func TestGameCombinationsUnevenSmall(t *testing.T) {
 }
 
 func TestGameCombinationsComplete(t *testing.T) {
+	ClearInstance("test-complete")
 	tables, players := testData([]string{"P1", "P2", "P3", "P4", "P5", "P6", "P7"}, []string{"T1", "T2", "T3"})
-	gameCombinations := GetGameCombinationsInstance("test")
+	gameCombinations := GetGameCombinationsInstance("test-complete")
 
 	rounds := gameCombinations.Update(players, tables)
 
@@ -134,14 +140,14 @@ func TestGameCombinationsComplete(t *testing.T) {
 		if len(gameRound) != 2 {
 			t.Errorf("Expected 2 games in round %d", i+1)
 		}
-
 	}
 }
 
 func TestGameCombinationsMultiTables(t *testing.T) {
+	ClearInstance("test-multi")
 	tables, players := testData([]string{"P1", "P2", "P3", "P4", "P5", "P6", "P7"}, []string{"T1", "T2", "T3"})
 
-	gameCombinations := GetGameCombinationsInstance("test")
+	gameCombinations := GetGameCombinationsInstance("test-multi")
 
 	gameCombinations.Update(players, tables)
 
@@ -220,18 +226,19 @@ func testData(names []string, tablesName []string) ([]*model.TournamentTable, []
 }
 
 func TestRandomize(t *testing.T) {
+	ClearInstance("test-random")
 	tables, players := testData([]string{"P1", "P2", "P3", "P4"}, []string{"T1"})
-	gameCombos := GetGameCombinationsInstance("test")
+	gameCombos := GetGameCombinationsInstance("test-random")
 
 	gameCombos.Update(players, tables)
-	initial := deepCopy(gameCombos.rounds)
+	initial := deepCopy(gameCombos.Rounds())
 
 	gameCombos.Randomize()
-	if reflect.DeepEqual(initial, gameCombos.rounds) {
+	if reflect.DeepEqual(initial, gameCombos.Rounds()) {
 		t.Error("Randomize did not change round order")
 	}
 
-	for _, round := range gameCombos.rounds {
+	for _, round := range gameCombos.Rounds() {
 		for _, game := range round {
 			if game == nil {
 				t.Error("Found nil games after randomization")
@@ -240,14 +247,28 @@ func TestRandomize(t *testing.T) {
 	}
 }
 
+func TestClearInstance(t *testing.T) {
+	instance1 := GetGameCombinationsInstance("test-clear")
+	if instance1 == nil {
+		t.Error("Expected non-nil instance")
+	}
+
+	ClearInstance("test-clear")
+
+	instance2 := GetGameCombinationsInstance("test-clear")
+	if instance1 == instance2 {
+		t.Error("Expected different instance after clear")
+	}
+}
+
 func deepCopy(games [][]*model.Game) [][]*model.Game {
-	copy := make([][]*model.Game, len(games))
+	cp := make([][]*model.Game, len(games))
 	for i, round := range games {
-		copy[i] = make([]*model.Game, len(round))
+		cp[i] = make([]*model.Game, len(round))
 		for j, game := range round {
 			tmp := *game
-			copy[i][j] = &tmp
+			cp[i][j] = &tmp
 		}
 	}
-	return copy
+	return cp
 }

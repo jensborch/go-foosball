@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/jensborch/go-foosball/model"
+	"github.com/jensborch/go-foosball/service"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -216,7 +217,7 @@ func (r *tournamentRepository) addHistory(player *model.TournamentPlayer) {
 func (r *tournamentRepository) RandomGames(tournamentId string) ([]*model.Game, model.Found) {
 	if players, found := r.FindAllActivePlayers(tournamentId); found {
 		if tables, found := r.FindAllTables(tournamentId); found {
-			gameCombinations := GetGameCombinationsInstance(tournamentId)
+			gameCombinations := service.GetGameCombinationsInstance(tournamentId)
 			if gameCombinations.Update(players, tables) > 0 {
 				gameCombinations.Randomize()
 			}
