@@ -71,15 +71,16 @@ var GameWinnerValidator validator.Func = func(fl validator.FieldLevel) bool {
 type addFunc func(*model.TournamentPlayer) error
 
 func addPlayers(tourId string, players []string, repo model.TournamentRepository, add addFunc) model.Found {
-	found := true
 	for _, nickname := range players {
-		if player, found := repo.FindPlayer(tourId, nickname); found {
-			add(player)
-		} else {
-			found = false
+		player, found := repo.FindPlayer(tourId, nickname)
+		if !found {
+			return false
+		}
+		if err := add(player); err != nil {
+			return false
 		}
 	}
-	return found
+	return true
 }
 
 // PostGame saves a played game result.
