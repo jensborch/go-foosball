@@ -27,7 +27,9 @@ func (r *tableRepository) Find(id string) (*model.Table, model.Found) {
 
 func (r *tableRepository) FindAll() []*model.Table {
 	var tables []*model.Table
-	r.db.Order("name").Find(&tables)
+	if err := r.db.Order("name").Find(&tables).Error; err != nil {
+		panic(err)
+	}
 	return tables
 }
 
@@ -36,10 +38,12 @@ func (r *tableRepository) FindAllNotInTournament(id string) []*model.Table {
 	sub := r.db.Select("table_id").
 		Where("tournament_id = ?", id).
 		Table("tournament_tables")
-	r.db.Model(&model.Table{}).
+	if err := r.db.Model(&model.Table{}).
 		Where("tables.id NOT IN (?)", sub).
 		Order("name").
-		Find(&tables)
+		Find(&tables).Error; err != nil {
+		panic(err)
+	}
 	return tables
 }
 

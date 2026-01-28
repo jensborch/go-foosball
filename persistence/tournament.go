@@ -74,7 +74,9 @@ func (r *tournamentRepository) FindTable(tournamentId string, tableId string) (*
 func (r *tournamentRepository) AddPlayerWithRanking(id string, p *model.Player, ranking uint) (*model.TournamentPlayer, model.Found) {
 	if t, found := r.Find(id); found {
 		tp := model.NewTournamentPlayerWithRanking(p, t, ranking)
-		r.db.Create(tp)
+		if err := r.db.Create(tp).Error; err != nil {
+			panic(err)
+		}
 		r.addHistory(tp)
 		return tp, true
 	} else {
@@ -85,7 +87,9 @@ func (r *tournamentRepository) AddPlayerWithRanking(id string, p *model.Player, 
 func (r *tournamentRepository) AddPlayer(id string, p *model.Player) (*model.TournamentPlayer, model.Found) {
 	if t, found := r.Find(id); found {
 		tp := model.NewTournamentPlayer(p, t)
-		r.db.Create(tp)
+		if err := r.db.Create(tp).Error; err != nil {
+			panic(err)
+		}
 		r.addHistory(tp)
 		return tp, true
 	} else {
@@ -232,18 +236,22 @@ func (r *tournamentRepository) Find(id string) (*model.Tournament, model.Found) 
 
 func (r *tournamentRepository) FindAll() []*model.Tournament {
 	var tournaments []*model.Tournament
-	r.db.Order("name").Find(&tournaments)
+	if err := r.db.Order("name").Find(&tournaments).Error; err != nil {
+		panic(err)
+	}
 	return tournaments
 }
 
 func (r *tournamentRepository) PlayerHistory(tournamentId string, nickname string, from time.Time) ([]*model.TournamentPlayerHistory, model.Found) {
 	if player, found := r.FindPlayer(tournamentId, nickname); found {
 		var history []*model.TournamentPlayerHistory
-		r.db.
+		if err := r.db.
 			Where("tournament_player_id = ?", player.ID).
 			Where("updated_at >= ?", from).
 			Order("updated_at").
-			Find(&history)
+			Find(&history).Error; err != nil {
+			panic(err)
+		}
 		return history, true
 	}
 	return nil, false
@@ -252,14 +260,16 @@ func (r *tournamentRepository) PlayerHistory(tournamentId string, nickname strin
 func (r *tournamentRepository) History(tournamentId string, from time.Time) ([]*model.TournamentPlayerHistory, model.Found) {
 	if _, found := r.Find(tournamentId); found {
 		var history []*model.TournamentPlayerHistory
-		r.db.Model(&model.TournamentPlayerHistory{}).
+		if err := r.db.Model(&model.TournamentPlayerHistory{}).
 			Distinct().
 			Preload("TournamentPlayer.Player").
 			Joins("inner join tournament_players on tournament_players.id = tournament_player_histories.tournament_player_id").
 			Where("tournament_players.tournament_id = ?", tournamentId).
 			Where("tournament_player_histories.updated_at >= ?", from).
 			Order("tournament_player_histories.updated_at DESC").
-			Find(&history)
+			Find(&history).Error; err != nil {
+			panic(err)
+		}
 		return history, true
 	}
 	return nil, false
