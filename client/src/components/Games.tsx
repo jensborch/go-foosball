@@ -29,7 +29,6 @@ import {
   yellow,
 } from "@mui/material/colors";
 import PlayerAvatar from "./PlayerAvatar";
-import { width } from "@mui/system";
 
 const Players = ({ players }: { players: string[] }) => {
   return (
@@ -213,7 +212,7 @@ type GamesProps = {
 };
 
 const Games = ({ tournament }: GamesProps) => {
-  const { status, error, data } = useRandomGames(tournament);
+  const { status, error, data, dataUpdatedAt } = useRandomGames(tournament);
 
   if (status === "pending") {
     return (
@@ -249,7 +248,7 @@ const Games = ({ tournament }: GamesProps) => {
       }}
     >
       {data?.map((game: Api.Game) => (
-        <Grid key={game.table.id}>
+        <Grid key={`${game.table.id}-${dataUpdatedAt}`}>
           <Game tournament={tournament} game={game} />
         </Grid>
       ))}
