@@ -11,14 +11,14 @@ import (
 )
 
 var (
-	once         sync.Once
-	instance     map[string]*GameCombinations
-	instanceLock sync.Mutex
+	once          sync.Once
+	generators    map[string]*GameRoundGenerator
+	generatorLock sync.Mutex
 )
 
-// GameCombinations manages round-robin game scheduling for tournaments.
+// GameRoundGenerator manages round-robin game scheduling for tournaments.
 // It generates all possible player combinations and cycles through them.
-type GameCombinations struct {
+type GameRoundGenerator struct {
 	sync.Mutex
 	current int
 	rounds  [][]*model.Game
@@ -26,86 +26,86 @@ type GameCombinations struct {
 	tables  []*model.TournamentTable
 }
 
-// GetGameCombinationsInstance returns the singleton GameCombinations for a tournament.
+// GetGameRoundGenerator returns the singleton GameRoundGenerator for a tournament.
 // Thread-safe for concurrent access.
-func GetGameCombinationsInstance(tournamentId string) *GameCombinations {
-	log.Printf("Getting combinations instance for tournament %s", tournamentId)
-	instanceLock.Lock()
-	defer instanceLock.Unlock()
+func GetGameRoundGenerator(tournamentId string) *GameRoundGenerator {
+	log.Printf("Getting game round generator for tournament %s", tournamentId)
+	generatorLock.Lock()
+	defer generatorLock.Unlock()
 
 	once.Do(func() {
-		instance = make(map[string]*GameCombinations)
+		generators = make(map[string]*GameRoundGenerator)
 	})
 
-	g, ok := instance[tournamentId]
+	g, ok := generators[tournamentId]
 	if !ok {
-		log.Printf("Creating new instance for tournament %s", tournamentId)
-		g = &GameCombinations{}
-		instance[tournamentId] = g
+		log.Printf("Creating new generator for tournament %s", tournamentId)
+		g = &GameRoundGenerator{}
+		generators[tournamentId] = g
 	}
 	return g
 }
 
-// ClearInstance removes the GameCombinations instance for a tournament.
+// ClearGameRoundGenerator removes the GameRoundGenerator instance for a tournament.
 // Useful for cleanup or when tournament configuration changes significantly.
-func ClearInstance(tournamentId string) {
-	instanceLock.Lock()
-	defer instanceLock.Unlock()
-	delete(instance, tournamentId)
+func ClearGameRoundGenerator(tournamentId string) {
+	generatorLock.Lock()
+	defer generatorLock.Unlock()
+	delete(generators, tournamentId)
 }
 
-// Next returns the next round of games in the rotation.
+// NextRound returns the next round of games in the rotation.
 // Cycles back to the first round after the last one.
-func (c *GameCombinations) Next() []*model.Game {
-	c.Lock()
-	defer c.Unlock()
+func (g *GameRoundGenerator) NextRound() []*model.Game {
+	g.Lock()
+	defer g.Unlock()
 	var result []*model.Game = nil
-	if len(c.rounds) != 0 {
-		if c.current >= len(c.rounds) {
-			c.current = 0
+	if len(g.rounds) != 0 {
+		if g.current >= len(g.rounds) {
+			g.current = 0
 		}
-		result = c.rounds[c.current]
-		c.current++
+		result = g.rounds[g.current]
+		g.current++
 	}
-	log.Printf("Playing round %d", c.current)
+	log.Printf("Playing round %d", g.current)
 	return result
 }
 
 // Randomize shuffles the order of rounds.
-func (c *GameCombinations) Randomize() {
-	c.Lock()
-	defer c.Unlock()
-	if c.rounds != nil {
-		result := make([][]*model.Game, len(c.rounds))
-		perm := rand.Perm(len(c.rounds))
+func (g *GameRoundGenerator) Randomize() {
+	g.Lock()
+	defer g.Unlock()
+	if g.rounds != nil {
+		result := make([][]*model.Game, len(g.rounds))
+		perm := rand.Perm(len(g.rounds))
 		for i, v := range perm {
-			result[i] = c.rounds[v]
+			result[i] = g.rounds[v]
 		}
-		c.rounds = result
+		g.rounds = result
 	}
 }
 
-// Update recalculates game combinations if players or tables have changed.
+// GenerateRounds recalculates game rounds if players or tables have changed.
 // Returns the number of rounds generated, or 0 if no update was needed.
-func (c *GameCombinations) Update(players []*model.TournamentPlayer, tables []*model.TournamentTable) int {
-	c.Lock()
-	defer c.Unlock()
-	if !isSamePlayers(c.players, players) || !isSameTables(c.tables, tables) {
-		c.players = players
-		c.tables = tables
-		c.rounds = allGamePlayerCombinations(players, tables)
-		c.current = 0
-		log.Printf("Created new set of %d rounds from %d players and %d tables", len(c.rounds), len(c.players), len(c.tables))
-		return len(c.rounds)
+func (g *GameRoundGenerator) GenerateRounds(players []*model.TournamentPlayer, tables []*model.TournamentTable) int {
+	g.Lock()
+	defer g.Unlock()
+	if !isSamePlayers(g.players, players) || !isSameTables(g.tables, tables) {
+		g.players = players
+		g.tables = tables
+		g.rounds = allGamePlayerCombinations(players, tables)
+		g.current = 0
+		log.Printf("Created new set of %d rounds from %d players and %d tables", len(g.rounds), len(g.players), len(g.tables))
+		return len(g.rounds)
 	}
 	return 0
 }
 
-// Rounds returns the current number of rounds (for testing).
-func (c *GameCombinations) Rounds() [][]*model.Game {
-	c.Lock()
-	defer c.Unlock()
-	return c.rounds
+// Rounds returns the current game rounds (for testing).
+func (g *GameRoundGenerator) Rounds() [][]*model.Game {
+	g.Lock()
+	defer g.Unlock()
+	return g.rounds
 }
 
 func sortPlayersByNickname(players []*model.TournamentPlayer) []*model.TournamentPlayer {

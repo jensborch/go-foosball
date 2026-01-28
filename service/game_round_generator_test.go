@@ -8,22 +8,22 @@ import (
 	"github.com/jensborch/go-foosball/model"
 )
 
-func TestGetGameCombinationsInstance(t *testing.T) {
+func TestGetGameRoundGenerator(t *testing.T) {
 	// Clean up before test
-	ClearInstance("test-singleton")
+	ClearGameRoundGenerator("test-singleton")
 
 	var wg sync.WaitGroup
-	instance1 := GetGameCombinationsInstance("test-singleton")
+	instance1 := GetGameRoundGenerator("test-singleton")
 	if instance1 == nil {
 		t.Error("Expected non-nil instance")
 	}
 
-	// Test that GetInstance always returns the same instance
+	// Test that GetGameRoundGenerator always returns the same instance
 	for i := 0; i < 10; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			instance2 := GetGameCombinationsInstance("test-singleton")
+			instance2 := GetGameRoundGenerator("test-singleton")
 			if instance1 != instance2 {
 				t.Error("Expected the same instance")
 			}
@@ -32,13 +32,13 @@ func TestGetGameCombinationsInstance(t *testing.T) {
 	wg.Wait()
 }
 
-func TestGameCombinationsEven(t *testing.T) {
-	ClearInstance("test-even")
+func TestGameRoundGeneratorEven(t *testing.T) {
+	ClearGameRoundGenerator("test-even")
 	tables, players := testData([]string{"P1", "P2", "P3", "P4"}, []string{"T1"})
 
-	gameCombinations := GetGameCombinationsInstance("test-even")
+	generator := GetGameRoundGenerator("test-even")
 
-	gameCombinations.Update(players, tables)
+	generator.GenerateRounds(players, tables)
 
 	tests := []struct {
 		want []string
@@ -52,7 +52,7 @@ func TestGameCombinationsEven(t *testing.T) {
 	}
 
 	for i, tc := range tests {
-		game := gameCombinations.Next()[0]
+		game := generator.NextRound()[0]
 
 		if game == nil {
 			t.Errorf("Test %d: Expected non nil game", i+1)
@@ -81,13 +81,13 @@ func TestGameCombinationsEven(t *testing.T) {
 	}
 }
 
-func TestGameCombinationsUnevenSmall(t *testing.T) {
-	ClearInstance("test-uneven")
+func TestGameRoundGeneratorUnevenSmall(t *testing.T) {
+	ClearGameRoundGenerator("test-uneven")
 	tables, players := testData([]string{"P1", "P2", "P3"}, []string{"T1"})
 
-	gameCombinations := GetGameCombinationsInstance("test-uneven")
+	generator := GetGameRoundGenerator("test-uneven")
 
-	gameCombinations.Update(players, tables)
+	generator.GenerateRounds(players, tables)
 
 	tests := []struct {
 		want []string
@@ -99,7 +99,7 @@ func TestGameCombinationsUnevenSmall(t *testing.T) {
 	}
 
 	for i, tc := range tests {
-		game := gameCombinations.Next()[0]
+		game := generator.NextRound()[0]
 
 		if game == nil {
 			t.Errorf("Test %d: Expected non nil game", i+1)
@@ -128,28 +128,28 @@ func TestGameCombinationsUnevenSmall(t *testing.T) {
 	}
 }
 
-func TestGameCombinationsComplete(t *testing.T) {
-	ClearInstance("test-complete")
+func TestGameRoundGeneratorComplete(t *testing.T) {
+	ClearGameRoundGenerator("test-complete")
 	tables, players := testData([]string{"P1", "P2", "P3", "P4", "P5", "P6", "P7"}, []string{"T1", "T2", "T3"})
-	gameCombinations := GetGameCombinationsInstance("test-complete")
+	generator := GetGameRoundGenerator("test-complete")
 
-	rounds := gameCombinations.Update(players, tables)
+	rounds := generator.GenerateRounds(players, tables)
 
 	for i := 0; i < rounds; i++ {
-		gameRound := gameCombinations.Next()
+		gameRound := generator.NextRound()
 		if len(gameRound) != 2 {
 			t.Errorf("Expected 2 games in round %d", i+1)
 		}
 	}
 }
 
-func TestGameCombinationsMultiTables(t *testing.T) {
-	ClearInstance("test-multi")
+func TestGameRoundGeneratorMultiTables(t *testing.T) {
+	ClearGameRoundGenerator("test-multi")
 	tables, players := testData([]string{"P1", "P2", "P3", "P4", "P5", "P6", "P7"}, []string{"T1", "T2", "T3"})
 
-	gameCombinations := GetGameCombinationsInstance("test-multi")
+	generator := GetGameRoundGenerator("test-multi")
 
-	gameCombinations.Update(players, tables)
+	generator.GenerateRounds(players, tables)
 
 	tests := []struct {
 		want [][]string
@@ -159,7 +159,7 @@ func TestGameCombinationsMultiTables(t *testing.T) {
 		{want: [][]string{{"P1", "P2", "P3", "P6"}, {"P4", "", "P5", ""}}},
 	}
 	for testIndex, test := range tests {
-		gameRound := gameCombinations.Next()
+		gameRound := generator.NextRound()
 		for tableIndex, table := range test.want {
 
 			if gameRound[tableIndex].TournamentTable.Table.Name != tables[tableIndex].Table.Name {
@@ -226,19 +226,19 @@ func testData(names []string, tablesName []string) ([]*model.TournamentTable, []
 }
 
 func TestRandomize(t *testing.T) {
-	ClearInstance("test-random")
+	ClearGameRoundGenerator("test-random")
 	tables, players := testData([]string{"P1", "P2", "P3", "P4"}, []string{"T1"})
-	gameCombos := GetGameCombinationsInstance("test-random")
+	generator := GetGameRoundGenerator("test-random")
 
-	gameCombos.Update(players, tables)
-	initial := deepCopy(gameCombos.Rounds())
+	generator.GenerateRounds(players, tables)
+	initial := deepCopy(generator.Rounds())
 
-	gameCombos.Randomize()
-	if reflect.DeepEqual(initial, gameCombos.Rounds()) {
+	generator.Randomize()
+	if reflect.DeepEqual(initial, generator.Rounds()) {
 		t.Error("Randomize did not change round order")
 	}
 
-	for _, round := range gameCombos.Rounds() {
+	for _, round := range generator.Rounds() {
 		for _, game := range round {
 			if game == nil {
 				t.Error("Found nil games after randomization")
@@ -247,15 +247,15 @@ func TestRandomize(t *testing.T) {
 	}
 }
 
-func TestClearInstance(t *testing.T) {
-	instance1 := GetGameCombinationsInstance("test-clear")
+func TestClearGameRoundGenerator(t *testing.T) {
+	instance1 := GetGameRoundGenerator("test-clear")
 	if instance1 == nil {
 		t.Error("Expected non-nil instance")
 	}
 
-	ClearInstance("test-clear")
+	ClearGameRoundGenerator("test-clear")
 
-	instance2 := GetGameCombinationsInstance("test-clear")
+	instance2 := GetGameRoundGenerator("test-clear")
 	if instance1 == instance2 {
 		t.Error("Expected different instance after clear")
 	}

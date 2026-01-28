@@ -217,11 +217,11 @@ func (r *tournamentRepository) addHistory(player *model.TournamentPlayer) {
 func (r *tournamentRepository) RandomGames(tournamentId string) ([]*model.Game, model.Found) {
 	if players, found := r.FindAllActivePlayers(tournamentId); found {
 		if tables, found := r.FindAllTables(tournamentId); found {
-			gameCombinations := service.GetGameCombinationsInstance(tournamentId)
-			if gameCombinations.Update(players, tables) > 0 {
-				gameCombinations.Randomize()
+			generator := service.GetGameRoundGenerator(tournamentId)
+			if generator.GenerateRounds(players, tables) > 0 {
+				generator.Randomize()
 			}
-			games := gameCombinations.Next()
+			games := generator.NextRound()
 			return games, true
 		} else {
 			return nil, false
