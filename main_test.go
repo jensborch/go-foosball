@@ -131,8 +131,8 @@ func postPlayers(ts *httptest.Server) func(t *testing.T) []model.Player {
 
 			resp, _ := http.Post(fmt.Sprintf("%s/api/players", ts.URL), "application/json", bytes.NewBuffer(p.player))
 
-			if resp.StatusCode != 200 {
-				t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
+			if resp.StatusCode != 201 {
+				t.Fatalf("Expected status code 201, got %v", resp.StatusCode)
 			}
 		}
 
@@ -170,8 +170,8 @@ func postTournaments(ts *httptest.Server) func(t *testing.T) model.Tournament {
 
 		postResp, _ := http.Post(fmt.Sprintf("%s/api/tournaments", ts.URL), "application/json", bytes.NewBuffer(tournament))
 
-		if postResp.StatusCode != 200 {
-			t.Fatalf("Expected status code 200, got %v", postResp.StatusCode)
+		if postResp.StatusCode != 201 {
+			t.Fatalf("Expected status code 201, got %v", postResp.StatusCode)
 		}
 
 		postResult := model.Tournament{}
@@ -204,8 +204,8 @@ func addPlayer2Tournament(ts *httptest.Server, id uint, player string) func(t *t
 
 		resp, _ := http.Post(fmt.Sprintf("%s/api/tournaments/%d/players", ts.URL, id), "application/json", bytes.NewBuffer(player))
 
-		if resp.StatusCode != 200 {
-			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
+		if resp.StatusCode != 201 {
+			t.Fatalf("Expected status code 201, got %v", resp.StatusCode)
 		}
 	}
 }
@@ -239,8 +239,8 @@ func postTables(ts *httptest.Server) func(t *testing.T) []model.Table {
 
 			resp, _ := http.Post(fmt.Sprintf("%s/api/tables", ts.URL), "application/json", bytes.NewBuffer(p.table))
 
-			if resp.StatusCode != 200 {
-				t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
+			if resp.StatusCode != 201 {
+				t.Fatalf("Expected status code 201, got %v", resp.StatusCode)
 			}
 		}
 
@@ -276,8 +276,8 @@ func addTable2Tournament(ts *httptest.Server, id uint, table uint) func(t *testi
 
 		resp, _ := http.Post(fmt.Sprintf("%s/api/tournaments/%d/tables", ts.URL, id), "application/json", bytes.NewBuffer(table))
 
-		if resp.StatusCode != 200 {
-			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
+		if resp.StatusCode != 201 {
+			t.Fatalf("Expected status code 201, got %v", resp.StatusCode)
 		}
 	}
 }
@@ -335,8 +335,8 @@ func postGame(ts *httptest.Server, tournamentId uint, tableId uint, right []stri
 
 		resp, _ := http.Post(fmt.Sprintf("%s/api/tournaments/%d/tables/%d/games", ts.URL, tournamentId, tableId), "application/json", bytes.NewBuffer(game))
 
-		if resp.StatusCode != 200 {
-			t.Fatalf("Expected status code 200, got %v", resp.StatusCode)
+		if resp.StatusCode != 201 {
+			t.Fatalf("Expected status code 201, got %v", resp.StatusCode)
 		}
 
 		result := model.GameJson{}
