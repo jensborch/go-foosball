@@ -59,7 +59,7 @@ type CreateTableRequest struct {
 	Color model.Color `json:"color" binding:"required"`
 } //@name CreateTable
 
-// PostTable creats new table
+// PostTable creates a new table.
 // @Summary  Create table
 // @Tags     table
 // @Accept   json

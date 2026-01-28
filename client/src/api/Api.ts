@@ -417,7 +417,7 @@ export class Api<
      *
      * @tags game
      * @name GamesList
-     * @summary Get all gamne results
+     * @summary Get all game results
      * @request GET:/games
      */
     gamesList: (params: RequestParams = {}) =>
@@ -434,7 +434,7 @@ export class Api<
      *
      * @tags game
      * @name GamesDetail
-     * @summary Get gamne results
+     * @summary Get game results
      * @request GET:/games/{id}
      */
     gamesDetail: (id: string, params: RequestParams = {}) =>
@@ -659,7 +659,7 @@ export class Api<
      *
      * @tags events
      * @name EventsGameList
-     * @summary Opens a web socket for tournamnent game start events
+     * @summary Opens a WebSocket for tournament game start events
      * @request GET:/tournaments/{id}/events/game
      */
     eventsGameList: (id: string, params: RequestParams = {}) =>
@@ -674,7 +674,7 @@ export class Api<
      *
      * @tags events
      * @name EventsPlayerList
-     * @summary Opens a web socket for tournamnent player events
+     * @summary Opens a WebSocket for tournament player events
      * @request GET:/tournaments/{id}/events/player
      */
     eventsPlayerList: (id: string, params: RequestParams = {}) =>
@@ -925,7 +925,7 @@ export class Api<
      *
      * @tags tournament
      * @name TablesGamesCreate
-     * @summary Submit gamne results
+     * @summary Submit game results
      * @request POST:/tournaments/{id}/tables/{table}/games
      */
     tablesGamesCreate: (

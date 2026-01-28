@@ -153,7 +153,7 @@ func (g Game) RightPlayerNames() []string {
 	return result
 }
 
-// Left return left playes
+// Left returns the left side players.
 func (g Game) Left() []Player {
 	var players []Player
 	if isEmptyPlayer(g.LeftPlayerTwo) {
