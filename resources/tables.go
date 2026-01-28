@@ -64,7 +64,7 @@ type CreateTableRequest struct {
 // @Accept   json
 // @Produce  json
 // @Param    table  body      CreateTableRequest  true  "The table"
-// @Success  200    {object}  model.Table
+// @Success  201    {object}  model.Table
 // @Failure  400    {object}  ErrorResponse
 // @Failure  404    {object}  ErrorResponse
 // @Failure  500    {object}  ErrorResponse
@@ -81,7 +81,7 @@ func PostTable(db *gorm.DB) func(*gin.Context) {
 		defer HandlePanicInTransaction(c, tx)
 		t := model.NewTable(table.Name, table.Color)
 		persistence.NewTableRepository(tx).Store(t)
-		c.JSON(http.StatusOK, t)
+		c.JSON(http.StatusCreated, t)
 	}
 }
 
@@ -138,7 +138,7 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 		r := persistence.NewTournamentRepository(tx)
 		if table, found := persistence.NewTableRepository(tx).Find(strconv.FormatUint(uint64(representation.ID), 10)); found {
 			if _, found := r.AddTables(id, table); found {
-				c.JSON(http.StatusOK, table)
+				c.JSON(http.StatusCreated, table)
 				return
 			}
 		}
