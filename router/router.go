@@ -9,6 +9,7 @@ import (
 // SetupAPIRoutes configures all API routes for the application.
 func SetupAPIRoutes(router *gin.Engine, db *gorm.DB) {
 	api := router.Group("/api")
+	api.Use(gin.Recovery(), resources.ErrorHandlerMiddleware())
 
 	setupPlayerRoutes(api, db)
 	setupTableRoutes(api, db)

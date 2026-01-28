@@ -1,7 +1,6 @@
 package resources
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -24,12 +23,11 @@ import (
 // @Router   /tables/{id} [get]
 func GetTable(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		defer HandlePanic(c)
 		id := c.Param(param)
 		if t, found := persistence.NewTableRepository(db).Find(id); found {
 			c.JSON(http.StatusOK, t)
 		} else {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find %s", id)))
+			Abort(c, NotFoundError("Could not find %s", id))
 		}
 	}
 }
@@ -44,7 +42,6 @@ func GetTable(param string, db *gorm.DB) func(*gin.Context) {
 // @Router   /tables [get]
 func GetTables(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		defer HandlePanic(c)
 		r := persistence.NewTableRepository(db)
 		if exclude, found := c.GetQuery("exclude"); found {
 			c.JSON(http.StatusOK, r.FindAllNotInTournament(exclude))
@@ -72,14 +69,13 @@ type CreateTableRequest struct {
 // @Router   /tables/ [post]
 func PostTable(db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		defer HandlePanic(c)
 		var table CreateTableRequest
 		if err := c.ShouldBindJSON(&table); err != nil {
-			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
 		tx := db.Begin()
-		defer HandlePanicInTransaction(c, tx)
+		defer commitOrRollback(c, tx)
 		t := model.NewTable(table.Name, table.Color)
 		persistence.NewTableRepository(tx).Store(t)
 		c.JSON(http.StatusCreated, t)
@@ -98,13 +94,12 @@ func PostTable(db *gorm.DB) func(*gin.Context) {
 // @Router   /tournaments/{id}/tables [get]
 func GetTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		defer HandlePanic(c)
 		id := c.Param(param)
 		tournamentRepo := persistence.NewTournamentRepository(db)
-		if tables, found := tournamentRepo.FindAllTables(id); !found {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
-		} else {
+		if tables, found := tournamentRepo.FindAllTables(id); found {
 			c.JSON(http.StatusOK, tables)
+		} else {
+			Abort(c, NotFoundError("Could not find tournament %s", id))
 		}
 	}
 }
@@ -127,23 +122,25 @@ type AddTableRequest struct {
 // @Router   /tournaments/{id}/tables [post]
 func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		defer HandlePanic(c)
 		id := c.Param(param)
 		var representation AddTableRequest
 		if err := c.ShouldBindJSON(&representation); err != nil {
-			c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
 		tx := db.Begin()
-		defer HandlePanicInTransaction(c, tx)
+		defer commitOrRollback(c, tx)
 		r := persistence.NewTournamentRepository(tx)
-		if table, found := persistence.NewTableRepository(tx).Find(strconv.FormatUint(uint64(representation.ID), 10)); found {
-			if _, found := r.AddTables(id, table); found {
-				c.JSON(http.StatusCreated, table)
-				return
-			}
+		table, found := persistence.NewTableRepository(tx).Find(strconv.FormatUint(uint64(representation.ID), 10))
+		if !found {
+			Abort(c, NotFoundError("Could not find table %d", representation.ID))
+			return
 		}
-		c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
+		if _, found := r.AddTables(id, table); found {
+			c.JSON(http.StatusCreated, table)
+		} else {
+			Abort(c, NotFoundError("Could not find tournament %s", id))
+		}
 	}
 }
 
@@ -160,17 +157,16 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 // @Router   /tournaments/{id}/tables/{tableId} [delete]
 func DeleteTournamentTable(tournamentParam string, tableParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
-		defer HandlePanic(c)
 		tourId := c.Param(tournamentParam)
 		tableId := c.Param(tableParam)
 		tx := db.Begin()
-		defer HandlePanicInTransaction(c, tx)
+		defer commitOrRollback(c, tx)
 		r := persistence.NewTournamentRepository(tx)
 		if found := r.RemoveTable(tourId, tableId); found {
 			service.ClearGameRoundGenerator(tourId)
 			c.Status(http.StatusNoContent)
 		} else {
-			c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s or table %s", tourId, tableId)))
+			Abort(c, NotFoundError("Could not find tournament %s or table %s", tourId, tableId))
 		}
 	}
 }

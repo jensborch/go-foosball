@@ -25,7 +25,7 @@ This is a **foosball tournament management system** with a Go REST API backend a
 1. **Repository Pattern**: `persistence/` layer abstracts GORM operations
 2. **Resource Handlers**: Each endpoint returns `func(*gin.Context)` closures with injected dependencies
 3. **Embedded Static**: `//go:embed client/dist` serves React app from Go binary
-4. **Singleton Game Logic**: `GetGameCombinationsInstance(tournamentId)` manages round-robin tournaments
+4. **Singleton Game Logic**: `GetGameRoundGenerator(tournamentId)` manages round-robin tournaments
 
 ## Development Workflows
 
@@ -63,7 +63,10 @@ make swagger  # Generates docs from Go annotations
 
 ### Go Code Patterns
 
-- **Error handling**: Use `HandlePanic(c)` in all Gin handlers via `defer`
+- **Error handling**: Use `Abort(c, err)` with typed HTTP errors, processed by `ErrorHandlerMiddleware()`
+- **HTTP Errors**: Use `NotFoundError()`, `BadRequestError()`, `ConflictError()` - these add errors to context
+- **Transactions**: Use `defer commitOrRollback(c, tx)` for handlers that modify data
+- **Panic recovery**: `gin.Recovery()` catches unexpected panics from persistence layer → HTTP 500
 - **Repository constructors**: `persistence.NewXRepository(db *gorm.DB)`
 - **Validation**: Custom validators registered in `main.go` (e.g., `GameWinnerValidator`)
 - **Base model**: All entities embed `model.Base` with GORM fields and JSON tags
@@ -75,21 +78,45 @@ make swagger  # Generates docs from Go annotations
 ```go
 func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
     return func(c *gin.Context) {
-        defer HandlePanic(c)
-        // handler logic
+        if p, found := repo.Find(name); found {
+            c.JSON(http.StatusOK, p)
+        } else {
+            Abort(c, NotFoundError("Could not find %s", name))
+        }
     }
 }
 ```
 
-- **Route Groups**: Organize endpoints by resource with `/api` prefix
+- **Route Groups**: Organize endpoints by resource with `/api` prefix, with `ErrorHandlerMiddleware()` and `gin.Recovery()`
 - **Parameter Extraction**: Use `c.Param(param)` for path params, `c.GetQuery()` for query params
 - **Request Binding**: Use `c.ShouldBindJSON(&struct{})` with validation tags
 - **Response Patterns**: Consistent JSON responses with proper HTTP status codes
-- **Error Handling**: `defer HandlePanic(c)` in every handler for centralized error management
+- **Error Handling**: Use `Abort(c, HTTPError)` to add errors to context, middleware renders response
 - **Custom Validation**: Register domain-specific validators like `gamewinner` for business rules
 - **CORS Middleware**: `AllowAllOrigins` configuration for development flexibility
 - **Static File Serving**: Embedded React app served via custom `serveStatic` function
 - **WebSocket Upgrades**: Use gorilla/websocket upgrader for real-time events
+
+### Persistence Layer Patterns
+
+- **Panic for unrecoverable errors**: All DB operations panic on error → caught by `gin.Recovery()` → HTTP 500
+- **Found pattern**: Methods return `(result, model.Found)` where `Found` is a boolean type alias
+- **HasBeenFound helper**: Converts GORM errors to Found, panics on unexpected errors
+
+```go
+// Consistent pattern for DB operations
+func (r *repository) Store(entity *model.Entity) {
+    if err := r.db.Create(entity).Error; err != nil {
+        panic(err)  // Caught by gin.Recovery() → HTTP 500
+    }
+}
+
+func (r *repository) Find(id string) (*model.Entity, model.Found) {
+    var entity model.Entity
+    err := r.db.First(&entity, id).Error
+    return &entity, HasBeenFound(err)  // Returns false for not found, panics on other errors
+}
+```
 
 ### GORM Relationship Patterns
 
@@ -111,8 +138,6 @@ r.db.Preload("RightPlayerOne.Player").
 
 - **Soft Deletes**: Use `gorm.DeletedAt` in `model.Base` for soft delete functionality
 - **History Tracking**: `TournamentPlayerHistory` tracks ranking changes over time without foreign key to main record
-
-### Testing Approach
 
 ### Testing Approach
 
@@ -237,8 +262,9 @@ cd client && pnpm swagger
 ## Key Files for Understanding
 
 - **`main.go`**: Application bootstrap, routing, database setup
-- **`CONVENTIONS.md`**: Detailed coding standards and project structure rules
+- **`router/router.go`**: API route configuration with middleware setup
+- **`resources/error.go`**: Error types (`HTTPError`), `Abort()`, and `ErrorHandlerMiddleware()`
 - **`model/model.go`**: Base entity structure with GORM integration
-- **`persistence/combinations.go`**: Complex tournament game scheduling logic
+- **`service/game_round_generator.go`**: Tournament game scheduling logic (singleton per tournament)
 - **`client/src/api/Api.ts`**: Auto-generated TypeScript API client
 - **`Makefile`**: Cross-platform build targets and development commands
