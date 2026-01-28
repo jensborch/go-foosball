@@ -20,6 +20,7 @@ import (
 
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/resources"
+	"github.com/jensborch/go-foosball/router"
 
 	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
@@ -67,8 +68,8 @@ func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
 		gormlog = logger.Default.LogMode(logger.Info)
 	}
 
-	router := gin.Default()
-	router.Use(corsHandler())
+	engine := gin.Default()
+	engine.Use(corsHandler())
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("gamewinner", resources.GameWinnerValidator)
@@ -93,78 +94,34 @@ func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
 		&model.Game{},
 		&model.TournamentPlayerHistory{})
 
-	api := router.Group("/api")
+	// Setup API routes
+	router.SetupAPIRoutes(engine, db)
 
-	players := api.Group("/players")
-	players.GET("", resources.GetPlayers(db))
-	players.POST("", resources.PostPlayer(db))
-	players.POST("/", resources.PostPlayer(db))
-	players.GET("/:name", resources.GetPlayer("name", db))
-	players.DELETE("/:name", resources.DeletePlayer("name", db))
+	// Setup static files and other routes
+	setupStaticRoutes(engine)
 
-	tables := api.Group("/tables")
-	tables.GET("", resources.GetTables(db))
-	tables.POST("", resources.PostTable(db))
-	tables.POST("/", resources.PostTable(db))
-	tables.GET("/:id", resources.GetTable("id", db))
-	//tables.DELETE("/:id", resources.DeleteTable("id", db))
+	return engine, nil
+}
 
-	tournaments := api.Group("/tournaments")
-	tournaments.GET("", resources.GetTournaments(db))
-	tournaments.POST("", resources.PostTournament(db))
-	tournaments.POST("/", resources.PostTournament(db))
-	tournaments.GET("/:id", resources.GetTournament("id", db))
-	tournaments.DELETE("/:id", resources.DeleteTournament("id", db))
-
-	tournaments.GET("/:id/players", resources.GetTournamentPlayes("id", db))
-	tournaments.POST("/:id/players", resources.PostTournamentPlayer("id", db))
-	tournaments.PUT("/:id/players/:name", resources.UpdateTournamentPlayerStatus("id", "name", db))
-	tournaments.DELETE("/:id/players", resources.DeleteAllTournamentPlayers("id", db))
-	//tournaments.GET("/:id/players/:name", resources.GetTournamentPlayer("id", "name", db))
-	tournaments.GET("/:id/players/:name/history", resources.GetTournamentPlayeHistory("id", "name", db))
-	tournaments.GET("/:id/history", resources.GetTournamentHistory("id", db))
-
-	tournaments.GET("/:id/tables", resources.GetTournamentTables("id", db))
-	tournaments.POST("/:id/tables", resources.PostTournamentTables("id", db))
-	tournaments.POST("/:id/tables/", resources.PostTournamentTables("id", db))
-	tournaments.DELETE("/:id/tables/:table", resources.DeleteTournamentTable("id", "table", db))
-	tournaments.POST("/:id/tables/:table/games", resources.PostGame("id", "table", db))
-	tournaments.POST("/:id/tables/:table/games/", resources.PostGame("id", "table", db))
-	tournaments.GET("/:id/games", resources.GetGamesInTournament("id", db))
-
-	//Actions
-	tournaments.GET("/:id/games/random", resources.GetRandomGames("id", db))
-	tournaments.GET("/:id/games/start", resources.GetGameStart("id", db))
-
-	//Events
-	tournaments.GET("/:id/events/player", resources.GetPlayerEvents("id"))
-	tournaments.GET("/:id/events/game", resources.GetGameEvents("id"))
-
-	games := api.Group("/games")
-	games.GET("", resources.GetGames(db))
-	games.GET("/:id", resources.GetGame("id", db))
-
+func setupStaticRoutes(engine *gin.Engine) {
 	const avatars = "./avatars"
-	_, err = os.Stat(avatars)
-	if os.IsNotExist(err) {
-		err = os.Mkdir(avatars, 0755)
-		if err != nil {
-			panic("unable to create avatars foler")
+	if _, err := os.Stat(avatars); os.IsNotExist(err) {
+		if err := os.Mkdir(avatars, 0755); err != nil {
+			log.Printf("Warning: unable to create avatars folder: %v", err)
 		}
 	}
-	router.Static("/avatars", avatars)
+	engine.Static("/avatars", avatars)
 
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	router.GET("/", func(c *gin.Context) {
+	engine.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusMovedPermanently, "/client")
 	})
 
 	subfs := subFs(client, "/client/", "client/dist")
-	router.GET("/client/*any", func(c *gin.Context) {
+	engine.GET("/client/*any", func(c *gin.Context) {
 		serveStatic(c, subfs, "/client/")
 	})
-	return router, db
 }
 
 func serveStatic(c *gin.Context, f fs.FS, prefix string) {
