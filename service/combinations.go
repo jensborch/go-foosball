@@ -1,8 +1,10 @@
-package persistence
+// Package service contains business logic services for the foosball application.
+package service
 
 import (
-	"fmt"
+	"log"
 	"math/rand/v2"
+	"sort"
 	"sync"
 
 	"github.com/jensborch/go-foosball/model"
@@ -14,6 +16,8 @@ var (
 	instanceLock sync.Mutex
 )
 
+// GameCombinations manages round-robin game scheduling for tournaments.
+// It generates all possible player combinations and cycles through them.
 type GameCombinations struct {
 	sync.Mutex
 	current int
@@ -22,8 +26,10 @@ type GameCombinations struct {
 	tables  []*model.TournamentTable
 }
 
+// GetGameCombinationsInstance returns the singleton GameCombinations for a tournament.
+// Thread-safe for concurrent access.
 func GetGameCombinationsInstance(tournamentId string) *GameCombinations {
-	fmt.Printf("Getting combinations instance for tournament %s\n", tournamentId)
+	log.Printf("Getting combinations instance for tournament %s", tournamentId)
 	instanceLock.Lock()
 	defer instanceLock.Unlock()
 
@@ -33,13 +39,23 @@ func GetGameCombinationsInstance(tournamentId string) *GameCombinations {
 
 	g, ok := instance[tournamentId]
 	if !ok {
-		fmt.Printf("Creating new instance for tournament %s\n", tournamentId)
+		log.Printf("Creating new instance for tournament %s", tournamentId)
 		g = &GameCombinations{}
 		instance[tournamentId] = g
 	}
 	return g
 }
 
+// ClearInstance removes the GameCombinations instance for a tournament.
+// Useful for cleanup or when tournament configuration changes significantly.
+func ClearInstance(tournamentId string) {
+	instanceLock.Lock()
+	defer instanceLock.Unlock()
+	delete(instance, tournamentId)
+}
+
+// Next returns the next round of games in the rotation.
+// Cycles back to the first round after the last one.
 func (c *GameCombinations) Next() []*model.Game {
 	c.Lock()
 	defer c.Unlock()
@@ -51,10 +67,11 @@ func (c *GameCombinations) Next() []*model.Game {
 		result = c.rounds[c.current]
 		c.current++
 	}
-	fmt.Printf("Playing round %d\n", c.current)
+	log.Printf("Playing round %d", c.current)
 	return result
 }
 
+// Randomize shuffles the order of rounds.
 func (c *GameCombinations) Randomize() {
 	c.Lock()
 	defer c.Unlock()
@@ -68,6 +85,8 @@ func (c *GameCombinations) Randomize() {
 	}
 }
 
+// Update recalculates game combinations if players or tables have changed.
+// Returns the number of rounds generated, or 0 if no update was needed.
 func (c *GameCombinations) Update(players []*model.TournamentPlayer, tables []*model.TournamentTable) int {
 	c.Lock()
 	defer c.Unlock()
@@ -76,10 +95,29 @@ func (c *GameCombinations) Update(players []*model.TournamentPlayer, tables []*m
 		c.tables = tables
 		c.rounds = allGamePlayerCombinations(players, tables)
 		c.current = 0
-		fmt.Printf("Created new set of %d rounds from %d players and %d tables\n", len(c.rounds), len(c.players), len(c.tables))
+		log.Printf("Created new set of %d rounds from %d players and %d tables", len(c.rounds), len(c.players), len(c.tables))
 		return len(c.rounds)
 	}
 	return 0
+}
+
+// Rounds returns the current number of rounds (for testing).
+func (c *GameCombinations) Rounds() [][]*model.Game {
+	c.Lock()
+	defer c.Unlock()
+	return c.rounds
+}
+
+func sortPlayersByNickname(players []*model.TournamentPlayer) []*model.TournamentPlayer {
+	if players == nil {
+		return nil
+	}
+	result := make([]*model.TournamentPlayer, len(players))
+	copy(result, players)
+	sort.Slice(result, func(p, q int) bool {
+		return result[p].Player.Nickname < result[q].Player.Nickname
+	})
+	return result
 }
 
 func isSamePlayers(players1, players2 []*model.TournamentPlayer) bool {
@@ -209,7 +247,6 @@ func createGame(playersLeft int, table *model.TournamentTable, combination [][]*
 			LeftPlayerOne:   *combination[1][0],
 			LeftPlayerTwo:   *combination[1][1],
 		}
-
 	} else {
 		game = model.Game{
 			TournamentTable: *table,
