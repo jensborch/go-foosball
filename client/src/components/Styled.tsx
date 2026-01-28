@@ -1,13 +1,19 @@
 import { styled } from "@mui/material/styles";
 import CardHeader from "@mui/material/CardHeader";
 import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import SvgIcon from "@mui/material/SvgIcon";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 import type {
   CardProps,
+  CardContentProps,
   GridProps,
   ButtonProps,
   SvgIconProps,
+  ChipProps,
+  StackProps,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import type { Theme } from "@mui/material/styles";
@@ -31,6 +37,23 @@ export const ActionIcon = styled((props: SvgIconProps) => (
   width: 24,
   height: 24,
 });
+
+export const RankingChip = styled((props: ChipProps) => (
+  <Chip size="small" color="primary" {...props} />
+))(({ theme }: { theme: Theme }) => ({
+  minWidth: theme.spacing(6),
+}));
+
+export const ScrollableCardContent = styled((props: CardContentProps) => (
+  <CardContent {...props} />
+))({
+  overflow: "auto",
+  maxHeight: "65vh",
+});
+
+export const CenteredStack = styled((props: StackProps) => (
+  <Stack alignItems="center" justifyContent="center" {...props} />
+))``;
 
 export const StyledCardHeader = styled(CardHeader)(
   ({ theme }: { theme: Theme }) => ({

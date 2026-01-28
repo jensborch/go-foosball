@@ -2,8 +2,6 @@ import * as Api from "../api/Api";
 import {
   Avatar,
   CardActions,
-  CardContent,
-  Chip,
   CircularProgress,
   Divider,
   IconButton,
@@ -13,6 +11,7 @@ import {
   ListItemText,
   Stack,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import {
   useTournamentPlayers,
@@ -21,7 +20,13 @@ import {
 } from "../api/hooks";
 import { Error } from "./Error";
 import CheckIcon from "@mui/icons-material/Check";
-import { StyledCard, StyledCardHeader } from "./Styled";
+import {
+  StyledCard,
+  StyledCardHeader,
+  RankingChip,
+  ScrollableCardContent,
+  CenteredStack,
+} from "./Styled";
 import AnimatedAvatar from "./AnimatedAvatar";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -32,7 +37,6 @@ import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined
 import EmojiPeopleOutlinedIcon from "@mui/icons-material/EmojiPeopleOutlined";
 import { useState } from "react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { responsiveTxt } from "../util/text";
 
 type PlayerProps = {
   tournament: string;
@@ -48,7 +52,7 @@ const Player = ({ tournament, player }: PlayerProps) => {
     mutate({ status: selected ? "active" : "inactive" });
   }
   return (
-    <ListItem disableGutters secondaryAction={<Chip label={player.ranking} />}>
+    <ListItem disableGutters>
       <ListItemAvatar>
         <AnimatedAvatar
           avatar={player.nickname}
@@ -59,9 +63,19 @@ const Player = ({ tournament, player }: PlayerProps) => {
         ></AnimatedAvatar>
       </ListItemAvatar>
       <ListItemText
-        primary={responsiveTxt(player.nickname, 10)}
-        secondary={responsiveTxt(player.realname, 10)}
+        primary={
+          <Typography variant="body1" noWrap>
+            {player.nickname}
+          </Typography>
+        }
+        secondary={
+          <Typography variant="body2" color="text.secondary" noWrap>
+            {player.realname}
+          </Typography>
+        }
+        sx={{ mr: 1, minWidth: 0 }}
       />
+      <RankingChip label={player.ranking} />
     </ListItem>
   );
 };
@@ -143,7 +157,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
   const { mutate: deselectAll } =
     useTournamentPlayersDeleteMutation(tournament);
   return (
-    <StyledCard sx={{ minWidth: "200px", maxHeight: "100vh" }}>
+    <StyledCard sx={{ minWidth: 200, maxHeight: "100vh" }}>
       <StyledCardHeader
         avatar={
           <Avatar>
@@ -157,15 +171,15 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
         }
         title="Players"
       />
-      <CardContent sx={{ overflow: "auto", maxHeight: "65vh" }}>
+      <ScrollableCardContent>
         {status === "pending" && (
-          <Stack alignItems="center" justifyContent="center">
+          <CenteredStack>
             <CircularProgress color="secondary" />
-          </Stack>
+          </CenteredStack>
         )}
         {status === "error" && <Error msg={error?.message} />}
         {status === "success" && (
-          <List dense={true}>
+          <List dense>
             {data
               .map((p) => ({ latest: MIN_DATE, ...p }))
               .sort(sortPlayers(order))
@@ -178,7 +192,7 @@ const TournamentPlayers = ({ tournament }: PlayersProps) => {
               ))}
           </List>
         )}
-      </CardContent>
+      </ScrollableCardContent>
       <Divider />
       <SortPlayers setOrder={setOrder} order={order} />
     </StyledCard>
