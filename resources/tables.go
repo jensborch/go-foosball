@@ -74,8 +74,7 @@ func PostTable(db *gorm.DB) func(*gin.Context) {
 			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
-		tx := db.Begin()
-		defer commitOrRollback(c, tx)
+		tx := GetTx(c)
 		t := model.NewTable(table.Name, table.Color)
 		persistence.NewTableRepository(tx).Store(t)
 		c.JSON(http.StatusCreated, t)
@@ -128,8 +127,7 @@ func PostTournamentTables(param string, db *gorm.DB) func(*gin.Context) {
 			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
-		tx := db.Begin()
-		defer commitOrRollback(c, tx)
+		tx := GetTx(c)
 		r := persistence.NewTournamentRepository(tx)
 		table, found := persistence.NewTableRepository(tx).Find(strconv.FormatUint(uint64(representation.ID), 10))
 		if !found {
@@ -159,8 +157,7 @@ func DeleteTournamentTable(tournamentParam string, tableParam string, db *gorm.D
 	return func(c *gin.Context) {
 		tourId := c.Param(tournamentParam)
 		tableId := c.Param(tableParam)
-		tx := db.Begin()
-		defer commitOrRollback(c, tx)
+		tx := GetTx(c)
 		r := persistence.NewTournamentRepository(tx)
 		if found := r.RemoveTable(tourId, tableId); found {
 			service.ClearGameRoundGenerator(tourId)
