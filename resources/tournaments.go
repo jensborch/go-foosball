@@ -71,7 +71,7 @@ func NewPlayerRepresentation(tp *model.TournamentPlayer) TournamentPlayerReprese
 	}
 }
 
-// GetTournamentPlayes get players in a given tournament
+// GetTournamentPlayers gets all players in a given tournament.
 // @Summary  Get players in tournament
 // @Tags     tournament
 // @Accept   json
@@ -81,7 +81,7 @@ func NewPlayerRepresentation(tp *model.TournamentPlayer) TournamentPlayerReprese
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
 // @Router   /tournaments/{id}/players [get]
-func GetTournamentPlayes(param string, db *gorm.DB) func(*gin.Context) {
+func GetTournamentPlayers(param string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
 		id := c.Param(param)
@@ -104,7 +104,7 @@ type CreateTournamentRequest struct {
 	Timeout        uint   `json:"timeout"`
 } //@name CreateTournament
 
-// PostTournament creats tournament
+// PostTournament creates a new tournament.
 // @Summary  Create tournament
 // @Tags     tournament
 // @Accept   json
@@ -184,7 +184,7 @@ func PostTournamentPlayer(param string, db *gorm.DB) func(*gin.Context) {
 					c.JSON(http.StatusCreated, tp)
 					playerEventPublisher.Publish(id, NewPlayerRepresentation(tp))
 				} else {
-					c.JSON(http.StatusNotFound, fmt.Sprintf("Could not finde tournament %s", id))
+					c.JSON(http.StatusNotFound, NewErrorResponse(fmt.Sprintf("Could not find tournament %s", id)))
 				}
 			}
 		}
@@ -284,8 +284,8 @@ func DeleteAllTournamentPlayers(tournamentParam string, db *gorm.DB) func(*gin.C
 
 var playerEventPublisher = NewEventPublisher()
 
-// GetPlayerEvents creats web socket with tournamnent player events
-// @Summary  Opens a web socket for tournamnent player events
+// GetPlayerEvents creates a WebSocket connection for tournament player events.
+// @Summary  Opens a WebSocket for tournament player events
 // @Tags     events
 // @Produce  json-stream
 // @Param    id   path      string  true  "Tournament ID"
@@ -295,7 +295,7 @@ func GetPlayerEvents(param string) func(c *gin.Context) {
 	return playerEventPublisher.Get(param)
 }
 
-// GetTournamentPlayeHistory get player ranking history in a given tournament
+// GetTournamentPlayerHistory gets player ranking history in a given tournament.
 // @Summary  Get player ranking history in tournament
 // @Tags     tournament
 // @Accept   json
@@ -307,7 +307,7 @@ func GetPlayerEvents(param string) func(c *gin.Context) {
 // @Failure  404       {object}  ErrorResponse
 // @Failure  500       {object}  ErrorResponse
 // @Router   /tournaments/{id}/players/{nickname}/history [get]
-func GetTournamentPlayeHistory(tournamentParam string, playerParam string, db *gorm.DB) func(*gin.Context) {
+func GetTournamentPlayerHistory(tournamentParam string, playerParam string, db *gorm.DB) func(*gin.Context) {
 	return func(c *gin.Context) {
 		defer HandlePanic(c)
 		id := c.Param(tournamentParam)

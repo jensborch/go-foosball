@@ -307,7 +307,7 @@ paths:
             items:
               $ref: '#/definitions/Game'
             type: array
-      summary: Get all gamne results
+      summary: Get all game results
       tags:
       - game
   /games/{id}:
@@ -335,7 +335,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/Error'
-      summary: Get gamne results
+      summary: Get game results
       tags:
       - game
   /players:
@@ -638,7 +638,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/GameStartEvent'
-      summary: Opens a web socket for tournamnent game start events
+      summary: Opens a WebSocket for tournament game start events
       tags:
       - events
   /tournaments/{id}/events/player:
@@ -656,7 +656,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/TournamentPlayer'
-      summary: Opens a web socket for tournamnent player events
+      summary: Opens a WebSocket for tournament player events
       tags:
       - events
   /tournaments/{id}/games:
@@ -1052,7 +1052,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/Error'
-      summary: Submit gamne results
+      summary: Submit game results
       tags:
       - tournament
   /tournaments/{id}/tables/{tableId}:

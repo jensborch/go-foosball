@@ -43,7 +43,7 @@ func (r *tableRepository) FindAllNotInTournament(id string) []*model.Table {
 	return tables
 }
 
-// NewTableRepository creats new repository
+// NewTableRepository creates a new TableRepository instance.
 func NewTableRepository(db *gorm.DB) model.TableRepository {
 	return &tableRepository{
 		db: db,

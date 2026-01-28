@@ -26,7 +26,7 @@ const docTemplate = `{
                 "tags": [
                     "game"
                 ],
-                "summary": "Get all gamne results",
+                "summary": "Get all game results",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -51,7 +51,7 @@ const docTemplate = `{
                 "tags": [
                     "game"
                 ],
-                "summary": "Get gamne results",
+                "summary": "Get game results",
                 "parameters": [
                     {
                         "type": "string",
@@ -530,7 +530,7 @@ const docTemplate = `{
                 "tags": [
                     "events"
                 ],
-                "summary": "Opens a web socket for tournamnent game start events",
+                "summary": "Opens a WebSocket for tournament game start events",
                 "parameters": [
                     {
                         "type": "string",
@@ -558,7 +558,7 @@ const docTemplate = `{
                 "tags": [
                     "events"
                 ],
-                "summary": "Opens a web socket for tournamnent player events",
+                "summary": "Opens a WebSocket for tournament player events",
                 "parameters": [
                     {
                         "type": "string",
@@ -1172,7 +1172,7 @@ const docTemplate = `{
                 "tags": [
                     "tournament"
                 ],
-                "summary": "Submit gamne results",
+                "summary": "Submit game results",
                 "parameters": [
                     {
                         "type": "string",
