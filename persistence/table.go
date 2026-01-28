@@ -16,7 +16,11 @@ func (r *tableRepository) Store(t *model.Table) {
 }
 
 func (r *tableRepository) Remove(id string) model.Found {
-	return HasBeenFound(r.db.Where("ID = ?", id).Delete(&model.Table{}).Error)
+	result := r.db.Where("ID = ?", id).Delete(&model.Table{})
+	if result.Error != nil {
+		panic(result.Error)
+	}
+	return result.RowsAffected > 0
 }
 
 func (r *tableRepository) Find(id string) (*model.Table, model.Found) {

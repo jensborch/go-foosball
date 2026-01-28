@@ -24,8 +24,11 @@ func (r *gameRepository) Store(g *model.Game) {
 }
 
 func (r *gameRepository) Remove(id string) model.Found {
-	err := r.db.Where("ID = ?", id).Delete(&model.Game{}).Error
-	return HasBeenFound(err)
+	result := r.db.Where("ID = ?", id).Delete(&model.Game{})
+	if result.Error != nil {
+		panic(result.Error)
+	}
+	return result.RowsAffected > 0
 }
 
 func (r *gameRepository) Find(id string) (*model.Game, model.Found) {

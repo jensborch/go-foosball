@@ -24,20 +24,26 @@ func (r *tournamentRepository) Store(t *model.Tournament) {
 }
 
 func (r *tournamentRepository) Remove(id string) model.Found {
-	err := r.db.Where("ID = ?", id).Delete(&model.Tournament{}).Error
-	return HasBeenFound(err)
+	result := r.db.Where("ID = ?", id).Delete(&model.Tournament{})
+	if result.Error != nil {
+		panic(result.Error)
+	}
+	return result.RowsAffected > 0
 }
 
 func (r *tournamentRepository) RemoveTable(tournamentId string, tableId string) model.Found {
-	err := r.db.Model(&model.TournamentTable{}).
+	result := r.db.Model(&model.TournamentTable{}).
 		Where("table_id = (?)", r.db.Model(&model.Table{}).
 			Select("id").
 			Where("ID = ?", tableId)).
 		Where("tournament_id = (?)", r.db.Model(&model.Tournament{}).
 			Select("id").
 			Where("ID = ?", tournamentId)).
-		Delete(&model.TournamentTable{}).Error
-	return HasBeenFound(err)
+		Delete(&model.TournamentTable{})
+	if result.Error != nil {
+		panic(result.Error)
+	}
+	return result.RowsAffected > 0
 }
 
 func (r *tournamentRepository) AddTables(tournamentId string, table *model.Table) (*model.TournamentTable, model.Found) {
@@ -162,11 +168,10 @@ func (r *tournamentRepository) DeactivatePlayers(tournamentId string) model.Foun
 	result := r.db.Model(&model.TournamentPlayer{}).
 		Where("tournament_id = ?", tournamentId).
 		Update("status", model.INACTIVE)
-	if result.Error == nil {
-		return result.RowsAffected >= 1
-	} else {
-		panic(fmt.Errorf("error deactivating all players in tournament %s", tournamentId))
+	if result.Error != nil {
+		panic(result.Error)
 	}
+	return result.RowsAffected > 0
 }
 
 func (r *tournamentRepository) UpdatePlayerStatus(tournamentId string, nickname string, status model.Status) (*model.TournamentPlayer, model.Found) {
