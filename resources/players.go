@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/persistence"
-	"gorm.io/gorm"
 )
 
 // GetPlayer gets player info
@@ -19,10 +18,10 @@ import (
 // @Failure  404   {object}  ErrorResponse
 // @Failure  500   {object}  ErrorResponse
 // @Router   /players/{name} [get]
-func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
+func GetPlayer(param string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		name := c.Param(param)
-		r := persistence.NewPlayerRepository(db)
+		r := persistence.NewPlayerRepository(GetDB(c))
 		if p, found := r.Find(name); found {
 			c.JSON(http.StatusOK, p)
 		} else {
@@ -39,9 +38,9 @@ func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 // @Param    exclude  query    int  false  "exlude tournament from list"
 // @Success  200      {array}  model.Player
 // @Router   /players [get]
-func GetPlayers(db *gorm.DB) func(*gin.Context) {
+func GetPlayers() func(*gin.Context) {
 	return func(c *gin.Context) {
-		r := persistence.NewPlayerRepository(db)
+		r := persistence.NewPlayerRepository(GetDB(c))
 		if exclude, found := c.GetQuery("exclude"); found {
 			c.JSON(http.StatusOK, r.FindAllNotInTournament(exclude))
 		} else {
@@ -67,15 +66,15 @@ type CreatePlayerRequest struct {
 // @Failure  409     {object}  ErrorResponse
 // @Failure  500     {object}  ErrorResponse
 // @Router   /players [post]
-func PostPlayer(db *gorm.DB) func(*gin.Context) {
+func PostPlayer() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var player CreatePlayerRequest
 		if err := c.ShouldBindJSON(&player); err != nil {
 			Abort(c, BadRequestError("%s", err.Error()))
 			return
 		}
-		tx := GetTx(c)
-		r := persistence.NewPlayerRepository(tx)
+		db := GetDB(c)
+		r := persistence.NewPlayerRepository(db)
 		if _, found := r.Find(player.Nickname); found {
 			Abort(c, ConflictError("Player %s already exists", player.Nickname))
 			return
@@ -96,11 +95,11 @@ func PostPlayer(db *gorm.DB) func(*gin.Context) {
 // @Failure  404  {object}  ErrorResponse
 // @Failure  500  {object}  ErrorResponse
 // @Router   /players/{name} [delete]
-func DeletePlayer(param string, db *gorm.DB) func(*gin.Context) {
+func DeletePlayer(param string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		name := c.Param(param)
-		tx := GetTx(c)
-		r := persistence.NewPlayerRepository(tx)
+		db := GetDB(c)
+		r := persistence.NewPlayerRepository(db)
 		if found := r.Remove(name); found {
 			c.Status(http.StatusNoContent)
 		} else {
