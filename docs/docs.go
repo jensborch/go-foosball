@@ -165,7 +165,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/players/{id}": {
+        "/players/{name}": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -180,8 +180,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Player ID",
-                        "name": "id",
+                        "description": "Player nickname",
+                        "name": "name",
                         "in": "path",
                         "required": true
                     }
@@ -221,8 +221,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Player ID",
-                        "name": "id",
+                        "description": "Player nickname",
+                        "name": "name",
                         "in": "path",
                         "required": true
                     }
@@ -1090,7 +1090,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/TournamentTable"
+                            "$ref": "#/definitions/Table"
                         }
                     },
                     "400": {
@@ -1114,7 +1114,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/tournaments/{id}/tables/{tableId}": {
+        "/tournaments/{id}/tables/{table}": {
             "delete": {
                 "consumes": [
                     "application/json"
@@ -1137,7 +1137,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Table ID",
-                        "name": "tableId",
+                        "name": "table",
                         "in": "path",
                         "required": true
                     }

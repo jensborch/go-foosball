@@ -391,14 +391,14 @@ paths:
       summary: Create a new player
       tags:
       - player
-  /players/{id}:
+  /players/{name}:
     delete:
       consumes:
       - application/json
       parameters:
-      - description: Player ID
+      - description: Player nickname
         in: path
-        name: id
+        name: name
         required: true
         type: string
       produces:
@@ -421,9 +421,9 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Player ID
+      - description: Player nickname
         in: path
-        name: id
+        name: name
         required: true
         type: string
       produces:
@@ -996,7 +996,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/TournamentTable'
+            $ref: '#/definitions/Table'
         "400":
           description: Bad Request
           schema:
@@ -1010,6 +1010,37 @@ paths:
           schema:
             $ref: '#/definitions/Error'
       summary: Add table to tournament
+      tags:
+      - tournament
+  /tournaments/{id}/tables/{table}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Tournament ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Table ID
+        in: path
+        name: table
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Remove table from tournament
       tags:
       - tournament
   /tournaments/{id}/tables/{table}/games:
@@ -1053,37 +1084,6 @@ paths:
           schema:
             $ref: '#/definitions/Error'
       summary: Submit game results
-      tags:
-      - tournament
-  /tournaments/{id}/tables/{tableId}:
-    delete:
-      consumes:
-      - application/json
-      parameters:
-      - description: Tournament ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Table ID
-        in: path
-        name: tableId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/Error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/Error'
-      summary: Remove table from tournament
       tags:
       - tournament
 swagger: "2.0"
