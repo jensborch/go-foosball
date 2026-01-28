@@ -42,7 +42,7 @@ make build
 make test  # or: go test -race -covermode=atomic -coverprofile=coverage.out ./...
 
 # Frontend development
-cd client && pnpm start  # Development server on :3000
+cd client && pnpm start  # Development server (Vite default port)
 cd client && pnpm build  # Production build
 ```
 
@@ -65,7 +65,7 @@ make swagger  # Generates docs from Go annotations
 
 - **Error handling**: Use `Abort(c, err)` with typed HTTP errors, processed by `ErrorHandlerMiddleware()`
 - **HTTP Errors**: Use `NotFoundError()`, `BadRequestError()`, `ConflictError()` - these add errors to context
-- **Transactions**: Use `defer commitOrRollback(c, tx)` for handlers that modify data
+- **Transactions**: Automatic via `TransactionMiddleware` - write operations (POST/PUT/DELETE/PATCH) use transactions, reads use connection pool. Use `GetDB(c)` to access the database.
 - **Panic recovery**: `gin.Recovery()` catches unexpected panics from persistence layer → HTTP 500
 - **Repository constructors**: `persistence.NewXRepository(db *gorm.DB)`
 - **Validation**: Custom validators registered in `main.go` (e.g., `GameWinnerValidator`)
@@ -73,12 +73,14 @@ make swagger  # Generates docs from Go annotations
 
 ### Gin Framework Patterns
 
-- **Handler Function Factories**: All handlers return `func(*gin.Context)` closures with injected dependencies
+- **Handler Function Factories**: All handlers return `func(*gin.Context)` closures. Database access is via `GetDB(c)` from context (set by `TransactionMiddleware`).
 
 ```go
-func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
+func GetPlayer(param string) func(*gin.Context) {
     return func(c *gin.Context) {
-        if p, found := repo.Find(name); found {
+        name := c.Param(param)
+        r := persistence.NewPlayerRepository(GetDB(c))
+        if p, found := r.Find(name); found {
             c.JSON(http.StatusOK, p)
         } else {
             Abort(c, NotFoundError("Could not find %s", name))
@@ -87,7 +89,7 @@ func GetPlayer(param string, db *gorm.DB) func(*gin.Context) {
 }
 ```
 
-- **Route Groups**: Organize endpoints by resource with `/api` prefix, with `ErrorHandlerMiddleware()` and `gin.Recovery()`
+- **Route Groups**: Organize endpoints by resource with `/api` prefix, with `gin.Recovery()`, `ErrorHandlerMiddleware()`, and `TransactionMiddleware(db)`
 - **Parameter Extraction**: Use `c.Param(param)` for path params, `c.GetQuery()` for query params
 - **Request Binding**: Use `c.ShouldBindJSON(&struct{})` with validation tags
 - **Response Patterns**: Consistent JSON responses with proper HTTP status codes
@@ -155,10 +157,10 @@ r.db.Preload("RightPlayerOne.Player").
 
 ### React/TypeScript Frontend Architecture
 
-- **Build System**: Vite with SWC for fast builds and HMR
+- **Build System**: Vite 7 with SWC for fast builds and HMR
 - **Package Manager**: pnpm with `preinstall` hook enforcing usage
-- **TypeScript**: Strict mode enabled with comprehensive type checking
-- **Testing**: Vitest with jsdom environment, Testing Library for component tests
+- **TypeScript**: TypeScript 5 with strict mode enabled
+- **Testing**: Vitest with happy-dom environment, Testing Library for component tests
 
 ### MUI (Material-UI) Patterns
 
@@ -203,9 +205,9 @@ export const usePlayers = (tournament: number) => {
 ### Vite Configuration
 
 - **Base Path**: `/client` for embedded deployment in Go binary
-- **Plugins**: React SWC for fast compilation, SVG support, TypeScript paths
+- **Plugins**: React SWC for fast compilation
 - **Testing**: Integrated Vitest configuration with coverage reporting
-- **Environment**: jsdom for browser-like testing environment
+- **Environment**: happy-dom for fast browser-like testing environment
 
 ### Development Workflow
 
@@ -247,8 +249,8 @@ cd client && pnpm swagger
 
 ### External Dependencies
 
-- **Backend**: Gin, GORM, SQLite driver, Swagger generation
-- **Frontend**: React 18, MUI, TanStack Query, Recharts for analytics
+- **Backend**: Gin, GORM, SQLite driver (glebarez/sqlite), Swagger generation, Go 1.24+
+- **Frontend**: React 19, MUI v7, TanStack Query v5, Recharts for analytics, Vite 7, TypeScript 5
 - **Build tools**: Go embed, Vite, pnpm package management
 
 ### Cross-Component Data Flow
@@ -261,9 +263,10 @@ cd client && pnpm swagger
 
 ## Key Files for Understanding
 
-- **`main.go`**: Application bootstrap, routing, database setup
+- **`main.go`**: Application bootstrap, database setup, static routes
 - **`router/router.go`**: API route configuration with middleware setup
-- **`resources/error.go`**: Error types (`HTTPError`), `Abort()`, and `ErrorHandlerMiddleware()`
+- **`resources/error.go`**: Error types (`HTTPError`) and `Abort()` function
+- **`resources/middleware.go`**: `ErrorHandlerMiddleware()`, `TransactionMiddleware()`, and `GetDB()`
 - **`model/model.go`**: Base entity structure with GORM integration
 - **`service/game_round_generator.go`**: Tournament game scheduling logic (singleton per tournament)
 - **`client/src/api/Api.ts`**: Auto-generated TypeScript API client
