@@ -13,15 +13,14 @@ import (
 
 	"github.com/jensborch/go-foosball/model"
 	"github.com/jensborch/go-foosball/resources"
-	"gorm.io/gorm"
 )
 
-func startServer() (*httptest.Server, *gorm.DB) {
+func startServer() (*httptest.Server, error) {
 	if err := os.Remove("test.db"); err != nil {
 		fmt.Println("Could not delete test DB", err)
 	}
-	engine, db := setupServer("test.db", true)
-	return httptest.NewServer(engine), db
+	engine, error := setupServer("test.db", true)
+	return httptest.NewServer(engine), error
 }
 
 func TestGetEmptyList(t *testing.T) {

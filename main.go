@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	"flag"
+	"fmt"
 	"io/fs"
 	"log"
 	"net/http"
@@ -49,7 +50,10 @@ func main() {
 	flag.BoolVar(&debug, "debug", false, "enable debug")
 	flag.Parse()
 	log.Printf("Starting go-foosball on port %d using database %s", port, dbfile)
-	engine, _ := setupServer(dbfile, debug)
+	engine, err := setupServer(dbfile, debug)
+	if err != nil {
+		log.Fatalf("Failed to set up server: %v", err)
+	}
 	engine.Run(":" + strconv.FormatUint(uint64(port), 10))
 }
 
@@ -59,7 +63,7 @@ func corsHandler() gin.HandlerFunc {
 	return cors.New(config)
 }
 
-func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
+func setupServer(dbfile string, debug bool) (*gin.Engine, error) {
 	var gormlog logger.Interface
 	if !debug {
 		gin.SetMode(gin.ReleaseMode)
@@ -74,14 +78,14 @@ func setupServer(dbfile string, debug bool) (*gin.Engine, *gorm.DB) {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("gamewinner", resources.GameWinnerValidator)
 	} else {
-		panic("failed to add validator")
+		return nil, fmt.Errorf("failed to add validator")
 	}
 
 	db, err := gorm.Open(sqlite.Open(dbfile), &gorm.Config{
 		Logger: gormlog,
 	})
 	if err != nil {
-		panic("failed to connect database")
+		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
 	sqliteDb, _ := db.DB()
 	sqliteDb.SetMaxOpenConns(1)
@@ -125,7 +129,7 @@ func setupStaticRoutes(engine *gin.Engine) {
 }
 
 func serveStatic(c *gin.Context, f fs.FS, prefix string) {
-	p := c.Request.URL.Path[len(prefix):len(c.Request.URL.Path)]
+	p := c.Request.URL.Path[len(prefix):]
 	if _, error := f.Open(p); error == nil {
 		c.FileFromFS(p, http.FS(f))
 	} else {
