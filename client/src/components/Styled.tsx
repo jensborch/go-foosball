@@ -25,7 +25,8 @@ export const MenuOffset = styled("div")(
 export const ActionButton = styled((props: ButtonProps) => (
   <Button size="large" {...props} />
 ))(({ theme }: { theme: Theme }) => ({
-  minWidth: 160,
+  width: 180,
+  height: 60,
   paddingTop: theme.spacing(1.5),
   paddingBottom: theme.spacing(1.5),
   fontWeight: theme.typography.fontWeightBold,

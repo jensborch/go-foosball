@@ -28,7 +28,7 @@ type RenderTimeProps = {
 
 const renderTime = ({ remainingTime }: RenderTimeProps) => {
   if (remainingTime === 0) {
-    return <Typography variant="h5">Game over</Typography>;
+    return <Typography variant="h6">Game over</Typography>;
   }
 
   return (
@@ -104,9 +104,8 @@ const Start = ({ tournament }: { tournament: string }) => {
   const onComplete = () => {
     new Audio(`${BASE_URL}/sounds/finish.wav`).play();
     setTimeout(() => {
-      setIsPlaying(false);
-      setStartTime(null);
-    }, 4000);
+      handleReset();
+    }, 3000);
   };
 
   const onUpdate = (remaining: number) => {

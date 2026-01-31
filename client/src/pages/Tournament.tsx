@@ -19,7 +19,7 @@ function Tournament() {
     <Stack direction="row">
       <Menu title="Foosball" />
       <ActionDraw tournament={id} />
-      <Box component="main" width="100%">
+      <Box component="main" width="100%" padding={1}>
         <MenuOffset />
         <Box m={1}>
           <Grid container spacing={3}>
