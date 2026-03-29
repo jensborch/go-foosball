@@ -51,7 +51,7 @@
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^17.0.0",
-    "happy-dom": "20.8.8",
+    "happy-dom": "20.8.9",
     "prettier": "^3.8.0",
     "swagger-typescript-api": "~13.2.16",
     "typescript-eslint": "^8.53.1",
