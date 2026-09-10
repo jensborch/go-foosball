@@ -55,6 +55,6 @@
     "prettier": "^3.8.0",
     "swagger-typescript-api": "~13.12.2",
     "typescript-eslint": "^8.53.1",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.11"
   }
 }
