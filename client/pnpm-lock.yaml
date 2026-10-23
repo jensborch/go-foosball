@@ -34,7 +34,7 @@ importers:
         version: 5.90.19(react@19.2.3)
       '@vitejs/plugin-react-swc':
         specifier: ^4.2.2
-        version: 4.2.2(vite@7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))
+        version: 4.2.2(vite@7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -60,14 +60,14 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       vite:
-        specifier: ^7.3.5
-        version: 7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)
+        specifier: ^7.3.7
+        version: 7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)
       vite-plugin-svgr:
         specifier: ^4.5.0
-        version: 4.5.0(rollup@4.62.2)(supports-color@7.2.0)(typescript@5.9.3)(vite@7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))
+        version: 4.5.0(rollup@4.62.2)(supports-color@7.2.0)(typescript@5.9.3)(vite@7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))
       vite-tsconfig-paths:
         specifier: ^6.0.4
-        version: 6.0.4(supports-color@7.2.0)(typescript@5.9.3)(vite@7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))
+        version: 6.0.4(supports-color@7.2.0)(typescript@5.9.3)(vite@7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))
     devDependencies:
       '@eslint/js':
         specifier: ^9.39.2
@@ -125,7 +125,7 @@ importers:
         version: 8.53.1(eslint@9.39.2(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@25.0.9)(@vitest/coverage-v8@4.0.17)(happy-dom@20.8.9)(jsdom@27.4.0(supports-color@7.2.0))(vite@7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))
+        version: 4.1.11(@types/node@25.0.9)(@vitest/coverage-v8@4.0.17)(happy-dom@20.8.9)(jsdom@27.4.0(supports-color@7.2.0))(vite@7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))
 
 packages:
 
@@ -2876,8 +2876,8 @@ packages:
       vite:
         optional: true
 
-  vite@7.3.5:
-    resolution: {integrity: sha512-KuOaNhcnGFN2zIPGA7wRmzF+lJA1sea7rHq17aiJ++9lzY1WWG6Jpwqwe1KNbRVPIqHmr8GLYx7jbrQcN/7/ww==}
+  vite@7.3.7:
+    resolution: {integrity: sha512-AHEzTORMbi7/7aXp7w7KZ5+DCUdSeLsJz0grY8xHpc9DHdYb0vQu6DqJfm2tOw3gDExNgPgnJTXxM6syYFHaCA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
@@ -4047,11 +4047,11 @@ snapshots:
       '@typescript-eslint/types': 8.53.1
       eslint-visitor-keys: 4.2.1
 
-  '@vitejs/plugin-react-swc@4.2.2(vite@7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))':
+  '@vitejs/plugin-react-swc@4.2.2(vite@7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))':
     dependencies:
       '@rolldown/pluginutils': 1.0.0-beta.47
       '@swc/core': 1.15.10
-      vite: 7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)
+      vite: 7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - '@swc/helpers'
 
@@ -4067,7 +4067,7 @@ snapshots:
       obug: 2.1.1
       std-env: 3.10.0
       tinyrainbow: 3.0.3
-      vitest: 4.1.11(@types/node@25.0.9)(@vitest/coverage-v8@4.0.17)(happy-dom@20.8.9)(jsdom@27.4.0(supports-color@7.2.0))(vite@7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))
+      vitest: 4.1.11(@types/node@25.0.9)(@vitest/coverage-v8@4.0.17)(happy-dom@20.8.9)(jsdom@27.4.0(supports-color@7.2.0))(vite@7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))
 
   '@vitest/expect@4.1.11':
     dependencies:
@@ -4078,13 +4078,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.1
 
-  '@vitest/mocker@4.1.11(vite@7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))':
+  '@vitest/mocker@4.1.11(vite@7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 4.1.11
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)
+      vite: 7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)
 
   '@vitest/pretty-format@4.0.17':
     dependencies:
@@ -4808,9 +4808,9 @@ snapshots:
 
   fast-uri@3.1.4: {}
 
-  fdir@6.5.0(picomatch@4.0.4):
+  fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
-      picomatch: 4.0.4
+      picomatch: 4.0.7
 
   file-entry-cache@8.0.0:
     dependencies:
@@ -5881,8 +5881,8 @@ snapshots:
 
   tinyglobby@0.2.17:
     dependencies:
-      fdir: 6.5.0(picomatch@4.0.4)
-      picomatch: 4.0.4
+      fdir: 6.5.0(picomatch@4.0.7)
+      picomatch: 4.0.7
 
   tinyrainbow@3.0.3: {}
 
@@ -6016,33 +6016,33 @@ snapshots:
       d3-time: 3.1.0
       d3-timer: 3.0.1
 
-  vite-plugin-svgr@4.5.0(rollup@4.62.2)(supports-color@7.2.0)(typescript@5.9.3)(vite@7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)):
+  vite-plugin-svgr@4.5.0(rollup@4.62.2)(supports-color@7.2.0)(typescript@5.9.3)(vite@7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)):
     dependencies:
       '@rollup/pluginutils': 5.3.0(rollup@4.62.2)
       '@svgr/core': 8.1.0(supports-color@7.2.0)(typescript@5.9.3)
       '@svgr/plugin-jsx': 8.1.0(@svgr/core@8.1.0(supports-color@7.2.0)(typescript@5.9.3))(supports-color@7.2.0)
-      vite: 7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)
+      vite: 7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - rollup
       - supports-color
       - typescript
 
-  vite-tsconfig-paths@6.0.4(supports-color@7.2.0)(typescript@5.9.3)(vite@7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)):
+  vite-tsconfig-paths@6.0.4(supports-color@7.2.0)(typescript@5.9.3)(vite@7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)):
     dependencies:
       debug: 4.4.1(supports-color@7.2.0)
       globrex: 0.1.2
       tsconfck: 3.1.6(typescript@5.9.3)
     optionalDependencies:
-      vite: 7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)
+      vite: 7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0):
+  vite@7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0):
     dependencies:
       esbuild: 0.27.7
-      fdir: 6.5.0(picomatch@4.0.4)
-      picomatch: 4.0.4
+      fdir: 6.5.0(picomatch@4.0.7)
+      picomatch: 4.0.7
       postcss: 8.5.15
       rollup: 4.62.2
       tinyglobby: 0.2.17
@@ -6052,10 +6052,10 @@ snapshots:
       jiti: 2.7.0
       yaml: 2.9.0
 
-  vitest@4.1.11(@types/node@25.0.9)(@vitest/coverage-v8@4.0.17)(happy-dom@20.8.9)(jsdom@27.4.0(supports-color@7.2.0))(vite@7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)):
+  vitest@4.1.11(@types/node@25.0.9)(@vitest/coverage-v8@4.0.17)(happy-dom@20.8.9)(jsdom@27.4.0(supports-color@7.2.0))(vite@7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)):
     dependencies:
       '@vitest/expect': 4.1.11
-      '@vitest/mocker': 4.1.11(vite@7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))
+      '@vitest/mocker': 4.1.11(vite@7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0))
       '@vitest/pretty-format': 4.1.11
       '@vitest/runner': 4.1.11
       '@vitest/snapshot': 4.1.11
@@ -6072,7 +6072,7 @@ snapshots:
       tinyexec: 1.3.1
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.1
-      vite: 7.3.5(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)
+      vite: 7.3.7(@types/node@25.0.9)(jiti@2.7.0)(yaml@2.9.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 25.0.9
